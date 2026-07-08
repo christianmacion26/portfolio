@@ -18,6 +18,8 @@ status: open-source
 tags: [regime, overlay, vol-targeting, risk-management, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+
 ## The hypothesis
 
 Some strategies are *the same alpha* across regimes; others are not. Scaling exposure by an external regime indicator — a smoothed VIX percentile — is a textbook risk-management overlay.
@@ -31,10 +33,19 @@ Some strategies are *the same alpha* across regimes; others are not. Scaling exp
 
 ## The result
 
-| Metric | Base | With overlay |
-|---|---|---|
-| Sharpe | 0.64 | **0.67** |
-| Max DD | −58% | **−42%** |
+<Chart
+  type="bar"
+  data={[
+    { value: 0.64, label: "Sharpe\nbase" },
+    { value: 0.67, label: "Sharpe\noverlay" },
+    { value: -58, label: "Max DD\nbase (%)" },
+    { value: -42, label: "Max DD\noverlay (%)" },
+  ]}
+  title="Risk overlay: Sharpe barely moves, drawdown halves"
+  caption="Same basket, two position-sizing rules. Sharpe: 0.64 → 0.67 (+5%). Max DD: −58% → −42% (−28%). The headline metric looks flat; the equity-curve shape changes materially. This is what risk-managed return looks like in the data."
+  yMin={-70}
+  yMax={10}
+/>
 
 The headline Sharpe barely moves. The equity curve shape changes materially: 16 percentage points of drawdown absorbed by a regime-aware size scaler.
 

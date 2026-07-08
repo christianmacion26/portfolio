@@ -18,6 +18,8 @@ status: open-source
 tags: [backtest-engine, transaction-costs, production-engineering, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+
 ## The hypothesis
 
 If the backtest engine doesn't model realistic costs, every high-frequency alpha is an illusion. The cost model is part of the strategy — not a footnote.
@@ -29,6 +31,21 @@ If the backtest engine doesn't model realistic costs, every high-frequency alpha
 - Scans break-even turnaround cost — the cost level at which Sharpe net → 0.
 
 ## The result
+
+<Chart
+  type="bar"
+  data={[
+    { value: 0.20, label: "Sharpe\ngross" },
+    { value: -0.05, label: "Sharpe\nnet" },
+    { value: 5, label: "Cost\nlow (bps)" },
+    { value: 20, label: "Cost\nbreak-even" },
+    { value: 40, label: "Cost\nrealistic" },
+  ]}
+  title="Net Sharpe vs cost-of-turnaround — high-turnover signal fails the test"
+  caption="Left pair: gross Sharpe 0.20 → net Sharpe −0.05 at realistic cost (~40 bps RT). Right triplet: break-even turnaround cost sits at ~20 bps — anything realistic wipes the edge. The cost model is the strategy. A signal that wins gross but loses net is not deployable."
+  yMin={-0.1}
+  yMax={0.5}
+/>
 
 - **Gross Sharpe: 0.20**.
 - **Realistic net Sharpe: < 0** — the signal loses after applying the cost model.

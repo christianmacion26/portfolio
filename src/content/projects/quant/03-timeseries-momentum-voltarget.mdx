@@ -18,6 +18,8 @@ status: open-source
 tags: [time-series-momentum, vol-targeting, risk-management, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+
 ## The hypothesis
 
 Time-series momentum (long positive-trend, flat/short negative-trend) is a documented edge. The risk-management question is more interesting: does vol targeting actually buy you risk-adjusted Sharpe on top of the raw signal?
@@ -29,6 +31,20 @@ Time-series momentum (long positive-trend, flat/short negative-trend) is a docum
 - Cost model: 5 bps/side.
 
 ## The result
+
+<Chart
+  type="bar"
+  data={[
+    { value: 0.27, label: "Sharpe\nraw" },
+    { value: 0.39, label: "Sharpe\nvol-target" },
+    { value: -62,  label: "Max DD\nraw (%)" },
+    { value: -30,  label: "Max DD\ntarget (%)" },
+  ]}
+  title="Risk-management lift: vol-targeting on/off"
+  caption="Left pair: Sharpe 0.27 → 0.39 (+44%). Right pair: Max drawdown −62% → −30% (−52%). Same signal, different position sizing — vol targeting doesn't make alpha, it makes calm. Currently deployed as my live paper-trading strategy."
+  yMin={-70}
+  yMax={10}
+/>
 
 | Metric | Raw signal | Vol-targeted |
 |---|---|---|

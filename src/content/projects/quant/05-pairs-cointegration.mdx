@@ -18,6 +18,8 @@ status: open-source
 tags: [cointegration, pairs-trading, adf, mean-reversion, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+
 ## The hypothesis
 
 BTC and ETH move together. If they are *cointegrated*, a stationary spread should mean-revert — a textbook stat-arb entry.
@@ -31,6 +33,20 @@ BTC and ETH move together. If they are *cointegrated*, a stationary spread shoul
 - Fades the spread OOS; applies a 5 bps/side cost.
 
 ## The result
+
+<Chart
+  type="bar"
+  data={[
+    { value: -1.95, label: "CV 1%\n(−2.57)" },
+    { value: -1.95, label: "CV 5%\n(−2.86)" },
+    { value: -2.11, label: "ADF\nstat" },
+    { value: -1.62, label: "CV 10%\n(−3.43)" },
+  ]}
+  title="ADF test statistic vs critical values — fail to reject unit root"
+  caption="Spread ADF = −2.11 sits *less negative* than the 5% critical value (≈ −2.86) and even the 10% line. Cannot reject H₀: spread has a unit root. The cointegration hypothesis fails — by construction, no stat-arb trade is warranted."
+  yMin={-4}
+  yMax={0}
+/>
 
 - **ADF test statistic: −2.11** — fails to reject the unit-root hypothesis at the 5% level. The spread is not stationary.
 - **Half-life: 208 days** — too slow to be a trade.

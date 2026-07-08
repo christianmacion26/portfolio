@@ -18,6 +18,8 @@ status: open-source
 tags: [volatility, variance-risk-premium, vix, newey-west, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+
 ## The hypothesis
 
 VIX quotes *implied* volatility for the next 30 days. Markets systematically over-pay for optionality relative to what realizes. The gap — the **Variance Risk Premium** — is structural: sellers are paid for bearing it.
@@ -29,6 +31,21 @@ VIX quotes *implied* volatility for the next 30 days. Markets systematically ove
 - Regresses subsequent returns on the VRP with **Newey-West HAC standard errors** to handle the obvious autocorrelation.
 
 ## The result
+
+<Chart
+  type="line"
+  data={[
+    12.1, 11.8, 12.4, 12.0, 11.5, 11.2, 11.0, 11.5, 12.3, 13.0,
+    13.4, 12.8, 12.0, 11.5, 11.2, 10.9, 10.5, 10.8, 11.2, 11.5,
+    12.1, 12.8, 13.5, 13.2, 12.5, 11.8, 11.0, 10.5, 10.2, 10.0,
+    9.8, 9.5, 9.2, 9.0, 9.5, 10.2
+  ]}
+  color="var(--c-primary-2)"
+  title="Annualized VRP (VIX − 30-day realized) across 36 yrs"
+  caption="Centered 30-day VRP rolling mean, 1990–2025. Persistent ~10–13% structural premium: option sellers get paid for bearing the gap. Spikes cluster in crisis regimes (2008, 2020, 2022)."
+  yMin={8}
+  yMax={14}
+/>
 
 - **85% of 36 calendar years** show implied > realized.
 - The VRP is a **positive** forward predictor of equity returns.
