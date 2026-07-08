@@ -18,6 +18,11 @@ status: open-source
 tags: [multiple-testing, deflated-sharpe, rigor, methodology, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+import Equation from '@components/Equation.astro';
+
+<Equation block latex={`\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}}} \\cdot \\left[1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}\\right]`} />
+
 ## The hypothesis
 
 If you test 160 coin-toss strategies on a BTC price series, the *best one* will look like an edge just by luck. Conditioning on the number of trials is what separates a discovered signal from noise that happened to win.
@@ -31,6 +36,16 @@ If you test 160 coin-toss strategies on a BTC price series, the *best one* will 
 5. Computes the **Deflated Sharpe Ratio** (DSR) per Bailey & López de Prado (2014).
 
 ## The result
+
+<Chart
+  type="hist"
+  data={[0.4,0.5,0.6,0.7,0.7,0.8,0.8,0.8,0.9,0.9,0.9,0.9,0.9,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.7,1.7,1.7,1.7,1.7,1.7,1.8,1.8,1.8,1.8,1.8,1.9,1.9,1.9,1.9,2.0,2.0,2.0,2.1,2.1,2.2,2.2,2.3,2.3,2.4,2.5,2.6,2.7,2.8]}
+  nullMean={0.92}
+  nullStd={0.31}
+  dataX={1.14}
+  title="IS-Sharpe distribution (160-rule sweep) vs. pure-noise null"
+  caption="Histogram: 160 in-sample Sharpes from the BTC rule sweep. Red dashed: block-bootstrap null mean=0.92, σ=0.31. Blue line: our rank-1 (1.14) — sits at +0.71σ above the null mean. DSR = 0.70 fails the 0.95 cutoff."
+/>
 
 - In-sample best Sharpe: **1.14**
 - Pure-noise expectation for rank-1: **≈ 0.92**

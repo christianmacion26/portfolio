@@ -7,6 +7,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import CTABanner from '@components/CTABanner.astro';
+import DSRCalculator from '@components/DSRCalculator.astro';
 import { path } from '@utils/url';
 
 const gates = [
@@ -112,6 +113,21 @@ const charter = [
           latex={`\\text{cost} = \\sum_{i} \\text{tokens}(i) \\cdot \\text{price}(\\text{tier}(i)) \\quad \\text{where} \\quad \\text{tier} : \\mathcal{A} \\to \\{\\text{Opus, Sonnet, Haiku, Fable}\\}`}
         />
       </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Interactive · G16</p>
+        <h2 class="section__title">Try the deflated Sharpe calculator.</h2>
+        <p class="section__sub">
+          See how the same in-sample Sharpe can pass or fail G16 depending on how many strategies you actually tried.
+          This is the gate that turns "1.14 looks great" into "DSR 0.70 — fail."
+        </p>
+      </header>
+
+      <DSRCalculator />
     </div>
   </section>
 
