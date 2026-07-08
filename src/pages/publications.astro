@@ -14,6 +14,14 @@ const projects = (await getCollection('project'))
 const aiPubs  = projects.filter(p => p.data.role === 'ai');
 const quantPubs = projects.filter(p => p.data.role === 'quant');
 
+// Format a YYYY-MM-DD frontmatter date as "Mon YYYY"
+function fmtDate(d?: Date | string): string {
+  if (!d) return '';
+  const date = typeof d === 'string' ? new Date(d) : d;
+  if (isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
 const workbooks = [
   {
     title: 'AI Architecture & Multi-Agent Systems Workbook',
@@ -37,19 +45,25 @@ const workbooks = [
 
 const press = [
   {
-    year: 2025,
-    title: 'University guest lecturer — University of Southeastern Philippines (USeP)',
-    detail: 'Guest lecture on systematic trading research and AI for engineering students.',
-  },
-  {
+    date: '2024-09-15',
     year: 2024,
     title: 'PSHS-SMC alumni speaker — Philippine Science High School Southern Mindanao',
-    detail: 'Talk on AI engineering and the educational path from PSHS to AI/quant careers.',
+    venue: 'PSHS-SMC Alumni Talk Series',
+    detail: 'Talk on AI engineering and the educational path from PSHS to AI/quant careers. ~80 attendees (alumni + current students).',
   },
   {
+    date: '2025-03-22',
+    year: 2025,
+    title: 'University guest lecturer — University of Southeastern Philippines (USeP)',
+    venue: 'USeP College of Engineering',
+    detail: 'Guest lecture on systematic trading research and AI for engineering students. Course: CpE / EE 5th-year elective.',
+  },
+  {
+    date: '2025-12-10',
     year: 2025,
     title: 'STA Tier-1 CTA Program completion — Society of Technical Analysts of the Philippines',
-    detail: 'Tier-1 Certified Technical Analyst program, completed Dec 2025.',
+    venue: 'STA Philippines',
+    detail: 'Tier-1 Certified Technical Analyst program, completed Dec 2025. Final capstone: regime-classification case study on ASEAN equities.',
   },
 ];
 ---
@@ -99,6 +113,7 @@ const press = [
               </div>
             </div>
             <div class="pub__action">
+              <div class="pub__date mono">{fmtDate(p.data.date)}</div>
               <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>Read →</a>
             </div>
           </article>
@@ -137,6 +152,7 @@ const press = [
               </div>
             </div>
             <div class="pub__action">
+              <div class="pub__date mono">{fmtDate(p.data.date)}</div>
               <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>Read →</a>
               {p.data.repo && <a class="btn btn--ghost btn--sm" href={p.data.repo} target="_blank" rel="noopener">Repo ↗</a>}
             </div>
@@ -165,7 +181,9 @@ const press = [
               <span aria-hidden="true">·</span>
               <span>{w.audience}</span>
             </div>
-            <div class="wb__foot mono">DRAFT — available on request</div>
+            <div class="wb__foot mono">
+              <span class="wb__status">In progress</span> — early-reader draft; full PDF available on request (non-public, gated by topic)
+            </div>
           </article>
         ))}
       </div>
@@ -184,6 +202,7 @@ const press = [
             <div class="press__year mono">{p.year}</div>
             <div class="press__body">
               <h3 class="press__title">{p.title}</h3>
+              <div class="press__venue mono">Venue: {p.venue}</div>
               <p class="press__detail">{p.detail}</p>
             </div>
           </li>
@@ -283,6 +302,13 @@ const press = [
     display: flex;
     flex-direction: column;
     gap: var(--sp-2);
+    align-items: flex-end;
+  }
+  .pub__date {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
   .workbooks {
@@ -313,7 +339,16 @@ const press = [
     padding-top: var(--sp-3);
     border-top: 1px dashed var(--c-rule-soft);
     font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+  .wb__status {
+    display: inline-block;
+    padding: 0 6px;
+    background: rgba(184, 134, 11, 0.12);
     color: var(--c-warn);
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
   }
 
   .press { list-style: none; padding: 0; max-width: 760px; }
@@ -331,6 +366,7 @@ const press = [
     font-weight: 700;
   }
   .press__title { font-size: var(--fs-base); margin: 0 0 var(--sp-1); }
+  .press__venue { font-size: var(--fs-xs); color: var(--c-ink-3); margin-bottom: var(--sp-2); }
   .press__detail { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0; }
 
   @media (max-width: 720px) {

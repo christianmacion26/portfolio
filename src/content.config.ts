@@ -26,6 +26,7 @@ const project = defineCollection({
     sourceLink: z.string().optional(),
     status: z.enum(['production', 'open-source', 'internal', 'archived']).default('open-source'),
     tags: z.array(z.string()).default([]),
+    date: z.coerce.date().optional(),
   }),
 });
 

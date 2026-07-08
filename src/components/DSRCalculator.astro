@@ -75,6 +75,31 @@
     DSR uses the normal-approximation of the expected maximum Sharpe under N i.i.d.
     trials, then deflates by √(1 − γ₃·SR + (γ₄·SR² − 1)/4).
   </p>
+
+  <details class="dsr-calc__why">
+    <summary class="dsr-calc__why-summary">Why 0.95? — reading the z-score and the numerator</summary>
+    <div class="dsr-calc__why-body">
+      <p>
+        The number the calculator prints is a <strong>z-score</strong> on the null H₀: "your IS Sharpe is just the
+        best of N i.i.d. N(0,1) draws." Pass at <strong>DSR ≥ 1.645</strong> = one-sided 95% test (the standard
+        frequentist threshold; equivalent to 0.05 significance). Anything below is inconclusive or fail — not
+        because 0.05 is sacred, but because 1.645σ is the conventional bar for "I tried many things and this
+        one still looks unlikely to be noise."
+      </p>
+      <p>
+        Read it as a ratio:
+        <strong>numerator</strong> = SR̂ − E[max SR under N trials] (how much your Sharpe <em>beats</em> the
+        expected best of N random strategies);
+        <strong>denominator</strong> = σ_SR̂ · √(1 − γ₃·SR + (γ₄−1)·SR²/4) (how noisy the Sharpe estimate is,
+        with the higher-moment correction for non-normal returns).
+        A DSR of 0.70 means "the gap is 0.70 noise-units wide" — not a 70% pass rate.
+      </p>
+      <p class="dsr-calc__why-mono">
+        Ref: Bailey &amp; López de Prado, "The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest
+        Overfitting, and Non-Normality" (2014), <em>JPM</em> 40(5).
+      </p>
+    </div>
+  </details>
 </div>
 
 <script>
@@ -334,6 +359,38 @@
     color: var(--c-ink-2);
     line-height: var(--lh-loose);
   }
+
+  .dsr-calc__why {
+    margin-top: var(--sp-3);
+    border: 1px solid var(--c-rule-soft);
+    border-radius: var(--radius-sm);
+    background: var(--c-bg-2);
+  }
+  .dsr-calc__why-summary {
+    cursor: pointer;
+    padding: var(--sp-2) var(--sp-3);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--c-primary);
+    list-style: none;
+    user-select: none;
+  }
+  .dsr-calc__why-summary::before {
+    content: '+ ';
+    color: var(--c-primary-2);
+    font-family: var(--ff-mono);
+  }
+  .dsr-calc__why[open] .dsr-calc__why-summary::before { content: '− '; }
+  .dsr-calc__why-body {
+    padding: 0 var(--sp-3) var(--sp-3);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
+  .dsr-calc__why-body p { margin-bottom: var(--sp-2); }
+  .dsr-calc__why-body p:last-child { margin-bottom: 0; }
+  .dsr-calc__why-body strong { color: var(--c-ink); font-weight: 600; }
+  .dsr-calc__why-mono { font-family: var(--ff-mono); font-size: 0.7rem; color: var(--c-ink-3); }
 
   @media (max-width: 720px) {
     .dsr-calc__body { grid-template-columns: 1fr; }

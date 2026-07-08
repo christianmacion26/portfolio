@@ -132,7 +132,13 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
       <div class="now-strip__inner">
         <div class="now-strip__cell">
           <div class="now-strip__label mono">NOW · 2026-07</div>
-          <div class="now-strip__val">Looking for: junior QR seat or contract research engineer — remote · UTC+8</div>
+          <div class="now-strip__val">
+            <strong>Open to:</strong> Quantitative Researcher (junior QR / QR-rotational),
+            Quantitative Research Engineer, or Research Engineer seat · remote · UTC+8
+          </div>
+          <div class="now-strip__meta">
+            <span class="mono">20 hrs/wk</span> · contract or part-time · immediate start
+          </div>
         </div>
         <div class="now-strip__cell now-strip__cell--narrow">
           <div class="now-strip__label mono">LATEST</div>
@@ -475,6 +481,20 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
   .now-strip__val {
     font-size: var(--fs-base);
     color: #e6edf3;
+  }
+  .now-strip__val strong { color: var(--c-primary-2); font-weight: 600; }
+  .now-strip__meta {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-xs);
+    color: rgba(230, 237, 243, 0.65);
+    letter-spacing: 0.03em;
+  }
+  .now-strip__meta .mono {
+    color: var(--c-primary-2);
+    font-weight: 700;
+    padding: 0 4px;
+    border: 1px solid rgba(212, 160, 23, 0.35);
+    border-radius: 3px;
   }
   .now-strip__cell--narrow .now-strip__val { font-size: var(--fs-sm); color: rgba(230, 237, 243, 0.85); }
 

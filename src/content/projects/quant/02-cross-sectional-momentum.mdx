@@ -1,4 +1,5 @@
 ---
+date: 2025-10-15
 title: Cross-Sectional Momentum (18 coins)
 role: quant
 order: 2
@@ -52,8 +53,20 @@ Cross-sectional momentum — long winners, short losers — has decades of equit
 - **Out-of-sample Sharpe: −0.03** (the OOS window quietly goes the other way).
 - 95% bootstrap CI straddles zero — cannot reject the null.
 
-## Why this is a *good* project, not a failure
+## How to read this result
 
-> An honest decay is a publishable result. The discipline is the OOS lock — the moment you peek, the test is dead.
+**This is, by construction, a mostly null result.** Cross-sectional momentum on 18 BTC-correlated coins over a 14-day
+rebalance horizon is a deliberately tight universe — the coins move together, the cross-sectional dispersion is small,
+and what looks like IS alpha is largely noise. The IS Sharpe (0.91) is *not* real alpha; the OOS decay to −0.03 is the
+true signal content of this experiment, which is *approximately zero*.
 
-The cross-sectional alpha literature gives the seat a realistic bar: BTC-correlated coins are too tightly coupled for cross-sectional dispersion to be a reliable signal at this horizon.
+I ship it anyway because:
+
+1. The OOS test was **pre-registered** — the window was locked before data was touched.
+2. The CI bounds were computed honestly — block bootstrap on the OOS period.
+3. A research book that ships nine winners and hides the failure modes is a book primed for selection bias. This project
+   *is* the failure-mode.
+
+> The discipline is the OOS lock — the moment you peek, the test is dead.
+
+The cross-sectional alpha literature gives the seat a realistic bar: BTC-correlated coins are too tightly coupled for cross-sectional dispersion to be a reliable signal at this horizon. If you want a deployable version of cross-sectional alpha, expand the universe, lengthen the rebalance horizon, or move up the stack to pair-cointegration inside a sector ETF basket (project 05 has the cointegration pre-filter for exactly this reason).
