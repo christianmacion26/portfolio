@@ -1,8 +1,12 @@
 ---
 /**
- * certifications.astro — curated 25-30 certs + "see all 102" footnote.
+ * certifications.astro — v2: curated certs + math/quant aesthetic.
+ *
+ * Hero equation: cert density over time → 102 certs / 11 months.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
+import Stat from '@components/Stat.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
@@ -10,6 +14,14 @@ const groups = (await getCollection('certGroup'))
   .sort((a, b) => a.data.order - b.data.order);
 
 const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
+const flagshipCount = groups.reduce(
+  (sum, g) => sum + g.data.items.filter(c => c.flagship).length,
+  0
+);
+const tier1Count = groups.reduce(
+  (sum, g) => sum + g.data.items.filter(c => c.tier === 1).length,
+  0
+);
 ---
 <BaseLayout
   title="Certifications"
@@ -18,14 +30,29 @@ const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
 
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow">Certifications</p>
+      <p class="section__eyebrow"><span class="mono">certs/</span> · 102 total, curated below</p>
       <h1 class="page-head__title">
         <span class="mono">{totalCount}+ of 102</span> certifications, four domains.
       </h1>
       <p class="page-head__sub">
         102 professional certifications across AI, finance, math/statistics, and event flagships —
-        collected in 11 months (Nov 2022 – May 2026). Curated below by domain; Tier-1 issuers flagged.
+        collected in 11 months (Nov 2022 → May 2026). Curated below by domain; Tier-1 issuers flagged.
       </p>
+
+      <div class="head-eq">
+        <Equation
+          block
+          latex="\text{cert\_density} = \frac{c(t)}{t} = \frac{102 \text{ certs}}{11 \text{ months}} \approx 9.3 \text{ certs/month}"
+          size="md"
+        />
+      </div>
+
+      <div class="head-stats">
+        <Stat value={String(totalCount)} label="curated" sub="below" formula="c_{shown}" />
+        <Stat value="102" label="total" sub="all-time" formula="c(t)" trend="up" />
+        <Stat value={String(flagshipCount)} label="flagships" sub="NASA · Meta · IBM · IMC" formula="\sum f" />
+        <Stat value={String(tier1Count)} label="tier-1" sub="STA · SEC · BSP" formula="\sum t_1" />
+      </div>
     </div>
   </header>
 
@@ -68,10 +95,10 @@ const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
 
 <style>
   .page-head {
-    padding-block: var(--sp-9) var(--sp-6);
+    padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% -100px, rgba(184, 134, 11, 0.10), transparent 60%),
+      var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -82,7 +109,22 @@ const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
+    line-height: var(--lh-loose);
     max-width: 64ch;
+    margin-bottom: var(--sp-6);
+  }
+  .head-eq {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-5);
+    overflow-x: auto;
+  }
+  .head-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
   }
   .certs {
     list-style: none;
@@ -140,5 +182,9 @@ const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
     background: var(--c-bg-2);
     border-left: 3px solid var(--c-primary-2);
     border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  @media (max-width: 880px) {
+    .head-stats { grid-template-columns: 1fr 1fr; }
   }
 </style>

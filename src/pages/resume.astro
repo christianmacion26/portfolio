@@ -1,8 +1,12 @@
 ---
 /**
- * resume.astro — download buttons for 3 tailored resumes.
+ * resume.astro — v2: 3 tailored resumes + math/quant aesthetic.
+ *
+ * Hero equation: which resume = argmax over JD fit.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
+import Stat from '@components/Stat.astro';
 import { path } from '@utils/url';
 
 const resumes = [
@@ -34,12 +38,27 @@ const resumes = [
 
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow">Resume</p>
+      <p class="section__eyebrow"><span class="mono">resume/</span> · 3 tailored versions</p>
       <h1 class="page-head__title">Three tailored resumes.</h1>
       <p class="page-head__sub">
         Pick the version that matches the role you're hiring for. All three are NDA-safe, free of
         proprietary data sources, and reference only public-data methodology or open-source work.
       </p>
+
+      <div class="head-eq">
+        <Equation
+          block
+          latex="\text{resume}^{\star} = \arg\max_{r \in R} \; \text{fit}(r, \text{JD}) \quad \text{where} \quad R = \{R_{\text{unified}}, R_{\text{AI}}, R_{\text{Quant}}\}"
+          size="md"
+        />
+      </div>
+
+      <div class="head-stats">
+        <Stat value="3" label="tailored" sub="resumes" formula="|R|" />
+        <Stat value="100%" label="NDA-safe" sub="by construction" formula="\neg N" />
+        <Stat value="9" label="quant proj" sub="public-data" formula="|P_q|" />
+        <Stat value="6" label="AI proj" sub="OSS runnable" formula="|P_a|" />
+      </div>
     </div>
   </header>
 
@@ -72,10 +91,10 @@ const resumes = [
 
 <style>
   .page-head {
-    padding-block: var(--sp-9) var(--sp-6);
+    padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% -100px, rgba(11, 61, 92, 0.10), transparent 60%),
+      var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -86,7 +105,22 @@ const resumes = [
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
+    line-height: var(--lh-loose);
     max-width: 64ch;
+    margin-bottom: var(--sp-6);
+  }
+  .head-eq {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-5);
+    overflow-x: auto;
+  }
+  .head-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
   }
   .resume-grid {
     display: grid;
@@ -157,4 +191,8 @@ const resumes = [
     line-height: var(--lh-loose);
   }
   .resume-note strong { color: var(--c-ink); font-weight: 600; }
+
+  @media (max-width: 880px) {
+    .head-stats { grid-template-columns: 1fr 1fr; }
+  }
 </style>

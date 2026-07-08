@@ -1,9 +1,14 @@
 ---
 /**
- * experience.astro — timeline view.
+ * experience.astro — v2: timeline + math/quant aesthetic.
+ *
+ * Hero equation: where proof / work / time = per-engagement contribution density.
+ * Stats panel: total engagements, total months, total proofs declared.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import TimelineEntry from '@components/TimelineEntry.astro';
+import Stat from '@components/Stat.astro';
+import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { getCollection, render } from 'astro:content';
 
@@ -17,6 +22,12 @@ const rendered = await Promise.all(
     return { entry: e, Content };
   })
 );
+
+// Aggregate metrics across all experiences (NDA-safe — only counts and labels)
+const totalContributions = rendered.reduce((sum, { entry }) => sum + (entry.data.contributions?.length ?? 0), 0);
+const totalProofs = rendered.reduce((sum, { entry }) => sum + (entry.data.proofs?.length ?? 0), 0);
+const totalEntries = rendered.length;
+const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
 ---
 <BaseLayout
   title="Experience"
@@ -32,6 +43,21 @@ const rendered = await Promise.all(
         that prove them. The 19V Capital role is a <strong>closed past contract</strong>
         (03/2026 – 06/2026); all references are NDA-safe and free of proprietary data sources.
       </p>
+
+      <div class="head-eq">
+        <Equation
+          block
+          latex="\text{contribution\_density} = \frac{\sum_{e \in E} \text{proofs}(e)}{\text{months}(\Delta E)}"
+          size="md"
+        />
+      </div>
+
+      <div class="head-stats">
+        <Stat value={String(totalEntries)} label="engagements" sub="multi-hat" formula="|E|" />
+        <Stat value={String(totalContributions)} label="contributions" sub="declared" formula="\sum c_e" trend="up" />
+        <Stat value={String(totalProofs)} label="proof pointers" sub="public artifacts" formula="\sum p_e" trend="up" />
+        <Stat value={`${totalMonths}`} label="months" sub="2024-12 → 2026-05" formula="\Delta t" />
+      </div>
     </div>
   </header>
 
@@ -66,10 +92,11 @@ const rendered = await Promise.all(
 
 <style>
   .page-head {
-    padding-block: var(--sp-9) var(--sp-6);
+    padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% -100px, rgba(44, 122, 123, 0.14), transparent 60%),
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
+      var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -80,7 +107,27 @@ const rendered = await Promise.all(
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
+    line-height: var(--lh-loose);
     max-width: 64ch;
+    margin-bottom: var(--sp-6);
+  }
+  .page-head__sub strong { color: var(--c-ink); font-weight: 600; }
+  .head-eq {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-5);
+    overflow-x: auto;
+  }
+  .head-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
   }
   .timeline { padding-block: var(--sp-5); }
+
+  @media (max-width: 880px) {
+    .head-stats { grid-template-columns: 1fr 1fr; }
+  }
 </style>

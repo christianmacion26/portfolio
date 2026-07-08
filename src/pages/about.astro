@@ -1,8 +1,10 @@
 ---
 /**
- * about.astro — narrative bio + education arc.
+ * about.astro — v2: narrative bio + math/quant aesthetic.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Stat from '@components/Stat.astro';
+import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
@@ -18,8 +20,23 @@ const education = [
 
   <header class="page-head">
     <div class="container container-narrow">
-      <p class="section__eyebrow">About</p>
-      <h1 class="page-head__title">A research-desk operator with one method.</h1>
+      <p class="section__eyebrow"><span class="mono">about/</span> · operator + researcher</p>
+      <h1 class="page-head__title">A research-desk operator with <span class="hl">one method</span>.</h1>
+
+      <div class="head-eq">
+        <Equation
+          block
+          latex="\text{ship}(x) = \begin{cases} 1 & \text{if } x \text{ passes G1--G31} \\ 0 & \text{otherwise} \end{cases}"
+          size="md"
+        />
+      </div>
+
+      <div class="head-stats">
+        <Stat value={profile.stats.certCount} label="certs" sub="11-month arc" formula="c(t)" />
+        <Stat value={profile.stats.evalGates} label="gates" sub="G1–G31" formula="g" />
+        <Stat value={profile.stats.aiAgentCount} label="agents" sub="orch + workers" formula="|\mathcal{A}|" />
+        <Stat value={profile.stats.locPython} label="LOC" sub="light-dep" formula="|\mathcal{L}|" />
+      </div>
     </div>
   </header>
 
@@ -94,16 +111,30 @@ const education = [
 
 <style>
   .page-head {
-    padding-block: var(--sp-9) var(--sp-6);
+    padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% -100px, rgba(44, 122, 123, 0.14), transparent 60%),
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
+      var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
     font-size: clamp(2rem, 4vw, 3rem);
     letter-spacing: -0.02em;
-    margin-bottom: var(--sp-3);
+    margin-bottom: var(--sp-5);
+  }
+  .head-eq {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-5);
+    overflow-x: auto;
+  }
+  .head-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
   }
   .about-prose p {
     margin-bottom: var(--sp-5);
@@ -163,4 +194,8 @@ const education = [
     font-weight: 600;
   }
   .neg-list strong { color: var(--c-ink); font-weight: 600; }
+
+  @media (max-width: 880px) {
+    .head-stats { grid-template-columns: 1fr 1fr; }
+  }
 </style>

@@ -1,12 +1,18 @@
 ---
 /**
- * skills.astro — domain-grouped skill matrix.
+ * skills.astro — v2: domain-grouped skill matrix + math/quant aesthetic.
+ *
+ * Hero equation: skill_stack = build + validate + ship (one stack across two lanes).
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
+import Stat from '@components/Stat.astro';
 import { getCollection } from 'astro:content';
 
 const groups = (await getCollection('skillGroup'))
   .sort((a, b) => a.data.order - b.data.order);
+
+const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
 ---
 <BaseLayout
   title="Skills"
@@ -15,12 +21,27 @@ const groups = (await getCollection('skillGroup'))
 
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow">Skills</p>
-      <h1 class="page-head__title">Three domains, one stack.</h1>
+      <p class="section__eyebrow"><span class="mono">skills/</span> · three domains, one stack</p>
+      <h1 class="page-head__title">Three domains. <span class="hl">One stack.</span></h1>
       <p class="page-head__sub">
         Skills grouped the way a hiring manager reads them: what I build, how I validate it, and what
         I ship it with. Each skill is paired with the discipline it represents.
       </p>
+
+      <div class="head-eq">
+        <Equation
+          block
+          latex="\mathrm{stack} \;=\; \mathrm{build} \;\cdot\; \mathrm{validate}\;\cdot\;\mathrm{ship} \qquad \text{where}\quad \mathrm{validate} = \mathrm{G1\;..\;G31}"
+          size="md"
+        />
+      </div>
+
+      <div class="head-stats">
+        <Stat value={String(groups.length)} label="domains" sub="three" formula="|D|" />
+        <Stat value={String(totalSkills)} label="skills" sub="in stack" formula="|\mathcal{S}|" />
+        <Stat value="0" label="proprietary" sub="data sources" formula="\neg p" />
+        <Stat value="6" label="OSS repos" sub="runnable" formula="|R|" trend="up" />
+      </div>
     </div>
   </header>
 
@@ -48,10 +69,10 @@ const groups = (await getCollection('skillGroup'))
 
 <style>
   .page-head {
-    padding-block: var(--sp-9) var(--sp-6);
+    padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% -100px, rgba(11, 61, 92, 0.10), transparent 60%),
+      var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -62,7 +83,22 @@ const groups = (await getCollection('skillGroup'))
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
+    line-height: var(--lh-loose);
     max-width: 64ch;
+    margin-bottom: var(--sp-6);
+  }
+  .head-eq {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-5);
+    overflow-x: auto;
+  }
+  .head-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
   }
   .skills {
     display: grid;
@@ -88,5 +124,9 @@ const groups = (await getCollection('skillGroup'))
   .skill__sub {
     font-size: var(--fs-sm);
     line-height: var(--lh-normal);
+  }
+
+  @media (max-width: 880px) {
+    .head-stats { grid-template-columns: 1fr 1fr; }
   }
 </style>

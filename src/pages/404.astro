@@ -1,8 +1,11 @@
 ---
 /**
- * 404.astro — friendly 404 with nav fallback.
+ * 404.astro — v2: math/quant aesthetic.
+ *
+ * Equation: ∄ x ∈ site : URL(x) = requested. Try one of these.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
 import { path } from '@utils/url';
 
 const links = [
@@ -18,12 +21,21 @@ const links = [
 
   <section class="not-found">
     <div class="container container-narrow not-found__inner">
-      <p class="section__eyebrow">404</p>
+      <p class="section__eyebrow mono">404 · off the path</p>
       <h1 class="not-found__title">Off the path.</h1>
       <p class="not-found__sub">
         The page you were looking for isn't here — or the URL changed. Try one of the routes below,
         or jump back to <a href={path('/')}>home</a>.
       </p>
+
+      <div class="not-found__eq">
+        <Equation
+          block
+          latex="\nexists\, x \in \mathcal{S} \;:\; \text{url}(x) = \text{requested} \quad \Longrightarrow \quad \text{try one of:}"
+          size="md"
+        />
+      </div>
+
       <nav class="not-found__nav" aria-label="404 navigation">
         {links.map(l => <a href={l.href} class="btn btn--ghost">{l.label}</a>)}
       </nav>
@@ -40,7 +52,7 @@ const links = [
     align-items: center;
     background:
       radial-gradient(800px 400px at 50% 0%, rgba(44, 122, 123, 0.10), transparent 60%),
-      var(--c-bg);
+      var(--c-paper);
   }
   .not-found__inner { text-align: center; }
   .not-found__title {
@@ -51,9 +63,19 @@ const links = [
   .not-found__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
+    line-height: var(--lh-loose);
     margin-bottom: var(--sp-6);
     max-width: 56ch;
     margin-inline: auto;
+  }
+  .not-found__eq {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-6);
+    overflow-x: auto;
+    display: inline-block;
   }
   .not-found__nav {
     display: flex;
