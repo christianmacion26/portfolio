@@ -18,13 +18,14 @@
  */
 
 :root {
-  /* === BRAND === */
-  --c-primary:        #0b3d5c;   /* navy/teal — primary brand */
-  --c-primary-deep:   #08283b;   /* hover/darker */
-  --c-primary-2:      #2c7a7b;   /* teal accent */
+  /* === BRAND (v2.3 — hedge-fund palette: near-black + single accent) === */
+  --c-primary:        #0a0e14;   /* near-black — primary brand */
+  --c-primary-deep:   #000000;   /* hover/darker */
+  --c-primary-2:      #d4a017;   /* single accent — amber/gold */
   --c-primary-3:      #6b4a8f;   /* purple accent — sparingly */
-  --c-gold:           #b8860b;   /* callouts/highlights */
+  --c-gold:           #d4a017;   /* callouts/highlights (matches accent) */
   --c-amber:          #c98a16;   /* terminal-amber accent */
+  --c-accent-cyan:    #22d3ee;   /* alternative accent (signal/data) */
 
   /* === INK === */
   --c-ink:            #1a1f24;   /* body text */
@@ -53,13 +54,13 @@
   --c-info:           #1d4ed8;   /* info blue */
   --c-info-soft:      #dbeafe;
 
-  /* === MATH / QUANT ACCENTS === */
-  --c-eq:             #0b3d5c;   /* equation color (navy) */
-  --c-phi:            #2c7a7b;   /* primary teal — Φ */
-  --c-sigma:          #6b4a8f;   /* σ purple */
-  --c-delta:          #b8860b;   /* Δ gold */
+  /* === MATH / QUANT ACCENTS (v2.3 — single accent) === */
+  --c-eq:             #0a0e14;   /* equation color (near-black) */
+  --c-phi:            #d4a017;   /* primary accent — Φ */
+  --c-sigma:          #6b4a8f;   /* σ purple (kept for variety) */
+  --c-delta:          #d4a017;   /* Δ gold (matches accent) */
   --c-mu:             #5a6473;   /* μ gray */
-  --c-alpha:          #16a34a;   /* α green */
+  --c-alpha:          #16a34a;   /* α green (signal pass) */
   --c-beta:           #c98a16;   /* β amber */
 
   /* === TYPE === */

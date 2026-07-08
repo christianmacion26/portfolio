@@ -208,9 +208,9 @@ li { line-height: var(--lh-loose); }
   border: 1px solid var(--c-rule-soft);
   white-space: nowrap;
 }
-.pill--brand { background: rgba(11, 61, 92, 0.08); color: var(--c-primary); border-color: rgba(11, 61, 92, 0.2); }
-.pill--accent { background: rgba(44, 122, 123, 0.10); color: var(--c-primary-2); border-color: rgba(44, 122, 123, 0.25); }
-.pill--gold { background: rgba(184, 134, 11, 0.10); color: #8a6506; border-color: rgba(184, 134, 11, 0.25); }
+.pill--brand { background: rgba(10, 14, 20, 0.08); color: var(--c-primary); border-color: rgba(10, 14, 20, 0.2); }
+.pill--accent { background: rgba(212, 160, 23, 0.10); color: #8a6506; border-color: rgba(212, 160, 23, 0.30); }
+.pill--gold { background: rgba(212, 160, 23, 0.10); color: #8a6506; border-color: rgba(212, 160, 23, 0.25); }
 
 /* === ACCESSIBILITY === */
 .sr-only {
