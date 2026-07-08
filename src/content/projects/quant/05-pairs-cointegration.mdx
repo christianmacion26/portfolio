@@ -1,0 +1,41 @@
+---
+title: Pairs Trading via Cointegration (BTC / ETH)
+role: quant
+order: 5
+summary: "ADF −2.11 (not cointegrated), half-life 208 d — the fade loses, as the test predicts."
+summary_long: "A cointegration study on BTC / ETH: the most-traded pair in crypto, and the most obvious candidate for mean-reversion. The ADF test is honest about it."
+stack:
+  - Python (numpy / pandas / matplotlib)
+  - Augmented Dickey-Fuller (from-scratch)
+  - Half-life estimator
+  - 5 bps / side cost model
+metrics:
+  - { label: "ADF test statistic", value: "−2.11", sub: "fail to reject unit root at 5%" }
+  - { label: "Half-life (estimated)", value: "208 days" }
+  - { label: "OOS Sharpe (fade)", value: "≈ 0", sub: "as the test predicted" }
+sourceLink: "https://github.com/christianmacion/quant-research-projects/tree/main/05_pairs_cointegration"
+status: open-source
+tags: [cointegration, pairs-trading, adf, mean-reversion, public-data]
+---
+
+## The hypothesis
+
+BTC and ETH move together. If they are *cointegrated*, a stationary spread should mean-revert — a textbook stat-arb entry.
+
+## What the project does
+
+- Pulls BTC/ETH daily prices.
+- Estimates a hedge ratio by OLS.
+- Runs an **Augmented Dickey-Fuller test** on the spread (implemented from scratch, no `statsmodels`).
+- Estimates the half-life of mean-reversion from an AR(1) on the spread.
+- Fades the spread OOS; applies a 5 bps/side cost.
+
+## The result
+
+- **ADF test statistic: −2.11** — fails to reject the unit-root hypothesis at the 5% level. The spread is not stationary.
+- **Half-life: 208 days** — too slow to be a trade.
+- The OOS fade produces **≈ 0 Sharpe net of cost** — and that is the *correct* answer, given the test.
+
+## What's transferable
+
+Stat-arb begins with the cointegration test, not with the trade. A pre-trade ADF regime filter is the single largest quality lift on a pairs/mean-reversion pipeline.

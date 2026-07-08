@@ -1,0 +1,34 @@
+---
+title: toolcall-agent
+role: ai
+order: 2
+summary: "ReAct-style tool-calling agent with OTel traces, fault injection, and 100% tool/arg correctness."
+summary_long: "A tool-calling agent built around the ReAct loop with explicit retry/backoff, a loop guard, OpenTelemetry GenAI semantic conventions, and a fault-injection harness that forces the agent to recover from broken tool outputs. Demonstrates production reliability patterns, not prompt-demo magic."
+stack:
+  - Python
+  - ReAct loop
+  - OpenTelemetry (gen_ai.* attrs)
+  - Fault-injection harness
+metrics:
+  - { label: "Tool / arg correctness", value: "100%" }
+  - { label: "Injected faults recovered", value: "6 / 6" }
+  - { label: "Loops without bound", value: "0" }
+sourceLink: "https://github.com/christianmacion/toolcall-agent"
+status: open-source
+tags: [agents, react, function-calling, opentelemetry, fault-injection]
+---
+
+## Why this exists
+
+Most agent demos show happy paths. **This one breaks the path on purpose.** Inject a tool that returns malformed JSON for two consecutive turns; inject a 500 from the upstream API; inject an infinite-loop attempt; the agent must recover and complete the task.
+
+## What it proves
+
+- **Structured-output contracts** — every tool call goes through a JSON validator before dispatch.
+- **Loop guard** — `max_steps` cap + explicit "you have already called this tool twice this turn; do something else" prompt-correction.
+- **OTel GenAI traces** — every LLM call and tool dispatch writes `gen_ai.*` attributes per the CNCF semantic conventions, ready for vendor-neutral observability.
+- **Recovery patterns** — 6/6 injected faults recovered without re-prompting from a human.
+
+## What's transferable
+
+The loop guard, the contract validator, and the OTel trace shape apply directly to a Claude Agent SDK / MCP-backed production agent — same shape, different tool providers.

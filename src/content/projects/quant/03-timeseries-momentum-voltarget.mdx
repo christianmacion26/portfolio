@@ -1,0 +1,42 @@
+---
+title: Time-Series Momentum + Vol Targeting
+role: quant
+order: 3
+summary: "Vol-targeting lifts Sharpe 0.27 → 0.39 and halves max DD (−62% → −30%)."
+summary_long: "A time-series momentum strategy on a single crypto series, with and without vol targeting. The headline isn't alpha — it's risk management that doesn't break under drawdown."
+stack:
+  - Python (numpy / pandas / matplotlib)
+  - Time-series momentum signal
+  - 20-day realized-vol targeting
+  - 5 bps / side cost model
+metrics:
+  - { label: "Sharpe (raw)", value: "0.27" }
+  - { label: "Sharpe (vol-targeted)", value: "0.39" }
+  - { label: "Max DD (raw → targeted)", value: "−62% → −30%" }
+sourceLink: "https://github.com/christianmacion/quant-research-projects/tree/main/03_timeseries_momentum_voltarget"
+status: open-source
+tags: [time-series-momentum, vol-targeting, risk-management, public-data]
+---
+
+## The hypothesis
+
+Time-series momentum (long positive-trend, flat/short negative-trend) is a documented edge. The risk-management question is more interesting: does vol targeting actually buy you risk-adjusted Sharpe on top of the raw signal?
+
+## What the project does
+
+- Signal: sign of the 20-day return.
+- Vol targeting: scale position to a 20-day realized-vol target.
+- Cost model: 5 bps/side.
+
+## The result
+
+| Metric | Raw signal | Vol-targeted |
+|---|---|---|
+| Sharpe | 0.27 | **0.39** |
+| Max DD | −62% | **−30%** |
+
+Vol targeting doesn't generate alpha — it generates **calm**. The Sharpe lift and the DD halving are the same story at different frequencies.
+
+## What's transferable
+
+A 20-day realized-vol target is one of the cheapest risk-managements you can ship. Applied at the strategy level or the book level, it changes the equity curve shape more than it changes the headline Sharpe.

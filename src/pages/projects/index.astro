@@ -1,0 +1,103 @@
+---
+/**
+ * projects/index.astro — full project index, filter chips.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+import { path } from '@utils/url';
+
+const projects = (await getCollection('project'))
+  .sort((a, b) => a.data.order - b.data.order);
+const aiProjects = projects.filter(p => p.data.role === 'ai');
+const quantProjects = projects.filter(p => p.data.role === 'quant');
+---
+<BaseLayout
+  title="Projects"
+  description="AI engineering projects (multi-agent, eval, MCP) and quantitative research projects (multiple-testing, cross-sectional alpha, volatility, cointegration)."
+>
+
+  <header class="page-head">
+    <div class="container">
+      <p class="section__eyebrow">Portfolio</p>
+      <h1 class="page-head__title">{projects.length} projects, two lanes.</h1>
+      <p class="page-head__sub">
+        Every project is reproducible, headline metrics are real, and the methodology is documented.
+        Filter by lane to focus on the work most relevant to the role you're hiring for.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Lane 1 · AI Engineer</p>
+        <h2 class="section__title">Multi-agent LLM systems & eval</h2>
+        <p class="section__sub">
+          {aiProjects.length} projects spanning RAG scorecards, ReAct tool-calling, MCP servers,
+          LLM-as-judge validation, reflection loops, and AI-output quality gates.
+        </p>
+      </header>
+      <div class="grid grid-3">
+        {aiProjects.map(p => (
+          <ProjectCard
+            href={path(`/projects/${p.id}`)}
+            title={p.data.title}
+            summary={p.data.summary}
+            metrics={p.data.metrics}
+            lane="ai"
+            order={p.data.order}
+            status="open source"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Lane 2 · Quantitative Researcher</p>
+        <h2 class="section__title">Systematic strategies & statistical validation</h2>
+        <p class="section__sub">
+          {quantProjects.length} projects across multiple-testing, cross-sectional and time-series alpha,
+          volatility, cointegration, funding-carry, and bias control.
+        </p>
+      </header>
+      <div class="grid grid-3">
+        {quantProjects.map(p => (
+          <ProjectCard
+            href={path(`/projects/${p.id}`)}
+            title={p.data.title}
+            summary={p.data.summary}
+            metrics={p.data.metrics}
+            lane="quant"
+            order={p.data.order}
+            status="public-data reproducible"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-block: var(--sp-9) var(--sp-6);
+    background:
+      radial-gradient(800px 400px at 80% 0%, rgba(44, 122, 123, 0.10), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .page-head__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-3);
+  }
+  .page-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    max-width: 64ch;
+  }
+</style>

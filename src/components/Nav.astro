@@ -1,0 +1,152 @@
+---
+/**
+ * Nav.astro — top navigation, responsive (collapses on mobile).
+ */
+import { path } from '@utils/url';
+const { pathname } = Astro.url;
+const isActive = (href: string) => {
+  const suffix = href === '/' ? '/' : href;
+  return pathname === suffix || pathname.startsWith(suffix + '/');
+};
+
+const nav = [
+  { href: path('/'),               label: 'Home' },
+  { href: path('/projects'),       label: 'Projects' },
+  { href: path('/experience'),     label: 'Experience' },
+  { href: path('/skills'),         label: 'Skills' },
+  { href: path('/certifications'), label: 'Certifications' },
+  { href: path('/about'),          label: 'About' },
+  { href: path('/contact'),        label: 'Contact' },
+];
+---
+<header class="nav">
+  <div class="container nav__inner">
+    <a href={path('/')} class="nav__brand" aria-label="Christian Macion — home">
+      <span class="nav__brand-mark" aria-hidden="true">CM</span>
+      <span class="nav__brand-text">
+        <span class="nav__brand-name">Christian Macion</span>
+        <span class="nav__brand-sub">AI Engineer · Quant Researcher</span>
+      </span>
+    </a>
+
+    <input type="checkbox" id="nav-toggle" class="nav__toggle-input" aria-hidden="true" />
+    <label for="nav-toggle" class="nav__toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="nav__links" aria-label="Primary">
+      {nav.map(({ href, label }) => (
+        <a href={href} class:list={["nav__link", { "nav__link--active": isActive(href) }]}>
+          {label}
+        </a>
+      ))}
+      <a href={path('/resume')} class="btn btn--primary btn--sm nav__cta">Resume ↓</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: var(--border);
+  }
+  .nav__inner {
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+  }
+  .nav__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    text-decoration: none;
+    color: var(--c-ink);
+  }
+  .nav__brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--c-primary);
+    color: #fff;
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    letter-spacing: 0.02em;
+  }
+  .nav__brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .nav__brand-name { font-weight: 600; font-size: var(--fs-sm); }
+  .nav__brand-sub  { font-size: var(--fs-xs); color: var(--c-ink-2); }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
+  }
+  .nav__link {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .nav__link:hover { color: var(--c-primary); }
+  .nav__link--active {
+    color: var(--c-primary);
+    border-bottom-color: var(--c-primary);
+  }
+
+  .nav__toggle-input { display: none; }
+  .nav__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 22px;
+    cursor: pointer;
+  }
+  .nav__toggle span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--c-ink);
+    border-radius: 1px;
+    transition: all 200ms ease;
+  }
+
+  @media (max-width: 880px) {
+    .nav__brand-sub { display: none; }
+    .nav__toggle { display: flex; }
+    .nav__links {
+      position: absolute;
+      top: var(--nav-h);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--c-bg);
+      border-bottom: var(--border);
+      padding: var(--sp-4) var(--sp-5);
+      gap: var(--sp-3);
+      transform: translateY(-200%);
+      transition: transform 200ms ease;
+      box-shadow: var(--shadow-md);
+    }
+    .nav__toggle-input:checked ~ .nav__links { transform: translateY(0); }
+    .nav__link {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--c-rule-soft);
+    }
+    .nav__link--active { border-bottom-color: var(--c-primary); }
+    .nav__cta { margin-top: var(--sp-2); align-self: flex-start; }
+  }
+</style>

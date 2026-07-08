@@ -1,0 +1,75 @@
+---
+/**
+ * CTABanner.astro — terminal call-to-action strip.
+ */
+import { path } from '@utils/url';
+
+interface Props {
+  title: string;
+  sub?: string;
+  primaryHref?: string;
+  primaryLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+}
+const {
+  title,
+  sub,
+  primaryHref,
+  primaryLabel = 'Download resume ↓',
+  secondaryHref,
+  secondaryLabel = 'Get in touch',
+} = Astro.props;
+const primary = primaryHref ?? path('/resume');
+const secondary = secondaryHref ?? path('/contact');
+---
+<section class="cta">
+  <div class="container cta__inner">
+    <div>
+      <h2 class="cta__title">{title}</h2>
+      {sub && <p class="cta__sub">{sub}</p>}
+    </div>
+    <div class="cta__actions">
+      <a class="btn btn--primary" href={primary}>{primaryLabel}</a>
+      <a class="btn btn--ghost" href={secondary}>{secondaryLabel}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    margin-block: var(--sp-7);
+    background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-deep) 100%);
+    color: #fff;
+    border-radius: var(--radius-lg);
+  }
+  .cta__inner {
+    padding: var(--sp-7) var(--sp-5);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--sp-5);
+  }
+  .cta__title { color: #fff; font-size: var(--fs-2xl); margin: 0; }
+  .cta__sub { color: rgba(255,255,255,0.85); font-size: var(--fs-base); margin-top: var(--sp-2); max-width: 56ch; }
+  .cta__actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+  .cta .btn--primary {
+    background: #fff;
+    color: var(--c-primary);
+  }
+  .cta .btn--primary:hover {
+    background: var(--c-bg-2);
+    color: var(--c-primary-deep);
+  }
+  .cta .btn--ghost {
+    border-color: rgba(255,255,255,0.4);
+    color: #fff;
+  }
+  .cta .btn--ghost:hover {
+    border-color: #fff;
+    background: rgba(255,255,255,0.08);
+  }
+  @media (max-width: 720px) {
+    .cta__inner { grid-template-columns: 1fr; }
+  }
+</style>

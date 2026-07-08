@@ -1,0 +1,38 @@
+---
+title: Look-Ahead Bias Audit (the shift test)
+role: quant
+order: 9
+summary: "A leak inflates Sharpe 0.59 → 5.07; the shift test exposes it as 88% phantom."
+summary_long: "A bias-hunting toolkit: deliberately introduce a look-ahead leak into a backtest, then detect it with a one-line shift test. If the leak survives, the equity curve is a phantom."
+stack:
+  - Python (numpy / pandas / matplotlib)
+  - One-bar shift test
+  - Leak-magnitude quantification
+metrics:
+  - { label: "Clean Sharpe", value: "0.59" }
+  - { label: "Leaked Sharpe", value: "5.07" }
+  - { label: "Phantom % detected", value: "88%", sub: "of the inflated Sharpe is leakage" }
+sourceLink: "https://github.com/christianmacion/quant-research-projects/tree/main/09_bias_audit"
+status: open-source
+tags: [look-ahead-bias, audit, leakage, methodology, public-data]
+---
+
+## Why this exists
+
+Look-ahead bias is the silent killer of every quantitative backtest. The researcher *thinks* the signal uses yesterday's close; the code uses today's. The result is an equity curve that looks like alpha and turns out to be a leak.
+
+## What the project does
+
+1. Run a backtest with the signal as designed.
+2. **Shift the data by one bar forward** — replicating what would happen if the signal accidentally used tomorrow's price.
+3. Compare the two Sharpe ratios.
+
+## The result
+
+- **Clean Sharpe: 0.59** (real signal).
+- **Leaked Sharpe: 5.07** (real leakage).
+- **88% of the inflated Sharpe** is leakage, not alpha.
+
+## What's transferable
+
+The one-bar shift test is a one-line audit that catches the most expensive error class in research. Every production research stack should run it as a pre-ship check — before the strategy is ever traded.

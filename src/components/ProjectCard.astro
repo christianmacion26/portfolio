@@ -1,0 +1,136 @@
+---
+/**
+ * ProjectCard.astro — single project cell (AI or Quant).
+ */
+interface Props {
+  href: string;
+  title: string;
+  summary: string;
+  metrics: { label: string; value: string; sub?: string }[];
+  lane: 'ai' | 'quant';
+  order?: number;
+  status?: string;
+}
+const { href, title, summary, metrics, lane, order, status } = Astro.props;
+const laneLabel = lane === 'ai' ? 'AI' : 'Quant';
+const laneClass = lane === 'ai' ? 'pill--brand' : 'pill--accent';
+---
+<article class="proj-card">
+  <header class="proj-card__head">
+    <div class="proj-card__lane">
+      <span class:list={["pill", laneClass]}>{laneLabel}</span>
+      {order !== undefined && <span class="proj-card__ord mono">#{String(order).padStart(2, '0')}</span>}
+    </div>
+    {status && <span class="pill pill--gold">{status}</span>}
+  </header>
+  <h3 class="proj-card__title"><a href={href}>{title}</a></h3>
+  <p class="proj-card__summary">{summary}</p>
+  {metrics.length > 0 && (
+    <dl class="proj-card__metrics">
+      {metrics.slice(0, 3).map(m => (
+        <div class="proj-card__metric">
+          <dt class="proj-card__metric-label">{m.label}</dt>
+          <dd class="proj-card__metric-value mono">{m.value}</dd>
+          {m.sub && <dd class="proj-card__metric-sub faint">{m.sub}</dd>}
+        </div>
+      ))}
+    </dl>
+  )}
+  <a class="proj-card__more" href={href} aria-label={`Read more about ${title}`}>
+    Read more <span aria-hidden="true">→</span>
+  </a>
+</article>
+
+<style>
+  .proj-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: var(--border);
+    border-radius: var(--radius);
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  .proj-card:hover {
+    border-color: var(--c-ink-3);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .proj-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+  .proj-card__lane {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .proj-card__ord {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+  .proj-card__title {
+    font-size: var(--fs-lg);
+    margin: 0;
+  }
+  .proj-card__title a {
+    color: var(--c-ink);
+    text-decoration: none;
+  }
+  .proj-card__title a:hover {
+    color: var(--c-primary);
+  }
+  .proj-card__summary {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    margin: 0;
+  }
+  .proj-card__metrics {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+    padding: var(--sp-3) 0;
+    border-top: 1px solid var(--c-rule-soft);
+    border-bottom: 1px solid var(--c-rule-soft);
+    margin: var(--sp-2) 0;
+  }
+  .proj-card__metric {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    column-gap: var(--sp-3);
+    row-gap: 0;
+    padding-block: 0.25rem;
+  }
+  .proj-card__metric-label {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0;
+    grid-column: 1;
+  }
+  .proj-card__metric-value {
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--c-primary);
+    margin: 0;
+    grid-column: 2;
+    text-align: right;
+  }
+  .proj-card__metric-sub {
+    grid-column: 1 / -1;
+    font-size: var(--fs-xs);
+    margin: 0;
+  }
+  .proj-card__more {
+    margin-top: auto;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--c-primary);
+  }
+</style>

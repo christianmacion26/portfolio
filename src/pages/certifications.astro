@@ -1,0 +1,144 @@
+---
+/**
+ * certifications.astro — curated 25-30 certs + "see all 102" footnote.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { path } from '@utils/url';
+
+const groups = (await getCollection('certGroup'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
+---
+<BaseLayout
+  title="Certifications"
+  description={`Curated ${totalCount}+ of 102 professional certifications, grouped by domain and Tier-1 issuer.`}
+>
+
+  <header class="page-head">
+    <div class="container">
+      <p class="section__eyebrow">Certifications</p>
+      <h1 class="page-head__title">
+        <span class="mono">{totalCount}+ of 102</span> certifications, four domains.
+      </h1>
+      <p class="page-head__sub">
+        102 professional certifications across AI, finance, math/statistics, and event flagships —
+        collected in 11 months (Nov 2022 – May 2026). Curated below by domain; Tier-1 issuers flagged.
+      </p>
+    </div>
+  </header>
+
+  {groups.map((group, idx) => (
+    <section class:list={["section", { "section--alt": idx % 2 === 1 }]}>
+      <div class="container">
+        <header class="section__head">
+          <p class="section__eyebrow">Domain {idx + 1}</p>
+          <h2 class="section__title">{group.data.title}</h2>
+          <p class="section__sub">{group.data.blurb}</p>
+        </header>
+        <ul class="certs">
+          {group.data.items.map(item => (
+            <li class:list={["cert", { "cert--tier1": item.tier === 1, "cert--flagship": item.flagship }]}>
+              <div class="cert__name">{item.name}</div>
+              <div class="cert__issuer">{item.issuer}</div>
+              <div class="cert__year mono">{item.year ?? ''}</div>
+              {item.flagship && <span class="pill pill--gold cert__tag">Flagship</span>}
+              {item.tier === 1 && !item.flagship && <span class="pill cert__tag">Tier 1</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
+
+  <section class="section section--tight">
+    <div class="container container-narrow">
+      <p class="footnote">
+        <strong>Full list:</strong> the curated {totalCount} above is the highlight reel. The complete
+        list of 102 (issuer + date + verifiable credential ID where applicable) lives in the
+        <a href={path('/resume')}> tailored resume package</a>. Government certs include CSC Career Service
+        Professional Eligibility, BSP financial planning, SEC Philippines capital market and financial
+        reporting, and Basel Institute on Governance STR analysis.
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-block: var(--sp-9) var(--sp-6);
+    background:
+      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .page-head__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-3);
+  }
+  .page-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    max-width: 64ch;
+  }
+  .certs {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--sp-3);
+  }
+  .cert {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 0 var(--sp-3);
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    position: relative;
+    transition: border-color var(--transition);
+  }
+  .cert:hover { border-color: var(--c-ink-3); }
+  .cert__name {
+    font-weight: 600;
+    color: var(--c-ink);
+    grid-column: 1;
+  }
+  .cert__issuer {
+    grid-column: 1;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+  .cert__year {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    text-align: right;
+  }
+  .cert__tag {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+    justify-self: end;
+    margin-top: var(--sp-2);
+  }
+  .cert--flagship {
+    border-color: var(--c-gold);
+    background: linear-gradient(180deg, rgba(184, 134, 11, 0.04), var(--c-bg));
+  }
+  .footnote {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    padding: var(--sp-5);
+    background: var(--c-bg-2);
+    border-left: 3px solid var(--c-primary-2);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+</style>

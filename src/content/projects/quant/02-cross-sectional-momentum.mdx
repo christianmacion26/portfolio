@@ -1,0 +1,42 @@
+---
+title: Cross-Sectional Momentum (18 coins)
+role: quant
+order: 2
+summary: "IS Sharpe 0.91 → OOS −0.03 — an honest decay; bootstrap CI straddles zero."
+summary_long: "A cross-sectional momentum study across 18 BTC-correlated coins: each rebalance, go long the top decile by 14-day return and short the bottom decile. The interesting question is what survives the out-of-sample window."
+stack:
+  - Python (numpy / pandas / matplotlib)
+  - Cross-sectional ranking
+  - Bootstrap confidence interval
+  - Locked out-of-sample window
+metrics:
+  - { label: "In-sample Sharpe", value: "0.91" }
+  - { label: "Out-of-sample Sharpe", value: "−0.03", sub: "honest decay" }
+  - { label: "OOS 95% CI", value: "straddles 0", sub: "cannot reject the null" }
+sourceLink: "https://github.com/christianmacion/quant-research-projects/tree/main/02_cross_sectional_momentum"
+status: open-source
+tags: [cross-sectional, momentum, oos, decay, public-data]
+---
+
+## The hypothesis
+
+Cross-sectional momentum — long winners, short losers — has decades of equity literature. Does it survive in a small crypto universe (18 BTC-correlated coins)?
+
+## What the project does
+
+- Universe: 18 altcoins, daily prices.
+- Each rebalance day, rank by 14-day return; long the top decile, short the bottom.
+- Compute IS Sharpe, then **freeze** the OOS window before touching data.
+- Report the OOS Sharpe with a block-bootstrap 95% CI.
+
+## The result
+
+- **In-sample Sharpe: 0.91** (looks like an edge).
+- **Out-of-sample Sharpe: −0.03** (the OOS window quietly goes the other way).
+- 95% bootstrap CI straddles zero — cannot reject the null.
+
+## Why this is a *good* project, not a failure
+
+> An honest decay is a publishable result. The discipline is the OOS lock — the moment you peek, the test is dead.
+
+The cross-sectional alpha literature gives the seat a realistic bar: BTC-correlated coins are too tightly coupled for cross-sectional dispersion to be a reliable signal at this horizon.

@@ -1,0 +1,153 @@
+---
+/**
+ * contact.astro — multi-channel contact, no form backend.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { profile } from '@utils/profile';
+
+const channels = [
+  { label: 'Email',         value: profile.contact.email,         href: `mailto:${profile.contact.email}`, primary: true },
+  { label: 'Phone',         value: profile.contact.phoneDisplay,  href: `tel:${profile.contact.phone}` },
+  { label: 'LinkedIn',      value: 'linkedin.com/in/christianmacion', href: profile.contact.linkedin, external: true },
+  { label: 'GitHub',        value: 'github.com/christianmacion',     href: profile.contact.github,   external: true },
+];
+---
+<BaseLayout title="Contact" description={`Email ${profile.contact.email} or grab a slot via LinkedIn / GitHub.`}>
+
+  <header class="page-head">
+    <div class="container">
+      <p class="section__eyebrow">Contact</p>
+      <h1 class="page-head__title">Get in touch.</h1>
+      <p class="page-head__sub">
+        AI Engineer and Quantitative Researcher roles welcome. I respond within 24 hours on weekdays.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2 contact-grid">
+
+        <a class="contact-card contact-card--primary" href={`mailto:${profile.contact.email}`}>
+          <div class="contact-card__label">Email (preferred)</div>
+          <div class="contact-card__value mono">{profile.contact.email}</div>
+          <div class="contact-card__hint">Open roles · reference requests · general</div>
+        </a>
+
+        <a class="contact-card" href={`tel:${profile.contact.phone}`}>
+          <div class="contact-card__label">Phone · WhatsApp · Viber</div>
+          <div class="contact-card__value mono">{profile.contact.phoneDisplay}</div>
+          <div class="contact-card__hint">UTC+8 · best 9 AM – 6 PM PHT</div>
+        </a>
+
+        <a class="contact-card" href={profile.contact.linkedin} target="_blank" rel="noopener">
+          <div class="contact-card__label">LinkedIn ↗</div>
+          <div class="contact-card__value">linkedin.com/in/christianmacion</div>
+          <div class="contact-card__hint">DMs open · recruiter-friendly</div>
+        </a>
+
+        <a class="contact-card" href={profile.contact.github} target="_blank" rel="noopener">
+          <div class="contact-card__label">GitHub ↗</div>
+          <div class="contact-card__value">github.com/christianmacion</div>
+          <div class="contact-card__hint">Runnable projects · reproducible scorecards</div>
+        </a>
+
+      </div>
+
+      <aside class="loc-card">
+        <h2 class="loc-card__title">Location & availability</h2>
+        <ul>
+          <li><strong>Based in</strong> {profile.location.display}</li>
+          <li><strong>Availability</strong> {profile.availability.mode} · {profile.availability.hours}</li>
+          <li><strong>Open to</strong> AI Engineer · Quantitative Researcher · Quant Developer · Trading Research Assistant roles</li>
+          <li><strong>Overlap with</strong> US East (UTC-5) = 21:00 – 02:00 PHT · EU (UTC+1) = 15:00 – 23:00 PHT · APAC (UTC+9) = 09:00 – 18:00 PHT</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-block: var(--sp-9) var(--sp-6);
+    background:
+      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .page-head__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-3);
+  }
+  .page-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    max-width: 64ch;
+  }
+  .contact-grid {
+    margin-bottom: var(--sp-6);
+  }
+  .contact-card {
+    display: block;
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: var(--border);
+    border-radius: var(--radius);
+    color: var(--c-ink);
+    text-decoration: none;
+    transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+  }
+  .contact-card:hover {
+    border-color: var(--c-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: var(--c-ink);
+  }
+  .contact-card--primary {
+    border-color: var(--c-primary);
+    background: linear-gradient(180deg, rgba(11, 61, 92, 0.04), var(--c-bg));
+  }
+  .contact-card__label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-2);
+    margin-bottom: var(--sp-2);
+  }
+  .contact-card__value {
+    font-size: var(--fs-xl);
+    font-weight: 600;
+    color: var(--c-primary);
+    margin-bottom: var(--sp-2);
+    word-break: break-all;
+  }
+  .contact-card__hint {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+  .loc-card {
+    padding: var(--sp-5);
+    background: var(--c-bg-2);
+    border: var(--border);
+    border-radius: var(--radius);
+    max-width: 760px;
+  }
+  .loc-card__title {
+    font-size: var(--fs-xl);
+    margin-bottom: var(--sp-3);
+    color: var(--c-primary);
+  }
+  .loc-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .loc-card li {
+    padding-block: var(--sp-2);
+    border-bottom: 1px solid var(--c-rule-soft);
+    line-height: var(--lh-loose);
+  }
+  .loc-card li:last-child { border-bottom: none; }
+  .loc-card strong { color: var(--c-ink); font-weight: 600; margin-right: var(--sp-2); }
+</style>

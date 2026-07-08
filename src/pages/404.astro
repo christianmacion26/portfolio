@@ -1,0 +1,64 @@
+---
+/**
+ * 404.astro — friendly 404 with nav fallback.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { path } from '@utils/url';
+
+const links = [
+  { href: path('/'),               label: 'Home' },
+  { href: path('/projects'),       label: 'Projects' },
+  { href: path('/experience'),     label: 'Experience' },
+  { href: path('/skills'),         label: 'Skills' },
+  { href: path('/certifications'), label: 'Certifications' },
+  { href: path('/contact'),        label: 'Contact' },
+];
+---
+<BaseLayout title="404 — Page not found" description="The page you're looking for isn't here.">
+
+  <section class="not-found">
+    <div class="container container-narrow not-found__inner">
+      <p class="section__eyebrow">404</p>
+      <h1 class="not-found__title">Off the path.</h1>
+      <p class="not-found__sub">
+        The page you were looking for isn't here — or the URL changed. Try one of the routes below,
+        or jump back to <a href={path('/')}>home</a>.
+      </p>
+      <nav class="not-found__nav" aria-label="404 navigation">
+        {links.map(l => <a href={l.href} class="btn btn--ghost">{l.label}</a>)}
+      </nav>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-block: var(--sp-9);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    background:
+      radial-gradient(800px 400px at 50% 0%, rgba(44, 122, 123, 0.10), transparent 60%),
+      var(--c-bg);
+  }
+  .not-found__inner { text-align: center; }
+  .not-found__title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--sp-3);
+  }
+  .not-found__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    margin-bottom: var(--sp-6);
+    max-width: 56ch;
+    margin-inline: auto;
+  }
+  .not-found__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    justify-content: center;
+  }
+</style>

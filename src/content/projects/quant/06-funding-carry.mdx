@@ -1,0 +1,40 @@
+---
+title: Crypto Funding-Carry
+role: quant
+order: 6
+summary: "Funding +11.9% annualized premium; fade IS 1.11 → OOS −0.05 (decayed post-2023)."
+summary_long: "A novel-data carry study: perpetual-swap funding rates are a real, observable, regularly-paid signal — and the obvious trade is to fade them. The interesting question is whether the carry persists OOS post-2023."
+stack:
+  - Python (numpy / pandas / matplotlib)
+  - Perpetual funding rates (Binance)
+  - Bootstrap CI
+  - Pre-registered lock window
+metrics:
+  - { label: "Annualized funding", value: "+11.9%", sub: "BTC perp, ~30-day centered mean" }
+  - { label: "Fade IS Sharpe", value: "1.11" }
+  - { label: "Fade OOS Sharpe", value: "−0.05", sub: "decay post-2023" }
+sourceLink: "https://github.com/christianmacion/quant-research-projects/tree/main/06_funding_carry"
+status: open-source
+tags: [carry, funding-rates, crypto, decay, public-data]
+---
+
+## The hypothesis
+
+Perpetual-swap funding rates are paid by the leveraged long to the short (or vice versa) every 8 hours. The textbook trade is to fade the funding — collect the carry and pray the basis doesn't blow up.
+
+## What the project does
+
+- Pulls Binance BTC perpetual funding rates.
+- Computes the centered rolling average as a "carry-as-signal" feature.
+- Runs the fade (short when funding > 0, long when funding < 0) with **locked** IS / OOS windows.
+- Pre-registers the OOS window **before** touching data.
+
+## The result
+
+- The funding rate averages **+11.9% annualized** — a real, structural premium.
+- **IS Sharpe (fade): 1.11** — looks like an edge.
+- **OOS Sharpe: −0.05** — the carry structurally decayed post-2023 as the participant mix shifted.
+
+## What's transferable
+
+Carry signals are observable, regularly-paid, and visible to anyone with the data — which means they crowd fast. This is a clean example of *alpha decay* detected before overfit, in production reporting cadence.

@@ -1,0 +1,45 @@
+---
+/**
+ * MetricPill.astro — single headline-metric pill.
+ */
+interface Props {
+  label: string;
+  value: string;
+  sub?: string;
+  tone?: 'brand' | 'accent' | 'gold' | 'pass';
+}
+const { label, value, sub, tone = 'brand' } = Astro.props;
+const pillClass = tone === 'pass' ? 'pill--accent' : `pill--${tone}`;
+---
+<div class="metric">
+  <div class="metric__value mono">{value}</div>
+  <div class="metric__label">{label}</div>
+  {sub && <div class="metric__sub faint text-xs">{sub}</div>}
+</div>
+
+<style>
+  .metric {
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+  .metric__value {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--c-primary);
+    line-height: 1;
+    margin-bottom: var(--sp-2);
+  }
+  .metric__label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--c-ink-2);
+  }
+  .metric__sub {
+    margin-top: var(--sp-2);
+  }
+</style>

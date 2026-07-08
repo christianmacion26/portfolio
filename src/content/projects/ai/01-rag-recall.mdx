@@ -1,0 +1,43 @@
+---
+title: rag-recall
+role: ai
+order: 1
+summary: "RAG service that proves its own retrieval — recall@3 = 0.886, MRR@3 = 0.805 with offline stdlib TF-IDF retriever."
+summary_long: "Most RAG demos show you an answer and stop there. The honest question is: did retrieval even surface the passage the answer should come from? rag-recall answers that with a reproducible scorecard (recall@k, MRR@k, hit-rate, faithfulness %, hallucination flag) over an in-repo hand-labeled set of 35 (question, gold_chunk_id) pairs."
+stack:
+  - Python (stdlib only — no LLM API, no pip install)
+  - TF-IDF retriever
+  - 17-doc / 34-chunk corpus
+  - Streamlit app
+metrics:
+  - { label: "recall@3", value: "0.886", sub: "over 35 labeled Q's" }
+  - { label: "MRR@3", value: "0.805" }
+  - { label: "Mean faithfulness", value: "1.00" }
+  - { label: "Hallucination flags", value: "0 / 35" }
+sourceLink: "https://github.com/christianmacion/rag-recall"
+status: open-source
+tags: [rag, evaluation, retrieval, faithfulness, stdlib]
+---
+
+## Why this exists
+
+> A small RAG service that answers questions over a bundled doc set **and ships a retrieval scorecard**, so you can see whether retrieval actually found the right passage instead of taking the answer on faith.
+
+The four metrics on every run:
+
+- **recall@k** — did the gold chunk land in the top-k?
+- **MRR@k** — how highly was it ranked?
+- **hit-rate** — fraction of questions with the gold chunk retrieved.
+- **faithfulness %** + **hallucination flag** — are the answer's claims actually grounded in the retrieved chunks?
+
+## Reproduce in one command
+
+```bash
+python3 -m rag_recall.evaluate
+```
+
+A reviewer clicks it: open the Streamlit app, hit **Run eval** to see the live scorecard, then go to the **Ask** tab and watch the cited chunks and faithfulness score update.
+
+## What's transferable
+
+The same scoring harness pattern (labeled eval set + per-query metric dashboard) drops directly into real RAG stacks — just swap the stdlib TF-IDF retriever for your embedding model + vector store and reuse the scorecard. The bundle proves the *pattern* without begging for an API key.

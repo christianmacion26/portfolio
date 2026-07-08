@@ -1,0 +1,41 @@
+---
+title: Multiple Testing & the Deflated Sharpe Ratio
+role: quant
+order: 1
+summary: "Best-of-160 BTC rule: IS Sharpe 1.14 is only 1.24× the pure-noise expectation — DSR = 0.70 (fail)."
+summary_long: "A study in multiple-testing discipline. Sweep 160 BTC trading rules, rank by in-sample Sharpe, then apply the Deflated Sharpe Ratio (Bailey & López de Prado, 2014). The rank-1 rule looks great until you condition on the number of trials."
+stack:
+  - Python (numpy / pandas / matplotlib)
+  - Block-bootstrap null
+  - Deflated Sharpe Ratio
+  - 160-rule BTC sweep
+metrics:
+  - { label: "Best-of-160 in-sample Sharpe", value: "1.14" }
+  - { label: "Pure-noise expectation", value: "0.92" }
+  - { label: "Deflated Sharpe Ratio", value: "0.70", sub: "fails the multiple-testing adjustment" }
+sourceLink: "https://github.com/christianmacion/quant-research-projects/tree/main/01_multiple_testing_deflated_sharpe"
+status: open-source
+tags: [multiple-testing, deflated-sharpe, rigor, methodology, public-data]
+---
+
+## The hypothesis
+
+If you test 160 coin-toss strategies on a BTC price series, the *best one* will look like an edge just by luck. Conditioning on the number of trials is what separates a discovered signal from noise that happened to win.
+
+## What the project does
+
+1. Sweeps 160 parameterizations of a single rule family across BTC.
+2. Ranks them by in-sample Sharpe — the rank-1 looks like a 1.14 Sharpe.
+3. Generates a block-bootstrap null with the same autocorrelation as the source.
+4. Asks: **what Sharpe would rank-1 achieve on pure noise?**
+5. Computes the **Deflated Sharpe Ratio** (DSR) per Bailey & López de Prado (2014).
+
+## The result
+
+- In-sample best Sharpe: **1.14**
+- Pure-noise expectation for rank-1: **≈ 0.92**
+- DSR: **0.70** — a *fail* under the standard 0.95 cutoff.
+
+## What's transferable
+
+The discipline generalizes. Every research shop with a parameter grid needs a multiple-testing correction; the 0.95 threshold is the difference between a published edge and a graveyard of overfit losers. The bootstrap-null methodology here runs in 20 lines and ships with the repo.

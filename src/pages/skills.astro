@@ -1,0 +1,92 @@
+---
+/**
+ * skills.astro — domain-grouped skill matrix.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const groups = (await getCollection('skillGroup'))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout
+  title="Skills"
+  description="Domain-grouped skill matrix: AI & multi-agent systems, quantitative research & statistics, and engineering tools."
+>
+
+  <header class="page-head">
+    <div class="container">
+      <p class="section__eyebrow">Skills</p>
+      <h1 class="page-head__title">Three domains, one stack.</h1>
+      <p class="page-head__sub">
+        Skills grouped the way a hiring manager reads them: what I build, how I validate it, and what
+        I ship it with. Each skill is paired with the discipline it represents.
+      </p>
+    </div>
+  </header>
+
+  {groups.map((group, idx) => (
+    <section class:list={["section", { "section--alt": idx % 2 === 1 }]}>
+      <div class="container">
+        <header class="section__head">
+          <p class="section__eyebrow">Domain {idx + 1}</p>
+          <h2 class="section__title">{group.data.title}</h2>
+          <p class="section__sub">{group.data.blurb}</p>
+        </header>
+        <div class="skills">
+          {group.data.items.map(item => (
+            <div class="skill">
+              <div class="skill__label">{item.label}</div>
+              {item.sub && <div class="skill__sub muted">{item.sub}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-block: var(--sp-9) var(--sp-6);
+    background:
+      radial-gradient(800px 400px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .page-head__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-3);
+  }
+  .page-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    max-width: 64ch;
+  }
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--sp-4);
+  }
+  .skill {
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition), transform var(--transition);
+  }
+  .skill:hover {
+    border-color: var(--c-ink-3);
+    transform: translateY(-1px);
+  }
+  .skill__label {
+    font-weight: 600;
+    color: var(--c-ink);
+    margin-bottom: 0.25rem;
+  }
+  .skill__sub {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+  }
+</style>
