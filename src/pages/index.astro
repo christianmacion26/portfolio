@@ -68,12 +68,12 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
 
       <div class="hero__stats">
         <Stat
-          value={profile.stats.aiAgentCount}
-          label="agents"
-          sub="orchestrator + workers"
-          spark={sparkAgents}
-          formula="|\mathcal{A}|"
+          value="9"
+          label="quant projects"
+          sub="public-data reproducible"
+          formula="|P_q|"
           size="lg"
+          trend="up"
         />
         <Stat
           value={profile.stats.evalGates}
@@ -85,22 +85,18 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
           trend="up"
         />
         <Stat
-          value={profile.stats.locPython}
-          label="LOC"
-          sub="light-dep Python"
-          spark={sparkLoc}
-          formula="|\mathcal{L}|"
+          value="5"
+          label="asset classes"
+          sub="equity · crypto · vol"
+          formula="\mathcal{U}"
           size="lg"
-          trend="up"
         />
         <Stat
-          value={profile.stats.certCount}
-          label="professional certs"
-          sub="11-month arc"
-          spark={sparkCert}
-          formula="c(t)"
+          value="100%"
+          label="NDA-clean"
+          sub="public-data only"
+          formula="\neg p"
           size="lg"
-          trend="up"
         />
       </div>
 
@@ -122,6 +118,29 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         <div class="hero__proof-cell">
           <span class="dot dot--pass"></span>
           <span class="mono">19V Capital = closed past contract (03/2026 – 06/2026)</span>
+        </div>
+        <div class="hero__proof-cell">
+          <span class="dot dot--pass"></span>
+          <span class="mono">all 9 quant projects reproducible end-to-end from public data</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="now-strip">
+    <div class="container">
+      <div class="now-strip__inner">
+        <div class="now-strip__cell">
+          <div class="now-strip__label mono">NOW · 2026-07</div>
+          <div class="now-strip__val">Looking for: junior QR seat or contract research engineer — remote · UTC+8</div>
+        </div>
+        <div class="now-strip__cell now-strip__cell--narrow">
+          <div class="now-strip__label mono">LATEST</div>
+          <div class="now-strip__val">DSR calculator shipped (signature interactive)</div>
+        </div>
+        <div class="now-strip__cell now-strip__cell--narrow">
+          <div class="now-strip__label mono">NEXT</div>
+          <div class="now-strip__val">Live paper-trading the vol-target strategy (project 03)</div>
         </div>
       </div>
     </div>
@@ -184,6 +203,25 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         <a href={path('/projects')} class="btn btn--ghost">All AI projects →</a>
         <a href={path('/solutions')} class="btn btn--ghost">Solutions library →</a>
       </div>
+
+      <aside class="ai-secondary">
+        <div class="ai-secondary__title mono">AI · SECONDARY</div>
+        <div class="ai-secondary__grid">
+          <div>
+            <div class="ai-secondary__num mono">{profile.stats.aiAgentCount}</div>
+            <div class="ai-secondary__lbl">agents · orch + workers</div>
+          </div>
+          <div>
+            <div class="ai-secondary__num mono">{profile.stats.locPython}</div>
+            <div class="ai-secondary__lbl">LOC · light-dep Python</div>
+          </div>
+          <div>
+            <div class="ai-secondary__num mono">{profile.stats.certCount}</div>
+            <div class="ai-secondary__lbl">certs · 11-month arc</div>
+          </div>
+        </div>
+        <p class="ai-secondary__note">These describe the eval-first discipline; the metrics above (9 projects, G1–G31, 5 asset classes, NDA-clean) are the actual seat-targets.</p>
+      </aside>
     </div>
   </section>
 
@@ -410,5 +448,82 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
   @media (max-width: 880px) {
     .hero__stats { grid-template-columns: 1fr 1fr; }
     .hero__eq-row { grid-template-columns: 1fr; }
+  }
+
+  /* === Now strip === */
+  .now-strip {
+    background: var(--c-tape);
+    color: #e6edf3;
+    border-bottom: 1px solid var(--c-tape-2);
+  }
+  .now-strip__inner {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: var(--sp-5);
+    padding-block: var(--sp-4);
+  }
+  .now-strip__cell { line-height: 1.5; }
+  .now-strip__cell--narrow { font-size: var(--fs-sm); color: rgba(230, 237, 243, 0.85); }
+  .now-strip__label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: #d4a017;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+  .now-strip__val {
+    font-size: var(--fs-base);
+    color: #e6edf3;
+  }
+  .now-strip__cell--narrow .now-strip__val { font-size: var(--fs-sm); color: rgba(230, 237, 243, 0.85); }
+
+  @media (max-width: 880px) {
+    .now-strip__inner { grid-template-columns: 1fr; gap: var(--sp-3); }
+  }
+
+  /* === AI secondary panel === */
+  .ai-secondary {
+    margin-top: var(--sp-6);
+    padding: var(--sp-5);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary-2);
+    border-radius: var(--radius);
+  }
+  .ai-secondary__title {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--c-primary-2);
+    font-weight: 600;
+    margin-bottom: var(--sp-3);
+  }
+  .ai-secondary__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+    margin-bottom: var(--sp-3);
+  }
+  .ai-secondary__num {
+    font-size: var(--fs-3xl);
+    color: var(--c-primary);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .ai-secondary__lbl {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    margin-top: 0.25rem;
+  }
+  .ai-secondary__note {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    font-style: italic;
+  }
+
+  @media (max-width: 720px) {
+    .ai-secondary__grid { grid-template-columns: 1fr; }
   }
 </style>
