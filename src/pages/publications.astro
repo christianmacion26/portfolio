@@ -1,0 +1,341 @@
+---
+/**
+ * publications.astro — research log: papers, workbooks, talks, videos, OSS projects.
+ * Targeted at recruiters who want to see *what Christian has published publicly*.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { getCollection } from 'astro:content';
+import { path } from '@utils/url';
+
+const projects = (await getCollection('project'))
+  .sort((a, b) => a.data.order - b.data.order);
+const aiPubs  = projects.filter(p => p.data.role === 'ai');
+const quantPubs = projects.filter(p => p.data.role === 'quant');
+
+const workbooks = [
+  {
+    title: 'AI Architecture & Multi-Agent Systems Workbook',
+    scope: '11-agent orchestrator, eval harness, MCP server, model routing',
+    pages: '~80 pp',
+    audience: 'AI engineers, agent architects, eval harness designers',
+  },
+  {
+    title: 'Statistical Modeling for Systematic Trading Workbook',
+    scope: 'multiple testing, walk-forward, block-bootstrap, deflated Sharpe, cost realism',
+    pages: '~110 pp',
+    audience: 'quant researchers, strategy developers, backtest engineers',
+  },
+  {
+    title: 'STA Tier-1 CTA Curriculum Workbook',
+    scope: 'technical analysis fundamentals through advanced pattern recognition',
+    pages: '~150 pp',
+    audience: 'technical analysts, finance students, CFA/CMT candidates',
+  },
+];
+
+const press = [
+  {
+    year: 2025,
+    title: 'University guest lecturer — University of Southeastern Philippines (USeP)',
+    detail: 'Guest lecture on systematic trading research and AI for engineering students.',
+  },
+  {
+    year: 2024,
+    title: 'PSHS-SMC alumni speaker — Philippine Science High School Southern Mindanao',
+    detail: 'Talk on AI engineering and the educational path from PSHS to AI/quant careers.',
+  },
+  {
+    year: 2025,
+    title: 'STA Tier-1 CTA Program completion — Society of Technical Analysts of the Philippines',
+    detail: 'Tier-1 Certified Technical Analyst program, completed Dec 2025.',
+  },
+];
+---
+<BaseLayout
+  title="Publications"
+  description="Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe."
+>
+
+  <header class="pub-head">
+    <div class="container">
+      <p class="section__eyebrow"><span class="mono">publications/</span> · public work log</p>
+      <h1 class="pub-head__title">Things I have <span class="hl">written, built, and said</span> in public.</h1>
+      <p class="pub-head__sub">
+        Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No
+        proprietary data sources. No NDA-protected content.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Research papers · 9 quant projects</p>
+        <h2 class="section__title">Public-data systematic research.</h2>
+      </header>
+      <div class="pub-list">
+        {quantPubs.map((p, i) => (
+          <article class="pub">
+            <div class="pub__num mono">[{String(i + 1).padStart(2, '0')}]</div>
+            <div class="pub__body">
+              <h3 class="pub__title">
+                <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
+              </h3>
+              <p class="pub__summary">{p.data.summary}</p>
+              {p.data.metrics.length > 0 && (
+                <ul class="pub__metrics">
+                  {p.data.metrics.map(m => (
+                    <li>
+                      <span class="pub__metric-label">{m.label}</span>
+                      <span class="pub__metric-value mono">{m.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div class="pub__meta">
+                {p.data.stack.slice(0, 6).map(s => <span class="pill">{s}</span>)}
+              </div>
+            </div>
+            <div class="pub__action">
+              <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>Read →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">OSS projects · 6 AI builds</p>
+        <h2 class="section__title">Multi-agent LLM systems with eval-first discipline.</h2>
+      </header>
+      <div class="pub-list">
+        {aiPubs.map((p, i) => (
+          <article class="pub">
+            <div class="pub__num mono">[{String(i + 1).padStart(2, '0')}]</div>
+            <div class="pub__body">
+              <h3 class="pub__title">
+                <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
+              </h3>
+              <p class="pub__summary">{p.data.summary}</p>
+              {p.data.metrics.length > 0 && (
+                <ul class="pub__metrics">
+                  {p.data.metrics.map(m => (
+                    <li>
+                      <span class="pub__metric-label">{m.label}</span>
+                      <span class="pub__metric-value mono">{m.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div class="pub__meta">
+                {p.data.stack.slice(0, 6).map(s => <span class="pill">{s}</span>)}
+              </div>
+            </div>
+            <div class="pub__action">
+              <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>Read →</a>
+              {p.data.repo && <a class="btn btn--ghost btn--sm" href={p.data.repo} target="_blank" rel="noopener">Repo ↗</a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Workbooks · long-form</p>
+        <h2 class="section__title">Three deep-dive workbooks (in progress).</h2>
+        <p class="section__sub">
+          Long-form workbooks that consolidate method, code, and exercises. Not yet published — drafts available on request.
+        </p>
+      </header>
+      <div class="workbooks">
+        {workbooks.map(w => (
+          <article class="wb">
+            <h3 class="wb__title">{w.title}</h3>
+            <div class="wb__scope">{w.scope}</div>
+            <div class="wb__meta mono">
+              <span>{w.pages}</span>
+              <span aria-hidden="true">·</span>
+              <span>{w.audience}</span>
+            </div>
+            <div class="wb__foot mono">DRAFT — available on request</div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Press & recognition</p>
+        <h2 class="section__title">Public talks, lectures, and recognitions.</h2>
+      </header>
+      <ol class="press">
+        {press.map(p => (
+          <li class="press__row">
+            <div class="press__year mono">{p.year}</div>
+            <div class="press__body">
+              <h3 class="press__title">{p.title}</h3>
+              <p class="press__detail">{p.detail}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Want a specific paper or talk?"
+    sub="Email me the topic and I'll point you to the artifact (PDF, video, repo) within 24 hours."
+    primaryLabel="Email me"
+    secondaryLabel="See methodology"
+    secondaryHref={path('/methodology')}
+  />
+
+</BaseLayout>
+
+<style>
+  .pub-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .pub-head__title {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-block: var(--sp-4) var(--sp-5);
+    max-width: 22ch;
+  }
+  .pub-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+
+  .pub-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .pub {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: var(--sp-5);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    align-items: start;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .pub:hover { border-color: var(--c-primary); box-shadow: var(--shadow-sm); }
+  .pub__num {
+    font-size: var(--fs-lg);
+    color: var(--c-primary);
+    font-weight: 700;
+  }
+  .pub__title { font-size: var(--fs-lg); margin: 0 0 var(--sp-2); }
+  .pub__title a { color: var(--c-ink); }
+  .pub__title a:hover { color: var(--c-primary); }
+  .pub__summary { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0 0 var(--sp-3); }
+  .pub__metrics {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-3);
+  }
+  .pub__metrics li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .pub__metric-label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-3);
+  }
+  .pub__metric-value {
+    font-size: var(--fs-base);
+    color: var(--c-primary);
+    font-weight: 700;
+  }
+  .pub__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .pub__action {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .workbooks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--sp-4);
+  }
+  .wb {
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .wb__title { font-size: var(--fs-lg); color: var(--c-ink); margin: 0; }
+  .wb__scope { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); }
+  .wb__meta {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .wb__foot {
+    margin-top: auto;
+    padding-top: var(--sp-3);
+    border-top: 1px dashed var(--c-rule-soft);
+    font-size: var(--fs-xs);
+    color: var(--c-warn);
+  }
+
+  .press { list-style: none; padding: 0; max-width: 760px; }
+  .press__row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--sp-4);
+    padding-block: var(--sp-4);
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  .press__row:last-child { border-bottom: none; }
+  .press__year {
+    font-size: var(--fs-lg);
+    color: var(--c-primary);
+    font-weight: 700;
+  }
+  .press__title { font-size: var(--fs-base); margin: 0 0 var(--sp-1); }
+  .press__detail { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0; }
+
+  @media (max-width: 720px) {
+    .pub { grid-template-columns: 40px 1fr; }
+    .pub__action { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+    .press__row { grid-template-columns: 1fr; gap: var(--sp-1); }
+  }
+</style>

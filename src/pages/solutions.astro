@@ -1,0 +1,398 @@
+---
+/**
+ * solutions.astro — "I do solutions" page. Case studies with problem → approach → evidence → outcome → proof.
+ * Targeted at hedge-fund QR / AI eng recruiters who want to see how Christian *thinks and ships*.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
+import Stat from '@components/Stat.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { getCollection } from 'astro:content';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+
+const solutions = (await getCollection('solution'))
+  .sort((a, b) => a.data.order - b.data.order);
+const aiSolutions  = solutions.filter(s => s.data.lane === 'ai');
+const quantSolutions = solutions.filter(s => s.data.lane === 'quant');
+const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.data.lane === 'systems');
+---
+<BaseLayout
+  title="Solutions"
+  description="Selected case studies. Problem → approach → evidence → outcome → proof. NDA-safe, public-data reproducible."
+>
+
+  <header class="solutions-head">
+    <div class="container">
+      <p class="section__eyebrow"><span class="mono">solutions/</span> · case studies</p>
+      <h1 class="solutions-head__title">
+        I do <span class="hl">solutions</span>.
+      </h1>
+      <p class="solutions-head__sub">
+        Each entry below is a real engagement or self-directed project: the problem, the approach, the
+        evidence, the outcome, and the proof. Every claim is <em>verifiable</em>. None of it relies
+        on proprietary data sources.
+      </p>
+
+      <div class="solutions-head__ribbon">
+        <div class="solutions-head__ribbon-eq">
+          <Equation
+            latex="\text{decision} = \arg\max_{a \in \mathcal{A}} \; \mathbb{E}\!\left[U(a) \mid \text{evidence}\right]"
+            size="lg"
+          />
+        </div>
+        <div class="solutions-head__ribbon-note mono">
+          <div class="muted">PROMISE</div>
+          <div>Every solution ships with at least one falsifiable claim and a proof pointer.</div>
+        </div>
+      </div>
+
+      <div class="solutions-head__stats">
+        <Stat value={String(solutions.length)} label="solutions shipped" size="md" formula="|S|" />
+        <Stat value="102" label="professional certs" sub="11-month arc" size="md" formula="c(t)" />
+        <Stat value="76.5k" label="LOC light-dep Python" sub="numpy/pandas/boto3" size="md" formula="|\mathcal{L}|" />
+        <Stat value="31" label="eval gates" sub="G1–G31 statistical" size="md" formula="g" />
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Lane · AI Engineering</p>
+        <h2 class="section__title">Multi-agent systems that pass validation.</h2>
+      </header>
+      <div class="sol-grid">
+        {aiSolutions.map(s => (
+          <article class="sol-card">
+            <header class="sol-card__head">
+              <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
+              <span class="pill pill--brand">AI</span>
+            </header>
+            <h3 class="sol-card__title">{s.data.title}</h3>
+            <div class="sol-card__client mono">{s.data.client}</div>
+
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Problem</div>
+              <p class="sol-card__row-body">{s.data.problem}</p>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Approach</div>
+              <p class="sol-card__row-body">{s.data.approach}</p>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Evidence</div>
+              <ul class="sol-card__evidence mono">
+                {s.data.evidence.map(e => <li>{e}</li>)}
+              </ul>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Outcome</div>
+              <p class="sol-card__row-body">{s.data.outcome}</p>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Proof</div>
+              <ul class="sol-card__proof">
+                {s.data.proof.map(p => <li>{p}</li>)}
+              </ul>
+            </div>
+            {s.data.tags.length > 0 && (
+              <footer class="sol-card__tags">
+                {s.data.tags.map(t => <span class="pill">{t}</span>)}
+              </footer>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Lane · Quantitative Research</p>
+        <h2 class="section__title">Strategies that survive multiple-testing.</h2>
+      </header>
+      <div class="sol-grid">
+        {quantSolutions.map(s => (
+          <article class="sol-card sol-card--quant">
+            <header class="sol-card__head">
+              <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
+              <span class="pill pill--accent">Quant</span>
+            </header>
+            <h3 class="sol-card__title">{s.data.title}</h3>
+            <div class="sol-card__client mono">{s.data.client}</div>
+
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Problem</div>
+              <p class="sol-card__row-body">{s.data.problem}</p>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Approach</div>
+              <p class="sol-card__row-body">{s.data.approach}</p>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Evidence</div>
+              <ul class="sol-card__evidence mono">
+                {s.data.evidence.map(e => <li>{e}</li>)}
+              </ul>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Outcome</div>
+              <p class="sol-card__row-body">{s.data.outcome}</p>
+            </div>
+            <div class="sol-card__row">
+              <div class="sol-card__row-label">Proof</div>
+              <ul class="sol-card__proof">
+                {s.data.proof.map(p => <li>{p}</li>)}
+              </ul>
+            </div>
+            {s.data.tags.length > 0 && (
+              <footer class="sol-card__tags">
+                {s.data.tags.map(t => <span class="pill">{t}</span>)}
+              </footer>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {eduSolutions.length > 0 && (
+    <section class="section section--alt">
+      <div class="container">
+        <header class="section__head">
+          <p class="section__eyebrow">Lane · Education & Outreach</p>
+          <h2 class="section__title">Public-facing work.</h2>
+        </header>
+        <div class="sol-grid">
+          {eduSolutions.map(s => (
+            <article class="sol-card">
+              <header class="sol-card__head">
+                <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
+                <span class="pill pill--gold">Public</span>
+              </header>
+              <h3 class="sol-card__title">{s.data.title}</h3>
+              <div class="sol-card__client mono">{s.data.client}</div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Problem</div>
+                <p class="sol-card__row-body">{s.data.problem}</p>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Approach</div>
+                <p class="sol-card__row-body">{s.data.approach}</p>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Evidence</div>
+                <ul class="sol-card__evidence mono">
+                  {s.data.evidence.map(e => <li>{e}</li>)}
+                </ul>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Outcome</div>
+                <p class="sol-card__row-body">{s.data.outcome}</p>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Proof</div>
+                <ul class="sol-card__proof">
+                  {s.data.proof.map(p => <li>{p}</li>)}
+                </ul>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CTABanner
+    title="Want a deep-dive on any of these?"
+    sub="Email me the JD or scope and I'll send back a tailored solution sketch within 24 hours."
+    primaryLabel="Email me"
+    secondaryLabel="Download resume ↓"
+  />
+
+</BaseLayout>
+
+<style>
+  .solutions-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
+      radial-gradient(900px 500px at 0% 100%, rgba(44, 122, 123, 0.10), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .solutions-head__title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-block: var(--sp-4) var(--sp-5);
+  }
+  .solutions-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 64ch;
+    margin-bottom: var(--sp-7);
+  }
+  .solutions-head__sub em { color: var(--c-primary-2); font-style: italic; }
+
+  .solutions-head__ribbon {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--sp-6);
+    align-items: center;
+    padding: var(--sp-5) var(--sp-6);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 4px solid var(--c-primary);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-7);
+    overflow-x: auto;
+  }
+  .solutions-head__ribbon-eq { text-align: center; }
+  .solutions-head__ribbon-note {
+    max-width: 280px;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+  }
+  .solutions-head__ribbon-note .muted {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2);
+    margin-bottom: var(--sp-2);
+  }
+
+  .solutions-head__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-4);
+  }
+
+  /* === Solution card === */
+  .sol-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: var(--sp-5);
+  }
+  .sol-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    position: relative;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .sol-card:hover {
+    border-color: var(--c-primary);
+    box-shadow: var(--shadow-md);
+  }
+  .sol-card--quant {
+    border-left: 3px solid var(--c-primary-2);
+  }
+  .sol-card:not(.sol-card--quant) {
+    border-left: 3px solid var(--c-primary);
+  }
+  .sol-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-2);
+  }
+  .sol-card__ord {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+  .sol-card__title {
+    font-size: var(--fs-xl);
+    line-height: 1.2;
+    color: var(--c-ink);
+    margin: 0;
+  }
+  .sol-card__client {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    margin-bottom: var(--sp-3);
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px dashed var(--c-rule-soft);
+  }
+  .sol-card__row { display: flex; flex-direction: column; gap: var(--sp-1); }
+  .sol-card__row-label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--c-primary);
+    font-weight: 600;
+    margin-top: var(--sp-2);
+  }
+  .sol-card__row-body {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+  .sol-card__evidence {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .sol-card__evidence li {
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    line-height: var(--lh-normal);
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  .sol-card__evidence li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--c-pass);
+    font-family: var(--ff-mono);
+    font-weight: 700;
+  }
+  .sol-card__proof {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .sol-card__proof li {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-normal);
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  .sol-card__proof li::before {
+    content: '↗';
+    position: absolute;
+    left: 0;
+    color: var(--c-primary-2);
+    font-family: var(--ff-mono);
+    font-weight: 700;
+  }
+  .sol-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-3);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--c-rule-soft);
+  }
+
+  @media (max-width: 720px) {
+    .solutions-head__stats { grid-template-columns: 1fr 1fr; }
+    .solutions-head__ribbon { grid-template-columns: 1fr; }
+    .sol-grid { grid-template-columns: 1fr; }
+  }
+</style>

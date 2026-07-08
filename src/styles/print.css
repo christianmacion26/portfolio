@@ -1,0 +1,17 @@
+/* print.css — friendly print stylesheet for resumes / solutions */
+
+@media print {
+  :root {
+    --c-bg: #fff;
+    --c-bg-2: #fff;
+    --c-ink: #000;
+  }
+  .nav, .footer, .skip-link, .no-print { display: none !important; }
+  body { font-size: 11pt; }
+  a { color: var(--c-ink); text-decoration: underline; }
+  .container { max-width: 100%; padding: 0; }
+  section { padding-block: 1rem !important; page-break-inside: avoid; }
+  h1, h2, h3 { page-break-after: avoid; }
+  .sol-card, .pub, .gate, .contact-card { page-break-inside: avoid; }
+  .hero { padding: 1rem 0 !important; }
+}

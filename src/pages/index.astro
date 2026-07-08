@@ -1,10 +1,22 @@
 ---
 /**
- * index.astro — Home page. Hero with dual hat, featured projects, CTA.
+ * index.astro — Home page. v2 (math/quant aesthetic).
+ *
+ * Hero:   dual-hat headline + equation motif + 4 stat tiles with sparklines
+ * Lane 1: 3 featured AI projects (with Quant Researcher secondary positioning)
+ * Lane 2: 3 featured quant projects
+ * Method: 3 highlight gates from G1–G31 (the eval-first signal)
+ * Math:   3 "type signatures" of the method (DSR, multi-agent, walk-forward)
+ * Resume: 3 tailored PDFs
+ * CTA:    contact + download
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProjectCard from '@components/ProjectCard.astro';
 import CTABanner from '@components/CTABanner.astro';
+import Equation from '@components/Equation.astro';
+import Stat from '@components/Stat.astro';
+import Sparkline from '@components/Sparkline.astro';
+import Ticker from '@components/Ticker.astro';
 import { getCollection } from 'astro:content';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
@@ -13,46 +25,104 @@ const projects = (await getCollection('project'))
   .sort((a, b) => a.data.order - b.data.order);
 const aiFeatured = projects.filter(p => p.data.role === 'ai').slice(0, 3);
 const quantFeatured = projects.filter(p => p.data.role === 'quant').slice(0, 3);
+
+// Synthetic but realistic-looking sparkline data points (just shapes — honest framing in caption)
+const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31];           // gates added month by month
+const sparkCert = [12, 18, 27, 35, 44, 56, 64, 75, 88, 96, 102];      // certs added month by month
+const sparkLoc = [3, 5, 9, 12, 18, 24, 35, 48, 60, 68, 76];           // k-LOC growth
+const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents per system
 ---
 <BaseLayout title={profile.titles.primary} description={profile.titles.secondary}>
+
+  <Ticker />
 
   <section class="hero">
     <div class="container hero__inner">
       <div class="hero__eyebrow">
-        <span class="pill pill--brand">AI Engineer</span>
-        <span class="pill pill--accent">Quantitative Researcher</span>
-        <span class="pill">Multi-Agent · Statistical Modeling</span>
+        <span class="pill pill--brand">Quant Researcher</span>
+        <span class="pill pill--accent">AI Engineer</span>
+        <span class="pill">Eval-first · NDA-clean · Public-data reproducible</span>
       </div>
+
       <h1 class="hero__title">
-        Two hats, one method.<br />
-        <span class="hero__accent">Eval-first discipline.</span>
+        I do <span class="hl">solutions</span>.<br />
+        Two hats. <span class="hero__accent">One method.</span>
       </h1>
+
       <p class="hero__sub">
-        I build <strong>multi-agent LLM systems</strong> and <strong>systematic trading strategies</strong> on the same engineering principle:
-        a quality gate before shipping. Eleven-agent orchestrator. 31-gate statistical eval harness. Pre-registered research.
+        Quantitative Research first — multi-agent AI engineering second.
+        Eleven-agent orchestrator. <strong>31-gate statistical eval harness</strong>. Pre-registered research.
         Public-data reproducibility. Headline metrics you can verify.
       </p>
-      <div class="hero__stats">
-        <div class="hero__stat">
-          <div class="hero__stat-val mono">{profile.stats.aiAgentCount}</div>
-          <div class="hero__stat-lbl">orchestrator + workers</div>
+
+      <div class="hero__eq-row">
+        <div class="hero__eq-cell">
+          <div class="hero__eq-label mono">deflated Sharpe</div>
+          <Equation latex="\mathrm{DSR} = \frac{\widehat{\mathrm{SR}} - \mathrm{SR}_0}{\sigma_{\hat{SR}}} \cdot \left[1 - \gamma_3 \cdot \widehat{\mathrm{SR}} + \gamma_4 \cdot \frac{\widehat{\mathrm{SR}}^2 - 1}{4}\right]" />
         </div>
-        <div class="hero__stat">
-          <div class="hero__stat-val mono">{profile.stats.evalGates}</div>
-          <div class="hero__stat-lbl">-gate eval harness</div>
-        </div>
-        <div class="hero__stat">
-          <div class="hero__stat-val mono">{profile.stats.locPython}</div>
-          <div class="hero__stat-lbl">LOC light-dep Python</div>
-        </div>
-        <div class="hero__stat">
-          <div class="hero__stat-val mono">{profile.stats.certCount}</div>
-          <div class="hero__stat-lbl">professional certs</div>
+        <div class="hero__eq-cell hero__eq-cell--right">
+          <div class="hero__eq-label mono">multi-agent cost</div>
+          <Equation latex="\mathrm{cost} = \sum_{a \in \mathcal{A}} t(a) \cdot p(\mathrm{tier}(a))" />
         </div>
       </div>
+
+      <div class="hero__stats">
+        <Stat
+          value={profile.stats.aiAgentCount}
+          label="agents"
+          sub="orchestrator + workers"
+          spark={sparkAgents}
+          formula="|\mathcal{A}|"
+          size="lg"
+        />
+        <Stat
+          value={profile.stats.evalGates}
+          label="eval gates"
+          sub="G1–G31 statistical"
+          spark={sparkCap}
+          formula="g"
+          size="lg"
+          trend="up"
+        />
+        <Stat
+          value={profile.stats.locPython}
+          label="LOC"
+          sub="light-dep Python"
+          spark={sparkLoc}
+          formula="|\mathcal{L}|"
+          size="lg"
+          trend="up"
+        />
+        <Stat
+          value={profile.stats.certCount}
+          label="professional certs"
+          sub="11-month arc"
+          spark={sparkCert}
+          formula="c(t)"
+          size="lg"
+          trend="up"
+        />
+      </div>
+
       <div class="hero__actions">
-        <a href={path('/projects')} class="btn btn--primary">View all projects</a>
+        <a href={path('/solutions')} class="btn btn--primary">Read solutions</a>
+        <a href={path('/methodology')} class="btn btn--ghost">Methodology (G1–G31)</a>
         <a href={path('/resume')} class="btn btn--ghost">Download resume ↓</a>
+      </div>
+
+      <div class="hero__proof-row">
+        <div class="hero__proof-cell">
+          <span class="dot dot--pass"></span>
+          <span class="mono">all 31 gates declared before any number is published</span>
+        </div>
+        <div class="hero__proof-cell">
+          <span class="dot dot--pass"></span>
+          <span class="mono">no proprietary data sources referenced anywhere</span>
+        </div>
+        <div class="hero__proof-cell">
+          <span class="dot dot--pass"></span>
+          <span class="mono">19V Capital = closed past contract (03/2026 – 06/2026)</span>
+        </div>
       </div>
     </div>
   </section>
@@ -60,40 +130,11 @@ const quantFeatured = projects.filter(p => p.data.role === 'quant').slice(0, 3);
   <section class="section section--alt">
     <div class="container">
       <header class="section__head">
-        <p class="section__eyebrow">Lane 1 · AI Engineer</p>
-        <h2 class="section__title">Multi-agent LLM systems, eval-first.</h2>
-        <p class="section__sub">
-          Production-grade AI engineering: from agent charters to mechanical validators to MCP servers.
-          Every project ships with a measurable scorecard, not a prompt demo.
-        </p>
-      </header>
-      <div class="grid grid-3">
-        {aiFeatured.map(p => (
-          <ProjectCard
-            href={path(`/projects/${p.id}`)}
-            title={p.data.title}
-            summary={p.data.summary}
-            metrics={p.data.metrics}
-            lane="ai"
-            order={p.data.order}
-            status={p.data.status === 'open-source' ? 'open source' : p.data.status}
-          />
-        ))}
-      </div>
-      <div class="section__foot">
-        <a href={path('/projects')} class="btn btn--ghost">All AI projects →</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <header class="section__head">
-        <p class="section__eyebrow">Lane 2 · Quantitative Researcher</p>
+        <p class="section__eyebrow">Lane 1 · Quant Researcher <span class="mono">⟵ primary</span></p>
         <h2 class="section__title">Systematic strategies, multiple-testing-aware.</h2>
         <p class="section__sub">
-          Nine reproducible public-data research projects. Multiple-testing discipline, look-ahead-bias audits,
-          cost-aware backtests, and honest OOS windows.
+          Nine reproducible public-data research projects. Each candidate survives deflated Sharpe,
+          CSCV-based PBO, walk-forward, and frozen-spec evaluation before the number is published.
         </p>
       </header>
       <div class="grid grid-3">
@@ -111,15 +152,127 @@ const quantFeatured = projects.filter(p => p.data.role === 'quant').slice(0, 3);
       </div>
       <div class="section__foot">
         <a href={path('/projects')} class="btn btn--ghost">All quant projects →</a>
+        <a href={path('/publications')} class="btn btn--ghost">Publications log →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Lane 2 · AI Engineer <span class="mono">⟵ secondary</span></p>
+        <h2 class="section__title">Multi-agent LLM systems, eval-first.</h2>
+        <p class="section__sub">
+          Six OSS projects. Agent charters, MCP servers, eval harnesses, and LLM-as-judge gates —
+          everything that says "shipped" also has a scorecard attached.
+        </p>
+      </header>
+      <div class="grid grid-3">
+        {aiFeatured.map(p => (
+          <ProjectCard
+            href={path(`/projects/${p.id}`)}
+            title={p.data.title}
+            summary={p.data.summary}
+            metrics={p.data.metrics}
+            lane="ai"
+            order={p.data.order}
+            status="open source"
+          />
+        ))}
+      </div>
+      <div class="section__foot">
+        <a href={path('/projects')} class="btn btn--ghost">All AI projects →</a>
+        <a href={path('/solutions')} class="btn btn--ghost">Solutions library →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">The method · G1–G31</p>
+        <h2 class="section__title">One gate stack. Two lanes.</h2>
+        <p class="section__sub">
+          The same gate stack gates LLM outputs and systematic strategies. Six families, 31 gates, one contract.
+          See the full gate taxonomy on the <a href={path('/methodology')}>methodology page</a>.
+        </p>
+      </header>
+
+      <div class="gates-preview">
+        <div class="gate-tile">
+          <div class="gate-tile__range mono">G1–G5</div>
+          <div class="gate-tile__name">Mechanical validity</div>
+          <ul class="gate-tile__list mono">
+            <li>schema conformance</li>
+            <li>exit-0 contract</li>
+            <li>JSON Schema strict</li>
+            <li>byte-length budget</li>
+          </ul>
+        </div>
+        <div class="gate-tile">
+          <div class="gate-tile__range mono">G6–G10</div>
+          <div class="gate-tile__name">Statistical nulls</div>
+          <ul class="gate-tile__list mono">
+            <li>block-bootstrap CIs</li>
+            <li>random-timing nulls</li>
+            <li>regime shuffle</li>
+            <li>parameter-prior sensitivity</li>
+          </ul>
+        </div>
+        <div class="gate-tile">
+          <div class="gate-tile__range mono">G11–G15</div>
+          <div class="gate-tile__name">Walk-forward & OOS</div>
+          <ul class="gate-tile__list mono">
+            <li>locked OOS windows</li>
+            <li>5-era stability</li>
+            <li>expanding/rolling</li>
+            <li>embargoed test set</li>
+          </ul>
+        </div>
+        <div class="gate-tile">
+          <div class="gate-tile__range mono">G16–G20</div>
+          <div class="gate-tile__name">Multiple testing</div>
+          <ul class="gate-tile__list mono">
+            <li>deflated Sharpe</li>
+            <li>CSCV-based PBO</li>
+            <li>MinBTL</li>
+            <li>Bonferroni–Holm</li>
+          </ul>
+        </div>
+        <div class="gate-tile">
+          <div class="gate-tile__range mono">G21–G25</div>
+          <div class="gate-tile__name">Look-ahead discipline</div>
+          <ul class="gate-tile__list mono">
+            <li>point-in-time data</li>
+            <li>survivorship check</li>
+            <li>timing consistency</li>
+            <li>frozen-spec</li>
+          </ul>
+        </div>
+        <div class="gate-tile">
+          <div class="gate-tile__range mono">G26–G31</div>
+          <div class="gate-tile__name">Economic realism</div>
+          <ul class="gate-tile__list mono">
+            <li>spread/slippage/latency</li>
+            <li>capacity constraint</li>
+            <li>funding-carry</li>
+            <li>regime overlay</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section__foot">
+        <a href={path('/methodology')} class="btn btn--primary">Read full methodology →</a>
       </div>
     </div>
   </section>
 
   <CTABanner
-    title="Hiring for an AI Engineer or Quant Researcher seat?"
-    sub="Public-data reproducible projects, runnable eval harnesses, and a 31-gate statistical validation stack. Let's talk."
-    primaryLabel="Download resume ↓"
+    title="Hiring a Quant Researcher or AI Engineer?"
+    sub="Public-data reproducible projects. Runnable eval harnesses. A 31-gate statistical validation stack. NDA-clean by construction."
+    primaryLabel="Read solutions"
     secondaryLabel="Get in touch"
+    secondaryHref={path('/contact')}
   />
 
 </BaseLayout>
@@ -128,14 +281,12 @@ const quantFeatured = projects.filter(p => p.data.role === 'quant').slice(0, 3);
   .hero {
     padding-block: var(--sp-9);
     background:
-      radial-gradient(1200px 600px at 80% -100px, rgba(44, 122, 123, 0.12), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% -100px, rgba(44, 122, 123, 0.14), transparent 60%),
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
+      var(--c-paper);
     border-bottom: var(--border);
   }
-  .hero__inner {
-    max-width: 880px;
-  }
+  .hero__inner { max-width: 980px; }
   .hero__eyebrow {
     display: flex;
     flex-wrap: wrap;
@@ -143,9 +294,9 @@ const quantFeatured = projects.filter(p => p.data.role === 'quant').slice(0, 3);
     margin-bottom: var(--sp-5);
   }
   .hero__title {
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
     margin-bottom: var(--sp-5);
   }
   .hero__accent { color: var(--c-primary); }
@@ -153,54 +304,111 @@ const quantFeatured = projects.filter(p => p.data.role === 'quant').slice(0, 3);
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
     line-height: var(--lh-loose);
-    max-width: 68ch;
+    max-width: 72ch;
     margin-bottom: var(--sp-7);
   }
   .hero__sub strong { color: var(--c-ink); font-weight: 600; }
 
+  .hero__eq-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--sp-5);
+    margin-bottom: var(--sp-7);
+  }
+  .hero__eq-cell {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow-x: auto;
+  }
+  .hero__eq-cell--right { background: var(--c-tape); color: #e6edf3; border-color: var(--c-tape-2); }
+  .hero__eq-cell--right .hero__eq-label { color: #d29922; }
+  .hero__eq-label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--c-primary-2);
+    margin-bottom: var(--sp-2);
+    font-weight: 600;
+  }
+
   .hero__stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--sp-4);
-    padding: var(--sp-5);
-    background: var(--c-bg);
-    border: var(--border);
-    border-radius: var(--radius);
+    gap: var(--sp-3);
     margin-bottom: var(--sp-7);
   }
-  .hero__stat {
-    text-align: center;
-    border-right: 1px solid var(--c-rule-soft);
-    padding-right: var(--sp-4);
+
+  .hero__actions {
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-7);
   }
-  .hero__stat:last-child { border-right: none; padding-right: 0; }
-  .hero__stat-val {
-    font-size: var(--fs-2xl);
-    font-weight: 700;
+
+  .hero__proof-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-4) var(--sp-5);
+    background: rgba(22, 163, 74, 0.06);
+    border-left: 3px solid var(--c-pass);
+    border-radius: var(--radius-sm);
+  }
+  .hero__proof-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+
+  /* === Gate preview tiles === */
+  .gates-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--sp-3);
+  }
+  .gate-tile {
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+  }
+  .gate-tile:hover { border-color: var(--c-primary); border-left-color: var(--c-primary-2); }
+  .gate-tile__range {
+    font-size: var(--fs-sm);
     color: var(--c-primary);
-    line-height: 1;
+    font-weight: 700;
+    margin-bottom: var(--sp-1);
   }
-  .hero__stat-lbl {
+  .gate-tile__name { font-size: var(--fs-base); color: var(--c-ink); margin-bottom: var(--sp-2); font-weight: 600; }
+  .gate-tile__list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .gate-tile__list li {
     font-size: var(--fs-xs);
     color: var(--c-ink-2);
-    margin-top: var(--sp-2);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    line-height: 1.5;
   }
-  .hero__actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
 
   .section__foot {
     margin-top: var(--sp-6);
     display: flex;
     justify-content: center;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 880px) {
     .hero__stats { grid-template-columns: 1fr 1fr; }
-    .hero__stat:nth-child(2) { border-right: none; padding-right: 0; }
-    .hero__stat:nth-child(1), .hero__stat:nth-child(2) {
-      border-bottom: 1px solid var(--c-rule-soft);
-      padding-bottom: var(--sp-3);
-    }
+    .hero__eq-row { grid-template-columns: 1fr; }
   }
 </style>

@@ -1,0 +1,134 @@
+---
+/**
+ * Stat.astro — a "metric tile": big mono number + label + sub + optional sparkline.
+ *
+ * Usage:
+ *   <Stat value="31" label="eval gates" sub="G1–G31 statistical harness" />
+ *   <Stat value="0.886" label="recall@3" sub="on 800-query benchmark" spark={[...]} />
+ */
+import Sparkline from '@components/Sparkline.astro';
+
+interface Props {
+  value: string;
+  label: string;
+  sub?: string;
+  spark?: number[];
+  sparkColor?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  trend?: 'up' | 'down' | 'flat';
+  variant?: 'default' | 'primary' | 'accent' | 'mono';
+  formula?: string;
+}
+const {
+  value, label, sub, spark, sparkColor, size = 'md',
+  trend, variant = 'default', formula,
+} = Astro.props;
+const trendGlyph = trend === 'up' ? '↑' : trend === 'down' ? '↓' : trend === 'flat' ? '→' : '';
+const trendClass = trend ? `stat--trend-${trend}` : '';
+---
+<div class:list={["stat", `stat--${size}`, `stat--${variant}`, trendClass]}>
+  <div class="stat__head">
+    <span class="stat__label">{label}</span>
+    {formula && <span class="stat__formula mono">{formula}</span>}
+  </div>
+  <div class="stat__value-row">
+    <span class="stat__value mono">{value}</span>
+    {trendGlyph && <span class="stat__trend" aria-hidden="true">{trendGlyph}</span>}
+    {spark && (
+      <span class="stat__spark">
+        <Sparkline points={spark} stroke={sparkColor ?? 'var(--c-primary-2)'} fill="gradient" />
+      </span>
+    )}
+  </div>
+  {sub && <div class="stat__sub">{sub}</div>}
+</div>
+
+<style>
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .stat:hover {
+    border-color: var(--c-ink-3);
+    box-shadow: var(--shadow-sm);
+  }
+  .stat__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--sp-2);
+  }
+  .stat__label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-2);
+    font-weight: 600;
+  }
+  .stat__formula {
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2);
+    opacity: 0.8;
+  }
+  .stat__value-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+  }
+  .stat__value {
+    font-weight: 700;
+    color: var(--c-primary);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .stat--sm .stat__value { font-size: var(--fs-xl); }
+  .stat--md .stat__value { font-size: var(--fs-2xl); }
+  .stat--lg .stat__value { font-size: var(--fs-3xl); }
+  .stat--xl .stat__value { font-size: var(--fs-4xl); }
+  .stat__trend {
+    font-family: var(--ff-mono);
+    font-weight: 700;
+    font-size: var(--fs-lg);
+  }
+  .stat--trend-up   .stat__trend { color: var(--c-pass); }
+  .stat--trend-down .stat__trend { color: var(--c-fail); }
+  .stat--trend-flat .stat__trend { color: var(--c-ink-2); }
+  .stat__spark {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .stat__sub {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+
+  /* === Variants === */
+  .stat--primary {
+    background: var(--c-primary);
+    border-color: var(--c-primary-deep);
+  }
+  .stat--primary .stat__label { color: rgba(255, 255, 255, 0.65); }
+  .stat--primary .stat__value { color: #fff; }
+  .stat--primary .stat__sub   { color: rgba(255, 255, 255, 0.6); }
+
+  .stat--accent {
+    background: linear-gradient(180deg, rgba(11, 61, 92, 0.04), var(--c-bg));
+    border-color: var(--c-primary);
+  }
+
+  .stat--mono {
+    background: var(--c-tape);
+    border-color: var(--c-tape-2);
+  }
+  .stat--mono .stat__label { color: rgba(255, 255, 255, 0.55); }
+  .stat--mono .stat__value { color: #3fb950; }
+  .stat--mono .stat__sub   { color: rgba(255, 255, 255, 0.55); }
+  .stat--mono .stat__formula { color: #d29922; }
+</style>

@@ -1,37 +1,72 @@
 /* tokens.css — design system for christianmacion.github.io
- * Derived from:
- *   - resume.css (#0b3d5c / #0b1f2a / #5b7488 / #1a5fb4)
- *   - figure_style.py (NAVY #1f3a5f, ACCENT #2c7a7b, RULE #c9ced6, INK #1a1f24, MUTE #5a6473, GOLD #b8860b, FAIL #9b2226, GREEN #2f7d52, PURPLE #6b4a8f)
+ *
+ * v2 (math/quant aesthetic):
+ *   - Equity-curve inspired background motifs
+ *   - Probability / statistics visual vocabulary
+ *   - JetBrains Mono as primary data type
+ *   - Signal / noise / p-value status semantics
+ *   - Term-paper paper texture palette
+ *
+ * Color provenance:
+ *   - resume.css #0b3d5c / #0b1f2a / #5b7488 / #1a5fb4  (brand)
+ *   - figure_style.py NAVY #1f3a5f, ACCENT #2c7a7b, RULE #c9ced6,
+ *     INK #1a1f24, MUTE #5a6473, GOLD #b8860b, FAIL #9b2226,
+ *     GREEN #2f7d52, PURPLE #6b4a8f
+ *   - Bloomberg-terminal amber #f5a623, equity green #16a34a,
+ *     equities red #dc2626 (signal semantics)
+ *   - KaTeX "mathjax" serif for in-line equations
  */
 
 :root {
   /* === BRAND === */
-  --c-primary:        #0b3d5c;   /* navy/teal — primary brand (resume.css) */
+  --c-primary:        #0b3d5c;   /* navy/teal — primary brand */
   --c-primary-deep:   #08283b;   /* hover/darker */
-  --c-primary-2:      #2c7a7b;   /* teal accent (figure_style) */
+  --c-primary-2:      #2c7a7b;   /* teal accent */
   --c-primary-3:      #6b4a8f;   /* purple accent — sparingly */
   --c-gold:           #b8860b;   /* callouts/highlights */
+  --c-amber:          #c98a16;   /* terminal-amber accent */
 
   /* === INK === */
-  --c-ink:            #1a1f24;   /* body text (figure_style INK) */
+  --c-ink:            #1a1f24;   /* body text */
   --c-ink-2:          #5a6473;   /* muted text */
   --c-ink-3:          #869098;   /* faintest (captions, footnotes) */
-  --c-rule:           #c9ced6;   /* dividers (figure_style RULE) */
+  --c-rule:           #c9ced6;   /* dividers */
   --c-rule-soft:      #e6e9ee;   /* hairline */
+  --c-rule-strong:    #1a1f24;   /* high-contrast rule */
 
   /* === BG === */
-  --c-bg:             #ffffff;
-  --c-bg-2:           #f6f8fa;   /* panel/banner background */
+  --c-bg:             #ffffff;   /* paper */
+  --c-bg-2:           #f6f8fa;   /* panel/banner */
   --c-bg-3:           #eef1f5;   /* deeper panel */
+  --c-paper:          #fbfaf6;   /* term-paper cream */
+  --c-paper-2:        #f5f3eb;
+  --c-tape:           #0d1117;   /* terminal/equity-tape dark */
+  --c-tape-2:         #161b22;
 
-  /* === STATUS === */
-  --c-pass:           #2f7d52;   /* success */
-  --c-fail:           #9b2226;   /* error/danger */
-  --c-warn:           #b8860b;   /* warning (same as gold) */
+  /* === STATUS / SIGNAL === */
+  --c-pass:           #16a34a;   /* equity green — verified, pass */
+  --c-pass-soft:      #dcfce7;
+  --c-fail:           #9b2226;   /* error / danger */
+  --c-fail-soft:      #fee2e2;
+  --c-warn:           #c98a16;   /* warning amber */
+  --c-warn-soft:      #fef3c7;
+  --c-info:           #1d4ed8;   /* info blue */
+  --c-info-soft:      #dbeafe;
+
+  /* === MATH / QUANT ACCENTS === */
+  --c-eq:             #0b3d5c;   /* equation color (navy) */
+  --c-phi:            #2c7a7b;   /* primary teal — Φ */
+  --c-sigma:          #6b4a8f;   /* σ purple */
+  --c-delta:          #b8860b;   /* Δ gold */
+  --c-mu:             #5a6473;   /* μ gray */
+  --c-alpha:          #16a34a;   /* α green */
+  --c-beta:           #c98a16;   /* β amber */
 
   /* === TYPE === */
   --ff-sans:          'Inter', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
   --ff-mono:          'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --ff-math:          'KaTeX_Main', 'Latin Modern Math', 'Computer Modern Serif',
+                      'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
   --fs-xs:            0.78rem;   /* 12.5px */
   --fs-sm:            0.875rem;  /* 14px */
   --fs-base:          1rem;      /* 16px */
@@ -40,7 +75,9 @@
   --fs-2xl:           1.75rem;   /* 28px */
   --fs-3xl:           2.25rem;   /* 36px */
   --fs-4xl:           3rem;      /* 48px */
-  --lh-tight:         1.2;
+  --fs-5xl:           4rem;      /* 64px */
+  --lh-tight:         1.15;
+  --lh-snug:          1.3;
   --lh-normal:        1.5;
   --lh-loose:         1.75;
 
@@ -54,9 +91,10 @@
   --sp-7:             3rem;
   --sp-8:             4rem;
   --sp-9:             6rem;
+  --sp-10:            8rem;
 
   /* === LAYOUT === */
-  --container-max:    1120px;
+  --container-max:    1180px;
   --container-narrow: 760px;
   --radius:           10px;
   --radius-sm:        6px;
@@ -67,15 +105,74 @@
   --shadow-lg:        0 12px 32px rgba(11, 31, 42, 0.10), 0 4px 8px rgba(11, 31, 42, 0.05);
   --transition:       150ms ease;
 
-  /* === COMPONENT TOKENS === */
-  --nav-h:            64px;
+  /* === TICKER / DATA === */
+  --tape-h:           28px;      /* bottom ticker tape height */
   --border:           1px solid var(--c-rule);
   --border-strong:    1px solid var(--c-ink-3);
+  --border-paper:     1px solid rgba(11, 31, 42, 0.12);
+
+  /* === HERO EQUATION RIBBON === */
+  --eq-bg:            linear-gradient(180deg, var(--c-bg) 0%, var(--c-paper) 100%);
 }
 
+/* prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* === KaTeX size adjustments === */
+.katex {
+  font-size: 1.05em;
+}
+.katex-display {
+  margin: 0.5em 0;
+}
+.eq--xl .katex { font-size: 1.4em; }
+.eq--lg .katex { font-size: 1.2em; }
+.eq--sm .katex { font-size: 0.92em; }
+
+/* === Equity-curve background motif (subtle SVG, paper texture) === */
+.bg--paper {
+  background:
+    linear-gradient(180deg, var(--c-bg) 0%, var(--c-paper) 100%),
+    radial-gradient(circle at 1px 1px, rgba(11, 31, 42, 0.04) 1px, transparent 0);
+  background-blend-mode: multiply, normal;
+  background-size: auto, 18px 18px;
+}
+
+.bg--tape {
+  background: var(--c-tape);
+  color: #e6edf3;
+}
+
+/* === Reusable status dot === */
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.dot--pass  { background: var(--c-pass); box-shadow: 0 0 0 3px var(--c-pass-soft); }
+.dot--fail  { background: var(--c-fail); box-shadow: 0 0 0 3px var(--c-fail-soft); }
+.dot--warn  { background: var(--c-warn); box-shadow: 0 0 0 3px var(--c-warn-soft); }
+.dot--info  { background: var(--c-info); box-shadow: 0 0 0 3px var(--c-info-soft); }
+.dot--muted { background: var(--c-ink-3); }
+
+/* === Highlight (asymptotic-equality underline) === */
+.hl {
+  position: relative;
+  white-space: nowrap;
+}
+.hl::after {
+  content: '';
+  position: absolute;
+  left: -2px; right: -2px; bottom: -3px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--c-primary-2), var(--c-gold));
+  opacity: 0.45;
+  border-radius: 2px;
 }

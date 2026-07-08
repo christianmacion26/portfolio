@@ -25,10 +25,11 @@ const rendered = await Promise.all(
 
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow">Experience</p>
-      <h1 class="page-head__title">Where the work happened.</h1>
+      <p class="section__eyebrow"><span class="mono">experience/</span> · engagements + proofs</p>
+      <h1 class="page-head__title">Where the work happened — and how to <span class="hl">verify</span> it.</h1>
       <p class="page-head__sub">
-        {entries.length} engagements, current and past. The 19V Capital role is a <strong>closed past contract</strong>
+        {entries.length} engagements. Each entry lists the contributions made and points to public artifacts
+        that prove them. The 19V Capital role is a <strong>closed past contract</strong>
         (03/2026 – 06/2026); all references are NDA-safe and free of proprietary data sources.
       </p>
     </div>
@@ -46,6 +47,8 @@ const rendered = await Promise.all(
             endDate={entry.data.endDate}
             isCurrent={entry.data.isCurrent}
             summary={entry.data.summary}
+            contributions={entry.data.contributions}
+            proofs={entry.data.proofs}
           >
             <Content />
           </TimelineEntry>

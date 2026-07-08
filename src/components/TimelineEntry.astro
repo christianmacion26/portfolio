@@ -1,6 +1,7 @@
 ---
 /**
  * TimelineEntry.astro — one experience entry, NDA-safe.
+ * v2: renders contributions + proofs sub-blocks.
  */
 interface Props {
   title: string;
@@ -10,8 +11,10 @@ interface Props {
   endDate: string;
   isCurrent?: boolean;
   summary?: string;
+  contributions?: { label: string; evidence: string; proof?: string }[];
+  proofs?: string[];
 }
-const { title, company, location, startDate, endDate, isCurrent, summary } = Astro.props;
+const { title, company, location, startDate, endDate, isCurrent, summary, contributions = [], proofs = [] } = Astro.props;
 
 function formatDate(iso: string): string {
   if (iso.toLowerCase() === 'present') return 'Present';
@@ -41,6 +44,35 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     </header>
     {summary && <p class="tl__summary">{summary}</p>}
     <div class="tl__content"><slot /></div>
+
+    {contributions.length > 0 && (
+      <div class="tl__contributions">
+        <div class="tl__contributions-label mono">CONTRIBUTIONS · EVIDENCE · PROOF</div>
+        <ul class="tl__contributions-list">
+          {contributions.map(c => (
+            <li>
+              <div class="tl__contribution-label">{c.label}</div>
+              <div class="tl__contribution-evidence">{c.evidence}</div>
+              {c.proof && <div class="tl__contribution-proof mono"><span class="dot dot--pass"></span> {c.proof}</div>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {proofs.length > 0 && (
+      <div class="tl__proofs">
+        <div class="tl__contributions-label mono">PROOF POINTERS</div>
+        <ul class="tl__proofs-list">
+          {proofs.map(p => (
+            <li>
+              <span class="tl__proof-glyph mono">↗</span>
+              {p}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
   </div>
 </article>
 
@@ -49,7 +81,7 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     display: grid;
     grid-template-columns: 32px 1fr;
     gap: var(--sp-5);
-    padding-block: var(--sp-5);
+    padding-block: var(--sp-6);
     border-bottom: 1px solid var(--c-rule-soft);
   }
   .tl:last-child { border-bottom: none; }
@@ -130,4 +162,63 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     background: var(--c-primary-2);
   }
   .tl__content :global(strong) { color: var(--c-primary); font-weight: 600; }
+
+  /* === Contributions === */
+  .tl__contributions {
+    margin-top: var(--sp-5);
+    padding: var(--sp-4);
+    background: var(--c-paper);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+  }
+  .tl__contributions-label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--c-primary-2);
+    font-weight: 600;
+    margin-bottom: var(--sp-3);
+  }
+  .tl__contributions-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .tl__contributions-list li {
+    border-left: 2px solid var(--c-primary);
+    padding-left: var(--sp-3);
+  }
+  .tl__contribution-label { font-size: var(--fs-sm); font-weight: 600; color: var(--c-ink); margin-bottom: 0.25rem; }
+  .tl__contribution-evidence { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin-bottom: 0.25rem; }
+  .tl__contribution-proof {
+    font-size: var(--fs-xs);
+    color: var(--c-pass);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .tl__proofs {
+    margin-top: var(--sp-3);
+  }
+  .tl__proofs-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .tl__proofs-list li {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-normal);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .tl__proof-glyph {
+    color: var(--c-primary-2);
+    font-weight: 700;
+  }
 </style>

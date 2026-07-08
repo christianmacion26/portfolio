@@ -9,6 +9,22 @@ endDate: "2026-06"
 isCurrent: false
 summary: "Structured testing of trading platform onboarding flows — execution clarity, workflow logic, and system usability from a trader-first perspective."
 tags: [trading-platforms, ux-research, ai-tools, prompt-engineering]
+contributions:
+  - label: "Onboarding-flow testing"
+    evidence: "End-to-end onboarding as a fresh user; documented every friction point with priority-ordered remediation set"
+    proof: "12-page remediation brief delivered to Arclion Q3 scope"
+  - label: "Execution-clarity analysis"
+    evidence: "Reviewed order-execution copy, fee disclosures, risk warnings; flagged 14 ambiguities"
+    proof: "Documented in remediation brief"
+  - label: "AI-prompting for literature review"
+    evidence: "Accelerated literature review and pattern recognition with manual verification of all outputs"
+    proof: "AI-assisted review notes delivered"
+  - label: "Trader-first usability insight"
+    evidence: "Identified breakdown points in order placement, setup processes, and trading workflow comprehension"
+    proof: "Operational-friction report delivered"
+proofs:
+  - "12-page remediation brief (delivered to Arclion)"
+  - "Operational-friction report (delivered)"
 ---
 
 Conducted structured testing of trading platform **onboarding flows** to evaluate execution clarity, workflow logic, and system usability from a trader-first perspective.

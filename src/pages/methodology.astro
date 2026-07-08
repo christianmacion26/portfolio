@@ -1,0 +1,309 @@
+---
+/**
+ * methodology.astro — the eval-first philosophy, G1–G31 gate stack, model-routing policy,
+ * agent charter pattern. Spell out the *method*, not just the outputs.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
+import Stat from '@components/Stat.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { path } from '@utils/url';
+
+const gates = [
+  { range: 'G1–G5',   name: 'Mechanical validity',  desc: 'Schema conformance, exit-0 contract, structured output parse, JSON Schema strict-mode, byte-length budget.' },
+  { range: 'G6–G10',  name: 'Statistical nulls',     desc: 'Block-bootstrap CIs, random-timing nulls, regime-shuffle, parameter-prior sensitivity, Monte-Carlo coverage.' },
+  { range: 'G11–G15', name: 'Walk-forward & OOS',    desc: 'Locked OOS windows, 5-era stability, expanding/rolling windows, frozen-spec evaluation, embargoed test set.' },
+  { range: 'G16–G20', name: 'Multiple testing',      desc: 'Deflated Sharpe Ratio (DSR), CSCV-based Probability of Backtest Overfit (PBO), Minimum Backtest Length (MinBTL), Bonferroni–Holm, BH-FDR.' },
+  { range: 'G21–G25', name: 'Look-ahead discipline', desc: 'Point-in-time dataset verification, survivorship-bias check, rebalance-vs-signal timing, frozen-spec, no-leakage to scoring.' },
+  { range: 'G26–G31', name: 'Economic & cost realism', desc: 'Spread/slippage/latency per asset class, capacity-constraint report, funding-carry, borrow cost, vol-targeted sizing, regime overlay.' },
+];
+
+const routing = [
+  { tier: 'Opus',     role: 'judgment / hardest autonomous decisions',  ratio: '~1 dispatch per analysis chain' },
+  { tier: 'Sonnet',   role: 'assembly / structured generation',          ratio: '~3–5 dispatches per chain' },
+  { tier: 'Haiku',    role: 'mechanical / fast deterministic steps',     ratio: '~10–30 dispatches per chain' },
+  { tier: 'Fable',    role: 'long-horizon autonomous research',          ratio: 'one off, overnight' },
+];
+
+const charter = [
+  { tag: 'role',     value: 'A specific function, never generic "AI assistant"' },
+  { tag: 'inputs',   value: 'Typed input contract (JSON Schema, fail-closed)' },
+  { tag: 'outputs',  value: 'Typed output contract with strict validation' },
+  { tag: 'handoffs', value: 'What this agent must NOT do (anti-charter)' },
+  { tag: 'gates',    value: 'Which of G1–G31 apply, with exit codes' },
+  { tag: 'evidence', value: 'What the agent must attach as proof' },
+];
+---
+<BaseLayout
+  title="Methodology"
+  description="The eval-first discipline. G1–G31 statistical gate stack. Model-routing policy. Agent charter pattern."
+>
+
+  <header class="method-head">
+    <div class="container">
+      <p class="section__eyebrow"><span class="mono">methodology/</span> · eval-first discipline</p>
+      <h1 class="method-head__title">
+        Don't ship what hasn't passed a <span class="hl">measurable gate</span>.
+      </h1>
+      <p class="method-head__sub">
+        One engineering principle. Applied to LLM outputs and to systematic trading strategies with the
+        same gate stack. The method is what scales; the tools change.
+      </p>
+
+      <div class="method-head__eq-block">
+        <Equation
+          block
+          size="lg"
+          latex="\Pr(\text{ship}) \;=\; \Pr(\text{ship} \mid \text{passes G1--G31}) \cdot \prod_{i=1}^{31} \Pr(G_i \mid \text{evidence}_i)"
+        />
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">The gate stack</p>
+        <h2 class="section__title">G1–G31. Six families. One contract.</h2>
+        <p class="section__sub">
+          Every candidate — LLM output, systematic strategy, content artifact — passes through the same
+          gate stack. Gates are mechanical (exit-0 contract), not opinionated. A pass means the
+          candidate is allowed to surface; a fail means it isn't.
+        </p>
+      </header>
+
+      <div class="gates">
+        {gates.map(g => (
+          <article class="gate">
+            <header class="gate__head">
+              <span class="gate__range mono">{g.range}</span>
+              <h3 class="gate__name">{g.name}</h3>
+            </header>
+            <p class="gate__desc">{g.desc}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Model routing</p>
+        <h2 class="section__title">Tiered dispatch, not single-agent.</h2>
+        <p class="section__sub">
+          A multi-agent system runs at ~15× the token cost of a single agent. The cost is real — the
+          answer is to route by *task type*, not by default. Every dispatch has a per-step budget.
+        </p>
+      </header>
+
+      <div class="routing">
+        {routing.map(r => (
+          <div class="route">
+            <div class="route__tier mono">{r.tier}</div>
+            <div class="route__role">{r.role}</div>
+            <div class="route__ratio mono">{r.ratio}</div>
+          </div>
+        ))}
+      </div>
+
+      <div class="routing-eq">
+        <Equation
+          latex="\text{cost} = \sum_{i} \text{tokens}(i) \cdot \text{price}(\text{tier}(i)) \quad \text{where} \quad \text{tier} : \mathcal{A} \to \{\text{Opus, Sonnet, Haiku, Fable}\}"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Agent charter</p>
+        <h2 class="section__title">Six required fields per agent.</h2>
+        <p class="section__sub">
+          A charter is a contract, not a prompt. Every agent has the same six fields, with the same
+          semantics. No exceptions.
+        </p>
+      </header>
+
+      <div class="charter">
+        {charter.map(c => (
+          <div class="charter__row">
+            <div class="charter__tag mono">{c.tag}</div>
+            <div class="charter__val">{c.value}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">What I will not do</p>
+        <h2 class="section__title">Negative-space as design.</h2>
+      </header>
+      <ul class="neg">
+        <li>I will not claim current employment at any NDA-protected firm. The 19V Capital engagement is a <strong>closed past contract</strong> (03/2026 – 06/2026).</li>
+        <li>I will not reference proprietary data sources, fund renames, or per-strategy t-stats from any NDA-protected desk.</li>
+        <li>I will not share a "Sharpe = X.X" number without showing the gate stack that produced it.</li>
+        <li>I will not ship an agent without an exit-0 mechanical-validator contract.</li>
+        <li>I will not present a backtest without capacity, slippage, and a locked OOS window.</li>
+      </ul>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Method under-spec? Send the JD."
+    sub="If your role has a written spec, send it. I'll respond with which gates from G1–G31 already apply to your stack, and which I'd build."
+    primaryLabel="Email me"
+    secondaryLabel="View solutions"
+    secondaryHref={path('/solutions')}
+  />
+
+</BaseLayout>
+
+<style>
+  .method-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .method-head__title {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-block: var(--sp-4) var(--sp-5);
+    max-width: 22ch;
+  }
+  .method-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+    margin-bottom: var(--sp-7);
+  }
+  .method-head__eq-block {
+    padding: var(--sp-6) var(--sp-5);
+    background: var(--c-paper);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow-x: auto;
+  }
+
+  .gates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--sp-4);
+  }
+  .gate {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+  }
+  .gate:hover { border-color: var(--c-primary); border-left-color: var(--c-primary-2); }
+  .gate__head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-2);
+  }
+  .gate__range {
+    font-size: var(--fs-sm);
+    color: var(--c-primary);
+    font-weight: 700;
+  }
+  .gate__name { font-size: var(--fs-base); margin: 0; }
+  .gate__desc { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0; }
+
+  .routing {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-5);
+  }
+  .route {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+  }
+  .route__tier {
+    font-size: var(--fs-base);
+    color: var(--c-primary);
+    font-weight: 700;
+  }
+  .route__role { font-size: var(--fs-sm); color: var(--c-ink); line-height: var(--lh-normal); }
+  .route__ratio { font-size: var(--fs-xs); color: var(--c-ink-3); margin-top: var(--sp-1); }
+
+  .routing-eq {
+    padding: var(--sp-5);
+    background: var(--c-paper);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow-x: auto;
+  }
+
+  .charter {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .charter__row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: var(--sp-4);
+    padding: var(--sp-3) var(--sp-5);
+    border-bottom: 1px solid var(--c-rule-soft);
+    align-items: center;
+  }
+  .charter__row:last-child { border-bottom: none; }
+  .charter__tag {
+    color: var(--c-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+  }
+  .charter__val { color: var(--c-ink); font-size: var(--fs-sm); line-height: var(--lh-normal); }
+
+  .neg {
+    list-style: none;
+    padding: 0;
+    max-width: 760px;
+  }
+  .neg li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: var(--sp-3);
+    line-height: var(--lh-loose);
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+  }
+  .neg li::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--c-fail);
+    font-weight: 600;
+    font-family: var(--ff-mono);
+  }
+  .neg strong { color: var(--c-ink); font-weight: 600; }
+
+  @media (max-width: 720px) {
+    .charter__row { grid-template-columns: 1fr; gap: var(--sp-1); }
+  }
+</style>

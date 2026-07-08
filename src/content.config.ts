@@ -42,6 +42,12 @@ const experience = defineCollection({
     isCurrent: z.boolean().default(false),
     summary: z.string().optional(),
     tags: z.array(z.string()).default([]),
+    contributions: z.array(z.object({
+      label: z.string(),
+      evidence: z.string(),
+      proof: z.string().optional(),
+    })).default([]),
+    proofs: z.array(z.string()).default([]),
   }),
 });
 
@@ -80,4 +86,22 @@ const certGroup = defineCollection({
   }),
 });
 
-export const collections = { project, experience, skillGroup, certGroup };
+const solution = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/solutions' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    category: z.string(),
+    order: z.number(),
+    client: z.string(),
+    problem: z.string(),
+    approach: z.string(),
+    evidence: z.array(z.string()),
+    outcome: z.string(),
+    proof: z.array(z.string()),
+    tags: z.array(z.string()).default([]),
+    lane: z.enum(['ai', 'quant', 'education', 'systems']),
+  }),
+});
+
+export const collections = { project, experience, skillGroup, certGroup, solution };

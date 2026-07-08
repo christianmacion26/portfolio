@@ -1,0 +1,85 @@
+---
+/**
+ * Sparkline.astro — inline SVG sparkline for time-series data.
+ *
+ * Usage:
+ *   <Sparkline points={[1,2,3,5,4,7,9,12,11,15]} />
+ *   <Sparkline points={...} width={140} height={40} stroke="#16a34a" />
+ *
+ * Props:
+ *   points  — number[]
+ *   width   — pixel width (default 100)
+ *   height  — pixel height (default 28)
+ *   stroke  — stroke color (default primary teal)
+ *   fill    — fill color (default transparent)
+ *   aria-label — accessible description
+ */
+interface Props {
+  points: number[];
+  width?: number;
+  height?: number;
+  stroke?: string;
+  fill?: string;
+  ariaLabel?: string;
+}
+const {
+  points,
+  width = 100,
+  height = 28,
+  stroke = 'var(--c-primary-2)',
+  fill = 'transparent',
+  ariaLabel = 'sparkline',
+} = Astro.props;
+
+// Compute path
+const xs = points.map((_, i) => i);
+const minY = Math.min(...points);
+const maxY = Math.max(...points);
+const rangeY = maxY - minY || 1;
+const pad = 2;
+const stepX = points.length > 1 ? (width - pad * 2) / (points.length - 1) : 0;
+const path = points.map((p, i) => {
+  const x = pad + i * stepX;
+  const y = pad + (height - pad * 2) * (1 - (p - minY) / rangeY);
+  return `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
+}).join(' ');
+const areaPath = `${path} L ${(width - pad).toFixed(2)} ${(height - pad).toFixed(2)} L ${pad} ${(height - pad).toFixed(2)} Z`;
+const gradId = `spk-${Math.random().toString(36).slice(2, 9)}`;
+---
+<svg
+  class="sparkline"
+  width={width}
+  height={height}
+  viewBox={`0 0 ${width} ${height}`}
+  role="img"
+  aria-label={ariaLabel}
+  preserveAspectRatio="none"
+>
+  {fill !== 'transparent' && (
+    <>
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color={stroke} stop-opacity="0.30" />
+          <stop offset="100%" stop-color={stroke} stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#${gradId})`} />
+    </>
+  )}
+  <path d={path} fill="none" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  {points.length > 0 && (
+    <circle
+      cx={pad + (points.length - 1) * stepX}
+      cy={pad + (height - pad * 2) * (1 - (points[points.length - 1] - minY) / rangeY)}
+      r="1.8"
+      fill={stroke}
+    />
+  )}
+</svg>
+
+<style>
+  .sparkline {
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>

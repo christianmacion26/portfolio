@@ -1,0 +1,77 @@
+---
+/**
+ * Equation.astro — server-side rendered KaTeX block.
+ *
+ * Usage:
+ *   <Equation latex="P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B)}" />
+ *   <Equation latex="\sigma^2 = E[(X - \mu)^2]" block label="(1)" />
+ *
+ * Props:
+ *   latex  — KaTeX-compatible LaTeX string
+ *   block  — render as display block (default: false, inline)
+ *   label  — optional equation label, e.g. "(1)"
+ *   size   — 'sm' | 'md' | 'lg' | 'xl' (default 'md')
+ *   className — extra classes
+ */
+import katex from 'katex';
+
+interface Props {
+  latex: string;
+  block?: boolean;
+  label?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}
+
+const { latex, block = false, label, size = 'md', className } = Astro.props;
+const html = katex.renderToString(latex, {
+  displayMode: block,
+  throwOnError: false,
+  output: 'html',
+  strict: 'ignore',
+  trust: false,
+});
+const sizeClass = size !== 'md' ? `eq--${size}` : '';
+---
+<span
+  class:list={["eq", sizeClass, className, { 'eq--block': block }]}
+  data-latex={latex}
+>
+  <Fragment set:html={html} />
+  {label && <span class="eq__label" aria-hidden="true">{label}</span>}
+</span>
+
+<style>
+  .eq {
+    display: inline-block;
+    font-family: var(--ff-math);
+    color: var(--c-eq);
+    line-height: 1.4;
+    vertical-align: baseline;
+    /* KaTeX HTML output is math-styled; preserve its baseline math */
+  }
+  .eq--block {
+    display: block;
+    margin: var(--sp-5) 0;
+    text-align: center;
+    position: relative;
+  }
+  .eq--block :global(.katex-display) {
+    margin: 0;
+  }
+  .eq__label {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--ff-mono);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+  .eq--block .eq__label {
+    top: auto;
+    bottom: -0.5em;
+    right: 0;
+    transform: none;
+  }
+</style>

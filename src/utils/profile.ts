@@ -9,9 +9,9 @@ export const profile = {
   shortName: 'Christian Macion',
   initials: 'CM',
   titles: {
-    primary: 'AI Engineer · Quantitative Researcher',
+    primary: 'Quantitative Researcher · AI Engineer',
     secondary: 'Multi-Agent LLM Systems & Statistical Modeling',
-    tagline: 'Two hats, one method. Eval-first discipline.',
+    tagline: 'I do solutions. Eval-first. NDA-clean.',
   },
   location: {
     city: 'Digos City',
@@ -27,6 +27,7 @@ export const profile = {
     linkedin: 'https://www.linkedin.com/in/christianmacion',
     github: 'https://github.com/christianmacion',
     ojp: 'https://www.onlinejobs.ph/jobseekers/info/...', // user to fill
+    upwork: 'https://www.upwork.com/freelancers/~...', // user to fill
   },
   availability: {
     hours: '20 hrs/wk',

@@ -1,0 +1,103 @@
+---
+/**
+ * Ticker.astro — scrolling marquee of "ticker symbols" that represent
+ * Christian's headline numbers / pillars. Pure CSS animation.
+ *
+ * Usage:
+ *   <Ticker />
+ *
+ * Items live in component (no props). Update inline if numbers change.
+ */
+const items = [
+  { sym: 'CM.QR',  val: 'Quant Researcher',  delta: '+',  color: 'pass' },
+  { sym: 'CM.AI',  val: 'AI Engineer',        delta: '+',  color: 'pass' },
+  { sym: 'AGENTS', val: '11',                 delta: '+',  color: 'info' },
+  { sym: 'GATES',  val: '31',                 delta: '+',  color: 'info' },
+  { sym: 'LOC',    val: '76.5k',              delta: '+',  color: 'info' },
+  { sym: 'CERTS',  val: '102',                delta: '+',  color: 'pass' },
+  { sym: 'PROJ',   val: '15',                 delta: '+',  color: 'info' },
+  { sym: 'SHARPE', val: 'deflated',           delta: '≈',  color: 'muted' },
+  { sym: 'PBO',    val: 'CSCV-bounded',       delta: '≈',  color: 'muted' },
+  { sym: 'OOS',    val: 'locked windows',     delta: '✓',  color: 'pass' },
+  { sym: 'MCP',    val: 'eval server',        delta: '✓',  color: 'pass' },
+  { sym: 'CTA',    val: 'Tier-1 STA',         delta: '✓',  color: 'pass' },
+  { sym: 'NDA',    val: 'clean',              delta: '✓',  color: 'pass' },
+  { sym: 'PSHS',   val: 'Southern Mindanao',  delta: '✓',  color: 'muted' },
+  { sym: 'UTC',    val: '+8 PHT',             delta: '·',  color: 'muted' },
+];
+---
+<div class="ticker" role="marquee" aria-label="headline signals">
+  <div class="ticker__track">
+    {[...items, ...items].map(it => (
+      <span class:list={["ticker__item", `ticker__item--${it.color}`]}>
+        <span class="ticker__sym mono">{it.sym}</span>
+        <span class="ticker__val">{it.val}</span>
+        <span class="ticker__delta mono">{it.delta}</span>
+      </span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ticker {
+    overflow: hidden;
+    background: var(--c-tape);
+    color: #e6edf3;
+    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+  }
+  .ticker::before,
+  .ticker::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .ticker::before { left: 0;  background: linear-gradient(90deg, var(--c-tape), transparent); }
+  .ticker::after  { right: 0; background: linear-gradient(-90deg, var(--c-tape), transparent); }
+
+  .ticker__track {
+    display: flex;
+    gap: var(--sp-6);
+    white-space: nowrap;
+    animation: ticker-scroll 60s linear infinite;
+    will-change: transform;
+  }
+
+  .ticker__item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
+  }
+  .ticker__sym {
+    color: #8b949e;
+    font-weight: 500;
+  }
+  .ticker__val {
+    color: #e6edf3;
+    font-weight: 600;
+  }
+  .ticker__delta { font-weight: 700; }
+
+  .ticker__item--pass  .ticker__delta { color: #3fb950; }
+  .ticker__item--fail  .ticker__delta { color: #f85149; }
+  .ticker__item--warn  .ticker__delta { color: #d29922; }
+  .ticker__item--info  .ticker__delta { color: #58a6ff; }
+  .ticker__item--muted .ticker__delta { color: #6e7681; }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track { animation: none; }
+  }
+</style>
