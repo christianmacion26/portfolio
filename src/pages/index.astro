@@ -58,11 +58,11 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
       <div class="hero__eq-row">
         <div class="hero__eq-cell">
           <div class="hero__eq-label mono">deflated Sharpe</div>
-          <Equation latex="\mathrm{DSR} = \frac{\widehat{\mathrm{SR}} - \mathrm{SR}_0}{\sigma_{\hat{SR}}} \cdot \left[1 - \gamma_3 \cdot \widehat{\mathrm{SR}} + \gamma_4 \cdot \frac{\widehat{\mathrm{SR}}^2 - 1}{4}\right]" />
+          <Equation latex={`\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}}} \\cdot \\left[1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}\\right]`} />
         </div>
         <div class="hero__eq-cell hero__eq-cell--right">
           <div class="hero__eq-label mono">multi-agent cost</div>
-          <Equation latex="\mathrm{cost} = \sum_{a \in \mathcal{A}} t(a) \cdot p(\mathrm{tier}(a))" />
+          <Equation latex={`\\mathrm{cost} = \\sum_{a \\in \\mathcal{A}} t(a) \\cdot p(\\mathrm{tier}(a))`} />
         </div>
       </div>
 
