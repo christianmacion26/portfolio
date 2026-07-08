@@ -18,6 +18,8 @@ status: open-source
 tags: [cross-sectional, momentum, oos, decay, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+
 ## The hypothesis
 
 Cross-sectional momentum — long winners, short losers — has decades of equity literature. Does it survive in a small crypto universe (18 BTC-correlated coins)?
@@ -30,6 +32,21 @@ Cross-sectional momentum — long winners, short losers — has decades of equit
 - Report the OOS Sharpe with a block-bootstrap 95% CI.
 
 ## The result
+
+<Chart
+  type="bar"
+  data={[
+    { value: 0.91, label: "IS" },
+    { value: -0.03, label: "OOS" },
+    { value: 0.0, label: "null" },
+    { value: -0.12, label: "OOS −1.96σ" },
+    { value: 0.18, label: "OOS +1.96σ" },
+  ]}
+  title="Sharpe comparison: in-sample vs out-of-sample vs null bounds"
+  caption="The honest story: 0.91 IS Sharpe decays to −0.03 OOS. 95% block-bootstrap CI [−0.12, +0.18] straddles zero — cannot reject the null. IS region (left, green) is positive; OOS region (red) below zero. CI bounds shown for reference."
+  yMin={-0.2}
+  yMax={1.1}
+/>
 
 - **In-sample Sharpe: 0.91** (looks like an edge).
 - **Out-of-sample Sharpe: −0.03** (the OOS window quietly goes the other way).

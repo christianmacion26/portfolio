@@ -17,6 +17,8 @@ status: open-source
 tags: [look-ahead-bias, audit, leakage, methodology, public-data]
 ---
 
+import Chart from '@components/Chart.astro';
+
 ## Why this exists
 
 Look-ahead bias is the silent killer of every quantitative backtest. The researcher *thinks* the signal uses yesterday's close; the code uses today's. The result is an equity curve that looks like alpha and turns out to be a leak.
@@ -28,6 +30,20 @@ Look-ahead bias is the silent killer of every quantitative backtest. The researc
 3. Compare the two Sharpe ratios.
 
 ## The result
+
+<Chart
+  type="bar"
+  data={[
+    { value: 0.59, label: "Clean" },
+    { value: 5.07, label: "Leaked" },
+    { value: 0.55, label: "Real α" },
+    { value: 4.48, label: "Phantom" },
+  ]}
+  title="Sharpe decomposition: real α vs look-ahead phantom"
+  caption="One-bar shift test exposes the leak: leaked Sharpe (5.07) − real α (0.55) ≈ 4.48 phantom Sharpe from a one-bar forward shift. 88% of the apparent edge was leakage."
+  yMin={0}
+  yMax={5.5}
+/>
 
 - **Clean Sharpe: 0.59** (real signal).
 - **Leaked Sharpe: 5.07** (real leakage).
