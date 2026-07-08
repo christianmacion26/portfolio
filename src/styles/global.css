@@ -27,6 +27,23 @@ body {
   min-height: 100dvh;
   font-size: var(--fs-base);
   background: var(--c-bg);
+  overflow-x: hidden;
+}
+
+/* Allow content panels to scroll horizontally on narrow viewports
+   without making the page itself scroll sideways. */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Long inline math/code blocks should never force horizontal scroll
+   on the page. */
+.katex-display,
+pre,
+code {
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 img, picture, video, canvas, svg {
@@ -243,4 +260,59 @@ li { line-height: var(--lh-loose); }
   h2 { font-size: var(--fs-2xl); }
   .section { padding-block: var(--sp-7); }
   .section--tight { padding-block: var(--sp-5); }
+
+  /* Collapse 4-up hero stat tiles to 2-up on mobile */
+  .grid-4,
+  .hero__stats,
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-3);
+  }
+
+  /* Reduce giant hero numbers */
+  .hero__num,
+  .stat__num {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+
+  /* Nav stack: keep brand visible, hide text sub on mobile */
+  .nav__brand-sub { display: none; }
+
+  /* Ticker animation is desktop flair; on mobile, freeze it (still readable, no jitter) */
+  .ticker__track { animation: none; }
+
+  /* Long tables: scroll instead of overflowing the page */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* KaTeX block equations: shrink padding so they fit narrow screens */
+  .katex-display {
+    padding: 0;
+    margin: 1rem 0;
+  }
+
+  /* Equation cards stack tighter */
+  .eq-card { padding: var(--sp-4); }
+
+  /* DSRC calculator: shrink sliders to fit */
+  .dsr-calc__row { flex-direction: column; align-items: stretch; }
+  .dsr-calc__row label { min-width: 0; }
+
+  /* Reduce tile shadow/transform on hover-capable touch devices */
+  .tile:hover { transform: none; }
+}
+
+@media (max-width: 480px) {
+  /* Below 480px, single-column stat tiles */
+  .grid-4,
+  .hero__stats,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  h1 { font-size: var(--fs-2xl); }
+  h2 { font-size: var(--fs-xl); }
+  .container { padding-inline: var(--sp-3); }
 }
