@@ -68,20 +68,34 @@ function log(prefix, msg) {
   console.log(`[build-resumes] ${prefix} ${msg}`);
 }
 
+// Returns true when the OJP toolchain is reachable. CI runners don't have the
+// local venv or the builder script, so they fall through to "skip" instead of
+// failing the prebuild — the committed PDFs in public/ are the source of truth
+// for what ships.
+function toolchainAvailable() {
+  return existsSync(PYTHON) && existsSync(OJP_BUILDER);
+}
+
 function render(variant) {
   log(variant.name, `→ ${variant.pdf}`);
   if (!existsSync(variant.json)) {
     console.error(`[build-resumes] ✗ ${variant.name}: missing JSON at ${variant.json}`);
     process.exit(1);
   }
-  if (!existsSync(PYTHON)) {
-    console.error(`[build-resumes] ✗ python venv not found at ${PYTHON}`);
-    console.error(`[build-resumes]   set OJP_PYTHON env var to the python3 with python-docx installed`);
-    process.exit(1);
-  }
-  if (!existsSync(OJP_BUILDER)) {
-    console.error(`[build-resumes] ✗ builder not found at ${OJP_BUILDER}`);
-    console.error(`[build-resumes]   set OJP_BUILDER env var to the build_resume.py path`);
+  if (!toolchainAvailable()) {
+    // Not a hard error — CI without the OJP venv should ship the committed PDFs.
+    if (existsSync(variant.pdf)) {
+      const size = statSync(variant.pdf).size;
+      log(
+        variant.name,
+        `○ skip (no OJP toolchain); using committed PDF (${(size / 1024).toFixed(1)} KB)`,
+      );
+      return;
+    }
+    console.error(
+      `[build-resumes] ✗ ${variant.name}: OJP toolchain not found AND no committed PDF at ${variant.pdf}`,
+    );
+    console.error(`[build-resumes]   either set OJP_PYTHON + OJP_BUILDER, or commit public/${variant.pdf}`);
     process.exit(1);
   }
   mkdirSync(dirname(variant.pdf), { recursive: true });
@@ -120,5 +134,12 @@ if (onlyVariant && targets.length === 0) {
 }
 
 log('start', `rendering ${targets.length} resume variant(s)`);
+if (!toolchainAvailable()) {
+  log(
+    'skip',
+    `OJP toolchain not reachable (PYTHON=${PYTHON}, BUILDER=${OJP_BUILDER}); shipping committed PDFs`,
+  );
+  // Run render() anyway so each variant reports its committed size — fast path.
+}
 for (const v of targets) render(v);
-log('done', `✓ ${targets.length}/${VARIANTS.length} resumes built`);
+log('done', `✓ ${targets.length}/${VARIANTS.length} resumes ready`);
