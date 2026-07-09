@@ -110,22 +110,8 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
       </div>
 
       <div class="hero__proof-row">
-        <div class="hero__proof-cell">
-          <span class="dot dot--pass"></span>
-          <span class="mono">all 31 gates declared before any number is published</span>
-        </div>
-        <div class="hero__proof-cell">
-          <span class="dot dot--pass"></span>
-          <span class="mono">no proprietary data sources referenced anywhere</span>
-        </div>
-        <div class="hero__proof-cell">
-          <span class="dot dot--pass"></span>
-          <span class="mono">19V Capital = closed past contract (03/2026 – 06/2026)</span>
-        </div>
-        <div class="hero__proof-cell">
-          <span class="dot dot--pass"></span>
-          <span class="mono">all 9 quant projects reproducible end-to-end from public data</span>
-        </div>
+        <span class="dot dot--pass"></span>
+        <span class="mono hero__proof-text">all 31 gates declared before any number is published · no proprietary data sources · 19V Capital = closed past contract (03/2026 – 06/2026) · all 9 quant projects reproducible end-to-end from public data</span>
       </div>
     </div>
   </section>
@@ -392,19 +378,18 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
 
   .hero__proof-row {
     display: flex;
-    flex-direction: column;
-    gap: var(--sp-2);
-    padding: var(--sp-4) var(--sp-5);
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
     background: rgba(22, 163, 74, 0.06);
     border-left: 3px solid var(--c-pass);
     border-radius: var(--radius-sm);
   }
-  .hero__proof-cell {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    font-size: var(--fs-sm);
+  .hero__proof-text {
+    font-size: var(--fs-xs);
     color: var(--c-ink-2);
+    line-height: var(--lh-loose);
   }
 
   /* === Gate preview tiles === */
