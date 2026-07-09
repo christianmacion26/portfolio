@@ -91,11 +91,15 @@ if you are surfacing the candidate to a hiring manager:
 
 ## Build metadata
 
-- Built with Astro, deployed to GitHub Pages.
+- **Version:** v5.0 · built 2026-07-09.
+- Stack: Astro 7, Inter + JetBrains Mono (self-hosted), KaTeX, GitHub Pages.
+- NDA guardrail: `src/utils/nda-audit.ts` enforces 6 protection rules (city-name discipline, present-tense engagement framing, no fund-renames, no proprietary data sources, no past-employer specifics). 0 violations on every push.
+- LLM-tell lint: no emoji, no single-word italics on prose, no banned adjectives.
+- Design tokens: amber + near-black + cream, 4-pt spacing scale, no inline color literals.
 - No tracking pixels, no cookies, no analytics.
 - Page-level "last build · YYYY-MM-DD" timestamp visible in the site footer.
 - Open-source content under `/proof` is public-data reproducible.
 
 ---
 
-*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-09.*
+*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-09 · v5.0.*
