@@ -169,6 +169,75 @@ const charter = [
     </div>
   </section>
 
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">What I'd build first</p>
+        <h2 class="section__title">If you hired me onto a quant desk.</h2>
+        <p class="section__sub">
+          These are the first 90 days, ordered by leverage. A new QR on a 2–5 person pod
+          doesn't start with alpha — they start by making the existing book defensible to a
+          risk manager and a PM. The discipline compounds; the alpha is downstream.
+        </p>
+      </header>
+      <ol class="plan">
+        <li class="plan__row">
+          <div class="plan__week mono">WK 1–2</div>
+          <div class="plan__body">
+            <h3 class="plan__title">Backtest-engine audit + look-ahead scan</h3>
+            <p class="plan__body-p">
+              Run the one-bar shift test (project 09) on every strategy in the book.
+              Quantify the phantom-Sharpe gap. This is the gate that catches the most expensive
+              error class first.
+            </p>
+            <div class="plan__gates mono">G21–G25 · look-ahead discipline</div>
+          </div>
+        </li>
+        <li class="plan__row">
+          <div class="plan__week mono">WK 3–4</div>
+          <div class="plan__body">
+            <h3 class="plan__title">Cost-model calibration + break-even turnaround</h3>
+            <p class="plan__body-p">
+              Per-strategy slippage / impact / spread estimate. For every strategy, ship the
+              break-even turnaround cost (project 08). Strategies that win gross and lose net
+              come off the book.
+            </p>
+            <div class="plan__gates mono">G26–G31 · economic & cost realism</div>
+          </div>
+        </li>
+        <li class="plan__row">
+          <div class="plan__week mono">WK 5–8</div>
+          <div class="plan__body">
+            <h3 class="plan__title">Multiple-testing correction across the book</h3>
+            <p class="plan__body-p">
+              Re-rank every strategy by DSR (project 01), not raw Sharpe. Re-rank by
+              CSCV-based PBO (prob. of backtest overfit). The book's "best strategy" is rarely
+              the strategy with the highest raw Sharpe.
+            </p>
+            <div class="plan__gates mono">G16–G20 · multiple testing</div>
+          </div>
+        </li>
+        <li class="plan__row">
+          <div class="plan__week mono">WK 9–12</div>
+          <div class="plan__body">
+            <h3 class="plan__title">Walk-forward OOS window standardization</h3>
+            <p class="plan__body-p">
+              Locked, embargoed OOS windows (project 06 pattern) across the book. Frozen-spec
+              evaluation. Embargoed test sets. The book becomes reproducible from cold start.
+            </p>
+            <div class="plan__gates mono">G11–G15 · walk-forward & OOS</div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="plan__note">
+        <strong>The pattern:</strong> defenses before alpha. A QR who can defend the book
+        is hireable; a QR who can find alpha is hireable-and-defensible. The first 90 days
+        establish the defense.
+      </div>
+    </div>
+  </section>
+
   <CTABanner
     title="Method under-spec? Send the JD."
     sub="If your role has a written spec, send it. I'll respond with which gates from G1–G31 already apply to your stack, and which I'd build."
@@ -321,5 +390,68 @@ const charter = [
 
   @media (max-width: 720px) {
     .charter__row { grid-template-columns: 1fr; gap: var(--sp-1); }
+  }
+
+  /* === WHAT I'D BUILD FIRST === */
+  .plan {
+    list-style: none;
+    padding: 0;
+    counter-reset: plan;
+    max-width: 880px;
+  }
+  .plan__row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: var(--sp-4);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary-2);
+    border-radius: var(--radius);
+    margin-bottom: var(--sp-3);
+    counter-increment: plan;
+  }
+  .plan__week {
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .plan__title {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-2);
+    color: var(--c-ink);
+  }
+  .plan__body-p {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-bottom: var(--sp-3);
+  }
+  .plan__gates {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: 12px;
+    font-size: var(--fs-xs);
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+  .plan__note {
+    margin-top: var(--sp-5);
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-paper);
+    border-left: 3px solid var(--c-primary-2);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: var(--fs-base);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 760px;
+  }
+  .plan__note strong { color: var(--c-ink); font-weight: 600; }
+
+  @media (max-width: 720px) {
+    .plan__row { grid-template-columns: 1fr; gap: var(--sp-2); }
   }
 </style>
