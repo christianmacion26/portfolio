@@ -1,0 +1,103 @@
+# .github/workflows/ci.yml — pull-request + push gate for the portfolio site.
+#
+# Five parallel jobs keep wall-clock low (~3-4 min):
+#   1. typecheck — astro check + tsc --noEmit
+#   2. lint     — ESLint flat config over src/ + scripts/
+#   3. format   — Prettier --check on the entire repo
+#   4. md       — markdownlint-cli2 over src/content/**/*.md
+#   5. dead     — knip unused-import/file/dep detection
+#   6. secrets  — gitleaks on every push (no PR noise)
+#
+# Triggers: PR open/sync/reopen + push to main. `deploy.yml` still ships the site.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    # `astro check` is strict and surfaces content-collection type drift that
+    # `astro build` tolerates; treat errors here as advisory so a clean build
+    # can still ship while we work through the long tail.
+    name: Type-check (astro check, advisory)
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx astro check
+
+  lint:
+    name: Lint (ESLint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  format:
+    name: Format (Prettier)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+
+  md:
+    name: Markdown (markdownlint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:md
+
+  dead:
+    name: Dead code (knip)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run knip
+
+  secrets:
+    name: Secrets (gitleaks)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

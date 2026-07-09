@@ -2,6 +2,11 @@
 /**
  * publications.astro — research log: papers, workbooks, talks, videos, OSS projects.
  * Targeted at recruiters who want to see *what Christian has published publicly*.
+ *
+ * Delta 6 — AQR-style research archive:
+ *   - Topic filter (papers / OSS / workbooks / press) via CSS-only radio
+ *   - Year grouping for research papers and OSS projects
+ *   - Venue/author metadata column on each row
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
@@ -19,6 +24,26 @@ function fmtDate(d?: Date | string): string {
   if (isNaN(date.getTime())) return '';
   return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
+function fmtYear(d?: Date | string): string {
+  if (!d) return '';
+  const date = typeof d === 'string' ? new Date(d) : d;
+  if (isNaN(date.getTime())) return '';
+  return String(date.getFullYear());
+}
+
+// Group pubs by year (descending) for the AQR-style year header
+function groupByYear<T extends { data: { date?: Date | string } }>(items: T[]): [string, T[]][] {
+  const map = new Map<string, T[]>();
+  for (const item of items) {
+    const y = fmtYear(item.data.date) || '—';
+    if (!map.has(y)) map.set(y, []);
+    map.get(y)!.push(item);
+  }
+  return Array.from(map.entries()).sort((a, b) => Number(b[0]) - Number(a[0]));
+}
+
+const quantByYear = groupByYear(quantPubs);
+const aiByYear = groupByYear(aiPubs);
 
 const workbooks = [
   {
@@ -67,15 +92,25 @@ const press = [
       'Tier-1 Certified Technical Analyst program, completed Dec 2025. Final capstone: regime-classification case study on ASEAN equities.',
   },
 ];
+
+const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.length;
 ---
 
 <BaseLayout
   title="Publications"
   description="Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe."
 >
+  {/* === CSS-only topic filter (no JS) === */}
+  <input type="radio" name="topic" id="topic-all" class="topic-input topic-input--all" checked aria-hidden="true" />
+  <input type="radio" name="topic" id="topic-papers" class="topic-input topic-input--papers" aria-hidden="true" />
+  <input type="radio" name="topic" id="topic-oss" class="topic-input topic-input--oss" aria-hidden="true" />
+  <input type="radio" name="topic" id="topic-workbooks" class="topic-input topic-input--workbooks" aria-hidden="true" />
+  <input type="radio" name="topic" id="topic-press" class="topic-input topic-input--press" aria-hidden="true" />
   <header class="pub-head">
     <div class="container">
-      <p class="section__eyebrow"><span class="mono">publications/</span> · public work log</p>
+      <p class="section__eyebrow">
+        <span class="mono">publications/</span> · public work log · {totalCount} artifacts
+      </p>
       <h1 class="pub-head__title">
         Things I have <span class="hl">written, built, and said</span> in public.
       </h1>
@@ -83,110 +118,124 @@ const press = [
         Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No
         proprietary data sources. No NDA-protected content.
       </p>
+
+      {/* Topic filter labels — radio inputs above are hidden; these are the clickable labels */}
+      <nav class="topic-filter" aria-label="Filter publications by topic">
+        <label for="topic-all" class="topic-btn"><span class="mono">all</span> <span class="topic-count">{totalCount}</span></label>
+        <label for="topic-papers" class="topic-btn"><span class="mono">papers</span> <span class="topic-count">{quantPubs.length}</span></label>
+        <label for="topic-oss" class="topic-btn"><span class="mono">oss</span> <span class="topic-count">{aiPubs.length}</span></label>
+        <label for="topic-workbooks" class="topic-btn"><span class="mono">workbooks</span> <span class="topic-count">{workbooks.length}</span></label>
+        <label for="topic-press" class="topic-btn"><span class="mono">press</span> <span class="topic-count">{press.length}</span></label>
+      </nav>
     </div>
   </header>
 
-  <section class="section section--alt">
+  <section class="section section--alt" data-topic="papers">
     <div class="container">
       <header class="section__head">
-        <p class="section__eyebrow">Research papers · 9 quant projects</p>
+        <p class="section__eyebrow">Research papers · {quantPubs.length} quant projects</p>
         <h2 class="section__title">Public-data systematic research.</h2>
       </header>
-      <div class="pub-list" data-pub-list="quant">
-        {
-          quantPubs.map((p) => (
-            <article class="pub">
-              <div class="pub__num mono" />
-              <div class="pub__body">
-                <h3 class="pub__title">
-                  <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
-                </h3>
-                <p class="pub__summary">{p.data.summary}</p>
-                {p.data.metrics.length > 0 && (
-                  <ul class="pub__metrics">
-                    {p.data.metrics.map((m) => (
-                      <li>
-                        <span class="pub__metric-label">{m.label}</span>
-                        <span class="pub__metric-value mono">{m.value}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <div class="pub__meta">
-                  {p.data.stack.slice(0, 6).map((s) => (
-                    <span class="pill">{s}</span>
-                  ))}
-                </div>
-              </div>
-              <div class="pub__action">
-                <div class="pub__date mono">{fmtDate(p.data.date)}</div>
-                <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>
-                  Read →
-                </a>
-              </div>
-            </article>
-          ))
-        }
-      </div>
+      {
+        quantByYear.map(([year, pubs]) => (
+          <div class="pub-year-group">
+            <h3 class="pub-year mono">{year}</h3>
+            <div class="pub-list" data-pub-list="quant">
+              {pubs.map((p) => (
+                <article class="pub">
+                  <div class="pub__num mono" />
+                  <div class="pub__body">
+                    <h4 class="pub__title">
+                      <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
+                    </h4>
+                    <p class="pub__summary">{p.data.summary}</p>
+                    {p.data.metrics.length > 0 && (
+                      <ul class="pub__metrics">
+                        {p.data.metrics.map((m) => (
+                          <li>
+                            <span class="pub__metric-label">{m.label}</span>
+                            <span class="pub__metric-value mono">{m.value}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div class="pub__meta">
+                      {p.data.stack.slice(0, 6).map((s) => (
+                        <span class="pill">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="pub__action">
+                    <div class="pub__date mono">{fmtDate(p.data.date)}</div>
+                    <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>
+                      Read →
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))
+      }
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" data-topic="oss">
     <div class="container">
       <header class="section__head">
-        <p class="section__eyebrow">OSS projects · 6 AI builds</p>
+        <p class="section__eyebrow">OSS projects · {aiPubs.length} AI builds</p>
         <h2 class="section__title">Multi-agent LLM systems with eval-first discipline.</h2>
       </header>
-      <div class="pub-list" data-pub-list="ai">
-        {
-          aiPubs.map((p) => (
-            <article class="pub">
-              <div class="pub__num mono" />
-              <div class="pub__body">
-                <h3 class="pub__title">
-                  <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
-                </h3>
-                <p class="pub__summary">{p.data.summary}</p>
-                {p.data.metrics.length > 0 && (
-                  <ul class="pub__metrics">
-                    {p.data.metrics.map((m) => (
-                      <li>
-                        <span class="pub__metric-label">{m.label}</span>
-                        <span class="pub__metric-value mono">{m.value}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <div class="pub__meta">
-                  {p.data.stack.slice(0, 6).map((s) => (
-                    <span class="pill">{s}</span>
-                  ))}
-                </div>
-              </div>
-              <div class="pub__action">
-                <div class="pub__date mono">{fmtDate(p.data.date)}</div>
-                <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>
-                  Read →
-                </a>
-                {p.data.sourceLink && (
-                  <a
-                    class="btn btn--ghost btn--sm"
-                    href={p.data.sourceLink}
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Repo ↗
-                  </a>
-                )}
-              </div>
-            </article>
-          ))
-        }
-      </div>
+      {
+        aiByYear.map(([year, pubs]) => (
+          <div class="pub-year-group">
+            <h3 class="pub-year mono">{year}</h3>
+            <div class="pub-list" data-pub-list="ai">
+              {pubs.map((p) => (
+                <article class="pub">
+                  <div class="pub__num mono" />
+                  <div class="pub__body">
+                    <h4 class="pub__title">
+                      <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
+                    </h4>
+                    <p class="pub__summary">{p.data.summary}</p>
+                    {p.data.metrics.length > 0 && (
+                      <ul class="pub__metrics">
+                        {p.data.metrics.map((m) => (
+                          <li>
+                            <span class="pub__metric-label">{m.label}</span>
+                            <span class="pub__metric-value mono">{m.value}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div class="pub__meta">
+                      {p.data.stack.slice(0, 6).map((s) => (
+                        <span class="pill">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="pub__action">
+                    <div class="pub__date mono">{fmtDate(p.data.date)}</div>
+                    <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>
+                      Read →
+                    </a>
+                    {p.data.sourceLink && (
+                      <a class="btn btn--ghost btn--sm" href={p.data.sourceLink} target="_blank" rel="noopener">
+                        Repo ↗
+                      </a>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))
+      }
     </div>
   </section>
 
-  <section class="section section--alt">
+  <section class="section section--alt" data-topic="workbooks">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Workbooks · long-form</p>
@@ -218,7 +267,7 @@ const press = [
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" data-topic="press">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Press & recognition</p>

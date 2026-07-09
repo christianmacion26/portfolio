@@ -82,12 +82,20 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
         <div class="hero__tooltip" id="hero-result-tooltip" role="tooltip">
           <div class="hero__tooltip-title mono">G1–G31 · six families</div>
           <ul class="hero__tooltip-list mono">
-            <li><b>G1–G5</b>  mechanical validity (schema, exit-0, JSON strict, byte budget)</li>
-            <li><b>G6–G10</b> statistical nulls (block-bootstrap CIs, random-timing, regime shuffle)</li>
-            <li><b>G11–G15</b> walk-forward / OOS (locked windows, 5-era stability, embargoed test)</li>
-            <li><b>G16–G20</b> multiple testing (deflated Sharpe, CSCV-PBO, MinBTL, Bonferroni–Holm)</li>
+            <li><b>G1–G5</b> mechanical validity (schema, exit-0, JSON strict, byte budget)</li>
+            <li>
+              <b>G6–G10</b> statistical nulls (block-bootstrap CIs, random-timing, regime shuffle)
+            </li>
+            <li>
+              <b>G11–G15</b> walk-forward / OOS (locked windows, 5-era stability, embargoed test)
+            </li>
+            <li>
+              <b>G16–G20</b> multiple testing (deflated Sharpe, CSCV-PBO, MinBTL, Bonferroni–Holm)
+            </li>
             <li><b>G21–G25</b> look-ahead discipline (point-in-time, survivorship, frozen-spec)</li>
-            <li><b>G26–G31</b> economic realism (spread/slippage, capacity, funding-carry, regime overlay)</li>
+            <li>
+              <b>G26–G31</b> economic realism (spread/slippage, capacity, funding-carry, regime overlay)
+            </li>
           </ul>
           <a class="hero__tooltip-link" href={path('/methodology')}>Read full methodology →</a>
         </div>
@@ -431,7 +439,9 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
     border: 1px solid var(--c-rule);
     border-left: 3px solid var(--c-primary-2-deep);
     border-radius: var(--radius);
-    transition: border-color var(--transition), box-shadow var(--transition);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
   }
   .hero__result:hover,
   .hero__result:focus-within {

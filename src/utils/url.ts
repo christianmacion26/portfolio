@@ -11,7 +11,3 @@ export function path(p: string): string {
   const suffix = p.startsWith('/') ? p : `/${p}`;
   return `${BASE}${suffix}`;
 }
-
-export function externalUrl(href: string): string {
-  return href;
-}

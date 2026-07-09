@@ -8,7 +8,7 @@
 // Idempotent — safe to re-run.
 
 import sharp from 'sharp';
-import { readdirSync, statSync, unlinkSync, existsSync, mkdirSync } from 'node:fs';
+import { readdirSync, statSync, unlinkSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 

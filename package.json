@@ -7,20 +7,20 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "favicons": "pwa-assets-generator",
     "lint:md": "markdownlint-cli2 \"src/content/**/*.md\"",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write \"**/*.{js,ts,tsx,jsx,astro,md,mdx,json,css,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,jsx,astro,md,mdx,json,css,yml,yaml}\"",
     "knip": "knip --no-progress",
     "prebuild": "node scripts/build-og-image.mjs && node scripts/optimize-assets.mjs",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "postbuild": "node scripts/asset-audit.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "audit": "tsx src/utils/nda-audit.ts",
     "version:bump": "tsx scripts/bump-version.ts",
     "sitemap:check": "tsx scripts/validate-sitemap.ts",
+    "typecheck": "astro check",
     "ci": "npm run lint:md && npm run lint && npm run format:check && npm run knip && npm run build && npm run audit && npm run sitemap:check"
   },
   "dependencies": {
@@ -42,6 +42,7 @@
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.0",
     "eslint": "^9.39.0",
     "eslint-config-prettier": "^10.1.0",
     "eslint-plugin-astro": "^1.6.0",

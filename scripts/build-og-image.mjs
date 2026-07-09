@@ -1,13 +1,15 @@
 // scripts/build-og-image.mjs
 //
-// Composites the og:image banner used for LinkedIn / Slack / Twitter previews.
-// Input:  src/assets/portrait/headshot-source.jpg
-// Output: public/og-image.jpg (1600×900) + public/og-image-twitter.jpg (1200×675)
+// Composites the og:image banner used for LinkedIn / Slack / Twitter / Facebook previews.
+// Input:  src/assets/portrait/headshot-source.jpg + public/cm-mark-amber.svg
+// Output: public/og-image.jpg          (1600×900, LinkedIn / Slack / Twitter large)
+//         public/og-image-twitter.jpg  (1200×675, Twitter summary_large_image)
+//         public/og-image-facebook.jpg  (1200×630, Facebook OG spec)
 //
-// Run once, then commit the outputs. Not part of `npm run build` — image is
-// deterministic from the source headshot, no need to rebuild on every commit.
+// Invoked by `npm run build` via the `prebuild` hook. Outputs are gitignored.
 
 import sharp from 'sharp';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -15,19 +17,23 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 
 const headshotPath = join(root, 'src/assets/portrait/headshot-source.jpg');
+const monogramPath = join(root, 'public/cm-mark-amber.svg');
 const publicDir = join(root, 'public');
 
 // ── SVG composition ──────────────────────────────────────────────────────────
-// Headshot anchored to the right third, dark gradient + amber rule on the left.
-// Type stack intentionally uses platform-safe sans (Helvetica/Arial) — these
-// get rasterized at build time, so we don't depend on @fontsource loading.
-function buildSvg({ width, height, headshotBox }) {
+// Headshot anchored to the right third, dark gradient + amber rule on the left,
+// CM monogram in the top-left corner (replacing the previous text-only mark).
+function buildSvg({ width, height, headshotBox, monogramSize }) {
   const scale = width / 1600; // normalize to 1600 design grid
   const s = (n) => Math.round(n * scale);
 
   // Headshot placement: anchored to right side, vertically centered
   const hsX = Math.round(width - headshotBox - s(80));
   const hsY = Math.round((height - headshotBox) / 2);
+
+  // Monogram: top-left, sits in the gutter above the eyebrow line
+  const monoX = s(120);
+  const monoY = s(80);
 
   return `
 <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +59,10 @@ function buildSvg({ width, height, headshotBox }) {
   <!-- Amber left rule -->
   <rect x="${s(60)}" y="${s(80)}" width="${s(6)}" height="${height - s(160)}" fill="url(#amber)"/>
 
-  <!-- Type stack -->
+  <!-- CM monogram in top-left gutter -->
+  <image href="${monogramPath}" x="${monoX}" y="${monoY}" width="${monogramSize}" height="${monogramSize}"/>
+
+  <!-- Type stack — shifted right of the monogram -->
   <g font-family="Helvetica, Arial, sans-serif" fill="#ffffff">
     <text x="${s(120)}" y="${s(220)}" font-size="${s(32)}" letter-spacing="${s(6)}" fill="#d4a017" font-weight="600">
       CHRISTIAN T. MACION, CTA®
@@ -75,20 +84,20 @@ function buildSvg({ width, height, headshotBox }) {
     </text>
   </g>
 
-  <!-- Headshot (composited after, but reserve slot for layout) -->
+  <!-- Headshot slot -->
   <rect x="${hsX}" y="${hsY}" width="${headshotBox}" height="${headshotBox}" fill="#0a0e14" stroke="#d4a017" stroke-width="${s(4)}"/>
 </svg>`;
 }
 
 // ── Pipeline ─────────────────────────────────────────────────────────────────
-async function buildOne({ width, height, outFile, headshotBox, quality }) {
+async function buildOne({ width, height, outFile, headshotBox, monogramSize, quality }) {
   // Resize headshot: crop-to-square at headshotBox, focus on attention area
   const headshotBuf = await sharp(headshotPath)
     .resize(headshotBox, headshotBox, { fit: 'cover', position: 'attention' })
     .png()
     .toBuffer();
 
-  const svg = buildSvg({ width, height, headshotBox });
+  const svg = buildSvg({ width, height, headshotBox, monogramSize });
   const compositeX = Math.round(width - headshotBox - (80 * width) / 1600);
   const compositeY = Math.round((height - headshotBox) / 2);
 
@@ -101,18 +110,40 @@ async function buildOne({ width, height, outFile, headshotBox, quality }) {
   console.log(`✓ ${outFile}  ${stats.width}×${stats.height}  ${(stats.size / 1024).toFixed(1)} KB`);
 }
 
+// Read the monogram SVG once so we can verify it exists (fail fast on missing asset).
+try { readFileSync(monogramPath); }
+catch {
+  console.error(`✗ Missing monogram: ${monogramPath}`);
+  console.error(`  Re-run after restoring public/cm-mark-amber.svg`);
+  process.exit(1);
+}
+
+// 1600×900 — LinkedIn / Slack / generic large card (the canonical og:image)
 await buildOne({
   width: 1600,
   height: 900,
   outFile: join(publicDir, 'og-image.jpg'),
   headshotBox: 640,
+  monogramSize: 88,
   quality: 82,
 });
 
+// 1200×675 — Twitter summary_large_image (16:9-ish)
 await buildOne({
   width: 1200,
   height: 675,
   outFile: join(publicDir, 'og-image-twitter.jpg'),
   headshotBox: 480,
+  monogramSize: 72,
+  quality: 82,
+});
+
+// 1200×630 — Facebook OG spec (the one we were missing — 1200×675 is Twitter-only)
+await buildOne({
+  width: 1200,
+  height: 630,
+  outFile: join(publicDir, 'og-image-facebook.jpg'),
+  headshotBox: 440,
+  monogramSize: 68,
   quality: 82,
 });

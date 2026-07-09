@@ -45,6 +45,7 @@ const jsonLd = personJsonLd({
   contact: profile.contact,
 });
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -61,20 +62,25 @@ const jsonLd = personJsonLd({
     <meta property="og:description" content={meta.openGraph.description} />
     <meta property="og:url" content={meta.openGraph.url} />
     <meta property="og:site_name" content={meta.openGraph.site_name} />
-    {meta.openGraph.images?.map((img: { url: string }) => (
-      <meta property="og:image" content={img.url} />
-    ))}
+    {
+      meta.openGraph.images?.map((img: { url: string }) => (
+        <meta property="og:image" content={img.url} />
+      ))
+    }
 
     <meta name="twitter:card" content={meta.twitter.card} />
     <meta name="twitter:title" content={meta.twitter.title} />
     <meta name="twitter:description" content={meta.twitter.description} />
-    {meta.twitter.images?.map((src: string) => (
-      <meta name="twitter:image" content={src} />
-    ))}
+    {meta.twitter.images?.map((src: string) => <meta name="twitter:image" content={src} />)}
 
-    <link rel="icon" type="image/svg+xml" href={path('/favicon.svg')} />
+    <!-- CM monogram: single-color for browser tabs + bookmarks (currentColor
+         inherits from the user-agent's icon color rule); amber variant is the
+         primary brand mark used in nav, og:image, and About hero. -->
+    <link rel="icon" type="image/svg+xml" href={path('/cm-mark.svg')} />
+    <link rel="apple-touch-icon" href={path('/cm-mark-amber.svg')} />
+    <link rel="mask-icon" href={path('/cm-mark.svg')} color="#0a0e14" />
     <link rel="sitemap" href={path('/sitemap-index.xml')} />
-    <meta name="theme-color" content="#0b3d5c" />
+    <meta name="theme-color" content="#0a0e14" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>

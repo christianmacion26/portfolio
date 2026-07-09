@@ -1,0 +1,20 @@
+// knip.json — dead-code detector config.
+// Catches unused imports, exports, files, and dependencies. Runs as `npm run knip`.
+// Ignored built-ins (dist, .astro, node_modules, public) are excluded by knip's defaults;
+// *.d.ts files contain ambient types and aren't tracked.
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["src/pages/**/*.astro"],
+  "ignoreDependencies": [
+    "astro-expressive-code",
+    "@fontsource/inter",
+    "@fontsource/jetbrains-mono",
+    "@astrojs/rss",
+    "astro-icon",
+    "lightweight-charts",
+    "lucide",
+    "rehype-katex",
+    "remark-math"
+  ],
+  "ignoreExportsUsedInFile": true
+}
