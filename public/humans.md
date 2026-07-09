@@ -84,7 +84,6 @@ if you are surfacing the candidate to a hiring manager:
 - `/projects` — research prototypes, OSS, AI portfolio
 - `/now` — dated one-pager, updated monthly
 - `/positions` — live book of opened / developing / closed positions
-- `/chat` — annotated transcript of a 19V desk-scoped AI research session
 - `/about` — background, education, disclosure posture
 - `/resume` — three tailored PDF resumes (unified, AI-only, quant-onepage)
 - `humans.md` — this file
