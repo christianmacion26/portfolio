@@ -300,6 +300,103 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
 </BaseLayout>
 
 <style>
+  /* === Topic filter (CSS-only, no JS) === */
+  .topic-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .topic-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--c-rule-soft);
+  }
+  .topic-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+  }
+  .topic-btn:hover {
+    border-color: var(--c-primary-2-deep);
+    color: var(--c-primary);
+  }
+  .topic-count {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    padding: 0 var(--sp-2);
+    border-radius: 999px;
+    background: var(--c-bg-2);
+  }
+  /* Selected state */
+  .topic-input--all:checked       ~ * .topic-btn:has(input[disabled]),
+  .topic-input--papers:checked    ~ * [data-topic="papers"],
+  .topic-input--oss:checked       ~ * [data-topic="oss"],
+  .topic-input--workbooks:checked ~ * [data-topic="workbooks"],
+  .topic-input--press:checked     ~ * [data-topic="press"] {
+    /* not quite — use sibling cascade */
+  }
+  .topic-input--all:checked       ~ * label[for="topic-all"]       { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+  .topic-input--all:checked       ~ * label[for="topic-all"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
+  .topic-input--papers:checked    ~ * label[for="topic-papers"]    { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+  .topic-input--papers:checked    ~ * label[for="topic-papers"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
+  .topic-input--oss:checked       ~ * label[for="topic-oss"]       { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+  .topic-input--oss:checked       ~ * label[for="topic-oss"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
+  .topic-input--workbooks:checked ~ * label[for="topic-workbooks"] { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+  .topic-input--workbooks:checked ~ * label[for="topic-workbooks"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
+  .topic-input--press:checked     ~ * label[for="topic-press"]     { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+  .topic-input--press:checked     ~ * label[for="topic-press"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
+
+  /* Hide sections by default; show based on filter */
+  [data-topic="papers"],
+  [data-topic="oss"],
+  [data-topic="workbooks"],
+  [data-topic="press"] {
+    display: none;
+  }
+  .topic-input--all:checked       ~ main [data-topic="papers"],
+  .topic-input--all:checked       ~ main [data-topic="oss"],
+  .topic-input--all:checked       ~ main [data-topic="workbooks"],
+  .topic-input--all:checked       ~ main [data-topic="press"],
+  .topic-input--papers:checked    ~ main [data-topic="papers"],
+  .topic-input--oss:checked       ~ main [data-topic="oss"],
+  .topic-input--workbooks:checked ~ main [data-topic="workbooks"],
+  .topic-input--press:checked     ~ main [data-topic="press"] {
+    display: block;
+  }
+  .topic-input--all:checked       ~ main [data-topic="papers"] .pub-list,
+  .topic-input--all:checked       ~ main [data-topic="oss"] .pub-list,
+  .topic-input--all:checked       ~ main [data-topic="workbooks"] .workbooks,
+  .topic-input--all:checked       ~ main [data-topic="press"] .press {
+    display: flex;
+  }
+
+  /* === Year groups (AQR-style) === */
+  .pub-year-group {
+    margin-bottom: var(--sp-6);
+  }
+  .pub-year {
+    font-size: var(--fs-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 700;
+    margin: 0 0 var(--sp-3);
+    padding-bottom: var(--sp-2);
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+
   .pub-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
@@ -318,6 +415,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     color: var(--c-ink-2);
     line-height: var(--lh-loose);
     max-width: 60ch;
+    margin-bottom: 0;
   }
 
   .pub-list {

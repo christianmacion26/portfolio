@@ -6,7 +6,7 @@
 **Time to read:** 4 minutes
 **Build window:** 10 working days (~70 hours)
 
-This is the **delta** between the v3.4 site (which is real and shipping) and the v3.5 target. The full proposal is the *what + why*; this file is the *what to touch in your actual repo*.
+This is the **delta** between the v3.4 site (which is real and shipping) and the v3.5 target. The full proposal is the _what + why_; this file is the _what to touch in your actual repo_.
 
 ---
 
@@ -14,21 +14,21 @@ This is the **delta** between the v3.4 site (which is real and shipping) and the
 
 The site at `/Users/christianmacion/Contingency/christianmacion.github.io` is **already substantial**:
 
-| Asset | State | What it gives us |
-|---|---|---|
-| Astro project | v5.7.10 (not v7 — upgrade needed) | Solid SSG foundation |
-| 16 components | `Avatar`, `CTABanner`, `Chart`, `DSRCalculator`, `Equation`, `Footer`, `MetricPill`, `Nav`, `ProjectCard`, `ProofCard`, `Sparkline`, `Stat`, `Ticker`, `TimelineEntry`, `VideoEmbed` | DSR + Chart + Sparkline + Ticker already exist |
-| 17 pages | `index`, `about`, `certifications`, `contact`, `experience`, `methodology`, `mistakes`, `now`, `positions`, `projects`, `projects/[slug]`, `proof`, `publications`, `resume`, `skills`, `solutions`, `uses` + `404` | Most IA is there |
-| 15 MDX projects | 6 AI (`rag-recall`, `toolcall-agent`, `judge-harness`, `eval-mcp-server`, `reflect-revise`, `slop-scanner`) + 9 quant (`deflated-sharpe`, `cross-sectional-momentum`, `timeseries-momentum-voltarget`, `variance-risk-premium`, `pairs-cointegration`, `funding-carry`, `macro-regime-overlay`, `backtest-engine-costs`, `lookahead-bias-audit`) | Content already there |
-| Content collections | Zod-typed in `src/content.config.ts` | Type-safe frontmatter |
-| `nda-audit.ts` | CI-enforced NDA guardrails | Already blocks Davao City / Present / fund renames / etc. |
-| `profile.ts` | Single source of truth for identity | Easy to update |
-| `tokens.css` + `global.css` + `print.css` | Design system in place | Extend, don't replace |
-| 3 resume PDFs in `/public/resume-*.pdf` | PDF distribution | Refresh after v3.5 |
-| 9 quant project figures in `/public/figures/quant/` | Visual assets | Keep |
-| Deploy pipeline | GitHub Actions → GH Pages | Production-ready |
+| Asset                                               | State                                                                                                                                                                                                                                                                                                                                            | What it gives us                                          |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| Astro project                                       | v5.7.10 (not v7 — upgrade needed)                                                                                                                                                                                                                                                                                                                | Solid SSG foundation                                      |
+| 16 components                                       | `Avatar`, `CTABanner`, `Chart`, `DSRCalculator`, `Equation`, `Footer`, `MetricPill`, `Nav`, `ProjectCard`, `ProofCard`, `Sparkline`, `Stat`, `Ticker`, `TimelineEntry`, `VideoEmbed`                                                                                                                                                             | DSR + Chart + Sparkline + Ticker already exist            |
+| 17 pages                                            | `index`, `about`, `certifications`, `contact`, `experience`, `methodology`, `mistakes`, `now`, `positions`, `projects`, `projects/[slug]`, `proof`, `publications`, `resume`, `skills`, `solutions`, `uses` + `404`                                                                                                                              | Most IA is there                                          |
+| 15 MDX projects                                     | 6 AI (`rag-recall`, `toolcall-agent`, `judge-harness`, `eval-mcp-server`, `reflect-revise`, `slop-scanner`) + 9 quant (`deflated-sharpe`, `cross-sectional-momentum`, `timeseries-momentum-voltarget`, `variance-risk-premium`, `pairs-cointegration`, `funding-carry`, `macro-regime-overlay`, `backtest-engine-costs`, `lookahead-bias-audit`) | Content already there                                     |
+| Content collections                                 | Zod-typed in `src/content.config.ts`                                                                                                                                                                                                                                                                                                             | Type-safe frontmatter                                     |
+| `nda-audit.ts`                                      | CI-enforced NDA guardrails                                                                                                                                                                                                                                                                                                                       | Already blocks Davao City / Present / fund renames / etc. |
+| `profile.ts`                                        | Single source of truth for identity                                                                                                                                                                                                                                                                                                              | Easy to update                                            |
+| `tokens.css` + `global.css` + `print.css`           | Design system in place                                                                                                                                                                                                                                                                                                                           | Extend, don't replace                                     |
+| 3 resume PDFs in `/public/resume-*.pdf`             | PDF distribution                                                                                                                                                                                                                                                                                                                                 | Refresh after v3.5                                        |
+| 9 quant project figures in `/public/figures/quant/` | Visual assets                                                                                                                                                                                                                                                                                                                                    | Keep                                                      |
+| Deploy pipeline                                     | GitHub Actions → GH Pages                                                                                                                                                                                                                                                                                                                        | Production-ready                                          |
 
-**Net:** v3.5 is a *targeted evolution*, not a rebuild. The full proposal is the destination; this delta is the route.
+**Net:** v3.5 is a _targeted evolution_, not a rebuild. The full proposal is the destination; this delta is the route.
 
 ---
 
@@ -41,6 +41,7 @@ Each delta is one focused change with an output and a test. Total: ~9 working da
 **Why it leads:** Unblocks every other change. New Astro features (View Transitions, content layer improvements) simplify everything else.
 
 **What to do:**
+
 ```bash
 cd /Users/christianmacion/Contingency/christianmacion.github.io
 # 1. Verify target versions
@@ -62,6 +63,7 @@ npm run build
 ```
 
 **Add new deps:**
+
 ```bash
 npm install remark-math rehype-katex
 npm install astro-expressive-code
@@ -73,6 +75,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 ```
 
 **Test:**
+
 - `npm run build` succeeds
 - `npm run audit` returns 0
 - `dist/` regenerates with new Astro 7 output
@@ -81,11 +84,12 @@ curl -fsSL https://pagefind.app/install.sh | bash
 
 ### Delta 2 — Color contrast fix (Day 2 AM, ~2h)
 
-**Critical finding from the adversarial review:** the existing amber `#C9A24A` on the cream background likely fails WCAG 2.2 AA. This is a *correctness* issue, not aesthetic.
+**Critical finding from the adversarial review:** the existing amber `#C9A24A` on the cream background likely fails WCAG 2.2 AA. This is a _correctness_ issue, not aesthetic.
 
 **Touch:** `src/styles/tokens.css`
 
 **What to do:**
+
 1. Add `--amber-deep: #8C6F2A` for text accents (passes AA on cream)
 2. Reserve `--amber: #C9A24A` for non-text decorative (hex motif, hairlines) and large display sizes (≥24px Inter 600)
 3. Replace any text-on-cream using `--amber` with `--amber-deep`
@@ -93,6 +97,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 5. Add the `prefers-color-scheme: dark` block (the v3.4 site may not have a dark mode)
 
 **Test:**
+
 - Run an axe-core scan (manual: open Chrome DevTools → Lighthouse → Accessibility)
 - All `--amber` text uses must now be `--amber-deep` for sizes <24px
 
@@ -105,6 +110,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 **Why:** The v3.4 hero is the primary "looks AI generated" symptom. Replace it with the HRT/AQR pattern.
 
 **What to do:**
+
 1. Build `HexPattern.astro` — single SVG, ~30 lines, 1–2 amber-segment fills, mostly transparent
 2. Build `VersionStamp.astro` — small mono text `portfolio.os / v3.5.0` bottom-right of hero
 3. Build `NounList.astro` — period-separated singular noun list (e.g., `backtest · risk model · factor library · DSR calculator · MCP server · RAG harness · research note · OSS tool`)
@@ -112,11 +118,12 @@ curl -fsSL https://pagefind.app/install.sh | bash
    - Hex motif background (low opacity)
    - 64px circular headshot top-right
    - Singular noun list (display Inter 600, period-terminated)
-   - Third-person sub-statement: *"Christian Macion is a quantitative researcher and AI engineer based in Digos City, Philippines (UTC+8), open to remote research roles with US-premarket or APAC-anchor overlap."*
+   - Third-person sub-statement: _"Christian Macion is a quantitative researcher and AI engineer based in Digos City, Philippines (UTC+8), open to remote research roles with US-premarket or APAC-anchor overlap."_
    - Mono sub-tags: `ALPHA RESEARCH · AI ENGINEERING · OPEN-SOURCE TOOLS · REMOTE-READY`
    - Two text-link CTAs: `[Read research →] · [Resume (PDF) →]`
 
 **Test:**
+
 - Above-the-fold on 1366×768 and 375×667 (mobile)
 - 90-second skim test: can a stranger answer who/what/location/WFH in 90 seconds?
 
@@ -129,6 +136,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 **Why:** The v3.4 site has `Stat.astro` and `MetricPill.astro` already; consolidate into a single 4-numeral line with no card chrome.
 
 **What to do:**
+
 1. Audit `~/code` and GitHub for **real** stats:
    - # of quant research notes
    - # of AI engineering projects
@@ -149,6 +157,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 **Why:** The current homepage likely leads with About or Projects. The proposal reorders: **proof before bio.** This is the single biggest "AI generated → institutional" lever.
 
 **What to do:**
+
 1. Refactor `ProofCard.astro` to use the proposal's pattern: mono label (`[ Quant #01 ]`) + title + 1-line outcome with a number + 2 link chips
 2. Curate 5 cards in this order (strongest first):
    1. **Deflated Sharpe Ratio calculator** (existing `DSRCalculator.astro` — anchor as Quant #01)
@@ -170,6 +179,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 **Why:** v3.4 has `publications.astro` already; reshape it into a paginated AQR-Insights-style uniform list with two-axis filter (Topic × Type).
 
 **What to do:**
+
 1. Create `src/content/research/` collection in `src/content.config.ts` with Zod schema (title, date, topic, type, readTime, summary, slug)
 2. Migrate 5–10 existing posts/notes from `publications.astro` into MDX with the new schema
 3. Build `ResearchRow.astro`: tag · title · date · read-time · link, hairline rule, no thumbnail
@@ -188,6 +198,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 **Touch:** new `src/pages/ai.astro`, new `src/components/CapabilityGrid.astro`, new `src/components/ProcessStrip.astro`
 
 **What to do:**
+
 1. Build `CapabilityGrid.astro` — 4-capability grid (Retrieval / Agents / Eval / Deploy) with one-paragraph capability statement and link back to the Proof card
 2. Build `ProcessStrip.astro` — Optiver `→` glyph pattern: `Hypothesis → Backtest → Deflated Sharpe → Robustness → Deploy`
 3. Build `/ai` page with the grid + a featured project spotlight (the eval harness)
@@ -201,9 +212,10 @@ curl -fsSL https://pagefind.app/install.sh | bash
 
 **Touch:** `src/components/TimelineEntry.astro`, `src/pages/experience.astro`, `src/pages/skills.astro`
 
-**Why:** This is the highest-risk "leak" surface. v3.4 already has `nda-audit.ts`, but the *content* of the experience entries needs the 5 before/after rewrites from the full proposal §7.
+**Why:** This is the highest-risk "leak" surface. v3.4 already has `nda-audit.ts`, but the _content_ of the experience entries needs the 5 before/after rewrites from the full proposal §7.
 
 **What to do:**
+
 1. Apply the 5 before/after rewrites to the 19V Capital line:
    - Specific IRs (2.1, 1.8) → "Result category: signals with 1-month half-life IR > 1.0; specific IRs NDA-protected"
    - PM names → removed
@@ -228,6 +240,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 **Touch:** `src/components/TrackRecord.astro` (new), `src/pages/oss.astro` (new), `src/pages/now.astro` (existing — refresh), `src/pages/404.astro`, `BaseLayout.astro`, `public/robots.txt`, `public/llms.txt`, `public/llms-full.txt`, `astro.config.mjs`
 
 **What to do:**
+
 1. Build `TrackRecord.astro` row: Numerai (after signup), Kaggle, arXiv (if any), GitHub contribution graph. **Do not link BRAIN** (PH not eligible)
 2. Build `/oss` page with 5 repo rows
 3. Refresh `/now` page — 200–400 words, dated 2026-07-09, opinionated, monthly cadence commitment
@@ -254,6 +267,7 @@ curl -fsSL https://pagefind.app/install.sh | bash
 **Why:** This is the standout AI capability demo. Reuses the RAGAS eval harness from the Proof section.
 
 **What to do:**
+
 1. Build `ChatIsland.astro` — Preact/React component, lazy-loaded, ~30 KB
 2. Wire to a small RAG backend: Vercel Edge Function or Cloudflare Worker that:
    - Embeds all MDX content at build time (use `@xenova/transformers` locally or a hosted embed API)
@@ -288,7 +302,7 @@ If git is dirty or CI is red, fix that first. v3.5 ships on top of green.
 
 ## 3. What to NOT do
 
-- **Don't redesign the color palette.** Amber+black is correct. The fix is *contrast* (--amber-deep for text), not *color*.
+- **Don't redesign the color palette.** Amber+black is correct. The fix is _contrast_ (--amber-deep for text), not _color_.
 - **Don't add a "What I do" icon grid.** That's the AI-generated pattern the proposal explicitly forbids.
 - **Don't add a "Hi, I'm Christian" hero.** The third-person sub-statement is the move.
 - **Don't claim current employment at 19V Capital.** Past contract, closed dates, abstracted methodology.

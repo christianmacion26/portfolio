@@ -3,18 +3,18 @@ date: 2026-02-18
 title: Pairs Trading via Cointegration (BTC / ETH)
 role: quant
 order: 5
-summary: "ADF −2.11 (not cointegrated), half-life 208 d — the fade loses, as the test predicts."
-summary_long: "A cointegration study on BTC / ETH: the most-traded pair in crypto, and the most obvious candidate for mean-reversion. The ADF test is honest about it."
+summary: 'ADF −2.11 (not cointegrated), half-life 208 d — the fade loses, as the test predicts.'
+summary_long: 'A cointegration study on BTC / ETH: the most-traded pair in crypto, and the most obvious candidate for mean-reversion. The ADF test is honest about it.'
 stack:
   - Python (numpy / pandas / matplotlib)
   - Augmented Dickey-Fuller (from-scratch)
   - Half-life estimator
   - 5 bps / side cost model
 metrics:
-  - { label: "ADF test statistic", value: "−2.11", sub: "fail to reject unit root at 5%" }
-  - { label: "Half-life (estimated)", value: "208 days" }
-  - { label: "OOS Sharpe (fade)", value: "≈ 0", sub: "as the test predicted" }
-sourceLink: "https://github.com/christianmacion26/pairs-cointegration"
+  - { label: 'ADF test statistic', value: '−2.11', sub: 'fail to reject unit root at 5%' }
+  - { label: 'Half-life (estimated)', value: '208 days' }
+  - { label: 'OOS Sharpe (fade)', value: '≈ 0', sub: 'as the test predicted' }
+sourceLink: 'https://github.com/christianmacion26/pairs-cointegration'
 status: open-source
 tags: [cointegration, pairs-trading, adf, mean-reversion, public-data]
 ---
@@ -23,7 +23,7 @@ import Chart from '@components/Chart.astro';
 
 ## The hypothesis
 
-BTC and ETH move together. If they are *cointegrated*, a stationary spread should mean-revert — a textbook stat-arb entry.
+BTC and ETH move together. If they are _cointegrated_, a stationary spread should mean-revert — a textbook stat-arb entry.
 
 ## What the project does
 
@@ -38,10 +38,10 @@ BTC and ETH move together. If they are *cointegrated*, a stationary spread shoul
 <Chart
   type="bar"
   data={[
-    { value: -1.95, label: "CV 1%\n(−2.57)" },
-    { value: -1.95, label: "CV 5%\n(−2.86)" },
-    { value: -2.11, label: "ADF\nstat" },
-    { value: -1.62, label: "CV 10%\n(−3.43)" },
+    { value: -1.95, label: 'CV 1%\n(−2.57)' },
+    { value: -1.95, label: 'CV 5%\n(−2.86)' },
+    { value: -2.11, label: 'ADF\nstat' },
+    { value: -1.62, label: 'CV 10%\n(−3.43)' },
   ]}
   title="ADF test statistic vs critical values — fail to reject unit root"
   caption="Spread ADF = −2.11 sits *less negative* than the 5% critical value (≈ −2.86) and even the 10% line. Cannot reject H₀: spread has a unit root. The cointegration hypothesis fails — by construction, no stat-arb trade is warranted."
@@ -51,7 +51,7 @@ BTC and ETH move together. If they are *cointegrated*, a stationary spread shoul
 
 - **ADF test statistic: −2.11** — fails to reject the unit-root hypothesis at the 5% level. The spread is not stationary.
 - **Half-life: 208 days** — too slow to be a trade.
-- The OOS fade produces **≈ 0 Sharpe net of cost** — and that is the *correct* answer, given the test.
+- The OOS fade produces **≈ 0 Sharpe net of cost** — and that is the _correct_ answer, given the test.
 
 ## What's transferable
 

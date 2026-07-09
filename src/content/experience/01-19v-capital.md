@@ -1,31 +1,31 @@
 ---
-title: "AI Systems Engineer / Quantitative Researcher (contract)"
-company: "19V Capital"
-role: "experience"
+title: 'AI Systems Engineer / Quantitative Researcher (contract)'
+company: '19V Capital'
+role: 'experience'
 order: 1
-location: "Remote"
-startDate: "2026-03"
-endDate: "2026-06"
+location: 'Remote'
+startDate: '2026-03'
+endDate: '2026-06'
 isCurrent: false
-summary: "Architected the 11-agent AI research platform and the 31-gate statistical eval harness used by the desk under PM Evan Ferioli. (Past contract; closed 06/2026.)"
+summary: 'Architected the 11-agent AI research platform and the 31-gate statistical eval harness used by the desk under PM Evan Ferioli. (Past contract; closed 06/2026.)'
 tags: [multi-agent, eval-harness, quant-research, MCP, model-routing]
 contributions:
-  - label: "11-agent orchestrator + 31-gate eval harness"
-    evidence: "Public scorecards for the eval gates (G1–G31); methodology in publications log"
-    proof: "See /solutions/11-agent-eval-platform + methodology page"
-  - label: "Deflated Sharpe, CSCV-based PBO, MinBTL"
-    evidence: "Three canonical multiple-testing corrections in one gate stack"
-    proof: "OSS repo (deflated-sharpe module); publications log entry"
-  - label: "5 asset-class systematic research"
-    evidence: "Locked OOS windows, frozen-spec evaluation per candidate"
-    proof: "Memo + figure for each (public-data)"
-  - label: "Public-data PIT data pipeline"
-    evidence: "byte-range subsetting, gap guards, idempotent incremental pulls"
-    proof: "Pipeline code in public quant portfolio"
+  - label: '11-agent orchestrator + 31-gate eval harness'
+    evidence: 'Public scorecards for the eval gates (G1–G31); methodology in publications log'
+    proof: 'See /solutions/11-agent-eval-platform + methodology page'
+  - label: 'Deflated Sharpe, CSCV-based PBO, MinBTL'
+    evidence: 'Three canonical multiple-testing corrections in one gate stack'
+    proof: 'OSS repo (deflated-sharpe module); publications log entry'
+  - label: '5 asset-class systematic research'
+    evidence: 'Locked OOS windows, frozen-spec evaluation per candidate'
+    proof: 'Memo + figure for each (public-data)'
+  - label: 'Public-data PIT data pipeline'
+    evidence: 'byte-range subsetting, gap guards, idempotent incremental pulls'
+    proof: 'Pipeline code in public quant portfolio'
 proofs:
-  - "Contract disclosed under NDA — role: AI Systems Engineer / Quantitative Researcher. PM of record (publicly attributable): Evan Ferioli."
-  - "Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs) carried forward into the public methodology page"
-  - "All deliverables NDA-safe; no proprietary data sources referenced"
+  - 'Contract disclosed under NDA — role: AI Systems Engineer / Quantitative Researcher. PM of record (publicly attributable): Evan Ferioli.'
+  - 'Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs) carried forward into the public methodology page'
+  - 'All deliverables NDA-safe; no proprietary data sources referenced'
 ---
 
 Designed and operated an **11-agent orchestrator-worker AI research platform** (~27,500 words of role-scoped agent charters) with contracted hand-off packets, few-shot routing, and separation-of-duties between generation, validation, and documentation agents — backed by ~76,500 LOC of light-dependency Python.

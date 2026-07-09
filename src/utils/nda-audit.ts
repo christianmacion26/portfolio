@@ -35,7 +35,7 @@ interface Rule {
   label: string;
   pattern: RegExp;
   exceptionPattern?: RegExp;
-  scope: 'content' | 'meta';  // 'content' = all text, 'meta' = allow in <meta> tags only
+  scope: 'content' | 'meta'; // 'content' = all text, 'meta' = allow in <meta> tags only
 }
 
 const RULES: Rule[] = [
@@ -48,7 +48,8 @@ const RULES: Rule[] = [
   {
     id: 'present-19v',
     label: 'Never claim "Present" employment at 19V Capital',
-    pattern: /\b(?:Present|Currently|presently|currently)\b[^.]*?19V|19V[^.]*?(?:Present|Currently|presently|currently)\b/gi,
+    pattern:
+      /\b(?:Present|Currently|presently|currently)\b[^.]*?19V|19V[^.]*?(?:Present|Currently|presently|currently)\b/gi,
     exceptionPattern: /closed past contract|03\/2026\s*[–-]\s*06\/2026/i,
     scope: 'content',
   },
@@ -96,7 +97,7 @@ async function walk(dir: string): Promise<string[]> {
   for (const entry of entries) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
-      out.push(...await walk(full));
+      out.push(...(await walk(full)));
     } else if (['.html', '.pdf', '.txt', '.md', '.mdx'].includes(extname(entry.name))) {
       out.push(full);
     }
@@ -159,9 +160,9 @@ async function audit(): Promise<number> {
   }
   console.error('');
   console.error('See src/utils/nda-audit.ts for the rule list.');
-  console.error('To allow a match, refine the rule\'s exceptionPattern (preferred) or');
+  console.error("To allow a match, refine the rule's exceptionPattern (preferred) or");
   console.error('rewrite the source content to comply.');
   return 1;
 }
 
-audit().then(code => process.exit(code));
+audit().then((code) => process.exit(code));

@@ -1,9 +1,9 @@
 ---
-title: "11-Agent Eval-First Research Platform"
-slug: "11-agent-eval-platform"
-category: "AI Systems Engineering"
+title: '11-Agent Eval-First Research Platform'
+slug: '11-agent-eval-platform'
+category: 'AI Systems Engineering'
 order: 1
-client: "19V Capital (closed past contract, 03/2026 – 06/2026)"
+client: '19V Capital (closed past contract, 03/2026 – 06/2026)'
 problem: |
   A small systematic-trading desk needed an AI workflow that could keep pace with the research pipeline
   *without* shipping hallucinated or unverifiable analysis. The naive path — a single agent with one
@@ -17,19 +17,19 @@ approach: |
   both. Tiered model-routing (Opus = judgment, Sonnet = assembly, Haiku = mechanical) kept the
   ~15× token multiplier economical.
 evidence:
-  - "**~27,500 words** of role-scoped agent charters"
-  - "**31-gate** statistical evaluation harness (G1–G31)"
-  - "**~76,500 LOC** light-dependency Python"
-  - "**5 asset classes** researched (equity-index, crypto, energy, metals, agriculture)"
-  - "**~15×** token cost vs single-agent, offset by tiered routing"
+  - '**~27,500 words** of role-scoped agent charters'
+  - '**31-gate** statistical evaluation harness (G1–G31)'
+  - '**~76,500 LOC** light-dependency Python'
+  - '**5 asset classes** researched (equity-index, crypto, energy, metals, agriculture)'
+  - '**~15×** token cost vs single-agent, offset by tiered routing'
 outcome: |
   Caught and documented false positives as enforced methodology (each banked into the desk's research-integrity
   playbook). Shipped an automated monthly forward-OOS monitoring fleet — scheduled data pull → S3 sync →
   frozen-spec evaluation → ledger — that produced un-gameable live performance evidence.
 proof:
-  - "Contract disclosed under NDA — PM of record (publicly attributable): Evan Ferioli"
-  - "Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs, walk-forward) carried forward into the public methodology page"
-  - "All deliverables NDA-safe; no proprietary data sources referenced"
+  - 'Contract disclosed under NDA — PM of record (publicly attributable): Evan Ferioli'
+  - 'Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs, walk-forward) carried forward into the public methodology page'
+  - 'All deliverables NDA-safe; no proprietary data sources referenced'
 tags: [multi-agent, eval-harness, MCP, model-routing, walk-forward, deflated-sharpe]
-lane: "ai"
+lane: 'ai'
 ---

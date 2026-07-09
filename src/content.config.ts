@@ -33,21 +33,25 @@ const project = defineCollection({
 const experience = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/experience' }),
   schema: z.object({
-    title: z.string(),          // job title
-    company: z.string(),        // employer
+    title: z.string(), // job title
+    company: z.string(), // employer
     role: z.string().default('experience'),
     order: z.number(),
     location: z.string(),
-    startDate: z.string(),      // YYYY-MM
-    endDate: z.string(),        // YYYY-MM or "present"
+    startDate: z.string(), // YYYY-MM
+    endDate: z.string(), // YYYY-MM or "present"
     isCurrent: z.boolean().default(false),
     summary: z.string().optional(),
     tags: z.array(z.string()).default([]),
-    contributions: z.array(z.object({
-      label: z.string(),
-      evidence: z.string(),
-      proof: z.string().optional(),
-    })).default([]),
+    contributions: z
+      .array(
+        z.object({
+          label: z.string(),
+          evidence: z.string(),
+          proof: z.string().optional(),
+        }),
+      )
+      .default([]),
     proofs: z.array(z.string()).default([]),
   }),
 });

@@ -3,18 +3,18 @@ date: 2026-04-05
 title: Crypto Funding-Carry
 role: quant
 order: 6
-summary: "Funding +11.9% annualized premium; fade IS 1.11 → OOS −0.05 (decayed post-2023)."
-summary_long: "A novel-data carry study: perpetual-swap funding rates are a real, observable, regularly-paid signal — and the obvious trade is to fade them. The interesting question is whether the carry persists OOS post-2023."
+summary: 'Funding +11.9% annualized premium; fade IS 1.11 → OOS −0.05 (decayed post-2023).'
+summary_long: 'A novel-data carry study: perpetual-swap funding rates are a real, observable, regularly-paid signal — and the obvious trade is to fade them. The interesting question is whether the carry persists OOS post-2023.'
 stack:
   - Python (numpy / pandas / matplotlib)
   - Perpetual funding rates (Binance)
   - Bootstrap CI
   - Pre-registered lock window
 metrics:
-  - { label: "Annualized funding", value: "+11.9%", sub: "BTC perp, ~30-day centered mean" }
-  - { label: "Fade IS Sharpe", value: "1.11" }
-  - { label: "Fade OOS Sharpe", value: "−0.05", sub: "decay post-2023" }
-sourceLink: "https://github.com/christianmacion26/funding-carry"
+  - { label: 'Annualized funding', value: '+11.9%', sub: 'BTC perp, ~30-day centered mean' }
+  - { label: 'Fade IS Sharpe', value: '1.11' }
+  - { label: 'Fade OOS Sharpe', value: '−0.05', sub: 'decay post-2023' }
+sourceLink: 'https://github.com/christianmacion26/funding-carry'
 status: open-source
 tags: [carry, funding-rates, crypto, decay, public-data]
 ---
@@ -37,7 +37,8 @@ Perpetual-swap funding rates are paid by the leveraged long to the short (or vic
 <Chart
   type="line"
   data={[
-    1.11, 1.08, 1.05, 1.02, 0.98, 0.91, 0.82, 0.71, 0.58, 0.42, 0.28, 0.15, 0.04, -0.02, -0.05, -0.08, -0.11, -0.09, -0.07, -0.05
+    1.11, 1.08, 1.05, 1.02, 0.98, 0.91, 0.82, 0.71, 0.58, 0.42, 0.28, 0.15, 0.04, -0.02, -0.05,
+    -0.08, -0.11, -0.09, -0.07, -0.05,
   ]}
   color="var(--c-fail)"
   title="Fade-trade Sharpe over rolling OOS windows"
@@ -52,4 +53,4 @@ Perpetual-swap funding rates are paid by the leveraged long to the short (or vic
 
 ## What's transferable
 
-Carry signals are observable, regularly-paid, and visible to anyone with the data — which means they crowd fast. This is a clean example of *alpha decay* detected before overfit, in production reporting cadence.
+Carry signals are observable, regularly-paid, and visible to anyone with the data — which means they crowd fast. This is a clean example of _alpha decay_ detected before overfit, in production reporting cadence.

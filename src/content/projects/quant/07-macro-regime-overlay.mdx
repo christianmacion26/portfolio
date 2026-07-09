@@ -3,7 +3,7 @@ date: 2026-05-10
 title: Macro / Volatility-Regime Overlay
 role: quant
 order: 7
-summary: "Vol-managed exposure: Sharpe 0.64 → 0.67, max DD −58% → −42%."
+summary: 'Vol-managed exposure: Sharpe 0.64 → 0.67, max DD −58% → −42%.'
 summary_long: "A regime-aware overlay: scale exposure up when a volatility regime is calm, down when it isn't. The headline metric isn't headline alpha — it's a smoother equity curve."
 stack:
   - Python (numpy / pandas / matplotlib)
@@ -11,10 +11,10 @@ stack:
   - Exposure scaler (smoothed)
   - 5 bps / side cost
 metrics:
-  - { label: "Sharpe (base)", value: "0.64" }
-  - { label: "Sharpe (regime overlay)", value: "0.67" }
-  - { label: "Max DD (base → overlay)", value: "−58% → −42%" }
-sourceLink: "https://github.com/christianmacion26/macro-regime-overlay"
+  - { label: 'Sharpe (base)', value: '0.64' }
+  - { label: 'Sharpe (regime overlay)', value: '0.67' }
+  - { label: 'Max DD (base → overlay)', value: '−58% → −42%' }
+sourceLink: 'https://github.com/christianmacion26/macro-regime-overlay'
 status: open-source
 tags: [regime, overlay, vol-targeting, risk-management, public-data]
 ---
@@ -23,7 +23,7 @@ import Chart from '@components/Chart.astro';
 
 ## The hypothesis
 
-Some strategies are *the same alpha* across regimes; others are not. Scaling exposure by an external regime indicator — a smoothed VIX percentile — is a textbook risk-management overlay.
+Some strategies are _the same alpha_ across regimes; others are not. Scaling exposure by an external regime indicator — a smoothed VIX percentile — is a textbook risk-management overlay.
 
 ## What the project does
 
@@ -37,10 +37,10 @@ Some strategies are *the same alpha* across regimes; others are not. Scaling exp
 <Chart
   type="bar"
   data={[
-    { value: 0.64, label: "Sharpe\nbase" },
-    { value: 0.67, label: "Sharpe\noverlay" },
-    { value: -58, label: "Max DD\nbase (%)" },
-    { value: -42, label: "Max DD\noverlay (%)" },
+    { value: 0.64, label: 'Sharpe\nbase' },
+    { value: 0.67, label: 'Sharpe\noverlay' },
+    { value: -58, label: 'Max DD\nbase (%)' },
+    { value: -42, label: 'Max DD\noverlay (%)' },
   ]}
   title="Risk overlay: Sharpe barely moves, drawdown halves"
   caption="Same basket, two position-sizing rules. Sharpe: 0.64 → 0.67 (+5%). Max DD: −58% → −42% (−28%). The headline metric looks flat; the equity-curve shape changes materially. This is what risk-managed return looks like in the data."
@@ -52,4 +52,4 @@ The headline Sharpe barely moves. The equity curve shape changes materially: 16 
 
 ## What's transferable
 
-Risk overlays don't show up in headline alpha. They show up in the worst-year column of a fund's tear sheet. This is the discipline of *risk-managed return*, not raw return.
+Risk overlays don't show up in headline alpha. They show up in the worst-year column of a fund's tear sheet. This is the discipline of _risk-managed return_, not raw return.

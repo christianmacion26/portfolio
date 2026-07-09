@@ -44,12 +44,12 @@ npm run audit      # NDA audit on built site
 
 ## Content collections
 
-| Collection    | Folder                              | Schema                                     |
-|---------------|-------------------------------------|--------------------------------------------|
-| `project`     | `src/content/projects/{ai,quant}/`  | Zod schema in `src/content.config.ts`      |
-| `experience`  | `src/content/experience/`           | Zod schema                                 |
-| `skillGroup`  | `src/content/skills/`               | Zod schema                                 |
-| `certGroup`   | `src/content/certifications/`       | Zod schema                                 |
+| Collection   | Folder                             | Schema                                |
+| ------------ | ---------------------------------- | ------------------------------------- |
+| `project`    | `src/content/projects/{ai,quant}/` | Zod schema in `src/content.config.ts` |
+| `experience` | `src/content/experience/`          | Zod schema                            |
+| `skillGroup` | `src/content/skills/`              | Zod schema                            |
+| `certGroup`  | `src/content/certifications/`      | Zod schema                            |
 
 Edit a single source of truth — `src/utils/profile.ts` — for owner identity.
 

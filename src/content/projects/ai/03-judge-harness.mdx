@@ -11,10 +11,10 @@ stack:
   - Cohen's κ + bootstrap CI
   - Position-bias flip test
 metrics:
-  - { label: "Cohen's κ (vs human)", value: "0.58", sub: "moderate agreement" }
-  - { label: "Pass rate", value: "0.60 ± 0.02", sub: "95% bootstrap CI" }
-  - { label: "Position bias", value: "17%", sub: "lower = better; flip-sensitive" }
-sourceLink: "https://github.com/christianmacion26/judge-harness"
+  - { label: "Cohen's κ (vs human)", value: '0.58', sub: 'moderate agreement' }
+  - { label: 'Pass rate', value: '0.60 ± 0.02', sub: '95% bootstrap CI' }
+  - { label: 'Position bias', value: '17%', sub: 'lower = better; flip-sensitive' }
+sourceLink: 'https://github.com/christianmacion26/judge-harness'
 status: open-source
 tags: [llm-as-judge, evaluation, cohen-kappa, bias, validation]
 ---
@@ -30,7 +30,7 @@ You cannot run a pipeline whose evaluator might be biased by where you placed "y
 - **Agreement** — Cohen's κ against a held-out human-rated gold set (with bootstrap CI).
 - **Pass rate** — fraction of pairs the judge rated the same way the human did.
 - **Position bias** — flip the option order; measure how much the rating drifts. ~17% drift means: don't anchor on the judge's verdict alone for borderline cases.
-- **Confidence interval** — 95% bootstrap CI over the agreement set; the judge is *moderate* agreement, not *excellent*.
+- **Confidence interval** — 95% bootstrap CI over the agreement set; the judge is _moderate_ agreement, not _excellent_.
 
 ## What's transferable
 

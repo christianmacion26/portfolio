@@ -3,18 +3,18 @@ date: 2025-10-15
 title: Cross-Sectional Momentum (18 coins)
 role: quant
 order: 2
-summary: "IS Sharpe 0.91 → OOS −0.03 — an honest decay; bootstrap CI straddles zero."
-summary_long: "A cross-sectional momentum study across 18 BTC-correlated coins: each rebalance, go long the top decile by 14-day return and short the bottom decile. The interesting question is what survives the out-of-sample window."
+summary: 'IS Sharpe 0.91 → OOS −0.03 — an honest decay; bootstrap CI straddles zero.'
+summary_long: 'A cross-sectional momentum study across 18 BTC-correlated coins: each rebalance, go long the top decile by 14-day return and short the bottom decile. The interesting question is what survives the out-of-sample window.'
 stack:
   - Python (numpy / pandas / matplotlib)
   - Cross-sectional ranking
   - Bootstrap confidence interval
   - Locked out-of-sample window
 metrics:
-  - { label: "In-sample Sharpe", value: "0.91" }
-  - { label: "Out-of-sample Sharpe", value: "−0.03", sub: "honest decay" }
-  - { label: "OOS 95% CI", value: "straddles 0", sub: "cannot reject the null" }
-sourceLink: "https://github.com/christianmacion26/cross-sectional-momentum"
+  - { label: 'In-sample Sharpe', value: '0.91' }
+  - { label: 'Out-of-sample Sharpe', value: '−0.03', sub: 'honest decay' }
+  - { label: 'OOS 95% CI', value: 'straddles 0', sub: 'cannot reject the null' }
+sourceLink: 'https://github.com/christianmacion26/cross-sectional-momentum'
 status: open-source
 tags: [cross-sectional, momentum, oos, decay, public-data]
 ---
@@ -37,11 +37,11 @@ Cross-sectional momentum — long winners, short losers — has decades of equit
 <Chart
   type="bar"
   data={[
-    { value: 0.91, label: "IS" },
-    { value: -0.03, label: "OOS" },
-    { value: 0.0, label: "null" },
-    { value: -0.12, label: "OOS −1.96σ" },
-    { value: 0.18, label: "OOS +1.96σ" },
+    { value: 0.91, label: 'IS' },
+    { value: -0.03, label: 'OOS' },
+    { value: 0.0, label: 'null' },
+    { value: -0.12, label: 'OOS −1.96σ' },
+    { value: 0.18, label: 'OOS +1.96σ' },
   ]}
   title="Sharpe comparison: in-sample vs out-of-sample vs null bounds"
   caption="The honest story: 0.91 IS Sharpe decays to −0.03 OOS. 95% block-bootstrap CI [−0.12, +0.18] straddles zero — cannot reject the null. IS region (left, green) is positive; OOS region (red) below zero. CI bounds shown for reference."
@@ -57,15 +57,15 @@ Cross-sectional momentum — long winners, short losers — has decades of equit
 
 **This is, by construction, a mostly null result.** Cross-sectional momentum on 18 BTC-correlated coins over a 14-day
 rebalance horizon is a deliberately tight universe — the coins move together, the cross-sectional dispersion is small,
-and what looks like IS alpha is largely noise. The IS Sharpe (0.91) is *not* real alpha; the OOS decay to −0.03 is the
-true signal content of this experiment, which is *approximately zero*.
+and what looks like IS alpha is largely noise. The IS Sharpe (0.91) is _not_ real alpha; the OOS decay to −0.03 is the
+true signal content of this experiment, which is _approximately zero_.
 
 I ship it anyway because:
 
 1. The OOS test was **pre-registered** — the window was locked before data was touched.
 2. The CI bounds were computed honestly — block bootstrap on the OOS period.
 3. A research book that ships nine winners and hides the failure modes is a book primed for selection bias. This project
-   *is* the failure-mode.
+   _is_ the failure-mode.
 
 > The discipline is the OOS lock — the moment you peek, the test is dead.
 

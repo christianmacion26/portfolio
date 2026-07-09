@@ -3,18 +3,18 @@ date: 2025-09-20
 title: Multiple Testing & the Deflated Sharpe Ratio
 role: quant
 order: 1
-summary: "Best-of-160 BTC rule: IS Sharpe 1.14 is only 1.24× the pure-noise expectation — DSR = 0.70 (fail)."
-summary_long: "A study in multiple-testing discipline. Sweep 160 BTC trading rules, rank by in-sample Sharpe, then apply the Deflated Sharpe Ratio (Bailey & López de Prado, 2014). The rank-1 rule looks great until you condition on the number of trials."
+summary: 'Best-of-160 BTC rule: IS Sharpe 1.14 is only 1.24× the pure-noise expectation — DSR = 0.70 (fail).'
+summary_long: 'A study in multiple-testing discipline. Sweep 160 BTC trading rules, rank by in-sample Sharpe, then apply the Deflated Sharpe Ratio (Bailey & López de Prado, 2014). The rank-1 rule looks great until you condition on the number of trials.'
 stack:
   - Python (numpy / pandas / matplotlib)
   - Block-bootstrap null
   - Deflated Sharpe Ratio
   - 160-rule BTC sweep
 metrics:
-  - { label: "Best-of-160 in-sample Sharpe", value: "1.14" }
-  - { label: "Pure-noise expectation", value: "0.92" }
-  - { label: "Deflated Sharpe Ratio", value: "0.70", sub: "fails the multiple-testing adjustment" }
-sourceLink: "https://github.com/christianmacion26/multiple-testing-deflated-sharpe"
+  - { label: 'Best-of-160 in-sample Sharpe', value: '1.14' }
+  - { label: 'Pure-noise expectation', value: '0.92' }
+  - { label: 'Deflated Sharpe Ratio', value: '0.70', sub: 'fails the multiple-testing adjustment' }
+sourceLink: 'https://github.com/christianmacion26/multiple-testing-deflated-sharpe'
 status: open-source
 tags: [multiple-testing, deflated-sharpe, rigor, methodology, public-data]
 ---
@@ -22,11 +22,14 @@ tags: [multiple-testing, deflated-sharpe, rigor, methodology, public-data]
 import Chart from '@components/Chart.astro';
 import Equation from '@components/Equation.astro';
 
-<Equation block latex={`\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}}} \\cdot \\left[1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}\\right]`} />
+<Equation
+  block
+  latex={`\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}}} \\cdot \\left[1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}\\right]`}
+/>
 
 ## The hypothesis
 
-If you test 160 coin-toss strategies on a BTC price series, the *best one* will look like an edge just by luck. Conditioning on the number of trials is what separates a discovered signal from noise that happened to win.
+If you test 160 coin-toss strategies on a BTC price series, the _best one_ will look like an edge just by luck. Conditioning on the number of trials is what separates a discovered signal from noise that happened to win.
 
 ## What the project does
 
@@ -40,7 +43,15 @@ If you test 160 coin-toss strategies on a BTC price series, the *best one* will 
 
 <Chart
   type="hist"
-  data={[0.4,0.5,0.6,0.7,0.7,0.8,0.8,0.8,0.9,0.9,0.9,0.9,0.9,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.7,1.7,1.7,1.7,1.7,1.7,1.8,1.8,1.8,1.8,1.8,1.9,1.9,1.9,1.9,2.0,2.0,2.0,2.1,2.1,2.2,2.2,2.3,2.3,2.4,2.5,2.6,2.7,2.8]}
+  data={[
+    0.4, 0.5, 0.6, 0.7, 0.7, 0.8, 0.8, 0.8, 0.9, 0.9, 0.9, 0.9, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    1.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.2, 1.2,
+    1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.3, 1.3, 1.3,
+    1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4,
+    1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.7,
+    1.7, 1.7, 1.7, 1.7, 1.7, 1.8, 1.8, 1.8, 1.8, 1.8, 1.9, 1.9, 1.9, 1.9, 2.0, 2.0, 2.0, 2.1, 2.1,
+    2.2, 2.2, 2.3, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8,
+  ]}
   nullMean={0.92}
   nullStd={0.31}
   dataX={1.14}
@@ -50,7 +61,7 @@ If you test 160 coin-toss strategies on a BTC price series, the *best one* will 
 
 - In-sample best Sharpe: **1.14**
 - Pure-noise expectation for rank-1: **≈ 0.92**
-- DSR: **0.70** — a *fail* under the standard 0.95 cutoff.
+- DSR: **0.70** — a _fail_ under the standard 0.95 cutoff.
 
 ## What's transferable
 

@@ -1,26 +1,26 @@
 ---
-title: "Guest Lecturer — Understanding the ICC and Indigenous Group in Mindanao"
-company: "University of Southeastern Philippines (USeP), College of Engineering"
-role: "experience"
+title: 'Guest Lecturer — Understanding the ICC and Indigenous Group in Mindanao'
+company: 'University of Southeastern Philippines (USeP), College of Engineering'
+role: 'experience'
 order: 8
-location: "Davao Region, Philippines (in-person)"
-startDate: "2024-09"
-endDate: "2024-09"
+location: 'Davao Region, Philippines (in-person)'
+startDate: '2024-09'
+endDate: '2024-09'
 isCurrent: false
-summary: "Delivered the Manobo / ICC / IPs guest lecture for USeP EGE 313, authored with a ChatGPT-assisted drafting pipeline that pre-figures the 31-gate evaluation harness now standard across my work."
+summary: 'Delivered the Manobo / ICC / IPs guest lecture for USeP EGE 313, authored with a ChatGPT-assisted drafting pipeline that pre-figures the 31-gate evaluation harness now standard across my work.'
 tags: [education, speaking, ai, methodology, reproducibility]
 contributions:
-  - label: "Lecture delivery"
-    evidence: "Live Presenter-view delivery to USeP EGE 313 (ECE 3A, 2:30pm MW, AY 2024-2025) — 19-slide deck on Manobo / ICC / IPs / cultural rights"
-    proof: "Live recording on /proof"
-  - label: "AI-assisted authoring pipeline"
-    evidence: "Slide deck drafted end-to-end via a ChatGPT-assisted drafting pipeline — same precursor pattern to the current 31-gate eval harness. Visual proof in the AI workflow recording."
-    proof: "AI workflow recording on /proof"
-  - label: "Public reproducibility"
+  - label: 'Lecture delivery'
+    evidence: 'Live Presenter-view delivery to USeP EGE 313 (ECE 3A, 2:30pm MW, AY 2024-2025) — 19-slide deck on Manobo / ICC / IPs / cultural rights'
+    proof: 'Live recording on /proof'
+  - label: 'AI-assisted authoring pipeline'
+    evidence: 'Slide deck drafted end-to-end via a ChatGPT-assisted drafting pipeline — same precursor pattern to the current 31-gate eval harness. Visual proof in the AI workflow recording.'
+    proof: 'AI workflow recording on /proof'
+  - label: 'Public reproducibility'
     evidence: "Both recordings (lecture + AI workflow) are public, NDA-clean, and show the file metadata proving provenance (PowerPoint title 'MACION. MANOBO. PIC. ECE3A. 230pm. MW')."
-    proof: "On-disk provenance on /proof"
+    proof: 'On-disk provenance on /proof'
 proofs:
-  - "/proof/"
+  - '/proof/'
 ---
 
 ## Live lecture

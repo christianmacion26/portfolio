@@ -3,25 +3,25 @@ date: 2026-03-01
 title: reflect-revise
 role: ai
 order: 5
-summary: "Reflection-loop agent — mean SLOP 127.5 → 14.0 across drafts, 3/4 improved, 1/4 honest no-progress halt."
-summary_long: "A reflection-loop pattern (draft → score → critique → revise) with logged score-deltas per iteration and an honest no-progress halt that ships the original when no improvement is found across a configurable threshold."
+summary: 'Reflection-loop agent — mean SLOP 127.5 → 14.0 across drafts, 3/4 improved, 1/4 honest no-progress halt.'
+summary_long: 'A reflection-loop pattern (draft → score → critique → revise) with logged score-deltas per iteration and an honest no-progress halt that ships the original when no improvement is found across a configurable threshold.'
 stack:
   - Python
   - Reflect / revise loop
   - Honest no-progress halt
   - Per-iteration score-delta logging
 metrics:
-  - { label: "Mean SLOP score", value: "127.5 → 14.0", sub: "across drafts" }
-  - { label: "Drafts improved", value: "3 / 4" }
-  - { label: "Honest no-progress halts", value: "1 / 4", sub: "shipped original" }
-sourceLink: "https://github.com/christianmacion26/reflect-revise"
+  - { label: 'Mean SLOP score', value: '127.5 → 14.0', sub: 'across drafts' }
+  - { label: 'Drafts improved', value: '3 / 4' }
+  - { label: 'Honest no-progress halts', value: '1 / 4', sub: 'shipped original' }
+sourceLink: 'https://github.com/christianmacion26/reflect-revise'
 status: open-source
 tags: [agents, reflection, evaluation, halt, logging]
 ---
 
 ## Why this exists
 
-The naive reflection loop keeps revising forever — sometimes past the point of improvement. **Honest engineering requires an honest halt.** reflect-revise logs per-iteration score-deltas; if no improvement is found across N iterations, it ships the original. That's the difference between "an agent that retries until the gate stops complaining" and an agent that measures whether retrying is *worth it*.
+The naive reflection loop keeps revising forever — sometimes past the point of improvement. **Honest engineering requires an honest halt.** reflect-revise logs per-iteration score-deltas; if no improvement is found across N iterations, it ships the original. That's the difference between "an agent that retries until the gate stops complaining" and an agent that measures whether retrying is _worth it_.
 
 ## What it logs
 
@@ -32,4 +32,4 @@ The naive reflection loop keeps revising forever — sometimes past the point of
 
 ## What's transferable
 
-The pattern — run a quality gate, log the delta, halt when no progress is being made — applies to any iterative agent: research agents refining a draft, code agents fixing test failures, eval-pipeline agents tuning prompts. The halt condition is what makes it *safe* in production.
+The pattern — run a quality gate, log the delta, halt when no progress is being made — applies to any iterative agent: research agents refining a draft, code agents fixing test failures, eval-pipeline agents tuning prompts. The halt condition is what makes it _safe_ in production.

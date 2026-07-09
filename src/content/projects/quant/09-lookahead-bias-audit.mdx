@@ -3,17 +3,17 @@ date: 2026-06-18
 title: Look-Ahead Bias Audit (the shift test)
 role: quant
 order: 9
-summary: "A leak inflates Sharpe 0.59 → 5.07; the shift test exposes it as 88% phantom."
-summary_long: "A bias-hunting toolkit: deliberately introduce a look-ahead leak into a backtest, then detect it with a one-line shift test. If the leak survives, the equity curve is a phantom."
+summary: 'A leak inflates Sharpe 0.59 → 5.07; the shift test exposes it as 88% phantom.'
+summary_long: 'A bias-hunting toolkit: deliberately introduce a look-ahead leak into a backtest, then detect it with a one-line shift test. If the leak survives, the equity curve is a phantom.'
 stack:
   - Python (numpy / pandas / matplotlib)
   - One-bar shift test
   - Leak-magnitude quantification
 metrics:
-  - { label: "Clean Sharpe", value: "0.59" }
-  - { label: "Leaked Sharpe", value: "5.07" }
-  - { label: "Phantom % detected", value: "88%", sub: "of the inflated Sharpe is leakage" }
-sourceLink: "https://github.com/christianmacion26/bias-audit"
+  - { label: 'Clean Sharpe', value: '0.59' }
+  - { label: 'Leaked Sharpe', value: '5.07' }
+  - { label: 'Phantom % detected', value: '88%', sub: 'of the inflated Sharpe is leakage' }
+sourceLink: 'https://github.com/christianmacion26/bias-audit'
 status: open-source
 tags: [look-ahead-bias, audit, leakage, methodology, public-data]
 ---
@@ -22,7 +22,7 @@ import Chart from '@components/Chart.astro';
 
 ## Why this exists
 
-Look-ahead bias is the silent killer of every quantitative backtest. The researcher *thinks* the signal uses yesterday's close; the code uses today's. The result is an equity curve that looks like alpha and turns out to be a leak.
+Look-ahead bias is the silent killer of every quantitative backtest. The researcher _thinks_ the signal uses yesterday's close; the code uses today's. The result is an equity curve that looks like alpha and turns out to be a leak.
 
 ## What the project does
 
@@ -35,10 +35,10 @@ Look-ahead bias is the silent killer of every quantitative backtest. The researc
 <Chart
   type="bar"
   data={[
-    { value: 0.59, label: "Clean" },
-    { value: 5.07, label: "Leaked" },
-    { value: 0.55, label: "Real α" },
-    { value: 4.48, label: "Phantom" },
+    { value: 0.59, label: 'Clean' },
+    { value: 5.07, label: 'Leaked' },
+    { value: 0.55, label: 'Real α' },
+    { value: 4.48, label: 'Phantom' },
   ]}
   title="Sharpe decomposition: real α vs look-ahead phantom"
   caption="One-bar shift test exposes the leak: leaked Sharpe (5.07) − real α (0.55) ≈ 4.48 phantom Sharpe from a one-bar forward shift. 88% of the apparent edge was leakage."

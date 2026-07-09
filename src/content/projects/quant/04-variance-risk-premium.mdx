@@ -3,18 +3,18 @@ date: 2026-01-25
 title: The Variance Risk Premium (VIX vs Realized)
 role: quant
 order: 4
-summary: "Implied > realized 85% of 36 yrs; predicts returns, Newey-West t = +6.5."
-summary_long: "The Variance Risk Premium (VRP) is the gap between implied volatility (VIX) and subsequent realized volatility. It is a structural premium — option sellers have been paid for bearing the gap for decades — and it is also a forward-looking predictor of equity returns."
+summary: 'Implied > realized 85% of 36 yrs; predicts returns, Newey-West t = +6.5.'
+summary_long: 'The Variance Risk Premium (VRP) is the gap between implied volatility (VIX) and subsequent realized volatility. It is a structural premium — option sellers have been paid for bearing the gap for decades — and it is also a forward-looking predictor of equity returns.'
 stack:
   - Python (numpy / pandas / matplotlib)
   - VIX (CBOE) historical
   - Realized-vol estimator
   - Newey-West HAC inference
 metrics:
-  - { label: "Years VRP > 0", value: "85%", sub: "of 36 yrs" }
-  - { label: "Newey-West t-stat", value: "+6.5", sub: "HAC-consistent" }
-  - { label: "Sample window", value: "1990 – 2025" }
-sourceLink: "https://github.com/christianmacion26/variance-risk-premium"
+  - { label: 'Years VRP > 0', value: '85%', sub: 'of 36 yrs' }
+  - { label: 'Newey-West t-stat', value: '+6.5', sub: 'HAC-consistent' }
+  - { label: 'Sample window', value: '1990 – 2025' }
+sourceLink: 'https://github.com/christianmacion26/variance-risk-premium'
 status: open-source
 tags: [volatility, variance-risk-premium, vix, newey-west, public-data]
 ---
@@ -23,7 +23,7 @@ import Chart from '@components/Chart.astro';
 
 ## The hypothesis
 
-VIX quotes *implied* volatility for the next 30 days. Markets systematically over-pay for optionality relative to what realizes. The gap — the **Variance Risk Premium** — is structural: sellers are paid for bearing it.
+VIX quotes _implied_ volatility for the next 30 days. Markets systematically over-pay for optionality relative to what realizes. The gap — the **Variance Risk Premium** — is structural: sellers are paid for bearing it.
 
 ## What the project does
 
@@ -36,10 +36,9 @@ VIX quotes *implied* volatility for the next 30 days. Markets systematically ove
 <Chart
   type="line"
   data={[
-    12.1, 11.8, 12.4, 12.0, 11.5, 11.2, 11.0, 11.5, 12.3, 13.0,
-    13.4, 12.8, 12.0, 11.5, 11.2, 10.9, 10.5, 10.8, 11.2, 11.5,
-    12.1, 12.8, 13.5, 13.2, 12.5, 11.8, 11.0, 10.5, 10.2, 10.0,
-    9.8, 9.5, 9.2, 9.0, 9.5, 10.2
+    12.1, 11.8, 12.4, 12.0, 11.5, 11.2, 11.0, 11.5, 12.3, 13.0, 13.4, 12.8, 12.0, 11.5, 11.2, 10.9,
+    10.5, 10.8, 11.2, 11.5, 12.1, 12.8, 13.5, 13.2, 12.5, 11.8, 11.0, 10.5, 10.2, 10.0, 9.8, 9.5,
+    9.2, 9.0, 9.5, 10.2,
   ]}
   color="var(--c-primary-2)"
   title="Annualized VRP (VIX − 30-day realized) across 36 yrs"
@@ -54,4 +53,4 @@ VIX quotes *implied* volatility for the next 30 days. Markets systematically ove
 
 ## What's transferable
 
-The pattern — model implied vs realized, regress forward returns, correct for autocorrelation — is the template for any *carry* signal. The Newey-West step is what makes the t-statistic interpretable; OLS t-stats in vol signals routinely overstate significance by 2–3×.
+The pattern — model implied vs realized, regress forward returns, correct for autocorrelation — is the template for any _carry_ signal. The Newey-West step is what makes the t-statistic interpretable; OLS t-stats in vol signals routinely overstate significance by 2–3×.

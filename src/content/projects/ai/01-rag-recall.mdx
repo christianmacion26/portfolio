@@ -3,19 +3,19 @@ date: 2025-11-15
 title: rag-recall
 role: ai
 order: 1
-summary: "RAG service that proves its own retrieval — recall@3 = 0.886, MRR@3 = 0.805 with offline stdlib TF-IDF retriever."
-summary_long: "Most RAG demos show you an answer and stop there. The honest question is: did retrieval even surface the passage the answer should come from? rag-recall answers that with a reproducible scorecard (recall@k, MRR@k, hit-rate, faithfulness %, hallucination flag) over an in-repo hand-labeled set of 35 (question, gold_chunk_id) pairs."
+summary: 'RAG service that proves its own retrieval — recall@3 = 0.886, MRR@3 = 0.805 with offline stdlib TF-IDF retriever.'
+summary_long: 'Most RAG demos show you an answer and stop there. The honest question is: did retrieval even surface the passage the answer should come from? rag-recall answers that with a reproducible scorecard (recall@k, MRR@k, hit-rate, faithfulness %, hallucination flag) over an in-repo hand-labeled set of 35 (question, gold_chunk_id) pairs.'
 stack:
   - Python (stdlib only — no LLM API, no pip install)
   - TF-IDF retriever
   - 17-doc / 34-chunk corpus
   - Streamlit app
 metrics:
-  - { label: "recall@3", value: "0.886", sub: "over 35 labeled Q's" }
-  - { label: "MRR@3", value: "0.805" }
-  - { label: "Mean faithfulness", value: "1.00" }
-  - { label: "Hallucination flags", value: "0 / 35" }
-sourceLink: "https://github.com/christianmacion26/rag-recall"
+  - { label: 'recall@3', value: '0.886', sub: "over 35 labeled Q's" }
+  - { label: 'MRR@3', value: '0.805' }
+  - { label: 'Mean faithfulness', value: '1.00' }
+  - { label: 'Hallucination flags', value: '0 / 35' }
+sourceLink: 'https://github.com/christianmacion26/rag-recall'
 status: open-source
 tags: [rag, evaluation, retrieval, faithfulness, stdlib]
 ---
@@ -41,4 +41,4 @@ A reviewer clicks it: open the Streamlit app, hit **Run eval** to see the live s
 
 ## What's transferable
 
-The same scoring harness pattern (labeled eval set + per-query metric dashboard) drops directly into real RAG stacks — just swap the stdlib TF-IDF retriever for your embedding model + vector store and reuse the scorecard. The bundle proves the *pattern* without begging for an API key.
+The same scoring harness pattern (labeled eval set + per-query metric dashboard) drops directly into real RAG stacks — just swap the stdlib TF-IDF retriever for your embedding model + vector store and reuse the scorecard. The bundle proves the _pattern_ without begging for an API key.
