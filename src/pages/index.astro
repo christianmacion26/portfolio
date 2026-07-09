@@ -15,6 +15,7 @@ import ProjectCard from '@components/ProjectCard.astro';
 import CTABanner from '@components/CTABanner.astro';
 import ProcessStrip from '@components/ProcessStrip.astro';
 import TrustStrip from '@components/TrustStrip.astro';
+import ProofCard from '@components/ProofCard.astro';
 
 const nowDate = new Date();
 const nowLabel = `NOW · ${nowDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-')}`;
@@ -118,6 +119,17 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
         >
       </div>
     </div>
+
+    <aside class="hero__signature" aria-label="Featured proof — STA Philippines School Principal signature">
+      <ProofCard
+        src={path('/proof/sta-philippines-graduation-2026-04.jpg')}
+        alt="STA Philippines Tier-1 graduation certificate, Christian T. Macion signature as School Principal."
+        caption="STA Philippines Tier-1 graduation cohort · Apr 5 2026 · 12 sign-offs as School Principal."
+        credit="STA Philippines · Apr 5 2026"
+        aspect="21/9"
+        href={path('/experience')}
+      />
+    </aside>
   </section>
 
   <TrustStrip
@@ -604,6 +616,12 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
     font-size: var(--fs-xs);
     color: var(--c-ink-2);
     line-height: var(--lh-loose);
+  }
+  .hero__signature {
+    margin-top: var(--sp-7);
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /* === Gate preview tiles === */

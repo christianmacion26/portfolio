@@ -54,6 +54,11 @@ export const profile = {
   awards: [
     '102 certificates (2024-12 → 2026-05)',
     'CTA® (Certificate in Investment Operations, CFA Institute)',
+    'Galactic Problem Solver · NASA Space Apps Challenge 2024 (Zurich cohort)',
+    'AI for the Modern Workforce · Ateneo de Davao + US Embassy · Nov 8 2025',
+    'AIccelerate 2025 · BIDA × Bayan Academy × Meta · Nov 12–21 2025',
+    'Blockchain4Youth B4Y-2026-000701 · Bitget · 2026',
+    'School Principal · STA Philippines Tier-1 · CryptoneedsChrist University · Apr 5 2026',
   ],
   availability: {
     hours: '30 hrs/wk',
