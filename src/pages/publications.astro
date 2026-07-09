@@ -101,11 +101,42 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   description="Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe."
 >
   {/* === CSS-only topic filter (no JS) === */}
-  <input type="radio" name="topic" id="topic-all" class="topic-input topic-input--all" checked aria-hidden="true" />
-  <input type="radio" name="topic" id="topic-papers" class="topic-input topic-input--papers" aria-hidden="true" />
-  <input type="radio" name="topic" id="topic-oss" class="topic-input topic-input--oss" aria-hidden="true" />
-  <input type="radio" name="topic" id="topic-workbooks" class="topic-input topic-input--workbooks" aria-hidden="true" />
-  <input type="radio" name="topic" id="topic-press" class="topic-input topic-input--press" aria-hidden="true" />
+  <input
+    type="radio"
+    name="topic"
+    id="topic-all"
+    class="topic-input topic-input--all"
+    checked
+    aria-hidden="true"
+  />
+  <input
+    type="radio"
+    name="topic"
+    id="topic-papers"
+    class="topic-input topic-input--papers"
+    aria-hidden="true"
+  />
+  <input
+    type="radio"
+    name="topic"
+    id="topic-oss"
+    class="topic-input topic-input--oss"
+    aria-hidden="true"
+  />
+  <input
+    type="radio"
+    name="topic"
+    id="topic-workbooks"
+    class="topic-input topic-input--workbooks"
+    aria-hidden="true"
+  />
+  <input
+    type="radio"
+    name="topic"
+    id="topic-press"
+    class="topic-input topic-input--press"
+    aria-hidden="true"
+  />
   <header class="pub-head">
     <div class="container">
       <p class="section__eyebrow">
@@ -121,11 +152,23 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
 
       {/* Topic filter labels — radio inputs above are hidden; these are the clickable labels */}
       <nav class="topic-filter" aria-label="Filter publications by topic">
-        <label for="topic-all" class="topic-btn"><span class="mono">all</span> <span class="topic-count">{totalCount}</span></label>
-        <label for="topic-papers" class="topic-btn"><span class="mono">papers</span> <span class="topic-count">{quantPubs.length}</span></label>
-        <label for="topic-oss" class="topic-btn"><span class="mono">oss</span> <span class="topic-count">{aiPubs.length}</span></label>
-        <label for="topic-workbooks" class="topic-btn"><span class="mono">workbooks</span> <span class="topic-count">{workbooks.length}</span></label>
-        <label for="topic-press" class="topic-btn"><span class="mono">press</span> <span class="topic-count">{press.length}</span></label>
+        <label for="topic-all" class="topic-btn"
+          ><span class="mono">all</span> <span class="topic-count">{totalCount}</span></label
+        >
+        <label for="topic-papers" class="topic-btn"
+          ><span class="mono">papers</span>
+          <span class="topic-count">{quantPubs.length}</span></label
+        >
+        <label for="topic-oss" class="topic-btn"
+          ><span class="mono">oss</span> <span class="topic-count">{aiPubs.length}</span></label
+        >
+        <label for="topic-workbooks" class="topic-btn"
+          ><span class="mono">workbooks</span>
+          <span class="topic-count">{workbooks.length}</span></label
+        >
+        <label for="topic-press" class="topic-btn"
+          ><span class="mono">press</span> <span class="topic-count">{press.length}</span></label
+        >
       </nav>
     </div>
   </header>
@@ -221,7 +264,12 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
                       Read →
                     </a>
                     {p.data.sourceLink && (
-                      <a class="btn btn--ghost btn--sm" href={p.data.sourceLink} target="_blank" rel="noopener">
+                      <a
+                        class="btn btn--ghost btn--sm"
+                        href={p.data.sourceLink}
+                        target="_blank"
+                        rel="noopener"
+                      >
                         Repo ↗
                       </a>
                     )}
@@ -340,45 +388,80 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     background: var(--c-bg-2);
   }
   /* Selected state */
-  .topic-input--all:checked       ~ * .topic-btn:has(input[disabled]),
-  .topic-input--papers:checked    ~ * [data-topic="papers"],
-  .topic-input--oss:checked       ~ * [data-topic="oss"],
-  .topic-input--workbooks:checked ~ * [data-topic="workbooks"],
-  .topic-input--press:checked     ~ * [data-topic="press"] {
+  .topic-input--all:checked ~ * .topic-btn:has(input[disabled]),
+  .topic-input--papers:checked ~ * [data-topic='papers'],
+  .topic-input--oss:checked ~ * [data-topic='oss'],
+  .topic-input--workbooks:checked ~ * [data-topic='workbooks'],
+  .topic-input--press:checked ~ * [data-topic='press'] {
     /* not quite — use sibling cascade */
   }
-  .topic-input--all:checked       ~ * label[for="topic-all"]       { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
-  .topic-input--all:checked       ~ * label[for="topic-all"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
-  .topic-input--papers:checked    ~ * label[for="topic-papers"]    { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
-  .topic-input--papers:checked    ~ * label[for="topic-papers"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
-  .topic-input--oss:checked       ~ * label[for="topic-oss"]       { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
-  .topic-input--oss:checked       ~ * label[for="topic-oss"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
-  .topic-input--workbooks:checked ~ * label[for="topic-workbooks"] { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
-  .topic-input--workbooks:checked ~ * label[for="topic-workbooks"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
-  .topic-input--press:checked     ~ * label[for="topic-press"]     { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
-  .topic-input--press:checked     ~ * label[for="topic-press"] .topic-count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); }
+  .topic-input--all:checked ~ * label[for='topic-all'] {
+    background: var(--c-primary);
+    color: #fff;
+    border-color: var(--c-primary);
+  }
+  .topic-input--all:checked ~ * label[for='topic-all'] .topic-count {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .topic-input--papers:checked ~ * label[for='topic-papers'] {
+    background: var(--c-primary);
+    color: #fff;
+    border-color: var(--c-primary);
+  }
+  .topic-input--papers:checked ~ * label[for='topic-papers'] .topic-count {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .topic-input--oss:checked ~ * label[for='topic-oss'] {
+    background: var(--c-primary);
+    color: #fff;
+    border-color: var(--c-primary);
+  }
+  .topic-input--oss:checked ~ * label[for='topic-oss'] .topic-count {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .topic-input--workbooks:checked ~ * label[for='topic-workbooks'] {
+    background: var(--c-primary);
+    color: #fff;
+    border-color: var(--c-primary);
+  }
+  .topic-input--workbooks:checked ~ * label[for='topic-workbooks'] .topic-count {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .topic-input--press:checked ~ * label[for='topic-press'] {
+    background: var(--c-primary);
+    color: #fff;
+    border-color: var(--c-primary);
+  }
+  .topic-input--press:checked ~ * label[for='topic-press'] .topic-count {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+  }
 
   /* Hide sections by default; show based on filter */
-  [data-topic="papers"],
-  [data-topic="oss"],
-  [data-topic="workbooks"],
-  [data-topic="press"] {
+  [data-topic='papers'],
+  [data-topic='oss'],
+  [data-topic='workbooks'],
+  [data-topic='press'] {
     display: none;
   }
-  .topic-input--all:checked       ~ main [data-topic="papers"],
-  .topic-input--all:checked       ~ main [data-topic="oss"],
-  .topic-input--all:checked       ~ main [data-topic="workbooks"],
-  .topic-input--all:checked       ~ main [data-topic="press"],
-  .topic-input--papers:checked    ~ main [data-topic="papers"],
-  .topic-input--oss:checked       ~ main [data-topic="oss"],
-  .topic-input--workbooks:checked ~ main [data-topic="workbooks"],
-  .topic-input--press:checked     ~ main [data-topic="press"] {
+  .topic-input--all:checked ~ main [data-topic='papers'],
+  .topic-input--all:checked ~ main [data-topic='oss'],
+  .topic-input--all:checked ~ main [data-topic='workbooks'],
+  .topic-input--all:checked ~ main [data-topic='press'],
+  .topic-input--papers:checked ~ main [data-topic='papers'],
+  .topic-input--oss:checked ~ main [data-topic='oss'],
+  .topic-input--workbooks:checked ~ main [data-topic='workbooks'],
+  .topic-input--press:checked ~ main [data-topic='press'] {
     display: block;
   }
-  .topic-input--all:checked       ~ main [data-topic="papers"] .pub-list,
-  .topic-input--all:checked       ~ main [data-topic="oss"] .pub-list,
-  .topic-input--all:checked       ~ main [data-topic="workbooks"] .workbooks,
-  .topic-input--all:checked       ~ main [data-topic="press"] .press {
+  .topic-input--all:checked ~ main [data-topic='papers'] .pub-list,
+  .topic-input--all:checked ~ main [data-topic='oss'] .pub-list,
+  .topic-input--all:checked ~ main [data-topic='workbooks'] .workbooks,
+  .topic-input--all:checked ~ main [data-topic='press'] .press {
     display: flex;
   }
 

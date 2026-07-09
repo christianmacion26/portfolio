@@ -155,11 +155,31 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
     title="How the AI lane ships."
     subtitle="Same five-step loop for every multi-agent build. The eval harness at the end is what keeps the other four honest."
     steps={[
-      { num: "1", title: "Intent", desc: "Write the agent charter and acceptance criteria before any model is called. Output contract: JSON Schema strict." },
-      { num: "2", title: "Architecture", desc: "Orchestrator-worker topology. Eleven agents. Each with explicit inputs, outputs, and failure modes." },
-      { num: "3", title: "Tools", desc: "MCP for structured calls (backtests, file I/O, retriever). No tool calls without a logged schema." },
-      { num: "4", title: "Eval gates", desc: "G1–G31 mechanical validity + statistical nulls + LLM-as-judge on samples. Frozen spec, no mid-run edits." },
-      { num: "5", title: "Deliverable", desc: "Runnable repo + readme + memo + eval-harness output. Scorecard attached, not promised." },
+      {
+        num: '1',
+        title: 'Intent',
+        desc: 'Write the agent charter and acceptance criteria before any model is called. Output contract: JSON Schema strict.',
+      },
+      {
+        num: '2',
+        title: 'Architecture',
+        desc: 'Orchestrator-worker topology. Eleven agents. Each with explicit inputs, outputs, and failure modes.',
+      },
+      {
+        num: '3',
+        title: 'Tools',
+        desc: 'MCP for structured calls (backtests, file I/O, retriever). No tool calls without a logged schema.',
+      },
+      {
+        num: '4',
+        title: 'Eval gates',
+        desc: 'G1–G31 mechanical validity + statistical nulls + LLM-as-judge on samples. Frozen spec, no mid-run edits.',
+      },
+      {
+        num: '5',
+        title: 'Deliverable',
+        desc: 'Runnable repo + readme + memo + eval-harness output. Scorecard attached, not promised.',
+      },
     ]}
   />
 

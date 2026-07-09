@@ -59,6 +59,8 @@ const experience = defineCollection({
 const skillItem = z.object({
   label: z.string(),
   sub: z.string().optional(),
+  level: z.number().min(1).max(5).optional(), // self-rated proficiency 1-5
+  years: z.number().optional(), // years of practice
 });
 
 const skillGroup = defineCollection({
