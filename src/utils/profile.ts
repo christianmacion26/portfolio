@@ -44,6 +44,8 @@ export const profile = {
     'Crypto Derivatives',
     'Python',
     'KaTeX',
+    'OSINT (Open-Source Intelligence)',
+    'AI Architecture Auditing',
   ],
   alumniOf: [
     'University of Mindanao (UM)',
