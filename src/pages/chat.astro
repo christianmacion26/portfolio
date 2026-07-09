@@ -12,7 +12,7 @@
  * zero network requests.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
 interface Chunk {
@@ -23,18 +23,32 @@ interface Chunk {
   rank: number;
 }
 
+// Extract a flat text snippet from MDX/MD body content.
+// Cheap string-based extraction; we don't need full Markdown parsing for retrieval.
+async function extractBodyText(entry: { body?: string }, cap = 12000): Promise<string> {
+  if (!entry.body) return '';
+  return entry.body
+    .replace(/import\s+.*$/gm, ' ')           // drop import statements
+    .replace(/<[^>]+>/g, ' ')                  // drop JSX/HTML tags
+    .replace(/```[\s\S]*?```/g, ' ')           // drop fenced code blocks
+    .replace(/`[^`]+`/g, ' ')                   // drop inline code
+    .replace(/[#*`>_~\[\]\(\)\|]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .slice(0, cap);
+}
+
 const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
 const experiences = await getCollection('experience');
+const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
 
-// Render each project / experience so we can pull body text out for retrieval.
 const projectChunks: Chunk[] = [];
 for (const p of projects) {
-  const { Content } = await render(p);
-  // Pull text from the frontmatter summary + title + tags as a cheap proxy
-  // for body content (the full MDX render is too heavy for a client corpus).
   const summaryText = `${p.data.title}. ${p.data.summary}. ${p.data.summary_long ?? ''}`;
   const tags = (p.data.tags ?? []).join(', ');
-  const text = `${summaryText} Stack: ${(p.data.stack ?? []).join(', ')}. Tags: ${tags}.`;
+  const stack = (p.data.stack ?? []).join(', ');
+  const body = await extractBodyText(p);
+  // Combine: frontmatter summary (high signal) + first ~12KB of body (recall boost).
+  const text = `${summaryText} Stack: ${stack}. Tags: ${tags}. Body: ${body}`;
   projectChunks.push({
     id: `project/${p.id}`,
     title: p.data.title,
@@ -48,7 +62,26 @@ for (const p of projects) {
     },
     rank: 0,
   });
-  void Content; // intentionally unused; we want frontmatter for the client corpus
+}
+
+const solutionChunks: Chunk[] = [];
+for (const s of solutions) {
+  const summaryText = `${s.data.title}. ${s.data.problem} Approach: ${s.data.approach} Outcome: ${s.data.outcome}`;
+  const tags = (s.data.tags ?? []).join(', ');
+  const evidence = (s.data.evidence ?? []).join(' ');
+  const text = `${summaryText}. Evidence: ${evidence}. Tags: ${tags}.`;
+  solutionChunks.push({
+    id: `solution/${s.id}`,
+    title: s.data.title,
+    text,
+    source: {
+      kind: 'project', // re-use the project badge color
+      slug: s.id,
+      title: s.data.title,
+      url: path(`/solutions`),
+    },
+    rank: 0,
+  });
 }
 
 const experienceChunks: Chunk[] = [];
@@ -72,8 +105,8 @@ for (const e of experiences) {
 
 const corpus = {
   generatedAt: new Date().toISOString(),
-  total: projectChunks.length + experienceChunks.length,
-  chunks: [...projectChunks, ...experienceChunks],
+  total: projectChunks.length + experienceChunks.length + solutionChunks.length,
+  chunks: [...projectChunks, ...experienceChunks, ...solutionChunks],
 };
 
 // Suggested starter queries (one-click)
