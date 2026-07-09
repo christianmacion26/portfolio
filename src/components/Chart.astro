@@ -33,6 +33,10 @@ interface Props {
   nullMean?: number;
   nullStd?: number;
   dataX?: number;
+  /** Optional caller-supplied instance ID. When omitted, a deterministic
+   * hash of (type, length, first/last values) is used so multiple charts of
+   * the same type on one page don't collide on `<defs>` IDs. */
+  instanceId?: string;
 }
 const {
   data = [],
@@ -47,7 +51,28 @@ const {
   nullMean,
   nullStd,
   dataX,
+  instanceId,
 } = Astro.props;
+
+// Deterministic per-instance ID. Two charts on the same page with the same
+// type and different data get different IDs. Astro's component-scoped CSS
+// already isolates styles; this guards against the global SVG <defs> namespace.
+function hashInstance(seed: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36).slice(0, 7);
+}
+const instanceSeed = instanceId
+  ? instanceId
+  : `${type}|${Array.isArray(data) ? data.length : 0}|${
+      Array.isArray(data) && data.length > 0
+        ? String((data as number[])[0]) + '|' + String((data as number[])[data.length - 1])
+        : ''
+    }`;
+const gradId = `chart-grad-${type}-${hashInstance(instanceSeed)}`;
 
 // Layout constants
 const padL = 44,
@@ -208,7 +233,7 @@ if (isLine) {
     aria-label={title ?? 'chart'}
   >
     <defs>
-      <linearGradient id={`chart-grad-${type}`} x1="0" y1="0" x2="0" y2="1">
+      <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color={color} stop-opacity="0.25"></stop>
         <stop offset="100%" stop-color={color} stop-opacity="0"></stop>
       </linearGradient>
@@ -233,7 +258,7 @@ if (isLine) {
     <line x1={padL} y1={padT + innerH} x2={padL + innerW} y2={padT + innerH} class="chart__axis"
     ></line>
 
-    {isLine && areaPath && <path d={areaPath} fill={`url(#chart-grad-line)`} />}
+    {isLine && areaPath && <path d={areaPath} fill={`url(#${gradId})`} />}
     {
       isLine && mainPath && (
         <path

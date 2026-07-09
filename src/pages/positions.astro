@@ -59,6 +59,13 @@ import { path } from '@utils/url';
         </div>
       </header>
 
+      <div class="positions-chart__head">
+        <div class="positions-chart__head-text">
+          <p class="mono positions-chart__title">Equity curve · normalized to 100 · BTC/USDT vol-target momentum</p>
+          <p class="mono positions-chart__sub">Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been low-vol regime.</p>
+        </div>
+        <span class="positions-chart__badge mono" title="Chart series is illustrative pending a real OOS export; the trade log on /proof is the load-bearing evidence.">illustrative series</span>
+      </div>
       <Chart
         type="line"
         data={[
@@ -68,8 +75,6 @@ import { path } from '@utils/url';
           109.2, 109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
         ]}
         color="var(--c-primary-2)"
-        title="Equity curve · normalized to 100 · BTC/USDT vol-target momentum"
-        caption="Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been low-vol regime."
         yMin={98}
         yMax={114}
       />
@@ -348,6 +353,41 @@ import { path } from '@utils/url';
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: var(--sp-3);
     margin-block: var(--sp-6);
+  }
+  .positions-chart__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-3);
+  }
+  .positions-chart__head-text {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .positions-chart__title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-ink);
+    margin-bottom: var(--sp-1);
+  }
+  .positions-chart__sub {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 65ch;
+  }
+  .positions-chart__badge {
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-fail);
+    background: rgba(248, 81, 73, 0.08);
+    border: 1px solid rgba(248, 81, 73, 0.3);
+    border-radius: 999px;
+    white-space: nowrap;
   }
   .positions-metric {
     padding: var(--sp-4);

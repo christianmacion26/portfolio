@@ -114,8 +114,8 @@ const charter = [
 
       <div class="gates">
         {
-          gates.map((g) => (
-            <article class="gate">
+          gates.map((g, i) => (
+            <article class="gate" id={`family-${i + 1}`}>
               <header class="gate__head">
                 <span class="gate__range mono">{g.range}</span>
                 <h3 class="gate__name">{g.name}</h3>
