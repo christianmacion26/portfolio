@@ -1,0 +1,120 @@
+---
+/**
+ * ProofCard.astro — figure wrapper for static proof images.
+ *
+ * Renders a `<figure>` with optional link wrap, `<img loading="lazy">`, caption,
+ * and credit. Uses aspect-ratio to prevent CLS. No lightbox JS — uses native
+ * `<details>` if expand is needed, or a `target="_blank"` raw link.
+ */
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  credit?: string;
+  href?: string;
+  aspect?: '16/9' | '4/3' | '3/2' | '16/10' | 'auto';
+  tone?: 'paper' | 'tape';
+}
+
+const {
+  src,
+  alt,
+  caption,
+  credit,
+  href,
+  aspect = '16/9',
+  tone = 'paper',
+} = Astro.props;
+
+const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect};`;
+---
+
+<figure class={`proof-card proof-card--${tone}`} style={figureStyle}>
+  {href ? (
+    <a href={href} class="proof-card__link" target="_blank" rel="noopener">
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        class="proof-card__img"
+      />
+    </a>
+  ) : (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      class="proof-card__img"
+    />
+  )}
+  {(caption || credit) && (
+    <figcaption class="proof-card__cap">
+      {caption && <span class="proof-card__caption">{caption}</span>}
+      {credit && <span class="proof-card__credit mono">{credit}</span>}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .proof-card {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .proof-card--paper {
+    background: var(--c-paper);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+  }
+  .proof-card--tape {
+    background: var(--c-tape);
+    border: 1px solid var(--c-tape-2);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+  }
+  .proof-card__link {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+  .proof-card__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-sm);
+  }
+  /* Aspect-ratio guard for CLS prevention — when set via inline --proof-aspect */
+  .proof-card[style*="--proof-aspect"] .proof-card__img {
+    aspect-ratio: var(--proof-aspect);
+    object-fit: cover;
+  }
+  .proof-card__cap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    padding: 0 var(--sp-1);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-snug);
+  }
+  .proof-card--tape .proof-card__cap {
+    color: rgba(230, 237, 243, 0.75);
+  }
+  .proof-card__caption { }
+  .proof-card__credit {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.04em;
+  }
+  .proof-card--tape .proof-card__credit {
+    color: rgba(230, 237, 243, 0.55);
+  }
+  .proof-card__link:hover .proof-card__img {
+    transform: scale(1.01);
+    transition: transform 200ms ease;
+  }
+</style>

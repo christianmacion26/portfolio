@@ -74,6 +74,26 @@ import { path } from '@utils/url';
         yMax={114}
       />
 
+      <aside class="positions-proof">
+        <a href={path('/proof')} class="positions-proof__link">
+          <img
+            src="/proof/cryptoneeds-christ-chart.jpg"
+            alt="TradingView chart of XAUT/USDT (tokenized gold) on the 1-hour timeframe with Elliott Wave counts, by @CryptoneedsChrist."
+            width="220" height="160"
+            loading="lazy" decoding="async"
+            class="positions-proof__img"
+          />
+          <div class="positions-proof__copy">
+            <div class="positions-proof__title mono">Operator-discretion · XAUT/USDT</div>
+            <p>
+              Public TradingView chart by <strong>@CryptoneedsChrist</strong>. Same operator, different
+              instrument family than the systematic book above — discretionary Elliott Wave work
+              on tokenized gold. <a href={path('/proof')} class="positions-proof__cta">See full chart + provenance on /proof →</a>
+            </p>
+          </div>
+        </a>
+      </aside>
+
       <div class="positions-grid">
         <div class="positions-metric">
           <div class="positions-metric__label mono">Total return</div>
@@ -243,6 +263,57 @@ import { path } from '@utils/url';
     border-radius: 14px;
     font-size: var(--fs-xs);
     color: var(--c-ink-2);
+  }
+
+  .positions-proof {
+    margin-block: var(--sp-5);
+    padding: var(--sp-3);
+    background: var(--c-tape);
+    border: 1px solid var(--c-tape-2);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--c-primary-2);
+  }
+  .positions-proof__link {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--sp-4);
+    align-items: center;
+    color: inherit;
+  }
+  .positions-proof__img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+    display: block;
+  }
+  .positions-proof__title {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--c-primary-2);
+    margin-bottom: var(--sp-2);
+    font-weight: 600;
+  }
+  .positions-proof__copy p {
+    font-size: var(--fs-sm);
+    color: rgba(230, 237, 243, 0.78);
+    line-height: var(--lh-snug);
+    margin: 0;
+  }
+  .positions-proof__copy strong {
+    color: #e6edf3;
+    font-weight: 600;
+  }
+  .positions-proof__cta {
+    color: var(--c-primary-2);
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+  }
+  .positions-proof__cta:hover {
+    text-decoration-color: var(--c-primary-2);
+  }
+  @media (max-width: 720px) {
+    .positions-proof__link { grid-template-columns: 1fr; }
+    .positions-proof__img { max-width: 220px; }
   }
 
   .positions-grid {

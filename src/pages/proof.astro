@@ -1,0 +1,195 @@
+---
+/**
+ * proof.astro — single-page gallery of public, NDA-clean proof artifacts.
+ *
+ * Anchors the site with one shareable URL a recruiter can DM or attach to a
+ * Loom response. Distributed proof (headshot on /about, chart thumb on
+ * /positions, cert card on /certifications, lecture videos on /experience)
+ * all flows back to this page.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProofCard from '@components/ProofCard.astro';
+import VideoEmbed from '@components/VideoEmbed.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { path } from '@utils/url';
+---
+<BaseLayout
+  title="Proof"
+  description="A gallery of public, NDA-clean artifacts that back up the claims on /experience, /certifications, and /now."
+  type="profile"
+>
+
+  <header class="proof-head">
+    <div class="container container-narrow">
+      <p class="section__eyebrow"><span class="mono">proof/</span> · show your work</p>
+      <h1 class="proof-head__title">
+        Things I can <span class="hl">show you</span>.
+      </h1>
+      <p class="proof-head__sub">
+        A gallery of public, NDA-clean artifacts — recordings, charts, co-signed
+        certificates — that back up the claims on
+        <a href={path('/experience')}>/experience</a>,
+        <a href={path('/certifications')}>/certifications</a>, and
+        <a href={path('/now')}>/now</a>.
+        Five items today. Updated when something new ships; never deleted when something expires.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Recorded presentations</p>
+        <h2 class="section__title">Two public talks, full provenance on-disk.</h2>
+        <p class="section__sub">
+          The same Manobo / ICC / IPs lecture for <strong>USeP EGE 313</strong>, delivered in
+          September 2024 — first as a ChatGPT-assisted draft (the AI-engineering workflow),
+          then as a live Presenter-view delivery. Both recordings are public; the PowerPoint
+          file metadata in the Edit-mode frame proves provenance.
+        </p>
+      </header>
+      <div class="proof-grid proof-grid--video">
+        <VideoEmbed
+          src="/proof/usep-lecture.mp4"
+          poster="/proof/usep-lecture.jpg"
+          title="USeP EGE 313 Manobo lecture — live presenter view"
+          duration={55}
+          caption="Live Presenter-view delivery, Sep 13 2024. Webcam lower-right; deck filename 'MACION. MANOBO. PIC. ECE3A. 230pm. MW' visible in the PPT Edit-mode frame."
+          mode="gallery"
+        />
+        <VideoEmbed
+          src="/proof/ai-workflow.mp4"
+          poster="/proof/ai-workflow.jpg"
+          title="AI workflow — same lecture, authored via ChatGPT-assisted drafting"
+          duration={55}
+          caption="Three weeks before the lecture: same deck, drafted end-to-end via a ChatGPT session. The precursor pattern to the current 31-gate authoring harness."
+          mode="gallery"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Operator-discretion chart</p>
+        <h2 class="section__title">Same operator. Different book.</h2>
+        <p class="section__sub">
+          The systematic book on <a href={path('/positions')}>/positions</a> runs vol-target
+          time-series momentum on BTC/USDT. This is the discretionary side of the same operator:
+          Elliott Wave on tokenized gold, under a public TradingView handle.
+        </p>
+      </header>
+      <ProofCard
+        src="/proof/cryptoneeds-christ-chart.jpg"
+        alt="TradingView chart of XAUT/USDT (tokenized gold) on the 1-hour timeframe with Elliott Wave counts. Public chart by @CryptoneedsChrist."
+        caption="XAUT/USDT perpetual futures, 1h, MEXC. Elliott Wave count by @CryptoneedsChrist (public TradingView handle). Operator-discretion; not part of the systematic book."
+        credit="@CryptoneedsChrist · public TradingView · Jan 3 2026"
+        aspect="16/9"
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Flagship certificates</p>
+        <h2 class="section__title">Co-signed by name.</h2>
+        <p class="section__sub">
+          The strongest single signature: a workshop co-signed by an Ateneo de Davao University
+          Director and a US Embassy American Spaces Specialist. Same credential is featured on
+          <a href={path('/certifications')}>/certifications</a>.
+        </p>
+      </header>
+      <ProofCard
+        src="/proof/ateneo-american-corner-2025-11.jpg"
+        alt="Co-signed certificate from Ateneo de Davao University and US Embassy American Spaces Philippines for the AI for the Modern Workforce workshop, Nov 8 2025."
+        caption='AI for the Modern Workforce: From Blockchain to the MOVE Language — Ateneo de Davao University + US Embassy American Spaces Philippines, Nov 8 2025. Signed by Lorgina Samson (Director, University Libraries & American Corner) and Kevin Punzalan (American Spaces Philippines Specialist, US Embassy in the Philippines).'
+        credit="Ateneo de Davao + US Embassy · Nov 8 2025"
+        href={path('/certifications')}
+        aspect="3/2"
+      />
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container container-narrow">
+      <p class="proof-neg">
+        <strong>What's not here:</strong> photos of the 19V Capital office. Screenshots of
+        proprietary strategy outputs. Calendar entries with client names. The 19V Capital
+        role is a <strong>closed past contract</strong> (03/2026 – 06/2026), and everything on
+        this page is public-data or self-owned. If the proof you need isn't on this page,
+        email me — if it's public, I'll send it within 24 hours.
+      </p>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Want a specific artifact?"
+    sub="Email me with the proof you need. If it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours."
+    primaryLabel="Email me"
+    secondaryLabel="Read /experience"
+    secondaryHref={path('/experience')}
+  />
+
+</BaseLayout>
+
+<style>
+  .proof-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1200px 600px at 80% -100px, rgba(212, 160, 23, 0.14), transparent 60%),
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .proof-head__title {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-block: var(--sp-4) var(--sp-5);
+  }
+  .proof-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 64ch;
+  }
+  .proof-head__sub a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--c-rule-strong);
+    text-underline-offset: 3px;
+  }
+  .proof-head__sub a:hover {
+    text-decoration-color: var(--c-primary-2);
+    color: var(--c-primary-2);
+  }
+
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--sp-5);
+  }
+  .proof-grid--video {
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  }
+
+  .proof-neg {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    padding: var(--sp-5);
+    background: var(--c-bg-2);
+    border-left: 3px solid var(--c-primary-2);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .proof-neg strong {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+
+  @media (max-width: 720px) {
+    .proof-grid--video { grid-template-columns: 1fr; }
+  }
+</style>

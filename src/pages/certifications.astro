@@ -7,6 +7,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
+import ProofCard from '@components/ProofCard.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
@@ -64,6 +65,17 @@ const tier1Count = groups.reduce(
           <h2 class="section__title">{group.data.title}</h2>
           <p class="section__sub">{group.data.blurb}</p>
         </header>
+        {group.data.featuredImg && (
+          <div class="cert-featured">
+            <ProofCard
+              src={path(group.data.featuredImg)}
+              alt={group.data.featuredAlt ?? ''}
+              caption={group.data.featuredCaption ?? ''}
+              href={group.data.featuredHref ? path(group.data.featuredHref) : undefined}
+              aspect="3/2"
+            />
+          </div>
+        )}
         <ul class="certs">
           {group.data.items.map(item => (
             <li class:list={["cert", { "cert--tier1": item.tier === 1, "cert--flagship": item.flagship }]}>
@@ -125,6 +137,10 @@ const tier1Count = groups.reduce(
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--sp-3);
+  }
+  .cert-featured {
+    margin-bottom: var(--sp-6);
+    max-width: 760px;
   }
   .certs {
     list-style: none;

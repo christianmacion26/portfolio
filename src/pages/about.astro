@@ -6,6 +6,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Stat from '@components/Stat.astro';
 import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
+import Avatar from '@components/Avatar.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 
@@ -20,6 +21,10 @@ const education = [
 
   <header class="page-head">
     <div class="container container-narrow">
+      <Avatar
+        alt="Christian T. Macion, dark blazer over graphic tee, three-quarter view, neutral background."
+        size={200}
+      />
       <p class="section__eyebrow"><span class="mono">about/</span> · operator + researcher</p>
       <h1 class="page-head__title">A research-desk operator with <span class="hl">one method</span>.</h1>
 

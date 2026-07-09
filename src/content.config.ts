@@ -84,6 +84,12 @@ const certGroup = defineCollection({
     blurb: z.string(),
     items: z.array(certItem),
     order: z.number(),
+    // Optional flagship: a single signature image that anchors the group.
+    // Rendered as a ProofCard above the cert list when set.
+    featuredImg: z.string().optional(),
+    featuredCaption: z.string().optional(),
+    featuredAlt: z.string().optional(),
+    featuredHref: z.string().optional(),
   }),
 });
 

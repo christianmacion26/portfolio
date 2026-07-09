@@ -1,0 +1,66 @@
+---
+/**
+ * Avatar.astro — circular headshot with amber ring.
+ *
+ * Uses Astro's `<Image>` from astro:assets for responsive srcset (AVIF + WebP
+ * + JPEG fallback). Renders eager + high fetch priority because the avatar is
+ * the LCP candidate on /about at mobile sizes.
+ */
+import { Image } from 'astro:assets';
+import headshot from '../assets/portrait/headshot-source.jpg';
+
+interface Props {
+  alt: string;
+  size?: number;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const {
+  alt,
+  size = 200,
+  loading = 'eager',
+  fetchpriority = 'high',
+} = Astro.props;
+
+// 2× the requested size for retina. Astro emits AVIF + WebP variants by default.
+const widths = [size, Math.round(size * 1.5), size * 2];
+---
+
+<figure class="avatar" style={`--avatar-size: ${size}px;`}>
+  <Image
+    src={headshot}
+    alt={alt}
+    width={size * 2}
+    height={size * 2}
+    widths={widths}
+    sizes={`${size}px`}
+    loading={loading}
+    fetchpriority={fetchpriority}
+    decoding="async"
+  />
+</figure>
+
+<style>
+  .avatar {
+    display: block;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    margin: 0 0 var(--sp-4) 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--c-primary-2);
+    box-shadow: 0 2px 12px rgba(212, 160, 23, 0.18);
+    background: var(--c-bg);
+  }
+  .avatar :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 28%;
+    display: block;
+  }
+  @media (max-width: 720px) {
+    .avatar { margin-bottom: var(--sp-3); }
+  }
+</style>

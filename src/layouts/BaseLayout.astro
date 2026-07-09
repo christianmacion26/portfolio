@@ -31,7 +31,10 @@ const { title, description, image, type = 'website', className } = Astro.props;
 const meta = buildMeta({
   title,
   description: description ?? profile.titles.secondary,
-  image: image ?? '/og-card.svg',
+  // Default og:image is the headshot banner. `path()` prepends the configured
+  // base (`/portfolio` on GH Pages) so the resolved URL points at the actual
+  // deployed asset, not the site root.
+  image: image ? path(image) : path('/og-image.jpg'),
   type,
   pathname: Astro.url.pathname,
 });
