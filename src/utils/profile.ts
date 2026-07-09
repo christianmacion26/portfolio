@@ -27,7 +27,7 @@ export const profile = {
     linkedin: 'https://www.linkedin.com/in/christianmacion',
     github: 'https://github.com/christianmacion26',
     ojp: 'https://www.onlinejobs.ph/jobseekers/info/christianmacion26', // placeholder — replace with real slug
-    upwork: 'https://www.upwork.com/freelancers/~christianmacion', // placeholder — replace with real ~uid
+    upwork: 'https://www.upwork.com/freelancers/~01785a76c001e4acd8',
   },
   availability: {
     hours: '20 hrs/wk',
