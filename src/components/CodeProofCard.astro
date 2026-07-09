@@ -1,0 +1,186 @@
+---
+/**
+ * CodeProofCard.astro — proof card for code artifacts.
+ *
+ * Lighter-weight than ProofCard: no image, just a terminal-style
+ * preview + headline metric + caption. Used on /proof for the 3
+ * artifacts that ship with the site (MCP backtest server, RAG
+ * harness, numerical faithfulness eval).
+ */
+interface Props {
+  title: string;
+  kind: 'MCP server' | 'Python package' | 'Eval harness' | 'CLI' | 'Library';
+  tagline: string;
+  metric: string; // e.g. "4 reference strategies, 0 market data"
+  preview?: string; // optional terminal-style preview block
+  path: string; // local repo path (for context)
+  href?: string; // optional external link
+  outputLines?: string[]; // optional terminal output lines
+}
+
+const {
+  title,
+  kind,
+  tagline,
+  metric,
+  preview,
+  path: repoPath,
+  href,
+  outputLines = [],
+} = Astro.props;
+---
+
+<article class="code-card">
+  <header class="code-card__head">
+    <div class="code-card__kind mono">{kind}</div>
+    <h3 class="code-card__title">{title}</h3>
+    <p class="code-card__tagline">{tagline}</p>
+  </header>
+
+  <div class="code-card__metric mono">
+    <span class="code-card__metric-dot"></span>
+    {metric}
+  </div>
+
+  {
+    preview && (
+      <pre class="code-card__preview">
+        <code>{preview}</code>
+      </pre>
+    )
+  }
+
+  {
+    outputLines.length > 0 && (
+      <pre class="code-card__output" aria-label="terminal output sample">
+        <code>{outputLines.join('\n')}</code>
+      </pre>
+    )
+  }
+
+  <footer class="code-card__foot">
+    <span class="mono code-card__path">{repoPath}</span>
+    {
+      href && (
+        <a class="code-card__link" href={href} target="_blank" rel="noopener">
+          Source →
+        </a>
+      )
+    }
+  </footer>
+</article>
+
+<style>
+  .code-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary-2-deep);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+  .code-card:hover {
+    border-color: var(--c-primary);
+    border-left-color: var(--c-primary-2-deep);
+    box-shadow: var(--shadow-sm);
+  }
+  .code-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .code-card__kind {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
+    font-weight: 700;
+  }
+  .code-card__title {
+    font-size: var(--fs-xl);
+    color: var(--c-primary);
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .code-card__tagline {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-snug);
+    margin: 0;
+  }
+  .code-card__metric {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--c-bg-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    font-weight: 500;
+  }
+  .code-card__metric-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-pass);
+    box-shadow: 0 0 0 3px var(--c-pass-soft);
+  }
+  .code-card__preview {
+    margin: 0;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-tape);
+    color: #e6edf3;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-snug);
+  }
+  .code-card__output {
+    margin: 0;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-paper);
+    color: var(--c-ink);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-snug);
+    white-space: pre;
+  }
+  .code-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    padding-top: var(--sp-2);
+    border-top: 1px solid var(--c-rule-soft);
+    margin-top: auto;
+  }
+  .code-card__path {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .code-card__link {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+  .code-card__link:hover {
+    color: var(--c-primary);
+  }
+</style>

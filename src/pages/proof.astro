@@ -9,6 +9,7 @@
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProofCard from '@components/ProofCard.astro';
+import CodeProofCard from '@components/CodeProofCard.astro';
 import VideoEmbed from '@components/VideoEmbed.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
@@ -70,6 +71,80 @@ import { path } from '@utils/url';
   </section>
 
   <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Code artifacts · 3 new</p>
+        <h2 class="section__title">Things I can <code class="mono">import</code>.</h2>
+        <p class="section__sub">
+          Three new repositories shipped with the v3.5 site. Each is <strong>MIT-licensed</strong>,
+          <strong>offline-runnable</strong>, and <strong>dependency-light</strong>. Each one is a small,
+          auditable artifact that demonstrates the eval-first methodology in code rather than prose.
+        </p>
+      </header>
+
+      <div class="proof-grid proof-grid--code">
+        <CodeProofCard
+          title="mcp-backtest-server"
+          kind="MCP server"
+          tagline="IP-clean backtest tools over the Model Context Protocol. Three tools, four textbook strategies, zero market data."
+          metric="100% offline · 4 strategies · 0 lines of proprietary data"
+          preview={`$ uv run server.py
+# FastMCP server listening on stdio
+{"tools":["get_ohlcv","run_backtest","compute_metrics"]}`}
+          outputLines={[
+            'smoke · 262 bars returned',
+            'sma_cross sharpe=0.471 cagr=0.079 max_dd=-0.21',
+            'buy_and_hold sharpe=-0.490',
+            'PASS · deterministic from symbol seed',
+          ]}
+          path="~/portfolio_v2/mcp-backtest-server/"
+          href="https://github.com/christianmacion26/portfolio_v2/tree/master/mcp-backtest-server"
+        />
+
+        <CodeProofCard
+          title="qfin-rag-harness"
+          kind="Python package"
+          tagline="Citation-grounded retrieval harness over a curated corpus of 16 canonical q-fin papers. Pure-Python TF-IDF cosine, no LLM call."
+          metric="16 papers · 0 API keys · 0 LLM dependency"
+          preview={`$ python -m qfin_rag "How do I correct factor significance for data mining?"
+
+# Citations for: How do I correct ...
+## Harvey (2016) — And the Cross-Section ...
+*Review of Financial Studies, 2016* (relevance: 0.173)`}
+          outputLines={[
+            'query → 16-paper curated corpus',
+            'top-3 by TF-IDF cosine',
+            'citation-grounded prompt template',
+            'NO network calls',
+          ]}
+          path="~/portfolio_v2/qfin-rag-harness/"
+          href="https://github.com/christianmacion26/portfolio_v2/tree/master/qfin-rag-harness"
+        />
+
+        <CodeProofCard
+          title="numerical-faithfulness-eval"
+          kind="Eval harness"
+          tagline="Verify LLM numerical claims against deterministic fixtures. Catches the most common LLM failure mode — wrong numbers — in <1 second."
+          metric="10 demo claims · 5 pass · 5 fail by design"
+          preview={`$ python -m eval_harness
+[FAIL] btc_2024_sma_cross_20_50 / sharpe: claimed=5.0,
+       truth=0.4707, diff=4.5293 > tol 0.05
+=== summary ===
+  5/10 passed (50.0%)`}
+          outputLines={[
+            'fixtures computed deterministically from seeded backtest',
+            'tolerances per metric (Sharpe atol=0.05, CAGR=0.02)',
+            'per-claim reason + diff vs tolerance',
+            'exit code = number of failed claims',
+          ]}
+          path="~/portfolio_v2/numerical-faithfulness-eval/"
+          href="https://github.com/christianmacion26/portfolio_v2/tree/master/numerical-faithfulness-eval"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Operator-discretion chart</p>
@@ -171,6 +246,10 @@ import { path } from '@utils/url';
   }
   .proof-grid--video {
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  }
+  .proof-grid--code {
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    align-items: stretch;
   }
 
   .proof-neg {
