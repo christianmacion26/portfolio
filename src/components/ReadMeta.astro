@@ -1,0 +1,117 @@
+---
+/**
+ * ReadMeta.astro — small, restrained read-time + last-updated annotation.
+ *
+ * Genre rule (Jane Street / Two Sigma / E. Sharpe): read-time and freshness
+ * dates are visible at the top of long-form artefacts. Markdown browsers
+ * crawl the <time> tags; humans see a quiet mono-captioned timestamp.
+ *
+ * Usage:
+ *   <ReadMeta minutes={9} updatedIso="2026-07-09" href="/proof" />
+ */
+interface Props {
+  /** Approximate read-time in minutes. Calculated client-side from the
+   * wordCount prop when omitted. */
+  minutes?: number;
+  /** Last-updated ISO date (YYYY-MM-DD). */
+  updatedIso?: string;
+  /** Optional provenance link — usually /proof. */
+  href?: string;
+  /** Word count for client-side reading-time calc. */
+  wordCount?: number;
+  /** Words-per-minute reading speed. Default 220 (long-form prose). */
+  wpm?: number;
+  /** Optional label prefix shown before the read-time number, e.g. "12 min read".
+   * Defaults to "<minutes> min read". */
+  label?: string;
+  /** Class to extend. */
+  class?: string;
+}
+
+const {
+  minutes,
+  updatedIso,
+  href,
+  wordCount,
+  wpm = 220,
+  label,
+  class: className = '',
+} = Astro.props;
+
+const computed = (() => {
+  if (typeof minutes === 'number') return minutes;
+  if (typeof wordCount === 'number' && wordCount > 0) {
+    return Math.max(1, Math.round(wordCount / wpm));
+  }
+  return null;
+})();
+const readLabel = label ?? (computed !== null ? `${computed} min read` : '');
+
+const updatedDate = updatedIso ? new Date(updatedIso) : undefined;
+const updatedFmt = updatedDate
+  ? updatedDate.toISOString().slice(0, 10)
+  : null;
+---
+
+<p class:list={['read-meta', 'mono', className]} aria-label="Read time and last updated">
+  {
+    readLabel && (
+      <>
+        <span class="read-meta__time">{readLabel}</span>
+        <span class="read-meta__sep" aria-hidden="true"> · </span>
+      </>
+    )
+  }
+  {
+    updatedFmt && (
+      <>
+        <span class="read-meta__upd-prefix">last updated</span>
+        <time datetime={updatedFmt} class="read-meta__date">{updatedFmt}</time>
+      </>
+    )
+  }
+  {
+    href && (
+      <>
+        <span class="read-meta__sep" aria-hidden="true"> · </span>
+        <a class="read-meta__proof" href={href}>how verified ↗</a>
+      </>
+    )
+  }
+</p>
+
+<style>
+  .read-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3em;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+  .read-meta__time {
+    color: var(--c-ink-2);
+  }
+  .read-meta__sep {
+    color: var(--c-rule-strong);
+  }
+  .read-meta__upd-prefix {
+    color: var(--c-ink-3);
+  }
+  .read-meta__date {
+    color: var(--c-ink-2);
+    margin-left: 0.35em;
+  }
+  .read-meta__proof {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(140, 111, 42, 0.4);
+  }
+  .read-meta__proof:hover {
+    text-decoration-color: var(--c-primary-2-deep);
+  }
+</style>

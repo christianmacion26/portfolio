@@ -4,6 +4,7 @@
  */
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import BrandMotif from '@components/BrandMotif.astro';
 
 const year = new Date().getFullYear();
 ---
@@ -11,6 +12,9 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
+      <div class="footer__mark">
+        <BrandMotif width={140} decorative={true} />
+      </div>
       <div class="footer__name">{profile.fullName}</div>
       <div class="footer__role">{profile.titles.primary}</div>
       <div class="footer__loc mono">{profile.location.display}</div>
@@ -82,7 +86,12 @@ const year = new Date().getFullYear();
           >No proprietary data sources referenced.</span
         ></small
       >
-      <small class="mono">last build · {new Date().toISOString().slice(0, 10)}</small>
+      <div class="footer__base-meta">
+        <small class="mono">
+          <a href={path('/humans.md')}>humans.md</a> · AI-agent identity document
+        </small>
+        <small class="mono">last build · {new Date().toISOString().slice(0, 10)}</small>
+      </div>
     </div>
   </div>
 </footer>
@@ -99,6 +108,10 @@ const year = new Date().getFullYear();
     display: grid;
     grid-template-columns: 1.1fr 3fr;
     gap: var(--sp-7);
+  }
+  .footer__mark {
+    margin-bottom: var(--sp-4);
+    opacity: 0.92;
   }
   .footer__name {
     font-weight: 600;
@@ -166,6 +179,22 @@ const year = new Date().getFullYear();
   .footer__base-inner small {
     font-size: var(--fs-xs);
     color: rgba(255, 255, 255, 0.45);
+  }
+  .footer__base-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+  }
+  .footer__base-meta a {
+    color: var(--c-primary-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+  }
+  .footer__base-meta a:hover {
+    color: var(--c-primary-2-deep);
+    text-decoration-color: var(--c-primary-2-deep);
   }
 
   @media (max-width: 880px) {

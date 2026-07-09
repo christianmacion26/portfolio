@@ -7,7 +7,10 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import CTABanner from '@components/CTABanner.astro';
+import ReadMeta from '@components/ReadMeta.astro';
+import TrustStrip from '@components/TrustStrip.astro';
 import { getCollection } from 'astro:content';
+import { path } from '@utils/url';
 
 const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
 const aiSolutions = solutions.filter((s) => s.data.lane === 'ai');
@@ -60,6 +63,12 @@ const eduSolutions = solutions.filter(
       </div>
     </div>
   </header>
+
+  <TrustStrip variant="tape" />
+
+  <div class="container">
+    <ReadMeta minutes={9} updatedIso="2026-07-09" href={path('/proof')} />
+  </div>
 
   <section class="section section--alt">
     <div class="container">
@@ -250,7 +259,7 @@ const eduSolutions = solutions.filter(
     border-bottom: var(--border);
   }
   .solutions-head__title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(1.875rem, 5.6vw, 4.5rem);
     letter-spacing: -0.03em;
     line-height: 1;
     margin-block: var(--sp-4) var(--sp-5);

@@ -23,6 +23,48 @@ const publicDir = join(root, 'public');
 // ── SVG composition ──────────────────────────────────────────────────────────
 // Headshot anchored to the right third, dark gradient + amber rule on the left,
 // CM monogram in the top-left corner (replacing the previous text-only mark).
+// ── BrandMotif (33-cell lattice) ────────────────────────────────────────────
+// Mirrors src/components/BrandMotif.astro. 33 cells = 31 gates + 1 ship + 1 block.
+// Bakes the same identity signal into the social-share preview.
+function buildBrandMotif({ originX, originY, motifW, motifH }) {
+  const N = 33;
+  const insetX = motifW * 0.04;
+  const drawW = motifW - insetX * 2;
+  const stepX = drawW / (N - 1);
+  const cy = originY + motifH * 0.42;
+  const r = motifH * 0.075;
+  const haloR = r * 1.9;
+
+  const shipIndex = 16;
+  const blockIndex = 27;
+  const dimFill = '#d4a017';
+  const dimOpacity = 0.32;
+  const captionY = originY + motifH * 0.92;
+  const captionText = 'G1–G31 · ship(x) = 1 ⇔ ∀ gates pass';
+
+  let cells = '';
+  for (let i = 0; i < N; i++) {
+    const cx = originX + insetX + stepX * i;
+    if (i === shipIndex) {
+      cells += `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${haloR.toFixed(2)}" fill="#d4a017" fill-opacity="0.18"/>`;
+      cells += `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${r.toFixed(2)}" fill="#d4a017"/>`;
+    } else if (i === blockIndex) {
+      cells += `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${r.toFixed(2)}" fill="none" stroke="#d4a017" stroke-width="1.2"/>`;
+    } else {
+      cells += `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${r.toFixed(2)}" fill="${dimFill}" fill-opacity="${dimOpacity}"/>`;
+    }
+  }
+
+  return `
+  <g class="brand-motif">
+    ${cells}
+    <text x="${(originX + motifW / 2).toFixed(2)}" y="${captionY.toFixed(2)}" text-anchor="middle"
+          font-family="ui-monospace, Menlo, monospace" font-size="${(motifH * 0.16).toFixed(2)}" letter-spacing="${(motifW * 0.0006).toFixed(3)}" fill="#d4a017" fill-opacity="0.55">
+      ${captionText}
+    </text>
+  </g>`;
+}
+
 function buildSvg({ width, height, headshotBox, monogramSize }) {
   const scale = width / 1600; // normalize to 1600 design grid
   const s = (n) => Math.round(n * scale);
@@ -34,6 +76,13 @@ function buildSvg({ width, height, headshotBox, monogramSize }) {
   // Monogram: top-left, sits in the gutter above the eyebrow line
   const monoX = s(120);
   const monoY = s(80);
+
+  // BrandMotif accent strip — anchored bottom-left, between the type stack
+  // footer line and the URL line.
+  const motifW = Math.min(s(900), width - monoX - s(40));
+  const motifH = s(56);
+  const motifX = monoX;
+  const motifY = s(700);
 
   return `
 <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
@@ -83,6 +132,8 @@ function buildSvg({ width, height, headshotBox, monogramSize }) {
       christianmacion26.github.io/portfolio
     </text>
   </g>
+
+  ${buildBrandMotif({ originX: motifX, originY: motifY, motifW, motifH })}
 
   <!-- Headshot slot -->
   <rect x="${hsX}" y="${hsY}" width="${headshotBox}" height="${headshotBox}" fill="#0a0e14" stroke="#d4a017" stroke-width="${s(4)}"/>

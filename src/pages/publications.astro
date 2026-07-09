@@ -10,6 +10,8 @@
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
+import ReadMeta from '@components/ReadMeta.astro';
+import TrustStrip from '@components/TrustStrip.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
@@ -192,6 +194,12 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
       </nav>
     </div>
   </header>
+
+  <TrustStrip variant="tape" />
+
+  <div class="container">
+    <ReadMeta minutes={7} updatedIso="2026-07-09" href={path('/proof')} />
+  </div>
 
   <section class="section section--alt" data-topic="papers">
     <div class="container">

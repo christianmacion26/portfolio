@@ -1,0 +1,147 @@
+---
+/**
+ * BrandMotif.astro — the 33-cell micro-lattice.
+ *
+ * One reusable geometric SVG that visually encodes the G1–G31 evaluation
+ * stack: 31 dim gates + 1 amber-lit "ship" indicator + 1 outlined "block"
+ * indicator. The aesthetic reference is Jane Street's six-exchange honeycomb,
+ * Akuna's engineer-first terminal glyph, and the Vatic Labs wordmark — a
+ * single geometric mark used sparingly across the IA, never wallpapered.
+ *
+ * Wired into the IA at three places only:
+ *   - The `/` hero, beside the H1 fragment.
+ *   - The `/proof` page head decoration.
+ *   - The footer, beside the brand wordmark.
+ *
+ * Usage:
+ *   <BrandMotif width={420} caption="G1–G31 · ship(x) = 1 ⇔ ∀ gates pass" />
+ */
+interface Props {
+  /** Rendered width in px. Default 240. */
+  width?: number;
+  /** Rendered height (auto-derived from width when omitted). */
+  height?: number;
+  /** Optional mono caption rendered under the lattice. */
+  caption?: string;
+  /** If true (default) the SVG is decorative (aria-hidden). Set false when
+   * the caption is the load-bearing context and you want screen readers
+   * to reach it. */
+  decorative?: boolean;
+}
+
+const {
+  width = 240,
+  height,
+  caption,
+  decorative = true,
+} = Astro.props;
+
+const N = 33;
+const VIEW_W = 240;
+const VIEW_H = 60;
+// 33 circles across VIEW_W → step ~7.0
+const stepX = VIEW_W / (N + 1); // leaves a half-cell of margin on each side
+const radius = 2.4;
+const cy = 22;
+const captionY = 50;
+
+// Choose one cell to be the bright "ship" gate (position 16 = G16 in a 31-gate run)
+// and one outlined "block" indicator at position 27.
+const shipIndex = 16;
+const blockIndex = 27;
+---
+
+<figure class="brand-motif" style={`--brand-w:${width}px;${height ? `--brand-h:${height}px;` : ''}`}>
+  <svg
+    viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+    width={width}
+    height={height}
+    role={decorative ? 'presentation' : 'img'}
+    aria-hidden={decorative ? 'true' : 'false'}
+    focusable="false"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <g class="brand-motif__row">
+      {
+        Array.from({ length: N }).map((_, i) => {
+          const cx = stepX * (i + 1);
+          if (i === shipIndex) {
+            return (
+              <g class="brand-motif__cell brand-motif__cell--ship">
+                <circle cx={cx} cy={cy} r={radius + 1.6} fill="var(--c-primary-2)" opacity="0.18" />
+                <circle cx={cx} cy={cy} r={radius} fill="var(--c-primary-2)" />
+              </g>
+            );
+          }
+          if (i === blockIndex) {
+            return (
+              <circle
+                class="brand-motif__cell brand-motif__cell--block"
+                cx={cx}
+                cy={cy}
+                r={radius}
+                fill="none"
+                stroke="var(--c-primary-2-deep)"
+                stroke-width="1.2"
+              />
+            );
+          }
+          return (
+            <circle
+              class="brand-motif__cell"
+              cx={cx}
+              cy={cy}
+              r={radius}
+              fill="var(--c-ink-3)"
+              opacity="0.55"
+            />
+          );
+        })
+      }
+    </g>
+    {caption && (
+      <text
+        class="brand-motif__caption"
+        x={VIEW_W / 2}
+        y={captionY}
+        text-anchor="middle"
+        font-family="var(--ff-mono)"
+        font-size="7"
+        fill="var(--c-ink-3)"
+        letter-spacing="0.08em"
+      >
+        {caption}
+      </text>
+    )}
+  </svg>
+</figure>
+
+<style>
+  .brand-motif {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    max-width: 100%;
+  }
+  .brand-motif svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  /* Subtle pulse on the ship indicator — restraint: opacity, no motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    .brand-motif__cell--ship > circle:nth-child(2) {
+      animation: brand-motif-breathe 5.5s ease-in-out infinite;
+    }
+  }
+  @keyframes brand-motif-breathe {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.72;
+    }
+  }
+</style>

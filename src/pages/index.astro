@@ -16,6 +16,7 @@ import CTABanner from '@components/CTABanner.astro';
 import ProcessStrip from '@components/ProcessStrip.astro';
 import TrustStrip from '@components/TrustStrip.astro';
 import ProofCard from '@components/ProofCard.astro';
+import BrandMotif from '@components/BrandMotif.astro';
 
 const nowDate = new Date();
 const nowLabel = `NOW · ${nowDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-')}`;
@@ -49,6 +50,10 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
         <span class="hl">Two hats.</span>
         <span class="hero__accent">One method.</span>
       </h1>
+
+      <div class="hero__motif">
+        <BrandMotif width={360} caption="G1–G31 · ship(x) = 1 ⇔ ∀ gates pass" />
+      </div>
 
       <p class="hero__sub">
         Systematic strategies that survive <strong>multiple-testing correction</strong>. Multi-agent
@@ -420,13 +425,18 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
     margin-bottom: var(--sp-5);
   }
   .hero__title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(1.875rem, 5.6vw, 4.5rem);
     line-height: 1;
     letter-spacing: -0.035em;
     margin-bottom: var(--sp-5);
   }
   .hero__accent {
     color: var(--c-primary);
+  }
+  .hero__motif {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0 0 var(--sp-5);
   }
   .hero__sub {
     font-size: var(--fs-lg);

@@ -10,8 +10,11 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProofCard from '@components/ProofCard.astro';
 import CodeProofCard from '@components/CodeProofCard.astro';
+import BrandMotif from '@components/BrandMotif.astro';
 import VideoEmbed from '@components/VideoEmbed.astro';
 import CTABanner from '@components/CTABanner.astro';
+import ReadMeta from '@components/ReadMeta.astro';
+import TrustStrip from '@components/TrustStrip.astro';
 import { path } from '@utils/url';
 ---
 
@@ -26,6 +29,9 @@ import { path } from '@utils/url';
       <h1 class="proof-head__title">
         Things I can <span class="hl">show you</span>.
       </h1>
+      <div class="proof-head__motif">
+        <BrandMotif width={320} caption="proof/ · G1–G31 gates emit the artefacts below" />
+      </div>
       <p class="proof-head__sub">
         A gallery of public, NDA-clean artifacts — recordings, charts, co-signed certificates — that
         back up the claims on
@@ -36,6 +42,12 @@ import { path } from '@utils/url';
       </p>
     </div>
   </header>
+
+  <TrustStrip variant="tape" />
+
+  <div class="container container-narrow">
+    <ReadMeta minutes={9} updatedIso="2026-07-09" href={path('/proof')} />
+  </div>
 
   <section class="section">
     <div class="container">
@@ -49,6 +61,8 @@ import { path } from '@utils/url';
           in the Edit-mode frame proves provenance.
         </p>
       </header>
+
+  <TrustStrip variant="tape" />
       <div class="proof-grid proof-grid--video">
         <VideoEmbed
           src={path('/proof/usep-lecture.mp4')}
@@ -82,6 +96,8 @@ import { path } from '@utils/url';
           prose.
         </p>
       </header>
+
+  <TrustStrip variant="tape" />
 
       <div class="proof-grid proof-grid--code">
         <CodeProofCard
@@ -156,6 +172,8 @@ import { path } from '@utils/url';
           gold, under a public TradingView handle.
         </p>
       </header>
+
+  <TrustStrip variant="tape" />
       <ProofCard
         src={path('/proof/cryptoneeds-christ-chart.jpg')}
         alt="TradingView chart of XAUT/USDT (tokenized gold) on the 1-hour timeframe with Elliott Wave counts. Public chart by @CryptoneedsChrist."
@@ -177,6 +195,8 @@ import { path } from '@utils/url';
           <a href={path('/certifications')}>/certifications</a>.
         </p>
       </header>
+
+  <TrustStrip variant="tape" />
       <ProofCard
         src={path('/proof/ateneo-american-corner-2025-11.jpg')}
         alt="Co-signed certificate from Ateneo de Davao University and US Embassy American Spaces Philippines for the AI for the Modern Workforce workshop, Nov 8 2025."
@@ -218,10 +238,15 @@ import { path } from '@utils/url';
     border-bottom: var(--border);
   }
   .proof-head__title {
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-size: clamp(1.75rem, 5vw, 3.5rem);
     letter-spacing: -0.025em;
     line-height: 1.05;
     margin-block: var(--sp-4) var(--sp-5);
+  }
+  .proof-head__motif {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0 0 var(--sp-5);
   }
   .proof-head__sub {
     font-size: var(--fs-lg);

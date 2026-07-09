@@ -10,7 +10,10 @@ import TimelineEntry from '@components/TimelineEntry.astro';
 import Stat from '@components/Stat.astro';
 import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
+import ReadMeta from '@components/ReadMeta.astro';
+import TrustStrip from '@components/TrustStrip.astro';
 import { getCollection, render } from 'astro:content';
+import { path } from '@utils/url';
 
 const entries = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
 
@@ -90,6 +93,12 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     </div>
   </header>
 
+  <TrustStrip variant="tape" />
+
+  <div class="container container-narrow">
+    <ReadMeta minutes={8} updatedIso="2026-07-09" href={path('/proof')} />
+  </div>
+
   <section class="section">
     <div class="container container-narrow">
       <div class="timeline">
@@ -129,7 +138,7 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     border-bottom: var(--border);
   }
   .page-head__title {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.5rem, 4vw, 3rem);
     letter-spacing: -0.02em;
     margin-bottom: var(--sp-3);
   }

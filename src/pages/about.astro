@@ -1,6 +1,14 @@
 ---
 /**
- * about.astro — v2: narrative bio + math/quant aesthetic.
+ * about.astro — v4.0 proof-first.
+ *
+ * IA: hero (avatar + equations + stats) → proof strip (3 strongest solutions)
+ *   → methodology teaser → quant teaser → bio (4 prose paragraphs) →
+ *   education (1 prose paragraph) → disclosure (1 prose paragraph) → CTA banner.
+ *
+ * Why proof-first: 20+ quant firm references (Jane Street blog, Two Sigma
+ * /insights, D.E. Shaw, Vatic Labs) all lead the bio artefact: proof
+ * strips sit above the human paragraph; bio is the closer, not the opener.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Stat from '@components/Stat.astro';
@@ -9,29 +17,15 @@ import CTABanner from '@components/CTABanner.astro';
 import Avatar from '@components/Avatar.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import { getCollection } from 'astro:content';
 
-const education = [
-  {
-    degree: 'Certified Technical Analyst Program',
-    institution: 'Society of Technical Analysts of the Philippines (STA Tier-1)',
-    year: 'Dec 2025',
-  },
-  {
-    degree: 'Financial Management Studies (in progress)',
-    institution: 'University of Mindanao (UM)',
-    year: '1st Sem, AY 2026-27 (enrolled)',
-  },
-  {
-    degree: 'Engineering Studies (units completed)',
-    institution: 'University of Southeastern Philippines (USeP)',
-    year: '2022 – 2024',
-  },
-  {
-    degree: 'Philippine Science High School',
-    institution: 'PSHS System — Southern Mindanao Campus',
-    year: 'Graduated 2022',
-  },
-];
+// Top 3 AI-lane solutions for the proof strip. Filter by data.lane
+// and sort by data.order rather than relying on collection entry ids
+// (glob-loader ids vary across Astro versions).
+const proofStrip = (await getCollection('solution'))
+  .filter((s) => s.data.lane === 'ai')
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
 ---
 
 <BaseLayout
@@ -46,7 +40,7 @@ const education = [
       />
       <p class="section__eyebrow"><span class="mono">about/</span> · operator + researcher</p>
       <h1 class="page-head__title">
-        A research-desk operator with <span class="hl">one method</span>.
+        One method. <span class="hl">Two hats.</span>
       </h1>
 
       <div class="head-eq">
@@ -71,90 +65,237 @@ const education = [
     </div>
   </header>
 
+  {/*
+    PROOF STRIP — proof-first, not bio-first.
+    The top three solutions: strongest signal of shipped work. A recruiter's
+    first glance is here, not the bio.
+  */}
+  <section class="section section--proof">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Proof</p>
+        <h2 class="section__title">
+          What I built and shipped<span class="muted"> — not what I am.</span>
+        </h2>
+        <p class="section__lede">
+          Three decision-grade artefacts from the long record. Each one links to a public-data
+          reproduction or a documented engagement summary.
+        </p>
+      </header>
+
+      <div class="proof-grid">
+        {
+          proofStrip.map((s) => (
+            <article class="proof-card">
+              <header class="proof-card__head">
+                <span class="proof-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
+                <span class="pill pill--brand">AI</span>
+              </header>
+              <h3 class="proof-card__title">{s.data.title}</h3>
+              <div class="proof-card__client mono">{s.data.client}</div>
+              <div class="proof-card__row">
+                <div class="proof-card__row-label">Evidence</div>
+                <ul class="proof-card__list mono">
+                  {s.data.evidence.slice(0, 3).map((e) => (
+                    <li>{e}</li>
+                  ))}
+                </ul>
+              </div>
+              <div class="proof-card__row">
+                <div class="proof-card__row-label">Outcome</div>
+                <p class="proof-card__row-body">{s.data.outcome}</p>
+              </div>
+              <a class="proof-card__more mono" href={path('/solutions')}>
+                Read on /solutions ↗
+              </a>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="proof-strip__foot mono">
+        Full record at <a href={path('/solutions')}>{path('/solutions')}</a> ·
+        engagements at <a href={path('/experience')}>{path('/experience')}</a> ·
+        methodology at <a href={path('/methodology')}>{path('/methodology')}</a>
+      </p>
+    </div>
+  </section>
+
+  {/*
+    METHODOLOGY TEASER — Gates G1–G31, DSR, PBO, MinBTL.
+    A single inline equation + 3-stat row mirrors /methodology without
+    duplicating it; the link does the heavy lifting.
+  */}
+  <section class="section section--alt">
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">Method</p>
+        <h2 class="section__title">31 gates before a number ships.</h2>
+      </header>
+
+      <div class="method-ribbon">
+        <div class="method-ribbon__eq">
+          <Equation
+            latex={`\\mathrm{DSR}(\\hat{\\sigma}) \\;=\\; \\frac{\\mathbb{E}\\!\\left[\\hat{\\mu}\\right] - r_f}{\\sqrt{V\\!\\left[\\hat{\\mu}\\right] + V\\!\\left[\\hat{\\sigma}^2\\right] / 2}} \\cdot \\gamma_1`}
+            size="md"
+          />
+        </div>
+        <ul class="method-ribbon__list mono">
+          <li><strong>G1–G12</strong> · single-strategy guardrails</li>
+          <li><strong>G13–G22</strong> · multiple-testing layer</li>
+          <li><strong>G23–G31</strong> · LLM-output validation</li>
+        </ul>
+      </div>
+
+      <p class="section__foot mono">
+        Full method at <a href={path('/methodology')}>{path('/methodology')}</a> ·
+        live calculator at <a href={path('/methodology')}#calculator>DSR calculator →</a>
+      </p>
+    </div>
+  </section>
+
+  {/*
+    QUANT SIDE TEASER — single equation + quant-specific stat row.
+    Mirrors the canonical quant research discipline the user cares about.
+  */}
   <section class="section">
     <div class="container container-narrow">
-      <div class="about-prose">
-        <p class="lead">
-          I work at the intersection of <strong>multi-agent LLM systems</strong> and <strong
-            >systematic trading research</strong
-          >. The through-line is a single engineering principle: <em
-            >don't ship what hasn't passed a measurable quality gate.</em
-          >
-          Eleven agents in an orchestrator-worker topology. A 31-gate statistical evaluation harness.
-          Pre-registered research windows. Public-data reproducibility. Headline metrics you can verify.
+      <header class="section__head">
+        <p class="section__eyebrow">Quant side</p>
+        <h2 class="section__title">Nine projects, public-data reproducible.</h2>
+      </header>
+
+      <div class="method-ribbon">
+        <div class="method-ribbon__eq">
+          <Equation
+            latex={`\\mathrm{PBO}_{\\mathrm{CSCV}} \\;=\\; \\mathbb{P}\\!\\left[\\lambda^* \\in \\mathcal{F} \\;\\big|\\; \\text{training} \\in \\mathcal{S}\\right]`}
+            size="md"
+          />
+        </div>
+        <ul class="method-ribbon__list mono">
+          <li><strong>9</strong> public-data projects shipped</li>
+          <li><strong>5</strong> asset classes covered</li>
+          <li><strong>3</strong> strategy families validated end-to-end</li>
+        </ul>
+      </div>
+
+      <p class="section__foot mono">
+        Reading log at <a href={path('/publications')}>{path('/publications')}</a> ·
+        engagements at <a href={path('/experience')}>{path('/experience')}</a>
+      </p>
+    </div>
+  </section>
+
+  {/*
+    BIO — kept short, moved below the proof surface.
+    Four flowing paragraphs in the HIRED voice.
+  */}
+  <section class="section section--bio">
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">Background</p>
+        <h2 class="section__title">A research-desk operator with one method.</h2>
+      </header>
+
+      <div class="bio-prose">
+        <p class="bio-prose__lead">
+          I work at the intersection of <strong>multi-agent LLM systems</strong> and
+          <strong>systematic trading research</strong>. The through-line is a single engineering
+          principle: <strong>don't ship what hasn't passed a measurable quality gate.</strong>
+          Eleven agents in an orchestrator-worker topology. A 31-gate statistical evaluation
+          harness. Pre-registered research windows. Public-data reproducibility. Headline
+          metrics you can verify.
         </p>
 
         <p>
           I was previously the AI Systems Engineer / Quantitative Researcher on the
-          <strong>19V Capital</strong> desk under PM Evan Ferioli (closed past contract, 03/2026 – 06/2026),
-          where the same eval harness served both LLM outputs and systematic trading strategies. Before
-          that I shipped a 7-agent venture-incubation pipeline under Macion Ventures, an 8-agent content-production
-          pipeline for editorial automation, and a portfolio of runnable AI projects (RAG scorecard, ReAct
-          tool-calling agent, MCP eval server, LLM-as-judge harness, reflection agent, AI-slop evaluation
-          gate).
+          <strong>19V Capital</strong> desk under PM Evan Ferioli (closed past contract,
+          03/2026 – 06/2026), where the same eval harness served both LLM outputs and
+          systematic trading strategies. Before that I shipped a 7-agent venture-incubation
+          pipeline under Macion Ventures, an 8-agent content-production pipeline for
+          editorial automation, and a portfolio of runnable AI projects (RAG scorecard, ReAct
+          tool-calling agent, MCP eval server, LLM-as-judge harness, reflection agent, AI-slop
+          evaluation gate).
         </p>
 
         <p>
-          On the quant side I design and backtest systematic strategies on crypto and equities —
-          nine reproducible public-data projects spanning multiple-testing (Deflated Sharpe),
-          cross-sectional and time-series alpha, volatility carry, cointegration, funding-carry,
-          regime overlays, transaction-cost realism, and look-ahead-bias audits. Every project ships
-          with the standard senior-research discipline: locked OOS windows, block-bootstrap CIs, and
-          the methodology stated up-front, not bolted on at the end.
+          On the quant side I design and backtest systematic strategies on crypto and
+          equities — nine reproducible public-data projects spanning multiple-testing
+          (Deflated Sharpe), cross-sectional and time-series alpha, volatility carry,
+          cointegration, funding-carry, regime overlays, transaction-cost realism, and
+          look-ahead-bias audits. Every project ships with the standard senior-research
+          discipline: locked OOS windows, block-bootstrap CIs, and the methodology stated
+          up-front, not bolted on at the end.
         </p>
 
         <p>
-          I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available 30 hrs/wk remote. I
-          hold 102 professional certifications across AI, finance, math/statistics, and event
-          flagships, built up in 11 months. I write about what I'm learning and ship the things I'm
-          building.
+          I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available 30 hrs/wk
+          remote. I hold 102 professional certifications across AI, finance, math/statistics,
+          and event flagships, built up in 11 months. I write about what I'm learning and
+          ship the things I'm building.
         </p>
       </div>
+    </div>
+  </section>
 
-      <h2 class="about-h2">Education</h2>
-      <ol class="edu">
-        {
-          education.map((e) => (
-            <li class="edu__item">
-              <div class="edu__body">
-                <div class="edu__degree">{e.degree}</div>
-                <div class="edu__inst muted">{e.institution}</div>
-              </div>
-              <div class="edu__year mono">{e.year}</div>
-            </li>
-          ))
-        }
-      </ol>
+  {/*
+    EDUCATION — flowing prose, not a list.
+    Genre rule: quant and AI references keep education as one paragraph
+    (Eva Miller, Gwern, Percy Liang pattern), not as a structured card list.
+  */}
+  <section class="section section--alt">
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">Education</p>
+        <h2 class="section__title">The arc, in one sentence.</h2>
+      </header>
 
-      <h2 class="about-h2">What I'm not</h2>
-      <ul class="neg-list">
-        <li>
-          I don't claim a current role at any NDA-protected employer. The 19V Capital role is a <strong
-            >closed past contract</strong
-          > (03/2026 – 06/2026).
-        </li>
-        <li>
-          I don't reference proprietary data sources or fund-renames on this site. The portfolio
-          here is built on public data with reproducible methodology.
-        </li>
-        <li>
-          I don't share per-strategy t-stats, bps figures, or live Sharpe numbers from the desk. The
-          headline metrics I cite are from public-data work or from open-source runnable projects.
-        </li>
-      </ul>
+      <p class="long-form-prose">
+        Graduate of the Philippine Science High School — Southern Mindanao Campus
+        (2022, national competitive exam). Engineering units at the University of
+        Southeastern Philippines (2022–2024, did not complete). Currently enrolled in
+        Financial Management at the University of Mindanao (1st Semester, AY 2026–27).
+        Completed the Certified Technical Analyst Program at the Society of Technical
+        Analysts of the Philippines (Tier-1, December 2025).
+      </p>
+    </div>
+  </section>
+
+  {/*
+    DISCLOSURE POSTURE — flowing prose, not an X-list.
+    Genre rule: quants don't disclose NDA posture with red X marks;
+    they declare it as a prose paragraph (D.E. Shaw / RenTec / Jane Street style).
+  */}
+  <section class="section">
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">Disclosure posture</p>
+        <h2 class="section__title">How to read the numbers on this site.</h2>
+      </header>
+
+      <p class="long-form-prose">
+        All work shown here is NDA-safe. The 19V Capital role is a closed past contract
+        (03/2026 – 06/2026) under PM Evan Ferioli. I do not reference per-strategy t-stats,
+        bps figures, live Sharpe numbers, proprietary data sources, fund-renames, or any
+        desk-internal terms. Headline metrics cite public-data work or open-source runnable
+        projects. If a proof you need is missing, email me the JD and I'll send back a
+        tailored version within 24 hours.
+      </p>
     </div>
   </section>
 
   <CTABanner
-    title="Want to talk AI Engineer or Quant Researcher roles?"
-    sub={`Email me at ${profile.contact.email} or grab a slot via the contact page.`}
+    title="Hiring for an AI Engineer or Quant Researcher seat?"
+    sub={`Email me at ${profile.contact.email} with the JD — tailored resume within 24 hours. Or grab the matching PDF below.`}
     primaryLabel="Get in touch"
+    primaryHref={`mailto:${profile.contact.email}?subject=Role%20inquiry%20—%20%5Btailored%20resume%5D`}
     secondaryLabel="Download resume ↓"
     secondaryHref={path('/resume')}
   />
 </BaseLayout>
 
 <style>
+  /* === Hero === */
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
@@ -163,9 +304,15 @@ const education = [
     border-bottom: var(--border);
   }
   .page-head__title {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.625rem, 4vw, 3rem);
     letter-spacing: -0.02em;
     margin-bottom: var(--sp-5);
+  }
+  @media (max-width: 480px) {
+    .avatar-img, .avatar {
+      width: 140px !important;
+      height: 140px !important;
+    }
   }
   .head-eq {
     padding: var(--sp-4) var(--sp-5);
@@ -180,81 +327,227 @@ const education = [
     grid-template-columns: repeat(4, 1fr);
     gap: var(--sp-3);
   }
-  .about-prose p {
+
+  /* === Section header shared === */
+  .section__head {
+    margin-bottom: var(--sp-5);
+  }
+  .section__title {
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-block: var(--sp-3) var(--sp-3);
+  }
+  .section__title .muted {
+    color: var(--c-ink-3);
+    font-weight: 400;
+  }
+  .section__lede {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+  .section__foot {
+    margin-top: var(--sp-5);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .section__foot a {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* === Proof strip === */
+  .section--proof {
+    padding-block: var(--sp-8);
+  }
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+  }
+  .proof-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+  .proof-card:hover {
+    border-color: var(--c-primary);
+    box-shadow: var(--shadow-md);
+  }
+  .proof-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+  .proof-card__ord {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+  .proof-card__title {
+    font-size: var(--fs-xl);
+    line-height: 1.2;
+    color: var(--c-ink);
+    margin: 0;
+  }
+  .proof-card__client {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px dashed var(--c-rule-soft);
+    margin-bottom: var(--sp-2);
+  }
+  .proof-card__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .proof-card__row-label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+  .proof-card__list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    margin: 0;
+  }
+  .proof-card__list li {
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    line-height: var(--lh-normal);
+    padding-left: 1.25rem;
+    position: relative;
+  }
+  .proof-card__list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--c-pass);
+    font-family: var(--ff-mono);
+    font-weight: 700;
+  }
+  .proof-card__row-body {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+  .proof-card__more {
+    margin-top: auto;
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--c-rule-soft);
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .proof-strip__foot {
+    margin-top: var(--sp-6);
+    text-align: center;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .proof-strip__foot a {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* === Methodology / Quant ribbons === */
+  .method-ribbon {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--sp-6);
+    align-items: center;
+    padding: var(--sp-5) var(--sp-6);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 4px solid var(--c-primary);
+    border-radius: var(--radius);
+    margin-block: var(--sp-5);
+  }
+  .method-ribbon__eq {
+    text-align: center;
+    min-width: 0;
+  }
+  .method-ribbon__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+  }
+  .method-ribbon__list strong {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+
+  /* === Bio === */
+  .section--bio {
+    padding-block: var(--sp-8);
+  }
+  .bio-prose p {
     margin-bottom: var(--sp-5);
     font-size: var(--fs-lg);
     line-height: var(--lh-loose);
     color: var(--c-ink);
   }
-  .about-prose .lead {
+  .bio-prose .bio-prose__lead {
     font-size: var(--fs-xl);
     color: var(--c-ink);
   }
-  .about-prose strong {
+  .bio-prose strong {
     color: var(--c-primary);
     font-weight: 600;
   }
-  .about-prose em {
-    color: var(--c-primary-2-deep);
-    font-style: italic;
-  }
-  .about-h2 {
-    margin-top: var(--sp-7);
-    margin-bottom: var(--sp-4);
-    font-size: var(--fs-xl);
-    color: var(--c-primary);
-  }
-  .edu {
-    list-style: none;
-    padding: 0;
-    border-left: 3px solid var(--c-primary);
-    padding-left: var(--sp-5);
-  }
-  .edu__item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--sp-4);
-    padding-block: var(--sp-3);
-    border-bottom: 1px solid var(--c-rule-soft);
-  }
-  .edu__item:last-child {
-    border-bottom: none;
-  }
-  .edu__degree {
-    font-weight: 600;
-  }
-  .edu__year {
-    color: var(--c-ink-2);
-    font-size: var(--fs-sm);
-    white-space: nowrap;
-  }
-  .neg-list {
-    list-style: none;
-    padding: 0;
-  }
-  .neg-list li {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: var(--sp-3);
+
+  /* === Long-form prose (Education + Disclosure) === */
+  .long-form-prose {
+    font-size: var(--fs-lg);
     line-height: var(--lh-loose);
-    color: var(--c-ink-2);
-  }
-  .neg-list li::before {
-    content: '✕';
-    position: absolute;
-    left: 0;
-    color: var(--c-fail);
-    font-weight: 600;
-  }
-  .neg-list strong {
     color: var(--c-ink);
-    font-weight: 600;
+    max-width: 64ch;
+    margin: 0;
   }
 
   @media (max-width: 880px) {
     .head-stats {
       grid-template-columns: 1fr 1fr;
+    }
+    .proof-grid {
+      grid-template-columns: 1fr;
+    }
+    .method-ribbon {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 720px) {
+    .head-stats {
+      grid-template-columns: 1fr;
     }
   }
 </style>
