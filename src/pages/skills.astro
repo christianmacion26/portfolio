@@ -1,8 +1,11 @@
 ---
 /**
- * skills.astro — v2: domain-grouped skill matrix + math/quant aesthetic.
+ * skills.astro — v3: domain-grouped skill matrix + math/quant aesthetic
+ *                + per-skill proficiency bar + self-rated level & years.
  *
  * Hero equation: skill_stack = build + validate + ship (one stack across two lanes).
+ * Proficiency is a 5-dot ladder (1 = exposure, 5 = production-grade).
+ * `years` is self-rated practice time (not tenure).
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
@@ -12,11 +15,37 @@ import { getCollection } from 'astro:content';
 const groups = (await getCollection('skillGroup')).sort((a, b) => a.data.order - b.data.order);
 
 const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
+const withLevel = groups.reduce(
+  (sum, g) => sum + g.data.items.filter((i) => typeof i.level === 'number').length,
+  0,
+);
+const withYears = groups.reduce(
+  (sum, g) => sum + g.data.items.filter((i) => typeof i.years === 'number').length,
+  0,
+);
+
+// Aggregate proficiency distribution across all rated skills
+const distribution: Record<1 | 2 | 3 | 4 | 5, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+for (const g of groups) {
+  for (const it of g.data.items) {
+    if (typeof it.level === 'number' && it.level >= 1 && it.level <= 5) {
+      distribution[it.level as 1 | 2 | 3 | 4 | 5]++;
+    }
+  }
+}
+
+const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
+  1: 'exposure',
+  2: 'familiar',
+  3: 'working',
+  4: 'strong',
+  5: 'production',
+};
 ---
 
 <BaseLayout
   title="Skills"
-  description="Domain-grouped skill matrix: AI & multi-agent systems, quantitative research & statistics, and engineering tools."
+  description="Domain-grouped skill matrix with self-rated proficiency and years of practice: AI & multi-agent systems, quantitative research & statistics, and engineering tools."
 >
   <header class="page-head">
     <div class="container">
@@ -24,8 +53,21 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
       <h1 class="page-head__title">Three domains. <span class="hl">One stack.</span></h1>
       <p class="page-head__sub">
         Skills grouped the way a hiring manager reads them: what I build, how I validate it, and
-        what I ship it with. Each skill is paired with the discipline it represents.
+        what I ship it with. Each skill is paired with a self-rated proficiency ladder
+        (<span class="mono">1 = exposure</span> ·
+        <span class="mono">5 = production</span>) and the number of years I've practiced it.
       </p>
+
+      <div class="nda-callout" role="note">
+        <span class="dot dot--pass" aria-hidden="true"></span>
+        <div>
+          <strong>Self-rated, not self-inflated.</strong> Proficiency dots are my honest answer
+          to <em>"could I ship this to production on Monday without help?"</em> Tradeoffs between
+          languages, libraries, and domains are explicit: e.g., I can ship production Python but my
+          Docker is <em>working</em>, not <em>expert</em>. Years of practice reflect actual use,
+          not calendar time since first exposure.
+        </div>
+      </div>
 
       <div class="head-eq">
         <Equation
@@ -37,9 +79,42 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
 
       <div class="head-stats">
         <Stat value={String(groups.length)} label="domains" sub="three" formula="|D|" />
-        <Stat value={String(totalSkills)} label="skills" sub="in stack" formula="|\mathcal{S}|" />
-        <Stat value="0" label="proprietary" sub="data sources" formula="\neg p" />
-        <Stat value="6" label="OSS repos" sub="runnable" formula="|R|" trend="up" />
+        <Stat
+          value={String(totalSkills)}
+          label="skills"
+          sub="in stack"
+          formula="|\mathcal{S}|"
+        />
+        <Stat
+          value={String(withLevel)}
+          label="rated"
+          sub={`of ${totalSkills} (${Math.round((withLevel / totalSkills) * 100)}%)`}
+          formula="\mathrm{rated}"
+        />
+        <Stat
+          value={String(distribution[5])}
+          label="★ production"
+          sub="level-5 rated"
+          formula="|s: \ell(s)=5|"
+        />
+      </div>
+
+      <div class="legend">
+        <span class="legend__title">Proficiency ladder:</span>
+        {
+          ([1, 2, 3, 4, 5] as const).map((lvl) => (
+            <span class="legend__chip">
+              <span class:list={['dot5', `dot5--${lvl}`]} aria-hidden="true" />
+              <span class="mono">{lvl}</span>
+              <span class="muted">{levelLabel[lvl]}</span>
+            </span>
+          ))
+        }
+        <span class="legend__years">
+          <span class="legend__years-icon" aria-hidden="true">⏱</span>
+          <span class="mono">yrs</span>
+          <span class="muted">practice (self-reported)</span>
+        </span>
       </div>
     </div>
   </header>
@@ -54,12 +129,49 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
             <p class="section__sub">{group.data.blurb}</p>
           </header>
           <div class="skills">
-            {group.data.items.map((item) => (
-              <div class="skill">
-                <div class="skill__label">{item.label}</div>
-                {item.sub && <div class="skill__sub muted">{item.sub}</div>}
-              </div>
-            ))}
+            {group.data.items.map((item) => {
+              const level = typeof item.level === 'number' ? Math.min(5, Math.max(1, item.level)) : null;
+              return (
+                <article class="skill">
+                  <div class="skill__head">
+                    <h3 class="skill__label">{item.label}</h3>
+                    {level !== null && (
+                      <span
+                        class:list={['skill__chip', `skill__chip--lvl-${level}`]}
+                        title={`Proficiency: ${level}/5 — ${levelLabel[level as 1 | 2 | 3 | 4 | 5]}`}
+                      >
+                        <span class="mono">{level}</span>
+                        <span class="muted">/5</span>
+                      </span>
+                    )}
+                  </div>
+
+                  {item.sub && <p class="skill__sub muted">{item.sub}</p>}
+
+                  {level !== null && (
+                    <div
+                      class="skill__ladder"
+                      role="img"
+                      aria-label={`Proficiency ${level} of 5 — ${levelLabel[level as 1 | 2 | 3 | 4 | 5]}`}
+                    >
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span class:list={['dot5', `dot5--${i + 1 <= level ? 'on' : 'off'}`]} aria-hidden="true" />
+                      ))}
+                    </div>
+                  )}
+
+                  {typeof item.years === 'number' && (
+                    <div class="skill__years" title="Years of practice">
+                      <span aria-hidden="true">⏱</span>
+                      <span class="mono">{item.years}</span>
+                      <span class="muted">
+                        yr{item.years === 1 ? '' : 's'}
+                      </span>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -87,6 +199,10 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
     max-width: 64ch;
     margin-bottom: var(--sp-6);
   }
+  .page-head__sub .mono {
+    font-size: 0.85em;
+    color: var(--c-ink);
+  }
   .head-eq {
     padding: var(--sp-4) var(--sp-5);
     background: var(--c-bg);
@@ -100,16 +216,118 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
     grid-template-columns: repeat(4, 1fr);
     gap: var(--sp-3);
   }
+
+  /* === NDA-safe / self-rated disclosure callout (parallels /experience) === */
+  .nda-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
+    margin-bottom: var(--sp-5);
+    padding: var(--sp-4) var(--sp-5);
+    background: rgba(21, 128, 61, 0.06);
+    border: 1px solid var(--c-pass);
+    border-left: 3px solid var(--c-pass);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    line-height: var(--lh-loose);
+  }
+  .nda-callout strong {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+  .nda-callout .mono {
+    font-size: 0.92em;
+    color: var(--c-primary-2-deep);
+  }
+
+  /* === Legend strip === */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: center;
+    margin-top: var(--sp-5);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+  }
+  .legend__title {
+    font-weight: 600;
+    color: var(--c-ink);
+    margin-right: var(--sp-2);
+  }
+  .legend__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .legend__chip .mono {
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+  .legend__years {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+    padding-left: var(--sp-4);
+    border-left: 1px solid var(--c-rule);
+  }
+  .legend__years-icon {
+    font-size: 1.1em;
+    line-height: 1;
+  }
+
+  /* === 5-dot ladder (used in legend + per skill) === */
+  .dot5 {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    transition:
+      background var(--transition),
+      border-color var(--transition);
+  }
+  /* ON dots — color hue tracks proficiency level */
+  .dot5--on,
+  .dot5--5,
+  .dot5--4,
+  .dot5--3,
+  .dot5--2,
+  .dot5--1 {
+    background: var(--c-amber);
+    border-color: var(--c-amber-deep);
+  }
+  /* In tier-1 (exposure) we keep dots muted even when ON to convey "saw it, haven't shipped it" */
+  .dot5--1 {
+    background: var(--c-bg-2);
+    border-color: var(--c-rule);
+  }
+  .dot5--off {
+    background: var(--c-bg-2);
+    border-color: var(--c-rule);
+  }
+
+  /* === Skill card === */
   .skills {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--sp-4);
   }
   .skill {
-    padding: var(--sp-4);
+    padding: var(--sp-4) var(--sp-4) var(--sp-3);
     background: var(--c-bg);
     border: var(--border);
     border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     transition:
       border-color var(--transition),
       transform var(--transition);
@@ -118,19 +336,103 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
     border-color: var(--c-ink-3);
     transform: translateY(-1px);
   }
+  .skill__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
   .skill__label {
+    font-size: 1rem;
     font-weight: 600;
     color: var(--c-ink);
-    margin-bottom: 0.25rem;
+    line-height: 1.3;
+    margin: 0;
+  }
+  .skill__chip {
+    flex-shrink: 0;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    line-height: 1;
+    display: inline-flex;
+    gap: 0.15rem;
+    align-items: baseline;
+  }
+  .skill__chip .mono {
+    font-weight: 600;
+  }
+  .skill__chip .muted {
+    font-size: 0.8em;
+    opacity: 0.7;
+  }
+  .skill__chip--lvl-5 {
+    background: rgba(196, 138, 22, 0.14); /* amber-deep tinted */
+    border: 1px solid var(--c-amber-deep);
+    color: var(--c-amber-deep);
+  }
+  .skill__chip--lvl-5 .mono {
+    color: var(--c-amber-deep);
+  }
+  .skill__chip--lvl-4 {
+    background: rgba(11, 61, 92, 0.08);
+    border: 1px solid var(--c-primary);
+    color: var(--c-primary);
+  }
+  .skill__chip--lvl-4 .mono {
+    color: var(--c-primary);
+  }
+  .skill__chip--lvl-3 {
+    background: rgba(11, 61, 92, 0.05);
+    border: 1px solid var(--c-ink-3);
+    color: var(--c-ink-2);
+  }
+  .skill__chip--lvl-2 {
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    color: var(--c-ink-3);
+  }
+  .skill__chip--lvl-1 {
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    color: var(--c-ink-3);
+    opacity: 0.85;
   }
   .skill__sub {
     font-size: var(--fs-sm);
     line-height: var(--lh-normal);
+    margin: 0;
+  }
+  .skill__ladder {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    margin-top: auto;
+  }
+  .skill__years {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+  }
+  .skill__years .mono {
+    font-weight: 600;
+    color: var(--c-ink);
   }
 
   @media (max-width: 880px) {
     .head-stats {
       grid-template-columns: 1fr 1fr;
+    }
+    .legend {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .legend__years {
+      margin-left: 0;
+      padding-left: 0;
+      border-left: none;
     }
   }
 </style>
