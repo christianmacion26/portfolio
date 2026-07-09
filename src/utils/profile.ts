@@ -56,7 +56,7 @@ export const profile = {
     'CTA® (Certificate in Investment Operations, CFA Institute)',
   ],
   availability: {
-    hours: '20 hrs/wk',
+    hours: '30 hrs/wk',
     mode: 'remote',
   },
   stats: {
