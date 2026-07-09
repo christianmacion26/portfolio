@@ -13,6 +13,9 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProjectCard from '@components/ProjectCard.astro';
 import CTABanner from '@components/CTABanner.astro';
+
+const nowDate = new Date();
+const nowLabel = `NOW · ${nowDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-')}`;
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import Sparkline from '@components/Sparkline.astro';
@@ -45,12 +48,12 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
       </div>
 
       <h1 class="hero__title">
-        I do <span class="hl">solutions</span>.<br />
-        Two hats. <span class="hero__accent">One method.</span>
+        Junior Quant Researcher.<br />
+        <span class="hl">I do</span> <span class="hero__accent">solutions</span> — two hats, one method.
       </h1>
 
       <p class="hero__sub">
-        Quantitative Research first — multi-agent AI engineering second.
+        Systematic strategies, multiple-testing-aware. Multi-agent AI engineering on the side.
         Eleven-agent orchestrator. <strong>31-gate statistical eval harness</strong>. Pre-registered research.
         Public-data reproducibility. Headline metrics you can verify.
       </p>
@@ -131,7 +134,7 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     <div class="container">
       <div class="now-strip__inner">
         <div class="now-strip__cell">
-          <div class="now-strip__label mono">NOW · 2026-07 · <a href={path('/now')} class="now-strip__link">/now →</a></div>
+          <div class="now-strip__label mono">{nowLabel} · <a href={path('/now')} class="now-strip__link">/now →</a></div>
           <div class="now-strip__val">
             <strong>Open to:</strong> Quantitative Researcher (junior QR / QR-rotational),
             Quantitative Research Engineer, or Research Engineer seat · remote · UTC+8
