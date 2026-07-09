@@ -51,6 +51,8 @@
   --c-paper-2: #f5f3eb;
   --c-tape: #0d1117; /* terminal/equity-tape dark */
   --c-tape-2: #161b22;
+  --ink-on-tape: #e6edf3; /* body text on dark/tape backgrounds */
+  --ink-on-tape-2: #c9ced6; /* muted text on dark/tape backgrounds */
 
   /* === STATUS / SIGNAL === */
   --c-pass: #15803d; /* equity green — verified, pass (deep enough for text) */
@@ -163,7 +165,7 @@
 
 .bg--tape {
   background: var(--c-tape);
-  color: #e6edf3;
+  color: var(--ink-on-tape);
 }
 
 /* === Reusable status dot === */

@@ -1,6 +1,9 @@
 ---
 /**
  * MetricPill.astro — single headline-metric pill.
+ *
+ * Tone maps to a numeric color token so the value's hue carries semantic
+ * weight (e.g. amber accent for quant metrics, near-black for AI/structural).
  */
 interface Props {
   label: string;
@@ -8,11 +11,19 @@ interface Props {
   sub?: string;
   tone?: 'brand' | 'accent' | 'gold' | 'pass';
 }
-const { label, value, sub } = Astro.props;
+const { label, value, sub, tone = 'brand' } = Astro.props;
+const valueColor =
+  tone === 'accent'
+    ? 'var(--c-primary-2-deep)'
+    : tone === 'gold'
+      ? 'var(--c-gold)'
+      : tone === 'pass'
+        ? 'var(--c-pass)'
+        : 'var(--c-primary)';
 ---
 
 <div class="metric">
-  <div class="metric__value mono">{value}</div>
+  <div class="metric__value mono" style={`color: ${valueColor}`}>{value}</div>
   <div class="metric__label">{label}</div>
   {sub && <div class="metric__sub faint text-xs">{sub}</div>}
 </div>
@@ -28,7 +39,6 @@ const { label, value, sub } = Astro.props;
   .metric__value {
     font-size: var(--fs-2xl);
     font-weight: 700;
-    color: var(--c-primary);
     line-height: 1;
     margin-bottom: var(--sp-2);
     font-variant-numeric: tabular-nums;

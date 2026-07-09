@@ -27,6 +27,16 @@ const project = defineCollection({
     status: z.enum(['production', 'open-source', 'internal', 'archived']).default('open-source'),
     tags: z.array(z.string()).default([]),
     date: z.coerce.date().optional(),
+    // Optional hero image rendered at the top of the detail page.
+    // Used to anchor visuals for backtests / eval dashboards / etc.
+    hero: z
+      .object({
+        src: z.string(), // path under /public, e.g. "/proof/dashboard-2026-01.png"
+        alt: z.string(),
+        fit: z.enum(['cover', 'contain']).default('cover'),
+        aspect: z.enum(['16/9', '4/3', '3/2', '16/10', 'auto']).default('16/9'),
+      })
+      .optional(),
   }),
 });
 

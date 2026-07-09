@@ -45,7 +45,18 @@ const path = points
   })
   .join(' ');
 const areaPath = `${path} L ${(width - pad).toFixed(2)} ${(height - pad).toFixed(2)} L ${pad} ${(height - pad).toFixed(2)} Z`;
-const gradId = `spk-${Math.random().toString(36).slice(2, 9)}`;
+
+// Deterministic gradient ID derived from the points themselves so SSR + client
+// agree on the defs id (no hydration mismatch from `Math.random()`).
+function hashPoints(pts: number[]): string {
+  let h = 0x811c9dc5;
+  for (const p of pts) {
+    h ^= Math.round(p * 1000) | 0;
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36).slice(0, 7);
+}
+const gradId = `spk-${hashPoints(points)}`;
 ---
 
 <svg

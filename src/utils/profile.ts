@@ -73,7 +73,6 @@ export const profile = {
   },
   stats: {
     certCount: '102',
-    locCount: '0',
     ageMonths: '11', // 102 certs in 11 months
     aiAgentCount: '11', // orchestrator + workers
     locPython: '76.5k', // ~76,500 LOC

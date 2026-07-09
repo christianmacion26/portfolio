@@ -15,7 +15,7 @@ const items = [
   { sym: 'SHARPE', val: 'deflated — not raw', delta: '·', color: 'muted' },
   { sym: 'GATES', val: 'G1–G31 mechanical', delta: '✓', color: 'pass' },
   { sym: 'NDA', val: 'clean — public data only', delta: '✓', color: 'pass' },
-  { sym: 'PROJ', val: '15 reproducible', delta: '✓', color: 'pass' },
+  { sym: 'PROJ', val: '9 quant projects', delta: '✓', color: 'pass' },
   { sym: 'CTA', val: 'Tier-1 STA', delta: '✓', color: 'pass' },
   { sym: 'PIT', val: 'point-in-time enforced', delta: '✓', color: 'pass' },
   { sym: 'UTC', val: '+8 PHT', delta: '·', color: 'muted' },
@@ -40,7 +40,7 @@ const items = [
   .ticker {
     overflow: hidden;
     background: var(--c-tape);
-    color: #e6edf3;
+    color: var(--ink-on-tape);
     border-block: 1px solid rgba(255, 255, 255, 0.06);
     position: relative;
     height: 32px;
@@ -88,7 +88,7 @@ const items = [
     font-variant-numeric: tabular-nums;
   }
   .ticker__val {
-    color: #e6edf3;
+    color: var(--ink-on-tape);
     font-weight: 600;
   }
   .ticker__delta {
