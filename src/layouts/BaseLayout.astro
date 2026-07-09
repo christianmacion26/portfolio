@@ -16,7 +16,7 @@ import 'katex/dist/katex.min.css';
 import Nav from '@components/Nav.astro';
 import Footer from '@components/Footer.astro';
 import { profile } from '@utils/profile';
-import { buildMeta, personJsonLd } from '@utils/seo';
+import { buildMeta, personJsonLd, websiteJsonLd } from '@utils/seo';
 import { path } from '@utils/url';
 
 interface Props {
@@ -25,9 +25,10 @@ interface Props {
   image?: string;
   type?: 'website' | 'article' | 'profile';
   className?: string;
+  extraJsonLd?: unknown; // optional page-specific JSON-LD (e.g. ItemList, CreativeWork)
 }
 
-const { title, description, image, type = 'website', className } = Astro.props;
+const { title, description, image, type = 'website', className, extraJsonLd } = Astro.props;
 const meta = buildMeta({
   title,
   description: description ?? profile.titles.secondary,
@@ -43,7 +44,11 @@ const jsonLd = personJsonLd({
   titles: profile.titles,
   location: profile.location,
   contact: profile.contact,
+  knowsAbout: profile.knowsAbout,
+  alumniOf: profile.alumniOf,
+  awards: profile.awards,
 });
+const siteJsonLd = websiteJsonLd();
 ---
 
 <!doctype html>
@@ -80,9 +85,19 @@ const jsonLd = personJsonLd({
     <link rel="apple-touch-icon" href={path('/cm-mark-amber.svg')} />
     <link rel="mask-icon" href={path('/cm-mark.svg')} color="#0a0e14" />
     <link rel="sitemap" href={path('/sitemap-index.xml')} />
+    <link
+      rel="alternate"
+      type="application/atom+xml"
+      title={`${profile.fullName} — Portfolio Updates`}
+      href={path('/feed.xml')}
+    />
     <meta name="theme-color" content="#0a0e14" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
+    {
+      extraJsonLd && <script type="application/ld+json" set:html={JSON.stringify(extraJsonLd)} />
+    }
   </head>
   <body class={className}>
     <a href="#main" class="skip-link">Skip to content</a>

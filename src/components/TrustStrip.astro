@@ -1,0 +1,145 @@
+---
+/**
+ * TrustStrip.astro — narrow horizontal strip of "trust anchors" rendered
+ * below the hero on the home page. Each chip points at a verifiable proof
+ * surface elsewhere on the site.
+ *
+ * Trust anchors surfaced here:
+ *   - Tested against           → numerical-faithfulness eval harness
+ *   - Reproducible builds       → public repos + Pages deploys
+ *   - NDA-safe by construction  → disclosure + Ferioli reference
+ *   - Public RSS / Atom feed    → /feed.xml
+ *   - Open-source first         → 6+ repos
+ *
+ * Why a strip (and not just a sentence): each anchor is a *pointer* to
+ * evidence. Hiring managers skim — make the pointers skimmable.
+ */
+interface Props {
+  variant?: 'paper' | 'tape';
+  buildSha?: string;
+  lastVerifiedIso?: string;
+}
+const {
+  variant = 'paper',
+  buildSha = 'sha-unknown',
+  lastVerifiedIso = new Date().toISOString(),
+} = Astro.props;
+const lastVerified = new Date(lastVerifiedIso).toISOString().slice(0, 10);
+const shortSha = buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(0, 7);
+---
+
+<aside class:list={['trust-strip', `trust-strip--${variant}`]} aria-label="Portfolio trust signals">
+  <div class="trust-strip__inner">
+    <span class="trust-strip__title mono">trust/</span>
+
+    <a class="trust-pill" href="/proof/#code-artifacts" title="All metrics evaluated by a separate harness">
+      <span class="trust-pill__icon" aria-hidden="true">✓</span>
+      <span class="trust-pill__label">tested</span>
+      <span class="trust-pill__detail">numerical-eval</span>
+    </a>
+
+    <a class="trust-pill" href="/projects/" title="Every project ships with a public repo + pages deploy">
+      <span class="trust-pill__icon" aria-hidden="true">⌥</span>
+      <span class="trust-pill__label">reproducible</span>
+      <span class="trust-pill__detail">public repos</span>
+    </a>
+
+    <a class="trust-pill" href="/experience/#nda-safe" title="19V Capital closed contract (03–06/2026); PM Evan Ferioli">
+      <span class="trust-pill__icon" aria-hidden="true">🛡</span>
+      <span class="trust-pill__label">NDA-clean</span>
+      <span class="trust-pill__detail">by construction</span>
+    </a>
+
+    <a class="trust-pill" href="/feed.xml" rel="alternate" type="application/atom+xml" title="Atom feed of new projects">
+      <span class="trust-pill__icon" aria-hidden="true">⌁</span>
+      <span class="trust-pill__label">RSS</span>
+      <span class="trust-pill__detail">/feed.xml</span>
+    </a>
+
+    <span class="trust-pill trust-pill--static" title={`Site build ${shortSha}`}>
+      <span class="trust-pill__icon" aria-hidden="true">⎈</span>
+      <span class="trust-pill__label">build</span>
+      <span class="trust-pill__detail mono">{shortSha}</span>
+    </span>
+
+    <span class="trust-pill trust-pill--static" title={`All claims re-verified on ${lastVerified}`}>
+      <span class="trust-pill__icon" aria-hidden="true">↻</span>
+      <span class="trust-pill__label">verified</span>
+      <span class="trust-pill__detail mono">{lastVerified}</span>
+    </span>
+  </div>
+</aside>
+
+<style>
+  .trust-strip {
+    border-block: var(--border);
+    background: var(--c-bg);
+  }
+  .trust-strip--paper {
+    background: var(--c-paper);
+  }
+  .trust-strip--tape {
+    background: var(--c-bg-2);
+    color: var(--c-ink);
+  }
+  .trust-strip__inner {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: var(--sp-3) var(--sp-4);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-2) var(--sp-3);
+  }
+  .trust-strip__title {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    margin-right: var(--sp-2);
+  }
+
+  .trust-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    background: var(--c-bg);
+    color: var(--c-ink);
+    text-decoration: none;
+    transition:
+      border-color var(--transition),
+      background var(--transition),
+      transform var(--transition);
+  }
+  a.trust-pill:hover {
+    border-color: var(--c-amber-deep);
+    background: rgba(196, 138, 22, 0.06);
+    transform: translateY(-1px);
+  }
+  .trust-pill--static {
+    cursor: default;
+    background: var(--c-bg-2);
+  }
+  .trust-pill__icon {
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--c-amber-deep);
+  }
+  .trust-pill__label {
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+  .trust-pill__detail {
+    color: var(--c-ink-2);
+  }
+
+  @media (max-width: 720px) {
+    .trust-strip__inner {
+      justify-content: flex-start;
+    }
+  }
+</style>

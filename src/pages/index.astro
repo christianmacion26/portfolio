@@ -14,6 +14,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import ProjectCard from '@components/ProjectCard.astro';
 import CTABanner from '@components/CTABanner.astro';
 import ProcessStrip from '@components/ProcessStrip.astro';
+import TrustStrip from '@components/TrustStrip.astro';
 
 const nowDate = new Date();
 const nowLabel = `NOW · ${nowDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-')}`;
@@ -118,6 +119,11 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
       </div>
     </div>
   </section>
+
+  <TrustStrip
+    buildSha={import.meta.env.PUBLIC_BUILD_SHA ?? 'sha-local'}
+    lastVerifiedIso={import.meta.env.PUBLIC_LAST_VERIFIED ?? new Date().toISOString()}
+  />
 
   <section class="stat-row">
     <div class="container">

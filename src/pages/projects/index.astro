@@ -6,15 +6,28 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import ProjectCard from '@components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
+import { projectListJsonLd } from '@utils/seo';
 
 const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
 const aiProjects = projects.filter((p) => p.data.role === 'ai');
 const quantProjects = projects.filter((p) => p.data.role === 'quant');
+
+const itemListJsonLd = projectListJsonLd(
+  projects.map((p) => ({
+    slug: p.id,
+    title: p.data.title,
+    summary: p.data.summary,
+    role: p.data.role,
+    sourceLink: p.data.sourceLink,
+    date: p.data.date,
+  })),
+);
 ---
 
 <BaseLayout
   title="Projects"
   description="AI engineering projects (multi-agent, eval, MCP) and quantitative research projects (multiple-testing, cross-sectional alpha, volatility, cointegration)."
+  extraJsonLd={itemListJsonLd}
 >
   <header class="page-head">
     <div class="container">
