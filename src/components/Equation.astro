@@ -11,6 +11,8 @@
  *   block  — render as display block (default: false, inline)
  *   label  — optional equation label, e.g. "(1)"
  *   size   — 'sm' | 'md' | 'lg' | 'xl' (default 'md')
+ *   tone   — 'paper' (default, near-black ink on light bg)
+ *         | 'tape' (light ink on dark `--c-tape` bg)
  *   className — extra classes
  */
 import katex from 'katex';
@@ -20,10 +22,11 @@ interface Props {
   block?: boolean;
   label?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  tone?: 'paper' | 'tape';
   className?: string;
 }
 
-const { latex, block = false, label, size = 'md', className } = Astro.props;
+const { latex, block = false, label, size = 'md', tone = 'paper', className } = Astro.props;
 const html = katex.renderToString(latex, {
   displayMode: block,
   throwOnError: false,
@@ -32,9 +35,10 @@ const html = katex.renderToString(latex, {
   trust: false,
 });
 const sizeClass = size !== 'md' ? `eq--${size}` : '';
+const toneClass = tone === 'tape' ? 'eq--tape' : '';
 ---
 <span
-  class:list={["eq", sizeClass, className, { 'eq--block': block }]}
+  class:list={["eq", sizeClass, toneClass, className, { 'eq--block': block }]}
   data-latex={latex}
 >
   <Fragment set:html={html} />
@@ -49,6 +53,64 @@ const sizeClass = size !== 'md' ? `eq--${size}` : '';
     line-height: 1.4;
     vertical-align: baseline;
     /* KaTeX HTML output is math-styled; preserve its baseline math */
+  }
+  /* 'tape' tone — light ink on dark `--c-tape` background. */
+  /* Reassign every KaTeX class the engine uses for math text so glyphs */
+  /* stay legible against dark cells; without this, .mord/.mathnormal */
+  /* inherit from --c-eq (near-black) and disappear into --c-tape. */
+  .eq--tape,
+  .eq--tape :global(.mord),
+  .eq--tape :global(.mathnormal),
+  .eq--tape :global(.mathit),
+  .eq--tape :global(.mathrm),
+  .eq--tape :global(.mathbf),
+  .eq--tape :global(.mathsf),
+  .eq--tape :global(.mathtt),
+  .eq--tape :global(.mbin),
+  .eq--tape :global(.mrel),
+  .eq--tape :global(.mopen),
+  .eq--tape :global(.mclose),
+  .eq--tape :global(.mpunct),
+  .eq--tape :global(.minner),
+  .eq--tape :global(.mop),
+  .eq--tape :global(.accent),
+  .eq--tape :global(.op-symbol),
+  .eq--tape :global(.delimsizing),
+  .eq--tape :global(.delimcenter),
+  .eq--tape :global(.delimcenter span),
+  .eq--tape :global(.sqrt),
+  .eq--tape :global(.sqrt > .root),
+  .eq--tape :global(.sqrt > .sqrt-sign),
+  .eq--tape :global(.frac-line),
+  .eq--tape :global(.sizing),
+  .eq--tape :global(.reset-size1),
+  .eq--tape :global(.reset-size2),
+  .eq--tape :global(.reset-size3),
+  .eq--tape :global(.reset-size4),
+  .eq--tape :global(.reset-size5),
+  .eq--tape :global(.reset-size6),
+  .eq--tape :global(.reset-size7),
+  .eq--tape :global(.reset-size8),
+  .eq--tape :global(.reset-size9),
+  .eq--tape :global(.reset-size10),
+  .eq--tape :global(.reset-size11),
+  .eq--tape :global(.size1),
+  .eq--tape :global(.size2),
+  .eq--tape :global(.size3),
+  .eq--tape :global(.size4),
+  .eq--tape :global(.size5),
+  .eq--tape :global(.size6),
+  .eq--tape :global(.size7),
+  .eq--tape :global(.size8),
+  .eq--tape :global(.size9),
+  .eq--tape :global(.size10),
+  .eq--tape :global(.size11) {
+    color: #e6edf3;
+  }
+  /* Accent tokens stay readable: Φ gold, σ purple, α green still glow */
+  .eq--tape :global(.accent .mord),
+  .eq--tape :global(.mathbb) {
+    color: var(--c-primary-2);
   }
   .eq--block {
     display: block;
@@ -67,6 +129,9 @@ const sizeClass = size !== 'md' ? `eq--${size}` : '';
     font-family: var(--ff-mono);
     font-size: var(--fs-sm);
     color: var(--c-ink-2);
+  }
+  .eq--tape .eq__label {
+    color: rgba(230, 237, 243, 0.65);
   }
   .eq--block .eq__label {
     top: auto;
