@@ -37,21 +37,20 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
   <section class="hero">
     <div class="container hero__inner">
       <div class="hero__eyebrow">
-        <span class="pill pill--brand">Quant Researcher</span>
-        <span class="pill pill--accent">AI Engineer</span>
+        <span class="pill pill--brand">Quant Researcher · AI Engineer</span>
         <span class="pill">Eval-first · NDA-clean · Public-data reproducible</span>
       </div>
 
       <h1 class="hero__title">
         Quant Researcher.<br />
-        <span class="hl">I do</span>
-        <span class="hero__accent">solutions</span> — two hats, one method.
+        <span class="hl">Two hats.</span>
+        <span class="hero__accent">One method.</span>
       </h1>
 
       <p class="hero__sub">
-        Systematic strategies, multiple-testing-aware. Multi-agent AI engineering on the side.
-        Eleven-agent orchestrator. <strong>31-gate statistical eval harness</strong>. Pre-registered
-        research. Public-data reproducibility. Headline metrics you can verify.
+        Systematic strategies that survive <strong>multiple-testing correction</strong>. Multi-agent
+        LLM systems that ship with a <strong>runnable eval harness</strong>. Same gate stack for
+        both — declared before any number is published.
       </p>
 
       <div class="hero__eq-row">
@@ -70,7 +69,50 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
         </div>
       </div>
 
-      <div class="hero__stats">
+      {/* === R — Result: single big numerical proof + T — Tooltip === */}
+      <div class="hero__result" tabindex="0" aria-describedby="hero-result-tooltip">
+        <div class="hero__result-num mono">
+          <span class="hero__result-eyebrow">statistical eval gates, declared up front</span>
+          <span class="hero__result-figure">31</span>
+          <span class="hero__result-cap">
+            covering mechanical validity, statistical nulls, walk-forward OOS, multiple testing,
+            look-ahead discipline, and economic realism
+          </span>
+        </div>
+        <div class="hero__tooltip" id="hero-result-tooltip" role="tooltip">
+          <div class="hero__tooltip-title mono">G1–G31 · six families</div>
+          <ul class="hero__tooltip-list mono">
+            <li><b>G1–G5</b>  mechanical validity (schema, exit-0, JSON strict, byte budget)</li>
+            <li><b>G6–G10</b> statistical nulls (block-bootstrap CIs, random-timing, regime shuffle)</li>
+            <li><b>G11–G15</b> walk-forward / OOS (locked windows, 5-era stability, embargoed test)</li>
+            <li><b>G16–G20</b> multiple testing (deflated Sharpe, CSCV-PBO, MinBTL, Bonferroni–Holm)</li>
+            <li><b>G21–G25</b> look-ahead discipline (point-in-time, survivorship, frozen-spec)</li>
+            <li><b>G26–G31</b> economic realism (spread/slippage, capacity, funding-carry, regime overlay)</li>
+          </ul>
+          <a class="hero__tooltip-link" href={path('/methodology')}>Read full methodology →</a>
+        </div>
+      </div>
+
+      <div class="hero__actions">
+        <a href={path('/solutions')} class="btn btn--primary">Read solutions</a>
+        <a href={path('/methodology')} class="btn btn--ghost">Methodology (G1–G31)</a>
+        <a href={path('/resume')} class="btn btn--ghost">Download resume ↓</a>
+      </div>
+
+      <div class="hero__proof-row">
+        <span class="dot dot--pass"></span>
+        <span class="mono hero__proof-text"
+          >all 31 gates declared before any number is published · no proprietary data sources · 19V
+          Capital = closed past contract (03/2026 – 06/2026) · all 9 quant projects reproducible
+          end-to-end from public data</span
+        >
+      </div>
+    </div>
+  </section>
+
+  <section class="stat-row">
+    <div class="container">
+      <div class="stat-row__inner">
         <Stat
           value="9"
           label="quant projects"
@@ -96,21 +138,6 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
           size="lg"
         />
         <Stat value="100%" label="NDA-clean" sub="public-data only" formula="\neg p" size="lg" />
-      </div>
-
-      <div class="hero__actions">
-        <a href={path('/solutions')} class="btn btn--primary">Read solutions</a>
-        <a href={path('/methodology')} class="btn btn--ghost">Methodology (G1–G31)</a>
-        <a href={path('/resume')} class="btn btn--ghost">Download resume ↓</a>
-      </div>
-
-      <div class="hero__proof-row">
-        <span class="dot dot--pass"></span>
-        <span class="mono hero__proof-text"
-          >all 31 gates declared before any number is published · no proprietary data sources · 19V
-          Capital = closed past contract (03/2026 – 06/2026) · all 9 quant projects reproducible
-          end-to-end from public data</span
-        >
       </div>
     </div>
   </section>
@@ -391,6 +418,122 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
     margin-bottom: var(--sp-7);
   }
 
+  /* === Hero R — Result + T — Tooltip (Delta 3 HRT) === */
+  .hero__result {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: var(--sp-6);
+    align-items: center;
+    padding: var(--sp-5) var(--sp-6);
+    margin-bottom: var(--sp-7);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary-2-deep);
+    border-radius: var(--radius);
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .hero__result:hover,
+  .hero__result:focus-within {
+    border-color: var(--c-primary);
+    border-left-color: var(--c-primary-2-deep);
+    box-shadow: var(--shadow-sm);
+  }
+  .hero__result-num {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .hero__result-eyebrow {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .hero__result-figure {
+    font-size: clamp(5rem, 14vw, 9rem);
+    font-weight: 800;
+    line-height: 0.9;
+    color: var(--c-primary);
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero__result-cap {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-normal);
+    max-width: 38ch;
+  }
+  .hero__tooltip {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+  }
+  .hero__tooltip-title {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
+    margin-bottom: var(--sp-3);
+    font-weight: 700;
+  }
+  .hero__tooltip-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--sp-3) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .hero__tooltip-list li {
+    color: var(--c-ink-2);
+    line-height: var(--lh-snug);
+  }
+  .hero__tooltip-list li b {
+    color: var(--c-primary);
+    font-weight: 700;
+    margin-right: var(--sp-2);
+  }
+  .hero__tooltip-link {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* === Stat row (Delta 4) === */
+  .stat-row {
+    padding-block: var(--sp-7);
+    background: var(--c-bg-2);
+    border-bottom: var(--border);
+  }
+  .stat-row__inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-5);
+  }
+
+  @media (max-width: 880px) {
+    .hero__result {
+      grid-template-columns: 1fr;
+    }
+    .hero__result-figure {
+      font-size: clamp(4rem, 18vw, 6rem);
+    }
+    .stat-row__inner {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 540px) {
+    .stat-row__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .hero__actions {
     display: flex;
     gap: var(--sp-3);
@@ -466,9 +609,6 @@ const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month 
   }
 
   @media (max-width: 880px) {
-    .hero__stats {
-      grid-template-columns: 1fr 1fr;
-    }
     .hero__eq-row {
       grid-template-columns: 1fr;
     }
