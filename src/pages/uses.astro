@@ -1,0 +1,219 @@
+---
+/**
+ * uses.astro — the /uses pattern (Werkzeug, Swyx, Bryan Cantrill school).
+ *
+ * A short, dated page that names the actual hardware, software, and AI tools
+ * used to do the work on this site and in projects. Recruiter signal: "this
+ * person is a working researcher using modern tooling, not a 2018-era ML
+ * engineer still running Jupyter-only."
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { path } from '@utils/url';
+
+const lastUpdated = '2026-07-09';
+
+const sections = [
+  {
+    title: 'Hardware',
+    items: [
+      { name: 'Primary laptop', detail: 'Apple MacBook Pro 14" (M-series)', why: 'Runs Python + Astro + KaTeX builds comfortably; instant resume.' },
+      { name: 'Secondary monitor', detail: 'LG 27" 4K UltraFine', why: 'Single-column reading + multi-pane code/terminal.' },
+      { name: 'Phone', detail: 'Standard Android', why: 'Not on the engineering loop; for comms only.' },
+    ],
+  },
+  {
+    title: 'Editor & shell',
+    items: [
+      { name: 'Editor', detail: 'Neovim (LazyVim distribution)', why: 'Modal editing + LSP for Python / TypeScript / MDX.' },
+      { name: 'Shell', detail: 'zsh + oh-my-zsh + starship prompt', why: 'Fast, themeable, portable across macOS sessions.' },
+      { name: 'Terminal', detail: 'Ghostty', why: 'GPU-accelerated, low-latency, minimal chrome.' },
+      { name: 'Git CLI', detail: 'git + gh + delta', why: 'gh for the GitHub-aware workflows; delta for diff review.' },
+    ],
+  },
+  {
+    title: 'Languages & frameworks',
+    items: [
+      { name: 'Python', detail: 'numpy / pandas / matplotlib / scipy-stack', why: '~76.5k LOC of the public work. No TA-Lib — pure stdlib math.' },
+      { name: 'TypeScript / JS', detail: 'Astro 5 / MDX / KaTeX', why: 'This site. Astro static-first is the right tool for a content-heavy portfolio.' },
+      { name: 'SQL', detail: 'postgres + sqlite + duckdb (parquet on-disk)', why: 'DuckDB increasingly replaces pandas for parquet-native analysis.' },
+      { name: 'Pine Script', detail: 'TradingView', why: 'For the charting side when working with non-Python researchers.' },
+    ],
+  },
+  {
+    title: 'Data & backtesting',
+    items: [
+      { name: 'Databento', detail: 'US equities + futures tick/rebar', why: 'Point-in-time dataset with embargo-aware access.' },
+      { name: 'Binance public klines', detail: 'BTC/USDT 1d', why: 'For /positions paper-trade record. Public, no auth.' },
+      { name: 'Yahoo Finance (yfinance)', detail: 'For backtesting at the OOS layer only', why: 'Look-ahead-free is the gate; yfinance passes G22 only after revision history checks.' },
+      { name: 'Custom numpy backtester', detail: 'No Lean / backtrader / vectorbt', why: 'The point of the quant projects is shipping the engine from scratch.' },
+    ],
+  },
+  {
+    title: 'AI / agent stack',
+    items: [
+      { name: 'Claude', detail: 'Anthropic API (Opus / Sonnet / Haiku routing)', why: 'Tiered dispatch policy lives on /methodology. ~15× cost vs single-agent is the constraint.' },
+      { name: 'Agent runtime', detail: 'Claude Agent SDK + MCP server (eval-mcp-server)', why: 'Structured-output contracts gated by a mechanical validator.' },
+      { name: 'Eval & measurement', detail: 'katex / ragas (subset) / Cohen’s κ tooling', why: 'Eval-first discipline is the throughline; G1–G31 gates apply to LLMs.' },
+      { name: 'Containerization', detail: 'Docker (compose, not swarm)', why: 'Reproducible env for /projects/quant repos that have non-Python deps.' },
+    ],
+  },
+  {
+    title: 'Cloud & infra',
+    items: [
+      { name: 'AWS S3', detail: 'public-bucket versioned artifacts', why: 'For dataset snapshots + plot fixtures. Idempotent incremental pulls (PyArrow).' },
+      { name: 'GitHub Pages', detail: 'static hosting for this site', why: 'Free, fast, tied to the commit history. Custom domain planned.' },
+      { name: 'GitHub Actions', detail: 'CI: build + deploy + NDA audit', why: 'Build-time NDA guardrail (`src/utils/nda-audit.ts`) fails the build on violation.' },
+      { name: 'No k8s / no terraform', detail: 'Not at this scale', why: 'Reproducibility via git + requirements.txt + lock files.' },
+    ],
+  },
+  {
+    title: 'Notes & writing',
+    items: [
+      { name: 'PKM', detail: 'Plain Markdown in git (no Obsidian / Notion)', why: 'A repo is reproducible; a Notion workspace is not.' },
+      { name: 'Long-form math', detail: 'KaTeX (client + server-side)', why: 'Server-side for /methodology, /projects, /now. Discord-style \[ \] delimiters where MDX risks eating braces.' },
+      { name: 'Reading', detail: 'arXiv SSRN + López de Prado primary sources', why: 'Never summarize an arXiv abstract I haven’t read; cite the primary source.' },
+    ],
+  },
+];
+---
+<BaseLayout
+  title="Uses"
+  description="The hardware, software, and AI tooling used to ship the projects, methodology, and this site. Dated 2026-07-09."
+>
+  <header class="uses-head">
+    <div class="container container-narrow">
+      <p class="section__eyebrow"><span class="mono">uses/</span> · last updated {lastUpdated}</p>
+      <h1 class="uses-head__title">
+        What I use to <span class="hl">do the work</span>.
+      </h1>
+      <p class="uses-head__sub">
+        The /uses pattern — named, dated, no marketing. Recruiter signal: this is a
+        working researcher’s stack, not a 2018-era ML-engineer’s. Update cadence is
+        quarterly or on tooling event.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container container-narrow">
+
+      {sections.map(s => (
+        <article class="uses-block">
+          <h2 class="uses-block__title">{s.title}</h2>
+          <ul class="uses-list">
+            {s.items.map(item => (
+              <li class="uses-row">
+                <div class="uses-row__name">{item.name}</div>
+                <div class="uses-row__detail mono">{item.detail}</div>
+                <div class="uses-row__why">{item.why}</div>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+
+      <div class="uses-foot mono">
+        Inspired by the <a href="https://uses.tech" target="_blank" rel="noopener">/uses</a> tradition. Edit history:
+        <a href="https://github.com/christianmacion26/portfolio/commits/main/src/pages/uses.astro" target="_blank" rel="noopener">github commits</a>.
+      </div>
+
+    </div>
+  </section>
+
+  <CTABanner
+    title="Specific question about the stack?"
+    sub="If a JD asks for a tool I use, I'll attach the relevant /uses entry plus a runnable reproduction."
+    primaryLabel="Email me"
+    secondaryLabel="Methodology"
+    secondaryHref={path('/methodology')}
+  />
+
+</BaseLayout>
+
+<style>
+  .uses-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1200px 600px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .uses-head__title {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-block: var(--sp-4) var(--sp-5);
+    max-width: 22ch;
+  }
+  .uses-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+
+  .uses-block {
+    margin-bottom: var(--sp-6);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+  }
+  .uses-block__title {
+    font-size: var(--fs-lg);
+    color: var(--c-ink);
+    margin: 0 0 var(--sp-4);
+    letter-spacing: -0.01em;
+  }
+  .uses-list {
+    list-style: none;
+    padding: 0;
+  }
+  .uses-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 1.2fr;
+    gap: var(--sp-4);
+    padding: var(--sp-3) 0;
+    border-bottom: 1px dashed var(--c-rule-soft);
+    align-items: start;
+  }
+  .uses-row:last-child { border-bottom: none; }
+  .uses-row__name {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+  .uses-row__detail {
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2);
+    word-break: break-word;
+  }
+  .uses-row__why {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
+
+  .uses-foot {
+    margin-top: var(--sp-6);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-paper);
+    border: 1px dashed var(--c-rule);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-3);
+  }
+  .uses-foot a {
+    color: var(--c-primary-2);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 720px) {
+    .uses-row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
+  }
+</style>
