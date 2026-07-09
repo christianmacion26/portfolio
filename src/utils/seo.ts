@@ -4,7 +4,10 @@
  * Canonical URLs use Astro.url which already includes the configured `base`,
  * so we never manually prepend it. SITE_URL is the deployment root (without
  * base) so combining it with Astro.url.pathname produces the full public URL.
+ * Image URLs combine SITE_URL with `path()` from `url.ts` so they pick up
+ * the configured `base` (`/portfolio` on GH Pages).
  */
+import { path as basePath, BASE } from './url';
 
 export interface SEO {
   title: string;
@@ -16,6 +19,11 @@ export interface SEO {
 
 const SITE_NAME = 'Christian T. Macion';
 export const SITE_URL = 'https://christianmacion26.github.io';
+
+/** Absolute URL with the configured base path appended. */
+function absUrl(p: string): string {
+  return new URL(basePath(p), `${SITE_URL}${BASE ? BASE : ''}/`).toString();
+}
 
 export function buildMeta({ title, description, image, type = 'website', pathname = '/' }: SEO) {
   const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
@@ -65,7 +73,7 @@ export function personJsonLd(p: PersonInfo) {
     jobTitle: p.titles.primary,
     description: p.titles.secondary,
     url: SITE_URL,
-    image: new URL('/og-image.jpg', SITE_URL).toString(),
+    image: absUrl('/og-image.jpg'),
     address: {
       '@type': 'PostalAddress',
       addressLocality: p.location.city,

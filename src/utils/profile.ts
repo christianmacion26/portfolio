@@ -10,8 +10,14 @@ export const profile = {
   initials: 'CM',
   titles: {
     primary: 'Quantitative Researcher · AI Engineer',
-    secondary: 'Multi-Agent LLM Systems & Statistical Modeling',
+    secondary:
+      'Christian T. Macion, CTA® — Quant Researcher and AI Engineer. 11-agent research platform, 31-gate statistical eval harness, 76.5k LOC Python, 102 professional certifications. NDA-safe by construction.',
     tagline: 'I do solutions. Eval-first. NDA-clean.',
+  },
+  headshot: {
+    src: '/headshot.jpg',
+    alt: 'Christian T. Macion, dark blazer over graphic tee, three-quarter view, neutral background. Photographed February 2026.',
+    credit: 'Photo · Feb 2026',
   },
   location: {
     city: 'Digos City',
