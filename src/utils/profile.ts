@@ -26,6 +26,7 @@ export const profile = {
     phoneDisplay: '+63 991 616 2630',
     linkedin: 'https://www.linkedin.com/in/christianmacion',
     github: 'https://github.com/christianmacion26',
+    medium: 'https://medium.com/@christianmacion',
     ojp: 'https://v2.onlinejobs.ph/jobseekers/info/4760383',
     upwork: 'https://www.upwork.com/freelancers/~01785a76c001e4acd8',
   },
