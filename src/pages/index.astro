@@ -146,7 +146,9 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         </div>
         <div class="now-strip__cell now-strip__cell--narrow">
           <div class="now-strip__label mono">NEXT</div>
-          <div class="now-strip__val">Live paper-trading the vol-target strategy (project 03)</div>
+          <div class="now-strip__val">
+            <a href={path('/positions')} class="now-strip__link">Live paper-trade log · project 03</a>
+          </div>
         </div>
       </div>
     </div>
@@ -211,22 +213,16 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
       </div>
 
       <aside class="ai-secondary">
-        <div class="ai-secondary__title mono">AI · SECONDARY</div>
-        <div class="ai-secondary__grid">
-          <div>
-            <div class="ai-secondary__num mono">{profile.stats.aiAgentCount}</div>
-            <div class="ai-secondary__lbl">agents · orch + workers</div>
-          </div>
-          <div>
-            <div class="ai-secondary__num mono">{profile.stats.locPython}</div>
-            <div class="ai-secondary__lbl">LOC · light-dep Python</div>
-          </div>
-          <div>
-            <div class="ai-secondary__num mono">{profile.stats.certCount}</div>
-            <div class="ai-secondary__lbl">certs · 11-month arc</div>
-          </div>
-        </div>
-        <p class="ai-secondary__note">These describe the eval-first discipline; the metrics above (9 projects, G1–G31, 5 asset classes, NDA-clean) are the actual seat-targets.</p>
+        <div class="ai-secondary__title mono">AI · SECONDARY — what this lane is and isn't</div>
+        <p class="ai-secondary__note">
+          The AI lane is <em>not</em> six vanity projects. It is the same eval-first discipline applied
+          to LLM outputs: agent charters, MCP servers, scorecards, and frozen-spec evaluation. The
+          primary seat target is Quant Researcher; the AI lane is what makes me useful inside a
+          quant team that ships with LLM tooling. See <a href={path('/solutions')}>the solutions
+          library</a> for the problem → approach → evidence → outcome → proof pattern, and
+          <a href={path('/mistakes')}>postmortems</a> for the failure modes the eval stack is built
+          to catch.
+        </p>
       </aside>
     </div>
   </section>
@@ -483,6 +479,8 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     color: #e6edf3;
   }
   .now-strip__val strong { color: var(--c-primary-2); font-weight: 600; }
+  .now-strip__link { color: inherit; text-decoration: underline; text-decoration-color: rgba(212, 160, 23, 0.4); text-underline-offset: 3px; }
+  .now-strip__link:hover { color: var(--c-primary-2); text-decoration-color: var(--c-primary-2); }
   .now-strip__meta {
     margin-top: var(--sp-2);
     font-size: var(--fs-xs);

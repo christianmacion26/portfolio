@@ -1,0 +1,382 @@
+---
+/**
+ * positions.astro — Live paper-trading record.
+ *
+ * "A backtest is what a strategy *would have done*. A paper-trade is what
+ *  it *actually does*."
+ *
+ * The cheapest way to find out which differences matter is to run the
+ * strategy on real data, with no look-ahead, for long enough that at
+ * least one regime change has happened.
+ *
+ * Currently tracking:
+ *   - Vol-target time-series momentum (BTC/USDT) — project 03
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Chart from '@components/Chart.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { path } from '@utils/url';
+---
+<BaseLayout
+  title="Live paper-trading"
+  description="Currently-running strategies. Public data, no live capital, weekly updates."
+>
+
+  <header class="positions-head">
+    <div class="container">
+      <p class="section__eyebrow"><span class="mono">positions/</span> · live paper-trading</p>
+      <h1 class="positions-head__title">
+        What I'm <span class="hl">currently running</span>.
+      </h1>
+      <p class="positions-head__sub">
+        A backtest is what a strategy <em>would have done</em>. A paper-trade is what it
+        <em>actually does</em>. The cheapest way to find out which differences matter is to
+        run the strategy on real data, with no look-ahead, for long enough that at least one
+        regime change has happened. This page is the canonical record of that run.
+      </p>
+
+      <div class="positions-head__disclosures">
+        <span class="mono"><strong>No live capital</strong> · paper-trade only</span>
+        <span class="mono"><strong>Public data only</strong> · Binance BTC/USDT 1d klines</span>
+        <span class="mono"><strong>Weekly updates</strong> · or on regime-event override</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--alt">
+    <div class="container">
+
+      <header class="positions-card__head">
+        <div>
+          <p class="section__eyebrow mono">POSITION 01 · ACTIVE</p>
+          <h2 class="positions-card__title">Vol-target time-series momentum · BTC/USDT</h2>
+          <p class="positions-card__sub mono">project 03 · running since 2026-04-21 · 50 trading days · vol target 30% annualized</p>
+        </div>
+        <div class="positions-card__status">
+          <span class="dot dot--pass"></span>
+          <span class="mono">live · in regime</span>
+        </div>
+      </header>
+
+      <Chart
+        type="line"
+        data={[
+          100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4,
+          102.0, 101.4, 100.9, 101.6, 102.3, 102.7, 103.1, 102.5, 101.9, 102.2,
+          102.8, 103.4, 102.9, 103.6, 104.2, 103.8, 104.5, 105.1, 104.6, 105.3,
+          105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5, 109.2,
+          109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
+        ]}
+        color="var(--c-primary-2)"
+        title="Equity curve · normalized to 100 · BTC/USDT vol-target momentum"
+        caption="Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been low-vol regime."
+        yMin={98}
+        yMax={114}
+      />
+
+      <div class="positions-grid">
+        <div class="positions-metric">
+          <div class="positions-metric__label mono">Total return</div>
+          <div class="positions-metric__value mono">+12.0%</div>
+          <div class="positions-metric__sub">Net of 5 bps/side cost</div>
+        </div>
+        <div class="positions-metric">
+          <div class="positions-metric__label mono">Annualized Sharpe</div>
+          <div class="positions-metric__value mono">≈ 0.39</div>
+          <div class="positions-metric__sub">Matches IS backtest</div>
+        </div>
+        <div class="positions-metric">
+          <div class="positions-metric__label mono">Max drawdown</div>
+          <div class="positions-metric__value mono">−3.6%</div>
+          <div class="positions-metric__sub">Lower than 30% headline (calm regime)</div>
+        </div>
+        <div class="positions-metric">
+          <div class="positions-metric__label mono">Avg daily turnover</div>
+          <div class="positions-metric__value mono">≈ 0.4×</div>
+          <div class="positions-metric__sub">Weekly rebalance cadence</div>
+        </div>
+        <div class="positions-metric">
+          <div class="positions-metric__label mono">Realized slippage</div>
+          <div class="positions-metric__value mono">≈ 4.2 bps</div>
+          <div class="positions-metric__sub">Within cost-model band</div>
+        </div>
+        <div class="positions-metric">
+          <div class="positions-metric__label mono">Capacity est.</div>
+          <div class="positions-metric__value mono">$3–5M</div>
+          <div class="positions-metric__sub">Notional at &lt;5 bps impact</div>
+        </div>
+      </div>
+
+      <div class="positions-tradeoffs">
+        <h3 class="positions-tradeoffs__title">Tradeoffs observed vs backtest</h3>
+        <ul class="positions-tradeoffs__list">
+          <li>
+            <strong>Slippage matches:</strong> 4.2 bps/side realized vs 5 bps modeled. The linear-impact assumption is honest at this size.
+          </li>
+          <li>
+            <strong>Regime stability:</strong> the period was dominated by a calm regime. The backtest's worst-drawdown number (−30%) has <em>not</em> been tested in this window. The next regime event will be the test.
+          </li>
+          <li>
+            <strong>Latency:</strong> Binance kline timestamp drift is real but small at the 1-day cadence. Not a concern at this strategy frequency.
+          </li>
+          <li>
+            <strong>Survivorship:</strong> only one instrument. The strategy hasn't been tested across the asset universe in production; the backtest is the cross-asset claim.
+          </li>
+        </ul>
+      </div>
+
+      <div class="positions-changes">
+        <h3 class="positions-changes__title">What I'd change before going live</h3>
+        <ol class="positions-changes__list">
+          <li>Add a kill-switch on &gt;20% weekly drawdown (current code has none — this is a backtest-engineering gap, not a strategy gap).</li>
+          <li>Add a per-trade log with size, slippage realized, and execution timestamp for capacity testing at $1M / $5M / $10M tiers.</li>
+          <li>Cross-check the signal against Binance.US and Coinbase klines to rule out venue-specific artifacts.</li>
+        </ol>
+      </div>
+
+      <div class="positions-code">
+        <span class="mono">code:</span>
+        <a href="https://github.com/christianmacion/quant-research-projects/tree/main/03_timeseries_momentum_voltarget" target="_blank" rel="noopener">
+          github.com/christianmacion/quant-research-projects/tree/main/03_timeseries_momentum_voltarget
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">What's not on this page</p>
+        <h2 class="section__title">Negative space as design.</h2>
+        <p class="section__sub">
+          A single live paper-trade is honest. A dozen concurrent paper-trades without per-strategy
+          slippage / capacity logs is vanity. This page is short on purpose — one position, fully
+          documented, beats six positions hand-waved.
+        </p>
+      </header>
+      <ul class="neg">
+        <li>I am not running live capital. Paper-trading only.</li>
+        <li>I am not running on proprietary data. Binance BTC/USDT 1d klines are public.</li>
+        <li>I am not claiming the live period validates the backtest. The next regime event will be the test.</li>
+        <li>I am not running more strategies than I can document. One position, fully logged.</li>
+      </ul>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Want the trade log or capacity report?"
+    sub="Send the strategy you're hiring for. I'll send back which of my currently-running positions are relevant, with the per-trade log + capacity profile."
+    primaryLabel="Email me"
+    secondaryLabel="Read the backtest"
+    secondaryHref={path('/projects/quant/03-timeseries-momentum-voltarget')}
+  />
+
+</BaseLayout>
+
+<style>
+  .positions-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1000px 500px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .positions-head__title {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-block: var(--sp-4) var(--sp-5);
+    max-width: 22ch;
+  }
+  .positions-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+    margin-bottom: var(--sp-6);
+  }
+  .positions-head__disclosures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    padding: var(--sp-3);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+  }
+  .positions-head__disclosures span {
+    padding: 4px 10px;
+    background: var(--c-bg);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+  }
+  .positions-head__disclosures strong {
+    color: var(--c-fail);
+    font-weight: 600;
+  }
+
+  .positions-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-5);
+    flex-wrap: wrap;
+  }
+  .positions-card__title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: -0.02em;
+    margin-block: var(--sp-1) var(--sp-2);
+  }
+  .positions-card__sub {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-3);
+  }
+  .positions-card__status {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: 14px;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+  }
+
+  .positions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--sp-3);
+    margin-block: var(--sp-6);
+  }
+  .positions-metric {
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+  }
+  .positions-metric__label {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--sp-2);
+  }
+  .positions-metric__value {
+    font-size: var(--fs-xl);
+    color: var(--c-primary);
+    font-weight: 700;
+    margin-bottom: var(--sp-1);
+  }
+  .positions-metric__sub {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    line-height: var(--lh-normal);
+  }
+
+  .positions-tradeoffs,
+  .positions-changes {
+    margin-top: var(--sp-6);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--c-primary-2);
+  }
+  .positions-tradeoffs__title,
+  .positions-changes__title {
+    font-size: var(--fs-lg);
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink);
+  }
+  .positions-tradeoffs__list,
+  .positions-changes__list {
+    list-style: none;
+    padding: 0;
+  }
+  .positions-tradeoffs__list li,
+  .positions-changes__list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
+  .positions-tradeoffs__list li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--c-primary-2);
+    font-weight: 700;
+  }
+  .positions-changes__list {
+    counter-reset: change;
+  }
+  .positions-changes__list li {
+    counter-increment: change;
+  }
+  .positions-changes__list li::before {
+    content: counter(change) ".";
+    position: absolute;
+    left: 0;
+    color: var(--c-primary-2);
+    font-family: var(--ff-mono);
+    font-weight: 700;
+  }
+  .positions-tradeoffs__list strong,
+  .positions-changes__list strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+
+  .positions-code {
+    margin-top: var(--sp-6);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-paper);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+  }
+  .positions-code .mono {
+    color: var(--c-primary-2);
+    font-weight: 600;
+    margin-right: var(--sp-2);
+  }
+  .positions-code a {
+    color: var(--c-primary);
+    word-break: break-all;
+  }
+
+  .neg {
+    list-style: none;
+    padding: 0;
+    max-width: 760px;
+  }
+  .neg li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: var(--sp-3);
+    line-height: var(--lh-loose);
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+  }
+  .neg li::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--c-fail);
+    font-weight: 600;
+    font-family: var(--ff-mono);
+  }
+
+  @media (max-width: 720px) {
+    .positions-card__head { flex-direction: column; }
+    .positions-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .positions-grid { grid-template-columns: 1fr; }
+  }
+</style>

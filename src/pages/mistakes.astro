@@ -1,0 +1,415 @@
+---
+/**
+ * mistakes.astro — "What I got wrong" page. Postmortems of the failed/wrong calls.
+ *
+ * Why this page exists: a quant book that ships nine winners and hides the
+ * failure modes is a book primed for selection bias. A researcher's failures
+ * are more diagnostic than their wins — they reveal what the discipline is
+ * actually catching. This is the page that says "here is what my gates
+ * stopped from shipping."
+ *
+ * Pattern: each entry is a real failure from one of the 9 quant projects
+ * (or pre-research incidents), with: what was wrong, what the gate caught,
+ * what I learned, what I changed in the pipeline.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Equation from '@components/Equation.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { path } from '@utils/url';
+
+const mistakes = [
+  {
+    id: 'M01',
+    title: 'Shipped a backtest with a 1-bar forward shift. Looked like a 5.07 Sharpe.',
+    project: 'Project 09 — Look-ahead bias audit',
+    date: '2026-06-18',
+    severity: 'critical',
+    summary:
+      'While refactoring a momentum signal pipeline, I accidentally left a `.shift(-1)` on the signal column for two days. The "result" Sharpe was 5.07. The strategy was nonsense — every "trade" was using tomorrow\'s signal today.',
+    caught_by: 'G21–G25 (look-ahead discipline, point-in-time verification)',
+    repair:
+      'Wrote project 09 as the canonical one-line shift test. The leaked-Sharpe was 5.07; the real Sharpe after removing the shift was 0.55. The phantom edge was 88% of the apparent alpha. The test now runs as a pre-ship gate on every backtest.',
+    lesson:
+      'A 5.07 Sharpe is not a feature. A 5.07 Sharpe that survives a one-line shift test is not, in fact, surviving — it is lying. The shift test is now mandatory. There is no "we\'ll just be careful next time."',
+    formula: '\\text{phantom} = \\text{leaked} - \\text{real}',
+  },
+  {
+    id: 'M02',
+    title: 'In-sample Sharpe 0.91 in cross-sectional momentum. Out-of-sample Sharpe −0.03.',
+    project: 'Project 02 — Cross-sectional momentum (18 coins)',
+    date: '2025-10-15',
+    severity: 'high',
+    summary:
+      '18 BTC-correlated altcoins, ranked by 14-day return, long top decile, short bottom decile. IS Sharpe 0.91. The OOS Sharpe was −0.03. Bootstrap CI [−0.12, +0.18] straddles zero — cannot reject the null.',
+    caught_by: 'G11–G15 (locked OOS windows, pre-registration, frozen-spec evaluation)',
+    repair:
+      'Reported both numbers, side by side. The "honest decay" framing in the project writeup replaced what would have been a published-only-IS-Sharpe story. The bootstrap CI was reported with the bound, not as a one-sided significance test.',
+    lesson:
+      'Cross-sectional dispersion in a tightly-correlated universe (BTC-altcoin beta ≈ 1) is too small a signal to overcome rebalance friction at 14-day cadence. Project 05 (pairs via cointegration) is the *first* gate for stat-arb in this universe; cross-sectional momentum is downstream. The right order would have caught this earlier.',
+    formula: '\\mathrm{CI}_{95\\%} \\ni 0 \\;\\Rightarrow\\; \\text{fail to reject null}',
+  },
+  {
+    id: 'M03',
+    title: 'BTC/ETH spread: looked like a textbook stat-arb. ADF said no.',
+    project: 'Project 05 — Pairs via cointegration',
+    date: '2026-02-18',
+    severity: 'medium',
+    summary:
+      'BTC and ETH are the most obvious pair in crypto. The textbook trade is to hedge, fade the spread, collect mean-reversion. The ADF test statistic was −2.11. Critical value at 5% is ≈ −2.86. Spread has a unit root; the trade is not stationary. Half-life 208 days. OOS Sharpe ≈ 0.',
+    caught_by: 'G1–G5 (mechanical validity), G6–G10 (statistical nulls)',
+    repair:
+      'Did not ship the trade. Shipped the rejection, with the ADF statistic and the half-life. The project is a published counter-example to the assumption "BTC and ETH are cointegrated."',
+    lesson:
+      'Stat-arb starts with the cointegration test, not with the trade. If the spread isn\'t stationary, no position-sizing rule will save it. Project 05 is the pre-trade filter for projects 02 and 06.',
+    formula: '\\text{ADF} = -2.11 \\;\\not<\\; -2.86_{5\\%}',
+  },
+  {
+    id: 'M04',
+    title: 'Fade-funding trade IS Sharpe 1.11. OOS Sharpe −0.05. Alpha decayed post-2023.',
+    project: 'Project 06 — Crypto funding carry',
+    date: '2026-04-05',
+    severity: 'medium',
+    summary:
+      'The textbook perpetual-swap carry trade is to fade funding (short when funding > 0). IS Sharpe was 1.11. OOS Sharpe was −0.05. The carry was real (+11.9% annualized), but the trade that captured it was systematically arbitraged away as the participant mix shifted.',
+    caught_by: 'G11–G15 (locked OOS windows, 5-era stability)',
+    repair:
+      'The OOS window was locked before data was touched. The decay was visible in the rolling OOS-Sharpe trace — Sharpe 1.11 → 0.91 → 0.71 → 0.42 → 0.04 → −0.05 over the rolling window. The "carry is real, trade is dead" conclusion was honest.',
+    lesson:
+      'Carry signals are observable, regularly-paid, and visible to anyone with the data — which means they crowd fast. Pre-registering the OOS window before touching the data is what makes this a study and not a justification.',
+    formula: '\\mathrm{IS} \\neq \\mathrm{OOS} \\;\\Rightarrow\\; \\alpha \\text{ decayed}',
+  },
+  {
+    id: 'M05',
+    title: 'First DSR pass on project 01: forgot γ₃·SR̂ term. Decoy result.',
+    project: 'Project 01 — Multiple testing / deflated Sharpe',
+    date: '2025-09-20',
+    severity: 'low',
+    summary:
+      'When implementing the Deflated Sharpe Ratio from the Bailey & López de Prado 2014 paper, I first wrote the simpler form: DSR = (SR̂ − E[max SR]) / σ_SR̂. The paper\'s full form has the higher-moment correction: (1 − γ₃·SR̂ + (γ₄·SR̂² − 1)/4) under the radical. Without it, returns with non-zero skew/kurtosis inflate the denominator and DSR is overstated.',
+    caught_by: 'G6–G10 (parameter-prior sensitivity, Monte-Carlo coverage)',
+    repair:
+      'Re-derived the formula from the paper\'s full expression. Added γ₃ and γ₄ to the calculator inputs as defaults (0, 3) with a comment that real-data estimates are recommended. The interactive DSR calculator on /methodology ships the full form.',
+    lesson:
+      'When the paper gives you a higher-moment correction, the higher-moment correction is the paper. The simplified form is for textbook examples. Always read the equation, never paraphrase it from a Stack Overflow answer.',
+    formula: '\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}} \\sqrt{1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}}}',
+  },
+];
+---
+<BaseLayout
+  title="What I got wrong"
+  description="Postmortems of failed strategies, broken gates, and pipeline bugs. A researcher's failures are more diagnostic than their wins."
+>
+
+  <header class="mistakes-head">
+    <div class="container">
+      <p class="section__eyebrow"><span class="mono">mistakes/</span> · public postmortems</p>
+      <h1 class="mistakes-head__title">
+        What I <span class="hl">got wrong</span>.
+      </h1>
+      <p class="mistakes-head__sub">
+        A research book that ships nine winners and hides the failure modes is a book primed for
+        selection bias. Below are five real failures from the quant pipeline — what was wrong,
+        which gate caught it, what I repaired, and what the discipline is for. NDA-safe. Public data.
+      </p>
+
+      <div class="mistakes-head__eq-block">
+        <Equation
+          block
+          size="md"
+          latex={`\\text{book\\_quality} = \\min\\!\\left(\\text{wins},\\; \\text{postmortems}\\right)`}
+        />
+        <p class="mistakes-head__eq-caption">
+          A book is only as honest as its weakest postmortem. The minimum of wins and postmortems is
+          the binding constraint.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--alt">
+    <div class="container">
+      <ol class="mistakes-list">
+        {mistakes.map(m => (
+          <li class={`mistake severity--${m.severity}`}>
+            <header class="mistake__head">
+              <div class="mistake__id mono">{m.id}</div>
+              <div class="mistake__meta">
+                <div class="mistake__project mono">{m.project}</div>
+                <div class="mistake__date mono">{m.date}</div>
+              </div>
+              <div class={`mistake__severity severity-tag--${m.severity} mono`}>
+                {m.severity}
+              </div>
+            </header>
+
+            <h2 class="mistake__title">{m.title}</h2>
+
+            <div class="mistake__formula">
+              <Equation latex={m.formula} size="sm" />
+            </div>
+
+            <div class="mistake__grid">
+              <div class="mistake__row">
+                <div class="mistake__row-label mono">What was wrong</div>
+                <p class="mistake__row-body">{m.summary}</p>
+              </div>
+              <div class="mistake__row">
+                <div class="mistake__row-label mono">Which gate caught it</div>
+                <p class="mistake__row-body">
+                  <span class="mistake__gate-pill">{m.caught_by}</span>
+                </p>
+              </div>
+              <div class="mistake__row">
+                <div class="mistake__row-label mono">Repair</div>
+                <p class="mistake__row-body">{m.repair}</p>
+              </div>
+              <div class="mistake__row">
+                <div class="mistake__row-label mono">Lesson</div>
+                <p class="mistake__row-body mistake__lesson">{m.lesson}</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">What this page is not</p>
+        <h2 class="section__title">Negative space as design.</h2>
+        <p class="section__sub">
+          This page is not self-flagellation, and it is not a humility performance. It is a record of
+          the failure modes the gate stack is built to catch. If a gate didn't catch the failure,
+          the gate gets updated; the failure gets logged. There is no "we'll be more careful next
+          time" — there is a pre-ship test.
+        </p>
+      </header>
+      <ul class="neg">
+        <li>I am not above shipping a 5.07 phantom Sharpe — that is exactly the failure mode the gates exist to prevent.</li>
+        <li>I am not claiming the gate stack catches everything — there are 31 gates and they fail closed on the obvious ones; the subtle ones come later.</li>
+        <li>I am not hiding any failures that I am aware of — if a postmortem would change your hire/no-hire, it is on this page.</li>
+        <li>I am not interested in "fake failure" stories — these are real failures from the actual pipeline, with the actual numbers.</li>
+      </ul>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Want the failure log for a specific strategy?"
+    sub="If you have a written spec, send it. I'll send back which of G1–G31 already apply to your stack, which ones would catch your last failure, and which I'd build."
+    primaryLabel="Email me"
+    secondaryLabel="Read methodology"
+    secondaryHref={path('/methodology')}
+  />
+
+</BaseLayout>
+
+<style>
+  .mistakes-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1000px 500px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .mistakes-head__title {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-block: var(--sp-4) var(--sp-5);
+    max-width: 22ch;
+  }
+  .mistakes-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+    margin-bottom: var(--sp-7);
+  }
+  .mistakes-head__eq-block {
+    padding: var(--sp-5);
+    background: var(--c-paper);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    border-left: 3px solid var(--c-primary-2);
+  }
+  .mistakes-head__eq-caption {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-top: var(--sp-3);
+    margin-bottom: 0;
+  }
+
+  .mistakes-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+  }
+
+  .mistake {
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    border-left: 3px solid var(--c-primary-2);
+    transition: border-color var(--transition);
+  }
+  .mistake:hover {
+    border-color: var(--c-primary);
+  }
+  .severity--critical { border-left-color: var(--c-fail); }
+  .severity--high     { border-left-color: #c98a16; }
+  .severity--medium   { border-left-color: var(--c-primary-2); }
+  .severity--low      { border-left-color: var(--c-primary); }
+
+  .mistake__head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-4);
+    flex-wrap: wrap;
+  }
+  .mistake__id {
+    font-size: var(--fs-xl);
+    color: var(--c-primary);
+    font-weight: 700;
+  }
+  .mistake__meta {
+    flex: 1;
+    min-width: 200px;
+  }
+  .mistake__project {
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+  .mistake__date {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    margin-top: 2px;
+  }
+  .mistake__severity {
+    font-size: var(--fs-xs);
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    font-weight: 700;
+  }
+  .severity-tag--critical {
+    background: rgba(155, 34, 38, 0.10);
+    color: var(--c-fail);
+    border: 1px solid var(--c-fail);
+  }
+  .severity-tag--high {
+    background: rgba(184, 134, 11, 0.10);
+    color: #c98a16;
+    border: 1px solid #c98a16;
+  }
+  .severity-tag--medium {
+    background: rgba(212, 160, 23, 0.10);
+    color: var(--c-primary-2);
+    border: 1px solid var(--c-primary-2);
+  }
+  .severity-tag--low {
+    background: rgba(11, 61, 92, 0.08);
+    color: var(--c-primary);
+    border: 1px solid var(--c-primary);
+  }
+
+  .mistake__title {
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    line-height: 1.25;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    max-width: 60ch;
+  }
+  .mistake__formula {
+    margin-block: var(--sp-3) var(--sp-5);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-paper);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--c-rule-soft);
+    overflow-x: auto;
+  }
+
+  .mistake__grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    margin-top: var(--sp-4);
+  }
+  .mistake__row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--sp-4);
+    padding-block: var(--sp-3);
+    border-top: 1px dashed var(--c-rule-soft);
+  }
+  .mistake__row:first-child { border-top: none; }
+  .mistake__row-label {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    padding-top: 2px;
+  }
+  .mistake__row-body {
+    font-size: var(--fs-base);
+    color: var(--c-ink);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+  .mistake__gate-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: 14px;
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+  .mistake__lesson {
+    font-style: italic;
+    color: var(--c-ink-2);
+    padding-left: var(--sp-3);
+    border-left: 3px solid var(--c-primary-2);
+  }
+
+  .neg {
+    list-style: none;
+    padding: 0;
+    max-width: 760px;
+  }
+  .neg li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: var(--sp-3);
+    line-height: var(--lh-loose);
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+  }
+  .neg li::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--c-fail);
+    font-weight: 600;
+    font-family: var(--ff-mono);
+  }
+
+  @media (max-width: 720px) {
+    .mistake__row { grid-template-columns: 1fr; gap: var(--sp-1); }
+    .mistake { padding: var(--sp-4); }
+    .mistake__head { gap: var(--sp-3); }
+  }
+</style>

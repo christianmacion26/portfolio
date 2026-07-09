@@ -9,21 +9,16 @@
  * Items live in component (no props). Update inline if numbers change.
  */
 const items = [
-  { sym: 'CM.QR',  val: 'Quant Researcher',  delta: '+',  color: 'pass' },
-  { sym: 'CM.AI',  val: 'AI Engineer',        delta: '+',  color: 'pass' },
-  { sym: 'AGENTS', val: '11',                 delta: '+',  color: 'info' },
-  { sym: 'GATES',  val: '31',                 delta: '+',  color: 'info' },
-  { sym: 'LOC',    val: '76.5k',              delta: '+',  color: 'info' },
-  { sym: 'CERTS',  val: '102',                delta: '+',  color: 'pass' },
-  { sym: 'PROJ',   val: '15',                 delta: '+',  color: 'info' },
-  { sym: 'SHARPE', val: 'deflated',           delta: '≈',  color: 'muted' },
-  { sym: 'PBO',    val: 'CSCV-bounded',       delta: '≈',  color: 'muted' },
-  { sym: 'OOS',    val: 'locked windows',     delta: '✓',  color: 'pass' },
-  { sym: 'MCP',    val: 'eval server',        delta: '✓',  color: 'pass' },
-  { sym: 'CTA',    val: 'Tier-1 STA',         delta: '✓',  color: 'pass' },
-  { sym: 'NDA',    val: 'clean',              delta: '✓',  color: 'pass' },
-  { sym: 'PSHS',   val: 'Southern Mindanao',  delta: '✓',  color: 'muted' },
-  { sym: 'UTC',    val: '+8 PHT',             delta: '·',  color: 'muted' },
+  { sym: 'DSR',     val: 'Bailey & López de Prado (2014)',  delta: '·',  color: 'muted' },
+  { sym: 'OOS',     val: 'locked windows',                   delta: '✓',  color: 'pass' },
+  { sym: 'PBO',     val: 'CSCV-based',                        delta: '·',  color: 'muted' },
+  { sym: 'SHARPE',  val: 'deflated — not raw',                delta: '·',  color: 'muted' },
+  { sym: 'GATES',   val: 'G1–G31 mechanical',                 delta: '✓',  color: 'pass' },
+  { sym: 'NDA',     val: 'clean — public data only',          delta: '✓',  color: 'pass' },
+  { sym: 'PROJ',    val: '15 reproducible',                   delta: '✓',  color: 'pass' },
+  { sym: 'CTA',     val: 'Tier-1 STA',                        delta: '✓',  color: 'pass' },
+  { sym: 'PIT',     val: 'point-in-time enforced',            delta: '✓',  color: 'pass' },
+  { sym: 'UTC',     val: '+8 PHT',                            delta: '·',  color: 'muted' },
 ];
 ---
 <div class="ticker" role="marquee" aria-label="headline signals">
