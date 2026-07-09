@@ -31,7 +31,7 @@ const { title, description, image, type = 'website', className } = Astro.props;
 const meta = buildMeta({
   title,
   description: description ?? profile.titles.secondary,
-  image,
+  image: image ?? '/og-card.svg',
   type,
   pathname: Astro.url.pathname,
 });

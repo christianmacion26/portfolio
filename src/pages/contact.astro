@@ -9,57 +9,62 @@ import { path } from '@utils/url';
 
 const channels = [
   {
-    label: 'Email',
+    label: 'Open roles · JDs',
+    sub: 'Email with the JD attached',
     value: profile.contact.email,
-    href: `mailto:${profile.contact.email}`,
+    href: `mailto:${profile.contact.email}?subject=JD%20%E2%80%94%20%5Brole%5D`,
     primary: true,
-    use: 'Open roles · reference requests · general',
+    use: 'I reply within 24h with: problem → approach → evidence → outcome → proof.',
   },
   {
-    label: 'Phone · WhatsApp · Viber',
-    value: profile.contact.phoneDisplay,
-    href: `tel:${profile.contact.phone}`,
-    use: 'UTC+8 · best 9 AM – 6 PM PHT',
-  },
-  {
-    label: 'LinkedIn',
+    label: 'Casual · paper-trail',
+    sub: 'LinkedIn DM',
     value: 'linkedin.com/in/christianmacion',
     href: profile.contact.linkedin,
     external: true,
-    use: 'DMs open · recruiter-friendly',
+    use: 'DMs open · recruiter-friendly.',
   },
   {
-    label: 'GitHub',
-    value: 'github.com/christianmacion',
+    label: 'Public work · proof',
+    sub: 'GitHub',
+    value: 'github.com/christianmacion26',
     href: profile.contact.github,
     external: true,
-    use: 'Runnable projects · reproducible scorecards',
+    use: '24 repos · runnable scorecards · reproducible methodology.',
   },
+  {
+    label: 'Phone · WhatsApp · Viber',
+    sub: 'Sync, after email',
+    value: profile.contact.phoneDisplay,
+    href: `tel:${profile.contact.phone}`,
+    use: 'UTC+8 · best 9 AM – 6 PM PHT.',
+  },
+];
+
+const platforms = [
   {
     label: 'OnlineJobs.ph',
     value: 'onlinejobs.ph/jobseekers/christianmacion',
     href: profile.contact.ojp,
-    external: true,
-    use: 'OJP applications · Filipino remote roles',
+    use: 'Filipino remote roles · OJP applications.',
   },
   {
     label: 'Upwork',
     value: 'upwork.com/freelancers/christianmacion',
     href: profile.contact.upwork,
-    external: true,
-    use: 'Contract engagements · hourly / fixed-price',
+    use: 'Contract engagements · hourly or fixed-price.',
   },
 ];
 ---
-<BaseLayout title="Contact" description={`Email ${profile.contact.email} or grab a slot via any of ${profile.contact.linkedin}, ${profile.contact.github}, OJP, or Upwork.`}>
+<BaseLayout title="Contact" description={`Email ${profile.contact.email} with a JD, or reach me via LinkedIn, GitHub, or phone. Reply within 24h on weekdays.`}>
 
   <header class="contact-head">
     <div class="container">
-      <p class="section__eyebrow"><span class="mono">contact/</span> · full directory</p>
-      <h1 class="contact-head__title">Six channels. Pick the one that fits.</h1>
+      <p class="section__eyebrow"><span class="mono">contact/</span> · 24h reply · NDA-safe</p>
+      <h1 class="contact-head__title">Four channels. Pick the one that fits.</h1>
       <p class="contact-head__sub">
-        I respond within <strong>24 hours</strong> on weekdays. For open roles, attach the JD or
-        scope and I'll reply with a tailored solution sketch (problem → approach → evidence → outcome → proof).
+        Each tile is named by <em>intent</em>, not by platform. For open roles, the
+        email-with-JD path gets the richest reply (problem → approach → evidence → outcome → proof).
       </p>
 
       <div class="contact-head__eq">
@@ -85,6 +90,7 @@ const channels = [
               {c.label}
               {c.external && <span class="contact-card__ext" aria-hidden="true">↗</span>}
             </div>
+            <div class="contact-card__sub">{c.sub}</div>
             <div class="contact-card__value mono">{c.value}</div>
             <div class="contact-card__hint">{c.use}</div>
           </a>
@@ -100,6 +106,29 @@ const channels = [
           <li><strong>Overlap with</strong> US East (UTC-5) = 21:00 – 02:00 PHT · EU (UTC+1) = 15:00 – 23:00 PHT · APAC (UTC+9) = 09:00 – 18:00 PHT</li>
         </ul>
       </aside>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Freelance platforms</p>
+        <h2 class="section__title">If you're sourcing on a marketplace.</h2>
+        <p class="section__sub">
+          These stay useful for Filipino-remote and short-engagement sourcing, but the
+          channels above are the primary path. I treat OJP/Upwork as supplementary,
+          not as the first stop.
+        </p>
+      </header>
+      <div class="platforms-grid">
+        {platforms.map(p => (
+          <a class="platform-card" href={p.href} target="_blank" rel="noopener">
+            <div class="platform-card__label mono">{p.label}</div>
+            <div class="platform-card__value mono">{p.value}</div>
+            <div class="platform-card__hint">{p.use}</div>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -222,9 +251,53 @@ const channels = [
     word-break: break-all;
     line-height: 1.3;
   }
+  .contact-card__sub {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--sp-1);
+  }
   .contact-card__hint {
     font-size: var(--fs-sm);
     color: var(--c-ink-2);
+  }
+
+  .platforms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--sp-3);
+  }
+  .platform-card {
+    display: block;
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule-soft);
+    border-radius: var(--radius-sm);
+    color: var(--c-ink);
+    text-decoration: none;
+    transition: border-color var(--transition);
+  }
+  .platform-card:hover {
+    border-color: var(--c-ink-3);
+    color: var(--c-ink);
+  }
+  .platform-card__label {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--sp-2);
+  }
+  .platform-card__value {
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2);
+    margin-bottom: var(--sp-2);
+    word-break: break-all;
+  }
+  .platform-card__hint {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
   }
 
   .loc-card {

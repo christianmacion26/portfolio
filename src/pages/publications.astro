@@ -89,10 +89,10 @@ const press = [
         <p class="section__eyebrow">Research papers · 9 quant projects</p>
         <h2 class="section__title">Public-data systematic research.</h2>
       </header>
-      <div class="pub-list">
+      <div class="pub-list" data-pub-list="quant">
         {quantPubs.map((p, i) => (
           <article class="pub">
-            <div class="pub__num mono">[{String(i + 1).padStart(2, '0')}]</div>
+            <div class="pub__num mono"></div>
             <div class="pub__body">
               <h3 class="pub__title">
                 <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
@@ -128,10 +128,10 @@ const press = [
         <p class="section__eyebrow">OSS projects · 6 AI builds</p>
         <h2 class="section__title">Multi-agent LLM systems with eval-first discipline.</h2>
       </header>
-      <div class="pub-list">
+      <div class="pub-list" data-pub-list="ai">
         {aiPubs.map((p, i) => (
           <article class="pub">
-            <div class="pub__num mono">[{String(i + 1).padStart(2, '0')}]</div>
+            <div class="pub__num mono"></div>
             <div class="pub__body">
               <h3 class="pub__title">
                 <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
@@ -154,7 +154,7 @@ const press = [
             <div class="pub__action">
               <div class="pub__date mono">{fmtDate(p.data.date)}</div>
               <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>Read →</a>
-              {p.data.repo && <a class="btn btn--ghost btn--sm" href={p.data.repo} target="_blank" rel="noopener">Repo ↗</a>}
+              {p.data.sourceLink && <a class="btn btn--ghost btn--sm" href={p.data.sourceLink} target="_blank" rel="noopener">Repo ↗</a>}
             </div>
           </article>
         ))}
@@ -247,6 +247,7 @@ const press = [
     display: flex;
     flex-direction: column;
     gap: var(--sp-4);
+    counter-reset: pub;
   }
   .pub {
     display: grid;
@@ -264,6 +265,10 @@ const press = [
     font-size: var(--fs-lg);
     color: var(--c-primary);
     font-weight: 700;
+    counter-increment: pub;
+  }
+  .pub__num::before {
+    content: "[" counter(pub, decimal-leading-zero) "]";
   }
   .pub__title { font-size: var(--fs-lg); margin: 0 0 var(--sp-2); }
   .pub__title a { color: var(--c-ink); }

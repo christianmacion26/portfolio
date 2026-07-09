@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0e14"/>
+      <stop offset="60%" stop-color="#11161d"/>
+      <stop offset="100%" stop-color="#1a1f24"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d4a017"/>
+      <stop offset="100%" stop-color="#e8b53a"/>
+    </linearGradient>
+    <pattern id="grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0 L0 0 0 60" fill="none" stroke="rgba(212,160,23,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect x="60" y="60" width="4" height="510" fill="url(#amber)"/>
+  <g font-family="Helvetica, Arial, sans-serif">
+    <text x="100" y="140" font-size="20" letter-spacing="3" fill="#d4a017">CHRISTIAN T. MACION, CTA®</text>
+    <text x="100" y="240" font-size="80" font-weight="700" fill="#ffffff" letter-spacing="-2">I do solutions.</text>
+    <text x="100" y="330" font-size="56" font-weight="600" fill="#d4a017" letter-spacing="-1">Two hats. One method.</text>
+    <text x="100" y="430" font-size="28" fill="#5a6473">Quant Researcher · AI Engineer · Eval-first</text>
+    <text x="100" y="475" font-size="22" fill="#7c8693">Multiple-testing-aware systematic strategies &amp; multi-agent LLM systems.</text>
+    <text x="100" y="555" font-size="18" letter-spacing="2" fill="#5a6473">christianmacion26.github.io/portfolio</text>
+  </g>
+</svg>

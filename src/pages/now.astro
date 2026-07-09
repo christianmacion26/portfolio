@@ -1,0 +1,215 @@
+---
+/**
+ * now.astro — Derek Sivers' /now pattern.
+ *
+ * A single dated page that says what I'm shipping this month, who I'm
+ * open to working with, what I'm *not* doing, and where I am. Highest-
+ * leverage one-page artifact in the 2026 personal-site canon.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+
+// Last-updated stamp: 2026-07-09 (the page is updated ~monthly)
+const updated = '2026-07-09';
+const updatedHuman = '9 July 2026';
+---
+<BaseLayout
+  title="Now"
+  description={`What Christian is shipping this month (${updatedHuman}). Open-to / not-open-to / where / how to reach me.`}
+>
+
+  <header class="now-head">
+    <div class="container container-narrow">
+      <p class="section__eyebrow"><span class="mono">now/</span> · last updated {updated}</p>
+      <h1 class="now-head__title">
+        What I'm doing <span class="hl">right now</span>.
+      </h1>
+      <p class="now-head__sub">
+        A dated one-pager. Updated ~monthly, or on regime-event override
+        (job change, paper-trade regime flip, new gate added to the stack).
+        Inspired by <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now</a>.
+      </p>
+      <div class="now-head__stamp mono">
+        <span class="dot dot--pass"></span>
+        <span><strong>Status:</strong> open to conversations · remote · UTC+8</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container container-narrow">
+
+      <h2 class="now-h2">Where I am</h2>
+      <ul class="now-list">
+        <li><strong>Based:</strong> {profile.location.display}. Working hours 09:00–18:00 PHT on weekdays.</li>
+        <li><strong>Mode:</strong> remote only. {profile.availability.hours} available.</li>
+        <li><strong>Stacking:</strong> junior QR / QR-rotational / AI-engineer seat at a hedge fund, prop shop, or systematic-trading fund.</li>
+      </ul>
+
+      <h2 class="now-h2">What I'm shipping this month</h2>
+      <ul class="now-list">
+        <li>
+          <strong>Live paper-trade on <a href={path('/positions')}>/positions</a>:</strong>
+          running project 03 (vol-target time-series momentum, BTC/USDT, 30% annualized vol target) into its second regime cycle.
+          Tracking slippage against the 5 bps linear-impact model — currently 4.2 bps realized.
+        </li>
+        <li>
+          <strong>Walk-forward OOS standardization across the book:</strong>
+          applying the locked-window pattern from project 06 to the remaining 8 quant projects. ETA end of August 2026.
+        </li>
+        <li>
+          <strong>Methodology expansion on <a href={path('/methodology')}>/methodology</a>:</strong>
+          the "what I'd build first" 90-day plan is the latest addition. Next up: per-asset-class G16–G20 deep dives.
+        </li>
+        <li>
+          <strong>This site:</strong> ongoing edits — see <a href="https://github.com/christianmacion26/portfolio/commits/main" target="_blank" rel="noopener">commit history</a>
+          for a dated build log.
+        </li>
+      </ul>
+
+      <h2 class="now-h2">Open to</h2>
+      <ul class="now-list">
+        <li>Junior Quant Researcher / QR-rotational seats (crypto, equities, multi-asset).</li>
+        <li>AI Engineer / Multi-Agent Engineer roles where evals and structured-output contracts are part of the spec.</li>
+        <li>Hybrid QR + AI roles — these are rare and I rank them highest.</li>
+        <li>Contract research engagements with a defined deliverable (a memo, a backtest harness, a strategy teardown).</li>
+        <li>QuantDev roles that touch an eval harness / model-routing policy / walk-forward pipeline.</li>
+      </ul>
+
+      <h2 class="now-h2">Not open to</h2>
+      <ul class="now-list now-list--not">
+        <li>Unpaid "trial tasks" or take-home assignments longer than 4 hours.</li>
+        <li>Roles that require me to relocate from {profile.location.city}.</li>
+        <li>Roles that require access to proprietary data I cannot disclose post-engagement.</li>
+        <li>Pure-research roles without a ship-to-prod path — the discipline compounds when the loop closes.</li>
+        <li>Recruiter mass-mail without a JD attached (see <a href={path('/contact')}>/contact</a> for the reply-with-JD protocol).</li>
+      </ul>
+
+      <h2 class="now-h2">Currently reading</h2>
+      <ul class="now-list">
+        <li><em>Advances in Financial Machine Learning</em> — Marcos López de Prado (re-read, ch. 16 on backtest overfitting).</li>
+        <li><em>The Deflated Sharpe Ratio</em> — Bailey &amp; López de Prado (2014). The paper that gates G16 of the eval stack.</li>
+        <li><em>Hamlet</em> — Shakespeare. Sometimes you have to step away from the screen.</li>
+      </ul>
+
+      <h2 class="now-h2">How to reach me</h2>
+      <ul class="now-list">
+        <li><strong>For open roles:</strong> email with the JD attached — <a href={`mailto:${profile.contact.email}?subject=JD%20%E2%80%94%20%5Brole%5D`}>{profile.contact.email}</a>. Reply within 24h on weekdays.</li>
+        <li><strong>For casual / paper-trail:</strong> <a href={profile.contact.linkedin} target="_blank" rel="noopener">LinkedIn DM</a>.</li>
+        <li><strong>For public work / proof:</strong> <a href={profile.contact.github} target="_blank" rel="noopener">GitHub</a> (24 public repos, all NDA-safe).</li>
+      </ul>
+
+      <div class="now-foot mono">
+        This page is versioned. <a href={`https://github.com/christianmacion26/portfolio/commits/main/src/pages/now.astro`} target="_blank" rel="noopener">Edit history →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <CTABanner
+    title="Got a JD? Send it."
+    sub="I read every email. If the role matches, you'll get a reply within 24h with: problem → approach → evidence → outcome → proof."
+    primaryLabel="Email me"
+    secondaryLabel="Read methodology"
+    secondaryHref={path('/methodology')}
+  />
+
+</BaseLayout>
+
+<style>
+  .now-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(1200px 600px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
+      var(--c-bg);
+    border-bottom: var(--border);
+  }
+  .now-head__title {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-block: var(--sp-4) var(--sp-5);
+    max-width: 22ch;
+  }
+  .now-head__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+    margin-bottom: var(--sp-5);
+  }
+  .now-head__sub a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--c-primary-2);
+    text-underline-offset: 3px;
+  }
+  .now-head__stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-4);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: 14px;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+  .now-head__stamp strong { color: var(--c-ink); font-weight: 600; }
+
+  .now-h2 {
+    font-size: var(--fs-xl);
+    color: var(--c-ink);
+    margin: var(--sp-7) 0 var(--sp-3);
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid var(--c-rule-soft);
+    padding-bottom: var(--sp-2);
+  }
+  .now-h2:first-of-type { margin-top: var(--sp-3); }
+
+  .now-list {
+    list-style: none;
+    padding: 0;
+    max-width: 720px;
+  }
+  .now-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    font-size: var(--fs-base);
+  }
+  .now-list li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--c-primary-2);
+    font-weight: 700;
+  }
+  .now-list strong { color: var(--c-ink); font-weight: 600; }
+  .now-list a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--c-rule);
+    text-underline-offset: 2px;
+  }
+  .now-list a:hover { text-decoration-color: var(--c-primary-2); }
+  .now-list--not li::before { content: '✕'; color: var(--c-fail); }
+
+  .now-foot {
+    margin-top: var(--sp-6);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-paper);
+    border: 1px dashed var(--c-rule);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-3);
+  }
+  .now-foot a {
+    color: var(--c-primary-2);
+    text-decoration: underline;
+  }
+</style>

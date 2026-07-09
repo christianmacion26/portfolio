@@ -7,6 +7,7 @@
  *   <Stat value="0.886" label="recall@3" sub="on 800-query benchmark" spark={[...]} />
  */
 import Sparkline from '@components/Sparkline.astro';
+import katex from 'katex';
 
 interface Props {
   value: string;
@@ -25,11 +26,25 @@ const {
 } = Astro.props;
 const trendGlyph = trend === 'up' ? '↑' : trend === 'down' ? '↓' : trend === 'flat' ? '→' : '';
 const trendClass = trend ? `stat--trend-${trend}` : '';
+let formulaHtml = '';
+if (formula) {
+  try {
+    formulaHtml = katex.renderToString(formula, {
+      displayMode: false,
+      throwOnError: false,
+      output: 'html',
+      strict: 'ignore',
+      trust: false,
+    });
+  } catch {
+    formulaHtml = formula;
+  }
+}
 ---
 <div class:list={["stat", `stat--${size}`, `stat--${variant}`, trendClass]}>
   <div class="stat__head">
     <span class="stat__label">{label}</span>
-    {formula && <span class="stat__formula mono">{formula}</span>}
+    {formula && <span class="stat__formula" set:html={formulaHtml} />}
   </div>
   <div class="stat__value-row">
     <span class="stat__value mono">{value}</span>
@@ -72,9 +87,10 @@ const trendClass = trend ? `stat--trend-${trend}` : '';
     font-weight: 600;
   }
   .stat__formula {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: var(--c-primary-2);
-    opacity: 0.8;
+    opacity: 0.85;
+    line-height: 1;
   }
   .stat__value-row {
     display: flex;

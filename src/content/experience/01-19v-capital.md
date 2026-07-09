@@ -23,8 +23,8 @@ contributions:
     evidence: "byte-range subsetting, gap guards, idempotent incremental pulls"
     proof: "Pipeline code in public quant portfolio"
 proofs:
-  - "Public statement by PM Evan Ferioli (publicly attributable)"
-  - "Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs) discussed publicly"
+  - "Contract disclosed under NDA — role: AI Systems Engineer / Quantitative Researcher. PM of record (publicly attributable): Evan Ferioli."
+  - "Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs) carried forward into the public methodology page"
   - "All deliverables NDA-safe; no proprietary data sources referenced"
 ---
 

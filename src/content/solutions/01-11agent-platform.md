@@ -27,8 +27,8 @@ outcome: |
   playbook). Shipped an automated monthly forward-OOS monitoring fleet — scheduled data pull → S3 sync →
   frozen-spec evaluation → ledger — that produced un-gameable live performance evidence.
 proof:
-  - "Public statement by PM Evan Ferioli (publicly attributable)"
-  - "Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs, walk-forward) discussed publicly"
+  - "Contract disclosed under NDA — PM of record (publicly attributable): Evan Ferioli"
+  - "Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs, walk-forward) carried forward into the public methodology page"
   - "All deliverables NDA-safe; no proprietary data sources referenced"
 tags: [multi-agent, eval-harness, MCP, model-routing, walk-forward, deflated-sharpe]
 lane: "ai"

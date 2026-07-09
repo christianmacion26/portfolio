@@ -25,7 +25,7 @@ export const profile = {
     phone: '+63-991-616-2630',
     phoneDisplay: '+63 991 616 2630',
     linkedin: 'https://www.linkedin.com/in/christianmacion',
-    github: 'https://github.com/christianmacion',
+    github: 'https://github.com/christianmacion26',
     ojp: 'https://www.onlinejobs.ph/jobseekers/info/christianmacion26', // placeholder — replace with real slug
     upwork: 'https://www.upwork.com/freelancers/~christianmacion', // placeholder — replace with real ~uid
   },
