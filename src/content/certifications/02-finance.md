@@ -3,9 +3,9 @@ title: Finance, Trading & Economics
 group: certifications
 order: 2
 blurb: 'Tier-1 finance credentials: STA flagship + Goldman / JPMorganChase brand-name work + DataCamp finance stack.'
-featuredImg: /proof/sta-philippines-graduation-2026-04.jpg
-featuredAlt: 'STA Philippines Tier-1 graduation certificate with Christian T. Macion signature as School Principal. Apr 5 2026.'
-featuredCaption: 'STA Philippines Tier-1 graduation cohort · Apr 5 2026 · 12 sign-offs as School Principal (CryptoneedsChrist University). Proves the principal-faculty role beyond the CTA cert itself.'
+featuredImg: /proof/cta-cert-portrait-2026-01.jpg
+featuredAlt: 'Christian T. Macion holding the Society of Technical Analysts Certified Technical Analyst® certificate, certificate number 260197, awarded January 2026. Visual proof of the Tier-1 CTA designation.'
+featuredCaption: 'Tier-1 Certified Technical Analyst® (CTA) · Society of Technical Analysts · certificate #260197 · Jan 2026. Photographic proof of the designation.'
 featuredHref: /proof/
 items:
   - {

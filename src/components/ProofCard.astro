@@ -14,11 +14,21 @@ interface Props {
   href?: string;
   aspect?: '16/9' | '4/3' | '3/2' | '16/10' | 'auto';
   tone?: 'paper' | 'tape';
+  /**
+   * object-fit policy when an aspect-ratio is set.
+   * - 'cover' (default): fill the box, crop if needed. Best for charts/screenshots/shots.
+   * - 'contain'        : fit fully inside the box, letterbox. Best for portraits
+   *                      and documents where cropping hides content.
+   */
+  fit?: 'cover' | 'contain';
 }
 
-const { src, alt, caption, credit, href, aspect = '16/9', tone = 'paper' } = Astro.props;
+const { src, alt, caption, credit, href, aspect = '16/9', tone = 'paper', fit = 'cover' } = Astro.props;
 
-const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect};`;
+const figureStyle =
+  aspect === 'auto'
+    ? ''
+    : `--proof-aspect: ${aspect}; --proof-fit: ${fit};`;
 ---
 
 <figure class={`proof-card proof-card--${tone}`} style={figureStyle}>
@@ -74,7 +84,8 @@ const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect};`;
   /* Aspect-ratio guard for CLS prevention — when set via inline --proof-aspect */
   .proof-card[style*='--proof-aspect'] .proof-card__img {
     aspect-ratio: var(--proof-aspect);
-    object-fit: cover;
+    object-fit: var(--proof-fit, cover);
+    background: var(--c-bg-2);
   }
   .proof-card__cap {
     display: flex;
