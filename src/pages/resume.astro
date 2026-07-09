@@ -92,6 +92,11 @@ const resumes = [
           I keep a <strong>bullet-bank resume materials</strong> package (~80 bullet variants) for tailored
           one-pagers per JD. Email me the JD and I'll send back a tailored version within 24 hours.
         </p>
+        <p class="resume-note__mono">
+          Built with the same HIRED-FlowCV builder used for OnlineJobs.ph and Upwork applications —
+          ATS-safe, single-column, no tables-for-layout. Source JSONs live in
+          <code>scripts/resumes/</code>; PDFs regenerate via <code>npm run resumes:build</code>.
+        </p>
       </aside>
     </div>
   </section>
@@ -200,6 +205,20 @@ const resumes = [
   .resume-note p {
     color: var(--c-ink-2);
     line-height: var(--lh-loose);
+  }
+  .resume-note p + p {
+    margin-top: var(--sp-3);
+  }
+  .resume-note__mono {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+  .resume-note__mono code {
+    font-family: var(--font-mono);
+    background: var(--c-bg-2);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--c-primary);
   }
   .resume-note strong {
     color: var(--c-ink);

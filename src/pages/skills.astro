@@ -19,10 +19,6 @@ const withLevel = groups.reduce(
   (sum, g) => sum + g.data.items.filter((i) => typeof i.level === 'number').length,
   0,
 );
-const withYears = groups.reduce(
-  (sum, g) => sum + g.data.items.filter((i) => typeof i.years === 'number').length,
-  0,
-);
 
 // Aggregate proficiency distribution across all rated skills
 const distribution: Record<1 | 2 | 3 | 4 | 5, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -53,19 +49,20 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
       <h1 class="page-head__title">Three domains. <span class="hl">One stack.</span></h1>
       <p class="page-head__sub">
         Skills grouped the way a hiring manager reads them: what I build, how I validate it, and
-        what I ship it with. Each skill is paired with a self-rated proficiency ladder
-        (<span class="mono">1 = exposure</span> ·
+        what I ship it with. Each skill is paired with a self-rated proficiency ladder (<span
+          class="mono">1 = exposure</span
+        > ·
         <span class="mono">5 = production</span>) and the number of years I've practiced it.
       </p>
 
       <div class="nda-callout" role="note">
         <span class="dot dot--pass" aria-hidden="true"></span>
         <div>
-          <strong>Self-rated, not self-inflated.</strong> Proficiency dots are my honest answer
-          to <em>"could I ship this to production on Monday without help?"</em> Tradeoffs between
-          languages, libraries, and domains are explicit: e.g., I can ship production Python but my
-          Docker is <em>working</em>, not <em>expert</em>. Years of practice reflect actual use,
-          not calendar time since first exposure.
+          <strong>Self-rated, not self-inflated.</strong> Proficiency dots are my honest answer to <em
+            >"could I ship this to production on Monday without help?"</em
+          > Tradeoffs between languages, libraries, and domains are explicit: e.g., I can ship production
+          Python but my Docker is <em>working</em>, not <em>expert</em>. Years of practice reflect
+          actual use, not calendar time since first exposure.
         </div>
       </div>
 
@@ -79,12 +76,7 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
 
       <div class="head-stats">
         <Stat value={String(groups.length)} label="domains" sub="three" formula="|D|" />
-        <Stat
-          value={String(totalSkills)}
-          label="skills"
-          sub="in stack"
-          formula="|\mathcal{S}|"
-        />
+        <Stat value={String(totalSkills)} label="skills" sub="in stack" formula="|\mathcal{S}|" />
         <Stat
           value={String(withLevel)}
           label="rated"
@@ -130,7 +122,8 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
           </header>
           <div class="skills">
             {group.data.items.map((item) => {
-              const level = typeof item.level === 'number' ? Math.min(5, Math.max(1, item.level)) : null;
+              const level =
+                typeof item.level === 'number' ? Math.min(5, Math.max(1, item.level)) : null;
               return (
                 <article class="skill">
                   <div class="skill__head">
@@ -155,7 +148,10 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
                       aria-label={`Proficiency ${level} of 5 — ${levelLabel[level as 1 | 2 | 3 | 4 | 5]}`}
                     >
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <span class:list={['dot5', `dot5--${i + 1 <= level ? 'on' : 'off'}`]} aria-hidden="true" />
+                        <span
+                          class:list={['dot5', `dot5--${i + 1 <= level ? 'on' : 'off'}`]}
+                          aria-hidden="true"
+                        />
                       ))}
                     </div>
                   )}
@@ -164,9 +160,7 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
                     <div class="skill__years" title="Years of practice">
                       <span aria-hidden="true">⏱</span>
                       <span class="mono">{item.years}</span>
-                      <span class="muted">
-                        yr{item.years === 1 ? '' : 's'}
-                      </span>
+                      <span class="muted">yr{item.years === 1 ? '' : 's'}</span>
                     </div>
                   )}
                 </article>

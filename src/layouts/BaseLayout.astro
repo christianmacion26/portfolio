@@ -95,9 +95,7 @@ const siteJsonLd = websiteJsonLd();
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
-    {
-      extraJsonLd && <script type="application/ld+json" set:html={JSON.stringify(extraJsonLd)} />
-    }
+    {extraJsonLd && <script type="application/ld+json" set:html={JSON.stringify(extraJsonLd)} />}
   </head>
   <body class={className}>
     <a href="#main" class="skip-link">Skip to content</a>

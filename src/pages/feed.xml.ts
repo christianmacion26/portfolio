@@ -72,10 +72,10 @@ export const GET: APIRoute = async ({ site }) => {
     <link href="${it.url}" rel="alternate" type="text/html" />
     <updated>${it.updated}</updated>
     <summary type="text">${escapeXml(it.summary)}</summary>${
-        it.tags.length
-          ? `\n    ${it.tags.map((t) => `<category term="${escapeXml(t)}" />`).join('\n    ')}`
-          : ''
-      }
+      it.tags.length
+        ? `\n    ${it.tags.map((t) => `<category term="${escapeXml(t)}" />`).join('\n    ')}`
+        : ''
+    }
   </entry>`,
     )
     .join('\n');

@@ -16,5 +16,6 @@
     "rehype-katex",
     "remark-math"
   ],
+  "ignoreBinaries": ["pdftotext"],
   "ignoreExportsUsedInFile": true
 }

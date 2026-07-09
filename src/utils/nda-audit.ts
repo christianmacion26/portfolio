@@ -20,6 +20,8 @@
  * Exits 0 if clean, 1 with a violation report otherwise.
  */
 
+import { spawnSync } from 'node:child_process';
+
 import { readFile, readdir } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -110,6 +112,18 @@ function stripMetaTags(html: string): string {
   return html.replace(/<meta[^>]*>/gi, '').replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '');
 }
 
+function extractPdfText(pdfPath: string): string {
+  // Uses poppler's `pdftotext` if available; falls back to empty string.
+  // If pdftotext is missing, PDFs are silently skipped (not silently passed).
+  const r = spawnSync('pdftotext', ['-q', pdfPath, '-'], { encoding: 'utf8' });
+  if (r.status === 0) return r.stdout;
+  if (r.error && r.error.code === 'ENOENT') {
+    console.warn(`[nda-audit] warn: pdftotext not found — skipping ${pdfPath}`);
+    return '';
+  }
+  return r.stdout || '';
+}
+
 async function audit(): Promise<number> {
   console.log(`[nda-audit] scanning ${DIST} ...`);
   const files = await walk(DIST);
@@ -118,14 +132,16 @@ async function audit(): Promise<number> {
   for (const file of files) {
     const ext = extname(file);
     let content: string;
-    try {
-      content = await readFile(file, 'utf8');
-    } catch {
-      continue;
+    if (ext === '.pdf') {
+      // Extract text via pdftotext so the same rules apply to PDF resumes too.
+      content = extractPdfText(file);
+    } else {
+      try {
+        content = await readFile(file, 'utf8');
+      } catch {
+        continue;
+      }
     }
-
-    // PDFs are binary; skip text audit (they live in public/ and are referenced only)
-    if (ext === '.pdf') continue;
 
     const auditable = ext === '.html' ? stripMetaTags(content) : content;
 

@@ -37,3 +37,5 @@ public/apple-touch-icon-*.png
 public/favicon.ico
 public/maskable-icon-*.png
 public/favicon-*.png
+# resume build intermediates (the .pdf outputs are committed, the .docx are not)
+public/resume-*.docx
