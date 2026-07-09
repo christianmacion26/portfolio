@@ -4,15 +4,13 @@
  * Targeted at recruiters who want to see *what Christian has published publicly*.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
-import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
-const projects = (await getCollection('project'))
-  .sort((a, b) => a.data.order - b.data.order);
-const aiPubs  = projects.filter(p => p.data.role === 'ai');
-const quantPubs = projects.filter(p => p.data.role === 'quant');
+const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
+const aiPubs = projects.filter((p) => p.data.role === 'ai');
+const quantPubs = projects.filter((p) => p.data.role === 'quant');
 
 // Format a YYYY-MM-DD frontmatter date as "Mon YYYY"
 function fmtDate(d?: Date | string): string {
@@ -49,33 +47,38 @@ const press = [
     year: 2024,
     title: 'PSHS-SMC alumni speaker — Philippine Science High School Southern Mindanao',
     venue: 'PSHS-SMC Alumni Talk Series',
-    detail: 'Talk on AI engineering and the educational path from PSHS to AI/quant careers. ~80 attendees (alumni + current students).',
+    detail:
+      'Talk on AI engineering and the educational path from PSHS to AI/quant careers. ~80 attendees (alumni + current students).',
   },
   {
     date: '2025-03-22',
     year: 2025,
     title: 'University guest lecturer — University of Southeastern Philippines (USeP)',
     venue: 'USeP College of Engineering',
-    detail: 'Guest lecture on systematic trading research and AI for engineering students. Course: CpE / EE 5th-year elective.',
+    detail:
+      'Guest lecture on systematic trading research and AI for engineering students. Course: CpE / EE 5th-year elective.',
   },
   {
     date: '2025-12-10',
     year: 2025,
     title: 'STA Tier-1 CTA Program completion — Society of Technical Analysts of the Philippines',
     venue: 'STA Philippines',
-    detail: 'Tier-1 Certified Technical Analyst program, completed Dec 2025. Final capstone: regime-classification case study on ASEAN equities.',
+    detail:
+      'Tier-1 Certified Technical Analyst program, completed Dec 2025. Final capstone: regime-classification case study on ASEAN equities.',
   },
 ];
 ---
+
 <BaseLayout
   title="Publications"
   description="Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe."
 >
-
   <header class="pub-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">publications/</span> · public work log</p>
-      <h1 class="pub-head__title">Things I have <span class="hl">written, built, and said</span> in public.</h1>
+      <h1 class="pub-head__title">
+        Things I have <span class="hl">written, built, and said</span> in public.
+      </h1>
       <p class="pub-head__sub">
         Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No
         proprietary data sources. No NDA-protected content.
@@ -90,34 +93,40 @@ const press = [
         <h2 class="section__title">Public-data systematic research.</h2>
       </header>
       <div class="pub-list" data-pub-list="quant">
-        {quantPubs.map((p, i) => (
-          <article class="pub">
-            <div class="pub__num mono"></div>
-            <div class="pub__body">
-              <h3 class="pub__title">
-                <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
-              </h3>
-              <p class="pub__summary">{p.data.summary}</p>
-              {p.data.metrics.length > 0 && (
-                <ul class="pub__metrics">
-                  {p.data.metrics.map(m => (
-                    <li>
-                      <span class="pub__metric-label">{m.label}</span>
-                      <span class="pub__metric-value mono">{m.value}</span>
-                    </li>
+        {
+          quantPubs.map((p) => (
+            <article class="pub">
+              <div class="pub__num mono" />
+              <div class="pub__body">
+                <h3 class="pub__title">
+                  <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
+                </h3>
+                <p class="pub__summary">{p.data.summary}</p>
+                {p.data.metrics.length > 0 && (
+                  <ul class="pub__metrics">
+                    {p.data.metrics.map((m) => (
+                      <li>
+                        <span class="pub__metric-label">{m.label}</span>
+                        <span class="pub__metric-value mono">{m.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div class="pub__meta">
+                  {p.data.stack.slice(0, 6).map((s) => (
+                    <span class="pill">{s}</span>
                   ))}
-                </ul>
-              )}
-              <div class="pub__meta">
-                {p.data.stack.slice(0, 6).map(s => <span class="pill">{s}</span>)}
+                </div>
               </div>
-            </div>
-            <div class="pub__action">
-              <div class="pub__date mono">{fmtDate(p.data.date)}</div>
-              <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>Read →</a>
-            </div>
-          </article>
-        ))}
+              <div class="pub__action">
+                <div class="pub__date mono">{fmtDate(p.data.date)}</div>
+                <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>
+                  Read →
+                </a>
+              </div>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -129,35 +138,50 @@ const press = [
         <h2 class="section__title">Multi-agent LLM systems with eval-first discipline.</h2>
       </header>
       <div class="pub-list" data-pub-list="ai">
-        {aiPubs.map((p, i) => (
-          <article class="pub">
-            <div class="pub__num mono"></div>
-            <div class="pub__body">
-              <h3 class="pub__title">
-                <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
-              </h3>
-              <p class="pub__summary">{p.data.summary}</p>
-              {p.data.metrics.length > 0 && (
-                <ul class="pub__metrics">
-                  {p.data.metrics.map(m => (
-                    <li>
-                      <span class="pub__metric-label">{m.label}</span>
-                      <span class="pub__metric-value mono">{m.value}</span>
-                    </li>
+        {
+          aiPubs.map((p) => (
+            <article class="pub">
+              <div class="pub__num mono" />
+              <div class="pub__body">
+                <h3 class="pub__title">
+                  <a href={path(`/projects/${p.id}`)}>{p.data.title}</a>
+                </h3>
+                <p class="pub__summary">{p.data.summary}</p>
+                {p.data.metrics.length > 0 && (
+                  <ul class="pub__metrics">
+                    {p.data.metrics.map((m) => (
+                      <li>
+                        <span class="pub__metric-label">{m.label}</span>
+                        <span class="pub__metric-value mono">{m.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div class="pub__meta">
+                  {p.data.stack.slice(0, 6).map((s) => (
+                    <span class="pill">{s}</span>
                   ))}
-                </ul>
-              )}
-              <div class="pub__meta">
-                {p.data.stack.slice(0, 6).map(s => <span class="pill">{s}</span>)}
+                </div>
               </div>
-            </div>
-            <div class="pub__action">
-              <div class="pub__date mono">{fmtDate(p.data.date)}</div>
-              <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>Read →</a>
-              {p.data.sourceLink && <a class="btn btn--ghost btn--sm" href={p.data.sourceLink} target="_blank" rel="noopener">Repo ↗</a>}
-            </div>
-          </article>
-        ))}
+              <div class="pub__action">
+                <div class="pub__date mono">{fmtDate(p.data.date)}</div>
+                <a class="btn btn--ghost btn--sm" href={path(`/projects/${p.id}`)}>
+                  Read →
+                </a>
+                {p.data.sourceLink && (
+                  <a
+                    class="btn btn--ghost btn--sm"
+                    href={p.data.sourceLink}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Repo ↗
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -168,24 +192,28 @@ const press = [
         <p class="section__eyebrow">Workbooks · long-form</p>
         <h2 class="section__title">Three deep-dive workbooks (in progress).</h2>
         <p class="section__sub">
-          Long-form workbooks that consolidate method, code, and exercises. Not yet published — drafts available on request.
+          Long-form workbooks that consolidate method, code, and exercises. Not yet published —
+          drafts available on request.
         </p>
       </header>
       <div class="workbooks">
-        {workbooks.map(w => (
-          <article class="wb">
-            <h3 class="wb__title">{w.title}</h3>
-            <div class="wb__scope">{w.scope}</div>
-            <div class="wb__meta mono">
-              <span>{w.pages}</span>
-              <span aria-hidden="true">·</span>
-              <span>{w.audience}</span>
-            </div>
-            <div class="wb__foot mono">
-              <span class="wb__status">In progress</span> — early-reader draft; full PDF available on request (non-public, gated by topic)
-            </div>
-          </article>
-        ))}
+        {
+          workbooks.map((w) => (
+            <article class="wb">
+              <h3 class="wb__title">{w.title}</h3>
+              <div class="wb__scope">{w.scope}</div>
+              <div class="wb__meta mono">
+                <span>{w.pages}</span>
+                <span aria-hidden="true">·</span>
+                <span>{w.audience}</span>
+              </div>
+              <div class="wb__foot mono">
+                <span class="wb__status">In progress</span> — early-reader draft; full PDF available
+                on request (non-public, gated by topic)
+              </div>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -197,16 +225,18 @@ const press = [
         <h2 class="section__title">Public talks, lectures, and recognitions.</h2>
       </header>
       <ol class="press">
-        {press.map(p => (
-          <li class="press__row">
-            <div class="press__year mono">{p.year}</div>
-            <div class="press__body">
-              <h3 class="press__title">{p.title}</h3>
-              <div class="press__venue mono">Venue: {p.venue}</div>
-              <p class="press__detail">{p.detail}</p>
-            </div>
-          </li>
-        ))}
+        {
+          press.map((p) => (
+            <li class="press__row">
+              <div class="press__year mono">{p.year}</div>
+              <div class="press__body">
+                <h3 class="press__title">{p.title}</h3>
+                <div class="press__venue mono">Venue: {p.venue}</div>
+                <p class="press__detail">{p.detail}</p>
+              </div>
+            </li>
+          ))
+        }
       </ol>
     </div>
   </section>
@@ -218,15 +248,13 @@ const press = [
     secondaryLabel="See methodology"
     secondaryHref={path('/methodology')}
   />
-
 </BaseLayout>
 
 <style>
   .pub-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.08), transparent 60%), var(--c-bg);
     border-bottom: var(--border);
   }
   .pub-head__title {
@@ -258,9 +286,14 @@ const press = [
     border: 1px solid var(--c-rule);
     border-radius: var(--radius);
     align-items: start;
-    transition: border-color var(--transition), box-shadow var(--transition);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
   }
-  .pub:hover { border-color: var(--c-primary); box-shadow: var(--shadow-sm); }
+  .pub:hover {
+    border-color: var(--c-primary);
+    box-shadow: var(--shadow-sm);
+  }
   .pub__num {
     font-size: var(--fs-lg);
     color: var(--c-primary);
@@ -268,12 +301,24 @@ const press = [
     counter-increment: pub;
   }
   .pub__num::before {
-    content: "[" counter(pub, decimal-leading-zero) "]";
+    content: '[' counter(pub, decimal-leading-zero) ']';
   }
-  .pub__title { font-size: var(--fs-lg); margin: 0 0 var(--sp-2); }
-  .pub__title a { color: var(--c-ink); }
-  .pub__title a:hover { color: var(--c-primary); }
-  .pub__summary { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0 0 var(--sp-3); }
+  .pub__title {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-2);
+  }
+  .pub__title a {
+    color: var(--c-ink);
+  }
+  .pub__title a:hover {
+    color: var(--c-primary);
+  }
+  .pub__summary {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0 0 var(--sp-3);
+  }
   .pub__metrics {
     list-style: none;
     padding: 0;
@@ -330,8 +375,16 @@ const press = [
     flex-direction: column;
     gap: var(--sp-2);
   }
-  .wb__title { font-size: var(--fs-lg); color: var(--c-ink); margin: 0; }
-  .wb__scope { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); }
+  .wb__title {
+    font-size: var(--fs-lg);
+    color: var(--c-ink);
+    margin: 0;
+  }
+  .wb__scope {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
   .wb__meta {
     font-size: var(--fs-xs);
     color: var(--c-ink-3);
@@ -356,7 +409,11 @@ const press = [
     letter-spacing: 0.04em;
   }
 
-  .press { list-style: none; padding: 0; max-width: 760px; }
+  .press {
+    list-style: none;
+    padding: 0;
+    max-width: 760px;
+  }
   .press__row {
     display: grid;
     grid-template-columns: 80px 1fr;
@@ -364,19 +421,42 @@ const press = [
     padding-block: var(--sp-4);
     border-bottom: 1px solid var(--c-rule-soft);
   }
-  .press__row:last-child { border-bottom: none; }
+  .press__row:last-child {
+    border-bottom: none;
+  }
   .press__year {
     font-size: var(--fs-lg);
     color: var(--c-primary);
     font-weight: 700;
   }
-  .press__title { font-size: var(--fs-base); margin: 0 0 var(--sp-1); }
-  .press__venue { font-size: var(--fs-xs); color: var(--c-ink-3); margin-bottom: var(--sp-2); }
-  .press__detail { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0; }
+  .press__title {
+    font-size: var(--fs-base);
+    margin: 0 0 var(--sp-1);
+  }
+  .press__venue {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    margin-bottom: var(--sp-2);
+  }
+  .press__detail {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
 
   @media (max-width: 720px) {
-    .pub { grid-template-columns: 40px 1fr; }
-    .pub__action { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
-    .press__row { grid-template-columns: 1fr; gap: var(--sp-1); }
+    .pub {
+      grid-template-columns: 40px 1fr;
+    }
+    .pub__action {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .press__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
   }
 </style>

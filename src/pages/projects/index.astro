@@ -7,16 +7,15 @@ import ProjectCard from '@components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
-const projects = (await getCollection('project'))
-  .sort((a, b) => a.data.order - b.data.order);
-const aiProjects = projects.filter(p => p.data.role === 'ai');
-const quantProjects = projects.filter(p => p.data.role === 'quant');
+const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
+const aiProjects = projects.filter((p) => p.data.role === 'ai');
+const quantProjects = projects.filter((p) => p.data.role === 'quant');
 ---
+
 <BaseLayout
   title="Projects"
   description="AI engineering projects (multi-agent, eval, MCP) and quantitative research projects (multiple-testing, cross-sectional alpha, volatility, cointegration)."
 >
-
   <header class="page-head">
     <div class="container">
       <p class="section__eyebrow">Portfolio</p>
@@ -34,22 +33,24 @@ const quantProjects = projects.filter(p => p.data.role === 'quant');
         <p class="section__eyebrow">Lane 1 · AI Engineer</p>
         <h2 class="section__title">Multi-agent LLM systems & eval</h2>
         <p class="section__sub">
-          {aiProjects.length} projects spanning RAG scorecards, ReAct tool-calling, MCP servers,
-          LLM-as-judge validation, reflection loops, and AI-output quality gates.
+          {aiProjects.length} projects spanning RAG scorecards, ReAct tool-calling, MCP servers, LLM-as-judge
+          validation, reflection loops, and AI-output quality gates.
         </p>
       </header>
       <div class="grid grid-3">
-        {aiProjects.map(p => (
-          <ProjectCard
-            href={path(`/projects/${p.id}`)}
-            title={p.data.title}
-            summary={p.data.summary}
-            metrics={p.data.metrics}
-            lane="ai"
-            order={p.data.order}
-            status="open source"
-          />
-        ))}
+        {
+          aiProjects.map((p) => (
+            <ProjectCard
+              href={path(`/projects/${p.id}`)}
+              title={p.data.title}
+              summary={p.data.summary}
+              metrics={p.data.metrics}
+              lane="ai"
+              order={p.data.order}
+              status="open source"
+            />
+          ))
+        }
       </div>
     </div>
   </section>
@@ -65,17 +66,19 @@ const quantProjects = projects.filter(p => p.data.role === 'quant');
         </p>
       </header>
       <div class="grid grid-3">
-        {quantProjects.map(p => (
-          <ProjectCard
-            href={path(`/projects/${p.id}`)}
-            title={p.data.title}
-            summary={p.data.summary}
-            metrics={p.data.metrics}
-            lane="quant"
-            order={p.data.order}
-            status="public-data reproducible"
-          />
-        ))}
+        {
+          quantProjects.map((p) => (
+            <ProjectCard
+              href={path(`/projects/${p.id}`)}
+              title={p.data.title}
+              summary={p.data.summary}
+              metrics={p.data.metrics}
+              lane="quant"
+              order={p.data.order}
+              status="public-data reproducible"
+            />
+          ))
+        }
       </div>
     </div>
   </section>
@@ -86,9 +89,11 @@ const quantProjects = projects.filter(p => p.data.role === 'quant');
         <p class="section__eyebrow">Combined-book analysis · cross-project</p>
         <h2 class="section__title">What 9 projects tell you about a research book</h2>
         <p class="section__sub">
-          None of these projects stand alone. The signal, cost, regime, and bias-control layers are designed to compose — a single
-          vol-targeted carry trade (03 + 06) carries different risk than a cointegration pair (05) carrying regime-aware sizing (07).
-          The shared methodology across all nine is what makes the book interpretable to a risk manager, not just an alpha-hunter.
+          None of these projects stand alone. The signal, cost, regime, and bias-control layers are
+          designed to compose — a single vol-targeted carry trade (03 + 06) carries different risk
+          than a cointegration pair (05) carrying regime-aware sizing (07). The shared methodology
+          across all nine is what makes the book interpretable to a risk manager, not just an
+          alpha-hunter.
         </p>
       </header>
 
@@ -97,7 +102,9 @@ const quantProjects = projects.filter(p => p.data.role === 'quant');
           <div class="book-card__layer">Layer A — Signal</div>
           <h3 class="book-card__title">Alpha sources</h3>
           <ul class="book-card__list">
-            <li><strong>Cross-sectional:</strong> project 02 (failed OOS, as the test predicted)</li>
+            <li>
+              <strong>Cross-sectional:</strong> project 02 (failed OOS, as the test predicted)
+            </li>
             <li><strong>Time-series:</strong> projects 03 (vol-targeted), 04 (VRP)</li>
             <li><strong>Carry / funding:</strong> project 06 (OOS Sharpe decayed post-2023)</li>
             <li><strong>Cointegration / stat-arb:</strong> project 05 (rejected by ADF)</li>
@@ -111,7 +118,9 @@ const quantProjects = projects.filter(p => p.data.role === 'quant');
             <li><strong>Vol targeting (20-day):</strong> project 03 (Sharpe 0.27 → 0.39)</li>
             <li><strong>Regime overlay (smoothed VIX):</strong> project 07 (DD −58% → −42%)</li>
             <li><strong>Cost-aware sizing:</strong> project 08 (break-even turnaround scan)</li>
-            <li><strong>Look-ahead audit:</strong> project 09 (one-line shift test, every book run)</li>
+            <li>
+              <strong>Look-ahead audit:</strong> project 09 (one-line shift test, every book run)
+            </li>
           </ul>
         </article>
 
@@ -120,29 +129,32 @@ const quantProjects = projects.filter(p => p.data.role === 'quant');
           <h3 class="book-card__title">Statistical gating</h3>
           <ul class="book-card__list">
             <li><strong>Multiple-testing:</strong> project 01 (Deflated Sharpe, 160-trial null)</li>
-            <li><strong>Pre-registration:</strong> project 06 (OOS window locked before data touched)</li>
+            <li>
+              <strong>Pre-registration:</strong> project 06 (OOS window locked before data touched)
+            </li>
             <li><strong>HAC inference:</strong> project 04 (Newey-West t = +6.5)</li>
-            <li><strong>Honest nulls:</strong> projects 02 + 05 (rejected, shipped as rejections)</li>
+            <li>
+              <strong>Honest nulls:</strong> projects 02 + 05 (rejected, shipped as rejections)
+            </li>
           </ul>
         </article>
       </div>
 
       <p class="book-note">
-        The book is not nine winning trades. It is one pipeline with three orthogonal layers and a layered validation
-        discipline that catches the failure modes that eat naive books alive. A risk manager reading these nine projects
-        sees the same engineering discipline applied end-to-end — that is what is hireable.
+        The book is not nine winning trades. It is one pipeline with three orthogonal layers and a
+        layered validation discipline that catches the failure modes that eat naive books alive. A
+        risk manager reading these nine projects sees the same engineering discipline applied
+        end-to-end — that is what is hireable.
       </p>
     </div>
   </section>
-
 </BaseLayout>
 
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-6);
     background:
-      radial-gradient(800px 400px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
-      var(--c-bg);
+      radial-gradient(800px 400px at 80% 0%, rgba(212, 160, 23, 0.1), transparent 60%), var(--c-bg);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -167,23 +179,27 @@ const quantProjects = projects.filter(p => p.data.role === 'quant');
     margin-bottom: var(--sp-6);
   }
   @media (max-width: 880px) {
-    .book-grid { grid-template-columns: 1fr; }
+    .book-grid {
+      grid-template-columns: 1fr;
+    }
   }
   .book-card {
     background: var(--c-bg-2);
     border: var(--border);
     border-radius: var(--radius);
     padding: var(--sp-5);
-    transition: transform 120ms ease, border-color 120ms ease;
+    transition:
+      transform 120ms ease,
+      border-color 120ms ease;
   }
   .book-card:hover {
     transform: translateY(-2px);
-    border-color: var(--c-primary-2);
+    border-color: var(--c-primary-2-deep);
   }
   .book-card__layer {
     font-family: var(--ff-mono);
     font-size: var(--fs-xs);
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 600;

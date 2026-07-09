@@ -60,7 +60,7 @@ const mistakes = [
     repair:
       'Did not ship the trade. Shipped the rejection, with the ADF statistic and the half-life. The project is a published counter-example to the assumption "BTC and ETH are cointegrated."',
     lesson:
-      'Stat-arb starts with the cointegration test, not with the trade. If the spread isn\'t stationary, no position-sizing rule will save it. Project 05 is the pre-trade filter for projects 02 and 06.',
+      "Stat-arb starts with the cointegration test, not with the trade. If the spread isn't stationary, no position-sizing rule will save it. Project 05 is the pre-trade filter for projects 02 and 06.",
     formula: '\\text{ADF} = -2.11 \\;\\not<\\; -2.86_{5\\%}',
   },
   {
@@ -85,21 +85,22 @@ const mistakes = [
     date: '2025-09-20',
     severity: 'low',
     summary:
-      'When implementing the Deflated Sharpe Ratio from the Bailey & López de Prado 2014 paper, I first wrote the simpler form: DSR = (SR̂ − E[max SR]) / σ_SR̂. The paper\'s full form has the higher-moment correction: (1 − γ₃·SR̂ + (γ₄·SR̂² − 1)/4) under the radical. Without it, returns with non-zero skew/kurtosis inflate the denominator and DSR is overstated.',
+      "When implementing the Deflated Sharpe Ratio from the Bailey & López de Prado 2014 paper, I first wrote the simpler form: DSR = (SR̂ − E[max SR]) / σ_SR̂. The paper's full form has the higher-moment correction: (1 − γ₃·SR̂ + (γ₄·SR̂² − 1)/4) under the radical. Without it, returns with non-zero skew/kurtosis inflate the denominator and DSR is overstated.",
     caught_by: 'G6–G10 (parameter-prior sensitivity, Monte-Carlo coverage)',
     repair:
-      'Re-derived the formula from the paper\'s full expression. Added γ₃ and γ₄ to the calculator inputs as defaults (0, 3) with a comment that real-data estimates are recommended. The interactive DSR calculator on /methodology ships the full form.',
+      "Re-derived the formula from the paper's full expression. Added γ₃ and γ₄ to the calculator inputs as defaults (0, 3) with a comment that real-data estimates are recommended. The interactive DSR calculator on /methodology ships the full form.",
     lesson:
       'When the paper gives you a higher-moment correction, the higher-moment correction is the paper. The simplified form is for textbook examples. Always read the equation, never paraphrase it from a Stack Overflow answer.',
-    formula: '\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}} \\sqrt{1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}}}',
+    formula:
+      '\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}} \\sqrt{1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}}}',
   },
 ];
 ---
+
 <BaseLayout
   title="What I got wrong"
   description="Postmortems of failed strategies, broken gates, and pipeline bugs. A researcher's failures are more diagnostic than their wins."
 >
-
   <header class="mistakes-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">mistakes/</span> · public postmortems</p>
@@ -108,8 +109,8 @@ const mistakes = [
       </h1>
       <p class="mistakes-head__sub">
         A research book that ships nine winners and hides the failure modes is a book primed for
-        selection bias. Below are five real failures from the quant pipeline — what was wrong,
-        which gate caught it, what I repaired, and what the discipline is for. NDA-safe. Public data.
+        selection bias. Below are five real failures from the quant pipeline — what was wrong, which
+        gate caught it, what I repaired, and what the discipline is for. NDA-safe. Public data.
       </p>
 
       <div class="mistakes-head__eq-block">
@@ -129,47 +130,47 @@ const mistakes = [
   <section class="section section--alt">
     <div class="container">
       <ol class="mistakes-list">
-        {mistakes.map(m => (
-          <li class={`mistake severity--${m.severity}`}>
-            <header class="mistake__head">
-              <div class="mistake__id mono">{m.id}</div>
-              <div class="mistake__meta">
-                <div class="mistake__project mono">{m.project}</div>
-                <div class="mistake__date mono">{m.date}</div>
-              </div>
-              <div class={`mistake__severity severity-tag--${m.severity} mono`}>
-                {m.severity}
-              </div>
-            </header>
+        {
+          mistakes.map((m) => (
+            <li class={`mistake severity--${m.severity}`}>
+              <header class="mistake__head">
+                <div class="mistake__id mono">{m.id}</div>
+                <div class="mistake__meta">
+                  <div class="mistake__project mono">{m.project}</div>
+                  <div class="mistake__date mono">{m.date}</div>
+                </div>
+                <div class={`mistake__severity severity-tag--${m.severity} mono`}>{m.severity}</div>
+              </header>
 
-            <h2 class="mistake__title">{m.title}</h2>
+              <h2 class="mistake__title">{m.title}</h2>
 
-            <div class="mistake__formula">
-              <Equation latex={m.formula} size="sm" />
-            </div>
+              <div class="mistake__formula">
+                <Equation latex={m.formula} size="sm" />
+              </div>
 
-            <div class="mistake__grid">
-              <div class="mistake__row">
-                <div class="mistake__row-label mono">What was wrong</div>
-                <p class="mistake__row-body">{m.summary}</p>
+              <div class="mistake__grid">
+                <div class="mistake__row">
+                  <div class="mistake__row-label mono">What was wrong</div>
+                  <p class="mistake__row-body">{m.summary}</p>
+                </div>
+                <div class="mistake__row">
+                  <div class="mistake__row-label mono">Which gate caught it</div>
+                  <p class="mistake__row-body">
+                    <span class="mistake__gate-pill">{m.caught_by}</span>
+                  </p>
+                </div>
+                <div class="mistake__row">
+                  <div class="mistake__row-label mono">Repair</div>
+                  <p class="mistake__row-body">{m.repair}</p>
+                </div>
+                <div class="mistake__row">
+                  <div class="mistake__row-label mono">Lesson</div>
+                  <p class="mistake__row-body mistake__lesson">{m.lesson}</p>
+                </div>
               </div>
-              <div class="mistake__row">
-                <div class="mistake__row-label mono">Which gate caught it</div>
-                <p class="mistake__row-body">
-                  <span class="mistake__gate-pill">{m.caught_by}</span>
-                </p>
-              </div>
-              <div class="mistake__row">
-                <div class="mistake__row-label mono">Repair</div>
-                <p class="mistake__row-body">{m.repair}</p>
-              </div>
-              <div class="mistake__row">
-                <div class="mistake__row-label mono">Lesson</div>
-                <p class="mistake__row-body mistake__lesson">{m.lesson}</p>
-              </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))
+        }
       </ol>
     </div>
   </section>
@@ -180,17 +181,29 @@ const mistakes = [
         <p class="section__eyebrow">What this page is not</p>
         <h2 class="section__title">Negative space as design.</h2>
         <p class="section__sub">
-          This page is not self-flagellation, and it is not a humility performance. It is a record of
-          the failure modes the gate stack is built to catch. If a gate didn't catch the failure,
+          This page is not self-flagellation, and it is not a humility performance. It is a record
+          of the failure modes the gate stack is built to catch. If a gate didn't catch the failure,
           the gate gets updated; the failure gets logged. There is no "we'll be more careful next
           time" — there is a pre-ship test.
         </p>
       </header>
       <ul class="neg">
-        <li>I am not above shipping a 5.07 phantom Sharpe — that is exactly the failure mode the gates exist to prevent.</li>
-        <li>I am not claiming the gate stack catches everything — there are 31 gates and they fail closed on the obvious ones; the subtle ones come later.</li>
-        <li>I am not hiding any failures that I am aware of — if a postmortem would change your hire/no-hire, it is on this page.</li>
-        <li>I am not interested in "fake failure" stories — these are real failures from the actual pipeline, with the actual numbers.</li>
+        <li>
+          I am not above shipping a 5.07 phantom Sharpe — that is exactly the failure mode the gates
+          exist to prevent.
+        </li>
+        <li>
+          I am not claiming the gate stack catches everything — there are 31 gates and they fail
+          closed on the obvious ones; the subtle ones come later.
+        </li>
+        <li>
+          I am not hiding any failures that I am aware of — if a postmortem would change your
+          hire/no-hire, it is on this page.
+        </li>
+        <li>
+          I am not interested in "fake failure" stories — these are real failures from the actual
+          pipeline, with the actual numbers.
+        </li>
       </ul>
     </div>
   </section>
@@ -202,15 +215,13 @@ const mistakes = [
     secondaryLabel="Read methodology"
     secondaryHref={path('/methodology')}
   />
-
 </BaseLayout>
 
 <style>
   .mistakes-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1000px 500px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1000px 500px at 80% 0%, rgba(212, 160, 23, 0.1), transparent 60%), var(--c-bg);
     border-bottom: var(--border);
   }
   .mistakes-head__title {
@@ -262,10 +273,18 @@ const mistakes = [
   .mistake:hover {
     border-color: var(--c-primary);
   }
-  .severity--critical { border-left-color: var(--c-fail); }
-  .severity--high     { border-left-color: #c98a16; }
-  .severity--medium   { border-left-color: var(--c-primary-2); }
-  .severity--low      { border-left-color: var(--c-primary); }
+  .severity--critical {
+    border-left-color: var(--c-fail);
+  }
+  .severity--high {
+    border-left-color: #c98a16;
+  }
+  .severity--medium {
+    border-left-color: var(--c-primary-2-deep);
+  }
+  .severity--low {
+    border-left-color: var(--c-primary);
+  }
 
   .mistake__head {
     display: flex;
@@ -298,22 +317,22 @@ const mistakes = [
     padding: 4px 10px;
     border-radius: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.10em;
+    letter-spacing: 0.1em;
     font-weight: 700;
   }
   .severity-tag--critical {
-    background: rgba(155, 34, 38, 0.10);
+    background: rgba(155, 34, 38, 0.1);
     color: var(--c-fail);
     border: 1px solid var(--c-fail);
   }
   .severity-tag--high {
-    background: rgba(184, 134, 11, 0.10);
+    background: rgba(184, 134, 11, 0.1);
     color: #c98a16;
     border: 1px solid #c98a16;
   }
   .severity-tag--medium {
-    background: rgba(212, 160, 23, 0.10);
-    color: var(--c-primary-2);
+    background: rgba(212, 160, 23, 0.1);
+    color: var(--c-primary-2-deep);
     border: 1px solid var(--c-primary-2);
   }
   .severity-tag--low {
@@ -351,7 +370,9 @@ const mistakes = [
     padding-block: var(--sp-3);
     border-top: 1px dashed var(--c-rule-soft);
   }
-  .mistake__row:first-child { border-top: none; }
+  .mistake__row:first-child {
+    border-top: none;
+  }
   .mistake__row-label {
     font-size: var(--fs-xs);
     color: var(--c-ink-3);
@@ -408,8 +429,15 @@ const mistakes = [
   }
 
   @media (max-width: 720px) {
-    .mistake__row { grid-template-columns: 1fr; gap: var(--sp-1); }
-    .mistake { padding: var(--sp-4); }
-    .mistake__head { gap: var(--sp-3); }
+    .mistake__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
+    .mistake {
+      padding: var(--sp-4);
+    }
+    .mistake__head {
+      gap: var(--sp-3);
+    }
   }
 </style>

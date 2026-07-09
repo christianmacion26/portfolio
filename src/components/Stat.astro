@@ -21,8 +21,15 @@ interface Props {
   formula?: string;
 }
 const {
-  value, label, sub, spark, sparkColor, size = 'md',
-  trend, variant = 'default', formula,
+  value,
+  label,
+  sub,
+  spark,
+  sparkColor,
+  size = 'md',
+  trend,
+  variant = 'default',
+  formula,
 } = Astro.props;
 const trendGlyph = trend === 'up' ? '↑' : trend === 'down' ? '↓' : trend === 'flat' ? '→' : '';
 const trendClass = trend ? `stat--trend-${trend}` : '';
@@ -41,19 +48,28 @@ if (formula) {
   }
 }
 ---
-<div class:list={["stat", `stat--${size}`, `stat--${variant}`, trendClass]}>
+
+<div class:list={['stat', `stat--${size}`, `stat--${variant}`, trendClass]}>
   <div class="stat__head">
     <span class="stat__label">{label}</span>
     {formula && <span class="stat__formula" set:html={formulaHtml} />}
   </div>
   <div class="stat__value-row">
     <span class="stat__value mono">{value}</span>
-    {trendGlyph && <span class="stat__trend" aria-hidden="true">{trendGlyph}</span>}
-    {spark && (
-      <span class="stat__spark">
-        <Sparkline points={spark} stroke={sparkColor ?? 'var(--c-primary-2)'} fill="gradient" />
-      </span>
-    )}
+    {
+      trendGlyph && (
+        <span class="stat__trend" aria-hidden="true">
+          {trendGlyph}
+        </span>
+      )
+    }
+    {
+      spark && (
+        <span class="stat__spark">
+          <Sparkline points={spark} stroke={sparkColor ?? 'var(--c-primary-2)'} fill="gradient" />
+        </span>
+      )
+    }
   </div>
   {sub && <div class="stat__sub">{sub}</div>}
 </div>
@@ -67,7 +83,9 @@ if (formula) {
     background: var(--c-bg);
     border: 1px solid var(--c-rule);
     border-radius: var(--radius);
-    transition: border-color var(--transition), box-shadow var(--transition);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
   }
   .stat:hover {
     border-color: var(--c-ink-3);
@@ -88,7 +106,7 @@ if (formula) {
   }
   .stat__formula {
     font-size: var(--fs-sm);
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     opacity: 0.85;
     line-height: 1;
   }
@@ -103,20 +121,34 @@ if (formula) {
     line-height: 1.05;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
+    font-feature-settings: 'tnum' 1;
   }
-  .stat--sm .stat__value { font-size: var(--fs-xl); }
-  .stat--md .stat__value { font-size: var(--fs-2xl); }
-  .stat--lg .stat__value { font-size: var(--fs-3xl); }
-  .stat--xl .stat__value { font-size: var(--fs-4xl); }
+  .stat--sm .stat__value {
+    font-size: var(--fs-xl);
+  }
+  .stat--md .stat__value {
+    font-size: var(--fs-2xl);
+  }
+  .stat--lg .stat__value {
+    font-size: var(--fs-3xl);
+  }
+  .stat--xl .stat__value {
+    font-size: var(--fs-4xl);
+  }
   .stat__trend {
     font-family: var(--ff-mono);
     font-weight: 700;
     font-size: var(--fs-lg);
   }
-  .stat--trend-up   .stat__trend { color: var(--c-pass); }
-  .stat--trend-down .stat__trend { color: var(--c-fail); }
-  .stat--trend-flat .stat__trend { color: var(--c-ink-2); }
+  .stat--trend-up .stat__trend {
+    color: var(--c-pass);
+  }
+  .stat--trend-down .stat__trend {
+    color: var(--c-fail);
+  }
+  .stat--trend-flat .stat__trend {
+    color: var(--c-ink-2);
+  }
   .stat__spark {
     flex: 1;
     display: flex;
@@ -132,9 +164,15 @@ if (formula) {
     background: var(--c-primary);
     border-color: var(--c-primary-deep);
   }
-  .stat--primary .stat__label { color: rgba(255, 255, 255, 0.65); }
-  .stat--primary .stat__value { color: #fff; }
-  .stat--primary .stat__sub   { color: rgba(255, 255, 255, 0.6); }
+  .stat--primary .stat__label {
+    color: rgba(255, 255, 255, 0.65);
+  }
+  .stat--primary .stat__value {
+    color: #fff;
+  }
+  .stat--primary .stat__sub {
+    color: rgba(255, 255, 255, 0.6);
+  }
 
   .stat--accent {
     background: linear-gradient(180deg, rgba(11, 61, 92, 0.04), var(--c-bg));
@@ -145,8 +183,16 @@ if (formula) {
     background: var(--c-tape);
     border-color: var(--c-tape-2);
   }
-  .stat--mono .stat__label { color: rgba(255, 255, 255, 0.55); }
-  .stat--mono .stat__value { color: #3fb950; }
-  .stat--mono .stat__sub   { color: rgba(255, 255, 255, 0.55); }
-  .stat--mono .stat__formula { color: #d29922; }
+  .stat--mono .stat__label {
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .stat--mono .stat__value {
+    color: #3fb950;
+  }
+  .stat--mono .stat__sub {
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .stat--mono .stat__formula {
+    color: #d29922;
+  }
 </style>

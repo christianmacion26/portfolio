@@ -37,12 +37,19 @@ const html = katex.renderToString(latex, {
 const sizeClass = size !== 'md' ? `eq--${size}` : '';
 const toneClass = tone === 'tape' ? 'eq--tape' : '';
 ---
+
 <span
-  class:list={["eq", sizeClass, toneClass, className, { 'eq--block': block }]}
+  class:list={['eq', sizeClass, toneClass, className, { 'eq--block': block }]}
   data-latex={latex}
 >
   <Fragment set:html={html} />
-  {label && <span class="eq__label" aria-hidden="true">{label}</span>}
+  {
+    label && (
+      <span class="eq__label" aria-hidden="true">
+        {label}
+      </span>
+    )
+  }
 </span>
 
 <style>
@@ -110,7 +117,7 @@ const toneClass = tone === 'tape' ? 'eq--tape' : '';
   /* Accent tokens stay readable: Φ gold, σ purple, α green still glow */
   .eq--tape :global(.accent .mord),
   .eq--tape :global(.mathbb) {
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
   }
   .eq--block {
     display: block;

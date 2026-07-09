@@ -18,25 +18,20 @@ const nowDate = new Date();
 const nowLabel = `NOW · ${nowDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-')}`;
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
-import Sparkline from '@components/Sparkline.astro';
 import Ticker from '@components/Ticker.astro';
 import { getCollection } from 'astro:content';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 
-const projects = (await getCollection('project'))
-  .sort((a, b) => a.data.order - b.data.order);
-const aiFeatured = projects.filter(p => p.data.role === 'ai').slice(0, 3);
-const quantFeatured = projects.filter(p => p.data.role === 'quant').slice(0, 3);
+const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
+const aiFeatured = projects.filter((p) => p.data.role === 'ai').slice(0, 3);
+const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3);
 
 // Synthetic but realistic-looking sparkline data points (just shapes — honest framing in caption)
-const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31];           // gates added month by month
-const sparkCert = [12, 18, 27, 35, 44, 56, 64, 75, 88, 96, 102];      // certs added month by month
-const sparkLoc = [3, 5, 9, 12, 18, 24, 35, 48, 60, 68, 76];           // k-LOC growth
-const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents per system
+const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month by month
 ---
-<BaseLayout title={profile.titles.primary} description={profile.titles.secondary}>
 
+<BaseLayout title={profile.titles.primary} description={profile.titles.secondary}>
   <Ticker />
 
   <section class="hero">
@@ -49,23 +44,29 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
 
       <h1 class="hero__title">
         Quant Researcher.<br />
-        <span class="hl">I do</span> <span class="hero__accent">solutions</span> — two hats, one method.
+        <span class="hl">I do</span>
+        <span class="hero__accent">solutions</span> — two hats, one method.
       </h1>
 
       <p class="hero__sub">
         Systematic strategies, multiple-testing-aware. Multi-agent AI engineering on the side.
-        Eleven-agent orchestrator. <strong>31-gate statistical eval harness</strong>. Pre-registered research.
-        Public-data reproducibility. Headline metrics you can verify.
+        Eleven-agent orchestrator. <strong>31-gate statistical eval harness</strong>. Pre-registered
+        research. Public-data reproducibility. Headline metrics you can verify.
       </p>
 
       <div class="hero__eq-row">
         <div class="hero__eq-cell">
           <div class="hero__eq-label mono">deflated Sharpe</div>
-          <Equation latex={`\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}}} \\cdot \\left[1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}\\right]`} />
+          <Equation
+            latex={`\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}}} \\cdot \\left[1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}\\right]`}
+          />
         </div>
         <div class="hero__eq-cell hero__eq-cell--right">
           <div class="hero__eq-label mono">multi-agent cost</div>
-          <Equation tone="tape" latex={`\\mathrm{cost} = \\sum_{a \\in \\mathcal{A}} t(a) \\cdot p(\\mathrm{tier}(a))`} />
+          <Equation
+            tone="tape"
+            latex={`\\mathrm{cost} = \\sum_{a \\in \\mathcal{A}} t(a) \\cdot p(\\mathrm{tier}(a))`}
+          />
         </div>
       </div>
 
@@ -94,13 +95,7 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
           formula="\mathcal{U}"
           size="lg"
         />
-        <Stat
-          value="100%"
-          label="NDA-clean"
-          sub="public-data only"
-          formula="\neg p"
-          size="lg"
-        />
+        <Stat value="100%" label="NDA-clean" sub="public-data only" formula="\neg p" size="lg" />
       </div>
 
       <div class="hero__actions">
@@ -111,7 +106,11 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
 
       <div class="hero__proof-row">
         <span class="dot dot--pass"></span>
-        <span class="mono hero__proof-text">all 31 gates declared before any number is published · no proprietary data sources · 19V Capital = closed past contract (03/2026 – 06/2026) · all 9 quant projects reproducible end-to-end from public data</span>
+        <span class="mono hero__proof-text"
+          >all 31 gates declared before any number is published · no proprietary data sources · 19V
+          Capital = closed past contract (03/2026 – 06/2026) · all 9 quant projects reproducible
+          end-to-end from public data</span
+        >
       </div>
     </div>
   </section>
@@ -120,10 +119,12 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     <div class="container">
       <div class="now-strip__inner">
         <div class="now-strip__cell">
-          <div class="now-strip__label mono">{nowLabel} · <a href={path('/now')} class="now-strip__link">/now →</a></div>
+          <div class="now-strip__label mono">
+            {nowLabel} · <a href={path('/now')} class="now-strip__link">/now →</a>
+          </div>
           <div class="now-strip__val">
-            <strong>Open to:</strong> Quant Researcher (QR / QR-rotational),
-            Quantitative Research Engineer, or Research Engineer seat · remote · UTC+8
+            <strong>Open to:</strong> Quant Researcher (QR / QR-rotational), Quantitative Research Engineer,
+            or Research Engineer seat · remote · UTC+8
           </div>
           <div class="now-strip__meta">
             <span class="mono">20 hrs/wk</span> · contract or part-time · immediate start
@@ -136,7 +137,9 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         <div class="now-strip__cell now-strip__cell--narrow">
           <div class="now-strip__label mono">NEXT</div>
           <div class="now-strip__val">
-            <a href={path('/positions')} class="now-strip__link">Live paper-trade log · project 03</a>
+            <a href={path('/positions')} class="now-strip__link"
+              >Live paper-trade log · project 03</a
+            >
           </div>
         </div>
       </div>
@@ -146,7 +149,9 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
   <section class="section section--alt">
     <div class="container">
       <header class="section__head">
-        <p class="section__eyebrow">Lane 1 · Quant Researcher <span class="mono">⟵ primary</span></p>
+        <p class="section__eyebrow">
+          Lane 1 · Quant Researcher <span class="mono">⟵ primary</span>
+        </p>
         <h2 class="section__title">Systematic strategies, multiple-testing-aware.</h2>
         <p class="section__sub">
           Nine reproducible public-data research projects. Each candidate survives deflated Sharpe,
@@ -154,17 +159,19 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         </p>
       </header>
       <div class="grid grid-3">
-        {quantFeatured.map(p => (
-          <ProjectCard
-            href={path(`/projects/${p.id}`)}
-            title={p.data.title}
-            summary={p.data.summary}
-            metrics={p.data.metrics}
-            lane="quant"
-            order={p.data.order}
-            status="public-data reproducible"
-          />
-        ))}
+        {
+          quantFeatured.map((p) => (
+            <ProjectCard
+              href={path(`/projects/${p.id}`)}
+              title={p.data.title}
+              summary={p.data.summary}
+              metrics={p.data.metrics}
+              lane="quant"
+              order={p.data.order}
+              status="public-data reproducible"
+            />
+          ))
+        }
       </div>
       <div class="section__foot">
         <a href={path('/projects')} class="btn btn--ghost">All quant projects →</a>
@@ -184,17 +191,19 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         </p>
       </header>
       <div class="grid grid-3">
-        {aiFeatured.map(p => (
-          <ProjectCard
-            href={path(`/projects/${p.id}`)}
-            title={p.data.title}
-            summary={p.data.summary}
-            metrics={p.data.metrics}
-            lane="ai"
-            order={p.data.order}
-            status="open source"
-          />
-        ))}
+        {
+          aiFeatured.map((p) => (
+            <ProjectCard
+              href={path(`/projects/${p.id}`)}
+              title={p.data.title}
+              summary={p.data.summary}
+              metrics={p.data.metrics}
+              lane="ai"
+              order={p.data.order}
+              status="open source"
+            />
+          ))
+        }
       </div>
       <div class="section__foot">
         <a href={path('/projects')} class="btn btn--ghost">All AI projects →</a>
@@ -205,12 +214,12 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         <div class="ai-secondary__title mono">AI · SECONDARY — what this lane is and isn't</div>
         <p class="ai-secondary__note">
           The AI lane is <em>not</em> six vanity projects. It is the same eval-first discipline applied
-          to LLM outputs: agent charters, MCP servers, scorecards, and frozen-spec evaluation. The
-          primary seat target is Quant Researcher; the AI lane is what makes me useful inside a
-          quant team that ships with LLM tooling. See <a href={path('/solutions')}>the solutions
-          library</a> for the problem → approach → evidence → outcome → proof pattern, and
-          <a href={path('/mistakes')}>postmortems</a> for the failure modes the eval stack is built
-          to catch.
+          to LLM outputs: agent charters, MCP servers, scorecards, and frozen-spec evaluation. The primary
+          seat target is Quant Researcher; the AI lane is what makes me useful inside a quant team that
+          ships with LLM tooling. See <a href={path('/solutions')}>the solutions library</a> for the problem
+          → approach → evidence → outcome → proof pattern, and
+          <a href={path('/mistakes')}>postmortems</a> for the failure modes the eval stack is built to
+          catch.
         </p>
       </aside>
     </div>
@@ -222,8 +231,10 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
         <p class="section__eyebrow">The method · G1–G31</p>
         <h2 class="section__title">One gate stack. Two lanes.</h2>
         <p class="section__sub">
-          The same gate stack gates LLM outputs and systematic strategies. Six families, 31 gates, one contract.
-          See the full gate taxonomy on the <a href={path('/methodology')}>methodology page</a>.
+          The same gate stack gates LLM outputs and systematic strategies. Six families, 31 gates,
+          one contract. See the full gate taxonomy on the <a href={path('/methodology')}
+            >methodology page</a
+          >.
         </p>
       </header>
 
@@ -303,7 +314,6 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     secondaryLabel="Get in touch"
     secondaryHref={path('/contact')}
   />
-
 </BaseLayout>
 
 <style>
@@ -311,11 +321,12 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     padding-block: var(--sp-9);
     background:
       radial-gradient(1200px 600px at 80% -100px, rgba(212, 160, 23, 0.14), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
-      var(--c-paper);
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.1), transparent 60%), var(--c-paper);
     border-bottom: var(--border);
   }
-  .hero__inner { max-width: 980px; }
+  .hero__inner {
+    max-width: 980px;
+  }
   .hero__eyebrow {
     display: flex;
     flex-wrap: wrap;
@@ -328,7 +339,9 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     letter-spacing: -0.035em;
     margin-bottom: var(--sp-5);
   }
-  .hero__accent { color: var(--c-primary); }
+  .hero__accent {
+    color: var(--c-primary);
+  }
   .hero__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
@@ -336,7 +349,10 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     max-width: 72ch;
     margin-bottom: var(--sp-7);
   }
-  .hero__sub strong { color: var(--c-ink); font-weight: 600; }
+  .hero__sub strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
 
   .hero__eq-row {
     display: grid;
@@ -351,13 +367,19 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     border-radius: var(--radius);
     overflow-x: auto;
   }
-  .hero__eq-cell--right { background: var(--c-tape); color: #e6edf3; border-color: var(--c-tape-2); }
-  .hero__eq-cell--right .hero__eq-label { color: #d29922; }
+  .hero__eq-cell--right {
+    background: var(--c-tape);
+    color: #e6edf3;
+    border-color: var(--c-tape-2);
+  }
+  .hero__eq-cell--right .hero__eq-label {
+    color: #d29922;
+  }
   .hero__eq-label {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.10em;
-    color: var(--c-primary-2);
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
     margin-bottom: var(--sp-2);
     font-weight: 600;
   }
@@ -406,14 +428,22 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     border-radius: var(--radius);
     transition: border-color var(--transition);
   }
-  .gate-tile:hover { border-color: var(--c-primary); border-left-color: var(--c-primary-2); }
+  .gate-tile:hover {
+    border-color: var(--c-primary);
+    border-left-color: var(--c-primary-2-deep);
+  }
   .gate-tile__range {
     font-size: var(--fs-sm);
     color: var(--c-primary);
     font-weight: 700;
     margin-bottom: var(--sp-1);
   }
-  .gate-tile__name { font-size: var(--fs-base); color: var(--c-ink); margin-bottom: var(--sp-2); font-weight: 600; }
+  .gate-tile__name {
+    font-size: var(--fs-base);
+    color: var(--c-ink);
+    margin-bottom: var(--sp-2);
+    font-weight: 600;
+  }
   .gate-tile__list {
     list-style: none;
     padding: 0;
@@ -436,8 +466,12 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
   }
 
   @media (max-width: 880px) {
-    .hero__stats { grid-template-columns: 1fr 1fr; }
-    .hero__eq-row { grid-template-columns: 1fr; }
+    .hero__stats {
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero__eq-row {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* === Now strip === */
@@ -452,12 +486,17 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     gap: var(--sp-5);
     padding-block: var(--sp-4);
   }
-  .now-strip__cell { line-height: 1.5; }
-  .now-strip__cell--narrow { font-size: var(--fs-sm); color: rgba(230, 237, 243, 0.85); }
+  .now-strip__cell {
+    line-height: 1.5;
+  }
+  .now-strip__cell--narrow {
+    font-size: var(--fs-sm);
+    color: rgba(230, 237, 243, 0.85);
+  }
   .now-strip__label {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.10em;
+    letter-spacing: 0.1em;
     color: #d4a017;
     margin-bottom: 0.25rem;
     font-weight: 600;
@@ -466,9 +505,20 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     font-size: var(--fs-base);
     color: #e6edf3;
   }
-  .now-strip__val strong { color: var(--c-primary-2); font-weight: 600; }
-  .now-strip__link { color: inherit; text-decoration: underline; text-decoration-color: rgba(212, 160, 23, 0.4); text-underline-offset: 3px; }
-  .now-strip__link:hover { color: var(--c-primary-2); text-decoration-color: var(--c-primary-2); }
+  .now-strip__val strong {
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .now-strip__link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-underline-offset: 3px;
+  }
+  .now-strip__link:hover {
+    color: var(--c-primary-2-deep);
+    text-decoration-color: var(--c-primary-2-deep);
+  }
   .now-strip__meta {
     margin-top: var(--sp-2);
     font-size: var(--fs-xs);
@@ -476,16 +526,22 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
     letter-spacing: 0.03em;
   }
   .now-strip__meta .mono {
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-weight: 700;
     padding: 0 4px;
     border: 1px solid rgba(212, 160, 23, 0.35);
     border-radius: 3px;
   }
-  .now-strip__cell--narrow .now-strip__val { font-size: var(--fs-sm); color: rgba(230, 237, 243, 0.85); }
+  .now-strip__cell--narrow .now-strip__val {
+    font-size: var(--fs-sm);
+    color: rgba(230, 237, 243, 0.85);
+  }
 
   @media (max-width: 880px) {
-    .now-strip__inner { grid-template-columns: 1fr; gap: var(--sp-3); }
+    .now-strip__inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-3);
+    }
   }
 
   /* === AI secondary panel === */
@@ -500,8 +556,8 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
   .ai-secondary__title {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.10em;
-    color: var(--c-primary-2);
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
     font-weight: 600;
     margin-bottom: var(--sp-3);
   }
@@ -530,6 +586,8 @@ const sparkAgents = [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];              // agents 
   }
 
   @media (max-width: 720px) {
-    .ai-secondary__grid { grid-template-columns: 1fr; }
+    .ai-secondary__grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

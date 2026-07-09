@@ -13,29 +13,32 @@ const resumes = [
   {
     label: 'Unified · AI Engineer + Quant Researcher',
     file: path('/resume-tailored.pdf'),
-    blurb: 'The single-pane view: covers both lanes simultaneously. Best for recruiters hiring for a combined seat or undecided between the two.',
+    blurb:
+      'The single-pane view: covers both lanes simultaneously. Best for recruiters hiring for a combined seat or undecided between the two.',
     primary: true,
     pages: '4 pages',
   },
   {
     label: 'AI Engineer Lane',
     file: path('/resume-ai-only.pdf'),
-    blurb: 'AI Engineer emphasis: multi-agent LLM systems, eval harnesses, MCP servers, and the projects that prove them.',
+    blurb:
+      'AI Engineer emphasis: multi-agent LLM systems, eval harnesses, MCP servers, and the projects that prove them.',
     pages: '4 pages',
   },
   {
     label: 'Quant Researcher Lane (one-pager)',
     file: path('/resume-quant-onepage.pdf'),
-    blurb: 'Quantitative Researcher emphasis: nine public-data projects with real headline metrics, plus the methodology that ties them together.',
+    blurb:
+      'Quantitative Researcher emphasis: nine public-data projects with real headline metrics, plus the methodology that ties them together.',
     pages: '1 page',
   },
 ];
 ---
+
 <BaseLayout
   title="Resume"
   description="Three tailored resumes — unified, AI-only, and Quant one-pager. NDA-safe, public-data reproducible."
 >
-
   <header class="page-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">resume/</span> · 3 tailored versions</p>
@@ -65,16 +68,22 @@ const resumes = [
   <section class="section">
     <div class="container">
       <div class="resume-grid">
-        {resumes.map(r => (
-          <a class:list={["resume-card", { "resume-card--primary": r.primary }]} href={r.file} download>
-            <div class="resume-card__label">{r.label}</div>
-            <div class="resume-card__blurb">{r.blurb}</div>
-            <div class="resume-card__foot">
-              <span class="pill pill--brand">{r.pages}</span>
-              <span class="resume-card__dl">Download PDF ↓</span>
-            </div>
-          </a>
-        ))}
+        {
+          resumes.map((r) => (
+            <a
+              class:list={['resume-card', { 'resume-card--primary': r.primary }]}
+              href={r.file}
+              download
+            >
+              <div class="resume-card__label">{r.label}</div>
+              <div class="resume-card__blurb">{r.blurb}</div>
+              <div class="resume-card__foot">
+                <span class="pill pill--brand">{r.pages}</span>
+                <span class="resume-card__dl">Download PDF ↓</span>
+              </div>
+            </a>
+          ))
+        }
       </div>
 
       <aside class="resume-note">
@@ -86,14 +95,13 @@ const resumes = [
       </aside>
     </div>
   </section>
-
 </BaseLayout>
 
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% -100px, rgba(11, 61, 92, 0.10), transparent 60%),
+      radial-gradient(1200px 600px at 80% -100px, rgba(11, 61, 92, 0.1), transparent 60%),
       var(--c-paper);
     border-bottom: var(--border);
   }
@@ -137,7 +145,10 @@ const resumes = [
     border-radius: var(--radius);
     text-decoration: none;
     color: var(--c-ink);
-    transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    transition:
+      border-color var(--transition),
+      transform var(--transition),
+      box-shadow var(--transition);
   }
   .resume-card:hover {
     border-color: var(--c-primary);
@@ -190,9 +201,14 @@ const resumes = [
     color: var(--c-ink-2);
     line-height: var(--lh-loose);
   }
-  .resume-note strong { color: var(--c-ink); font-weight: 600; }
+  .resume-note strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
 
   @media (max-width: 880px) {
-    .head-stats { grid-template-columns: 1fr 1fr; }
+    .head-stats {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

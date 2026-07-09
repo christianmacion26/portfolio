@@ -9,23 +9,22 @@ import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import { getCollection } from 'astro:content';
 
-const groups = (await getCollection('skillGroup'))
-  .sort((a, b) => a.data.order - b.data.order);
+const groups = (await getCollection('skillGroup')).sort((a, b) => a.data.order - b.data.order);
 
 const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
 ---
+
 <BaseLayout
   title="Skills"
   description="Domain-grouped skill matrix: AI & multi-agent systems, quantitative research & statistics, and engineering tools."
 >
-
   <header class="page-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">skills/</span> · three domains, one stack</p>
       <h1 class="page-head__title">Three domains. <span class="hl">One stack.</span></h1>
       <p class="page-head__sub">
-        Skills grouped the way a hiring manager reads them: what I build, how I validate it, and what
-        I ship it with. Each skill is paired with the discipline it represents.
+        Skills grouped the way a hiring manager reads them: what I build, how I validate it, and
+        what I ship it with. Each skill is paired with the discipline it represents.
       </p>
 
       <div class="head-eq">
@@ -45,33 +44,34 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
     </div>
   </header>
 
-  {groups.map((group, idx) => (
-    <section class:list={["section", { "section--alt": idx % 2 === 1 }]}>
-      <div class="container">
-        <header class="section__head">
-          <p class="section__eyebrow">Domain {idx + 1}</p>
-          <h2 class="section__title">{group.data.title}</h2>
-          <p class="section__sub">{group.data.blurb}</p>
-        </header>
-        <div class="skills">
-          {group.data.items.map(item => (
-            <div class="skill">
-              <div class="skill__label">{item.label}</div>
-              {item.sub && <div class="skill__sub muted">{item.sub}</div>}
-            </div>
-          ))}
+  {
+    groups.map((group, idx) => (
+      <section class:list={['section', { 'section--alt': idx % 2 === 1 }]}>
+        <div class="container">
+          <header class="section__head">
+            <p class="section__eyebrow">Domain {idx + 1}</p>
+            <h2 class="section__title">{group.data.title}</h2>
+            <p class="section__sub">{group.data.blurb}</p>
+          </header>
+          <div class="skills">
+            {group.data.items.map((item) => (
+              <div class="skill">
+                <div class="skill__label">{item.label}</div>
+                {item.sub && <div class="skill__sub muted">{item.sub}</div>}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  ))}
-
+      </section>
+    ))
+  }
 </BaseLayout>
 
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% -100px, rgba(11, 61, 92, 0.10), transparent 60%),
+      radial-gradient(1200px 600px at 80% -100px, rgba(11, 61, 92, 0.1), transparent 60%),
       var(--c-paper);
     border-bottom: var(--border);
   }
@@ -110,7 +110,9 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
     background: var(--c-bg);
     border: var(--border);
     border-radius: var(--radius-sm);
-    transition: border-color var(--transition), transform var(--transition);
+    transition:
+      border-color var(--transition),
+      transform var(--transition);
   }
   .skill:hover {
     border-color: var(--c-ink-3);
@@ -127,6 +129,8 @@ const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
   }
 
   @media (max-width: 880px) {
-    .head-stats { grid-template-columns: 1fr 1fr; }
+    .head-stats {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

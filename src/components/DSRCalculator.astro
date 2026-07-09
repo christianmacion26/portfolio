@@ -11,33 +11,67 @@
  * No external chart libs; pure SVG.
  */
 ---
+
 <div class="dsr-calc" data-dsr-calc>
   <header class="dsr-calc__head">
     <p class="dsr-calc__eyebrow mono">deflated Sharpe · interactive</p>
     <h3 class="dsr-calc__title">DSR calculator</h3>
     <p class="dsr-calc__sub">
-      Drag the sliders. DSR tells you whether your in-sample Sharpe survives the
-      multiple-testing penalty for the number of strategies you tried.
+      Drag the sliders. DSR tells you whether your in-sample Sharpe survives the multiple-testing
+      penalty for the number of strategies you tried.
     </p>
   </header>
 
   <div class="dsr-calc__body">
     <div class="dsr-calc__controls">
       <div class="dsr-calc__row">
-        <label class="dsr-calc__label" for="dsr-n">Strategies tried <span class="mono dsr-calc__val" data-dsr-n>160</span></label>
-        <input type="range" id="dsr-n" data-dsr-input="n" min="1" max="1000" step="1" value="160" class="dsr-calc__slider" />
+        <label class="dsr-calc__label" for="dsr-n"
+          >Strategies tried <span class="mono dsr-calc__val" data-dsr-n>160</span></label
+        >
+        <input
+          type="range"
+          id="dsr-n"
+          data-dsr-input="n"
+          min="1"
+          max="1000"
+          step="1"
+          value="160"
+          class="dsr-calc__slider"
+        />
         <div class="dsr-calc__ticks mono"><span>1</span><span>100</span><span>1000</span></div>
       </div>
 
       <div class="dsr-calc__row">
-        <label class="dsr-calc__label" for="dsr-sharpe">In-sample Sharpe <span class="mono dsr-calc__val" data-dsr-sharpe>1.14</span></label>
-        <input type="range" id="dsr-sharpe" data-dsr-input="sharpe" min="-0.5" max="4.0" step="0.01" value="1.14" class="dsr-calc__slider" />
+        <label class="dsr-calc__label" for="dsr-sharpe"
+          >In-sample Sharpe <span class="mono dsr-calc__val" data-dsr-sharpe>1.14</span></label
+        >
+        <input
+          type="range"
+          id="dsr-sharpe"
+          data-dsr-input="sharpe"
+          min="-0.5"
+          max="4.0"
+          step="0.01"
+          value="1.14"
+          class="dsr-calc__slider"
+        />
         <div class="dsr-calc__ticks mono"><span>−0.5</span><span>2.0</span><span>4.0</span></div>
       </div>
 
       <div class="dsr-calc__row">
-        <label class="dsr-calc__label" for="dsr-t">Years of data <span class="mono dsr-calc__val" data-dsr-t>4.0</span></label>
-        <input type="range" id="dsr-t" data-dsr-input="t" min="0.5" max="20" step="0.1" value="4.0" class="dsr-calc__slider" />
+        <label class="dsr-calc__label" for="dsr-t"
+          >Years of data <span class="mono dsr-calc__val" data-dsr-t>4.0</span></label
+        >
+        <input
+          type="range"
+          id="dsr-t"
+          data-dsr-input="t"
+          min="0.5"
+          max="20"
+          step="0.1"
+          value="4.0"
+          class="dsr-calc__slider"
+        />
         <div class="dsr-calc__ticks mono"><span>0.5y</span><span>10y</span><span>20y</span></div>
       </div>
     </div>
@@ -53,50 +87,54 @@
           <span class="dsr-calc__dsr-label mono">DSR</span>
         </div>
         <div class="dsr-calc__gates mono">
-          <span>denominator  <b data-dsr-den>—</b></span>
-          <span>expected SR  <b data-dsr-exp>—</b></span>
-          <span>γ₃  <b data-dsr-g3>—</b></span>
-          <span>γ₄  <b data-dsr-g4>—</b></span>
+          <span>denominator <b data-dsr-den>—</b></span>
+          <span>expected SR <b data-dsr-exp>—</b></span>
+          <span>γ₃ <b data-dsr-g3>—</b></span>
+          <span>γ₄ <b data-dsr-g4>—</b></span>
         </div>
       </div>
 
       <svg class="dsr-calc__chart" viewBox="0 0 320 80" aria-hidden="true">
-        <line x1="0" y1="40" x2="320" y2="40" class="dsr-calc__axis" />
-        <line x1="0" y1="40" x2="320" y2="40" class="dsr-calc__threshold" />
-        <line x1="0" y1="40" x2="320" y2="40" class="dsr-calc__mark" data-dsr-mark />
+        <line x1="0" y1="40" x2="320" y2="40" class="dsr-calc__axis"></line>
+        <line x1="0" y1="40" x2="320" y2="40" class="dsr-calc__threshold"></line>
+        <line x1="0" y1="40" x2="320" y2="40" class="dsr-calc__mark" data-dsr-mark></line>
         <text x="0" y="76" class="dsr-calc__axis-label mono">0</text>
-        <text x="160" y="76" class="dsr-calc__axis-label mono" text-anchor="middle">1.5 (pass)</text>
+        <text x="160" y="76" class="dsr-calc__axis-label mono" text-anchor="middle">1.5 (pass)</text
+        >
         <text x="320" y="76" class="dsr-calc__axis-label mono" text-anchor="end">3.0</text>
       </svg>
     </div>
   </div>
 
   <p class="dsr-calc__formula">
-    DSR uses the normal-approximation of the expected maximum Sharpe under N i.i.d.
-    trials, then deflates by √(1 − γ₃·SR + (γ₄·SR² − 1)/4).
+    DSR uses the normal-approximation of the expected maximum Sharpe under N i.i.d. trials, then
+    deflates by √(1 − γ₃·SR + (γ₄·SR² − 1)/4).
   </p>
 
   <details class="dsr-calc__why">
-    <summary class="dsr-calc__why-summary">Why 0.95? — reading the z-score and the numerator</summary>
+    <summary class="dsr-calc__why-summary"
+      >Why 0.95? — reading the z-score and the numerator</summary
+    >
     <div class="dsr-calc__why-body">
       <p>
-        The number the calculator prints is a <strong>z-score</strong> on the null H₀: "your IS Sharpe is just the
-        best of N i.i.d. N(0,1) draws." Pass at <strong>DSR ≥ 1.645</strong> = one-sided 95% test (the standard
-        frequentist threshold; equivalent to 0.05 significance). Anything below is inconclusive or fail — not
-        because 0.05 is sacred, but because 1.645σ is the conventional bar for "I tried many things and this
-        one still looks unlikely to be noise."
+        The number the calculator prints is a <strong>z-score</strong> on the null H₀: "your IS Sharpe
+        is just the best of N i.i.d. N(0,1) draws." Pass at <strong>DSR ≥ 1.645</strong> = one-sided 95%
+        test (the standard frequentist threshold; equivalent to 0.05 significance). Anything below is
+        inconclusive or fail — not because 0.05 is sacred, but because 1.645σ is the conventional bar
+        for "I tried many things and this one still looks unlikely to be noise."
       </p>
       <p>
         Read it as a ratio:
-        <strong>numerator</strong> = SR̂ − E[max SR under N trials] (how much your Sharpe <em>beats</em> the
-        expected best of N random strategies);
-        <strong>denominator</strong> = σ_SR̂ · √(1 − γ₃·SR + (γ₄−1)·SR²/4) (how noisy the Sharpe estimate is,
-        with the higher-moment correction for non-normal returns).
-        A DSR of 0.70 means "the gap is 0.70 noise-units wide" — not a 70% pass rate.
+        <strong>numerator</strong> = SR̂ − E[max SR under N trials] (how much your Sharpe <em
+          >beats</em
+        > the expected best of N random strategies);
+        <strong>denominator</strong> = σ_SR̂ · √(1 − γ₃·SR + (γ₄−1)·SR²/4) (how noisy the Sharpe estimate
+        is, with the higher-moment correction for non-normal returns). A DSR of 0.70 means "the gap is
+        0.70 noise-units wide" — not a 70% pass rate.
       </p>
       <p class="dsr-calc__why-mono">
-        Ref: Bailey &amp; López de Prado, "The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest
-        Overfitting, and Non-Normality" (2014), <em>JPM</em> 40(5).
+        Ref: Bailey &amp; López de Prado, "The Deflated Sharpe Ratio: Correcting for Selection Bias,
+        Backtest Overfitting, and Non-Normality" (2014), <em>JPM</em> 40(5).
       </p>
     </div>
   </details>
@@ -106,29 +144,41 @@
   // --- Pure JS: Deflated Sharpe Ratio per Bailey & López de Prado (2014) ---
   function normSInv(p: number): number {
     // Beasley-Springer-Moro approximation of the inverse standard normal CDF.
-    const a = [-39.6968302866538, 220.946098424521, -275.928510446969,
-                138.357751867269, -30.6647980661472, 2.50662827745924];
-    const b = [-54.4760987982241, 161.585836858041, -155.698979859887,
-                66.8013118877197, -13.2806815528857];
-    const c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184,
-               -2.54973253934373, 4.37466414146497, 2.93816398269878];
-    const d = [0.00778469570904146, 0.32246712907004, 2.445134137143,
-               3.75440866190742];
-    const pLow = 0.02425, pHigh = 1 - pLow;
+    const a = [
+      -39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472,
+      2.50662827745924,
+    ];
+    const b = [
+      -54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857,
+    ];
+    const c = [
+      -0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373,
+      4.37466414146497, 2.93816398269878,
+    ];
+    const d = [0.00778469570904146, 0.32246712907004, 2.445134137143, 3.75440866190742];
+    const pLow = 0.02425,
+      pHigh = 1 - pLow;
     let q, r;
     if (p < pLow) {
       q = Math.sqrt(-2 * Math.log(p));
-      return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-             ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      return (
+        (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+        ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+      );
     }
     if (p <= pHigh) {
-      q = p - 0.5; r = q * q;
-      return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
-             (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+      q = p - 0.5;
+      r = q * q;
+      return (
+        ((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q) /
+        (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
+      );
     }
     q = Math.sqrt(-2 * Math.log(1 - p));
-    return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-            ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+    return (
+      -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+      ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+    );
   }
 
   function dsr(n: number, sr: number, T: number) {
@@ -141,10 +191,9 @@
     // For T years at daily sampling, the std error of SR ≈ 1/√(252T)
     const se = 1 / Math.sqrt(252 * T);
     // Skewness / kurtosis of returns (default 0, 3 for normal — not user-input here)
-    const g3 = 0, g4 = 3;
-    const denom = se * Math.sqrt(
-      1 - g3 * sr + (g4 - 1) * sr * sr / 4
-    );
+    const g3 = 0,
+      g4 = 3;
+    const denom = se * Math.sqrt(1 - g3 * sr + ((g4 - 1) * sr * sr) / 4);
     const dsrZ = (sr - expectedMax) / denom;
     return { dsr: dsrZ, denom, exp: expectedMax, g3, g4 };
   }
@@ -152,33 +201,43 @@
   function verdict(dsrZ: number): { dot: string; text: string; pct: number } {
     if (isNaN(dsrZ)) return { dot: 'muted', text: 'set N > 1 and T > 0', pct: 0 };
     // Z-score interpretation: > 1.645 ≈ 95% one-sided
-    if (dsrZ >= 1.645) return { dot: 'pass', text: 'passes the multiple-testing penalty', pct: Math.min(1, dsrZ / 3) };
-    if (dsrZ >= 0)     return { dot: 'warn', text: 'inconclusive — better Sharpe needed', pct: Math.max(0.1, dsrZ / 3) };
-    return                  { dot: 'fail', text: 'fails — likely overfit or noise', pct: 0 };
+    if (dsrZ >= 1.645)
+      return {
+        dot: 'pass',
+        text: 'passes the multiple-testing penalty',
+        pct: Math.min(1, dsrZ / 3),
+      };
+    if (dsrZ >= 0)
+      return {
+        dot: 'warn',
+        text: 'inconclusive — better Sharpe needed',
+        pct: Math.max(0.1, dsrZ / 3),
+      };
+    return { dot: 'fail', text: 'fails — likely overfit or noise', pct: 0 };
   }
 
   // Wire up
-  document.querySelectorAll<HTMLElement>('[data-dsr-calc]').forEach(root => {
+  document.querySelectorAll<HTMLElement>('[data-dsr-calc]').forEach((root) => {
     const inputs = root.querySelectorAll<HTMLInputElement>('[data-dsr-input]');
     const out = {
-      n:     root.querySelector<HTMLElement>('[data-dsr-n]')!,
-      sharpe:root.querySelector<HTMLElement>('[data-dsr-sharpe]')!,
-      t:     root.querySelector<HTMLElement>('[data-dsr-t]')!,
-      dsr:   root.querySelector<HTMLElement>('[data-dsr-dsr]')!,
-      den:   root.querySelector<HTMLElement>('[data-dsr-den]')!,
-      exp:   root.querySelector<HTMLElement>('[data-dsr-exp]')!,
-      g3:    root.querySelector<HTMLElement>('[data-dsr-g3]')!,
-      g4:    root.querySelector<HTMLElement>('[data-dsr-g4]')!,
-      mark:  root.querySelector<SVGLineElement>('[data-dsr-mark]')!,
+      n: root.querySelector<HTMLElement>('[data-dsr-n]')!,
+      sharpe: root.querySelector<HTMLElement>('[data-dsr-sharpe]')!,
+      t: root.querySelector<HTMLElement>('[data-dsr-t]')!,
+      dsr: root.querySelector<HTMLElement>('[data-dsr-dsr]')!,
+      den: root.querySelector<HTMLElement>('[data-dsr-den]')!,
+      exp: root.querySelector<HTMLElement>('[data-dsr-exp]')!,
+      g3: root.querySelector<HTMLElement>('[data-dsr-g3]')!,
+      g4: root.querySelector<HTMLElement>('[data-dsr-g4]')!,
+      mark: root.querySelector<SVGLineElement>('[data-dsr-mark]')!,
       verdictBox: root.querySelector<HTMLElement>('[data-dsr-verdict]')!,
       verdictText: root.querySelector<HTMLElement>('.dsr-calc__verdict-text')!,
       verdictDot: root.querySelector<HTMLElement>('[data-dsr-verdict] .dot')!,
     };
 
     function update() {
-      const n = Number((root.querySelector<HTMLInputElement>('[data-dsr-input="n"]')!).value);
-      const sr = Number((root.querySelector<HTMLInputElement>('[data-dsr-input="sharpe"]')!).value);
-      const T = Number((root.querySelector<HTMLInputElement>('[data-dsr-input="t"]')!).value);
+      const n = Number(root.querySelector<HTMLInputElement>('[data-dsr-input="n"]')!.value);
+      const sr = Number(root.querySelector<HTMLInputElement>('[data-dsr-input="sharpe"]')!.value);
+      const T = Number(root.querySelector<HTMLInputElement>('[data-dsr-input="t"]')!.value);
       out.n.textContent = String(n);
       out.sharpe.textContent = sr.toFixed(2);
       out.t.textContent = T.toFixed(1);
@@ -188,8 +247,8 @@
       out.dsr.textContent = isFinite(r.dsr) ? r.dsr.toFixed(2) : '—';
       out.den.textContent = isFinite(r.denom) ? r.denom.toFixed(3) : '—';
       out.exp.textContent = isFinite(r.exp) ? r.exp.toFixed(2) : '—';
-      out.g3.textContent  = String(r.g3);
-      out.g4.textContent  = String(r.g4);
+      out.g3.textContent = String(r.g3);
+      out.g4.textContent = String(r.g4);
 
       // Mark: map DSR z [-0.5, 3] → x [0, 320]
       const x = Math.max(0, Math.min(320, ((Math.max(-0.5, r.dsr) + 0.5) / 3.5) * 320));
@@ -203,7 +262,7 @@
       out.verdictDot.classList.add(`dot--${v.dot}`);
       out.verdictText.textContent = v.text;
     }
-    inputs.forEach(i => i.addEventListener('input', update));
+    inputs.forEach((i) => i.addEventListener('input', update));
     update();
   });
 </script>
@@ -219,8 +278,8 @@
   .dsr-calc__eyebrow {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.10em;
-    color: var(--c-primary-2);
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
     margin-bottom: var(--sp-2);
     font-weight: 600;
   }
@@ -239,7 +298,9 @@
     grid-template-columns: 1.4fr 1fr;
     gap: var(--sp-6);
   }
-  .dsr-calc__row { margin-bottom: var(--sp-4); }
+  .dsr-calc__row {
+    margin-bottom: var(--sp-4);
+  }
   .dsr-calc__label {
     display: flex;
     justify-content: space-between;
@@ -265,22 +326,26 @@
   }
   .dsr-calc__slider::-webkit-slider-thumb {
     appearance: none;
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     background: var(--c-primary);
     border: 2px solid var(--c-bg);
     border-radius: 50%;
     margin-top: -7px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     transition: transform 0.1s;
   }
-  .dsr-calc__slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .dsr-calc__slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
   .dsr-calc__slider::-moz-range-track {
     height: 4px;
     background: var(--c-rule);
     border-radius: 2px;
   }
   .dsr-calc__slider::-moz-range-thumb {
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     background: var(--c-primary);
     border: 2px solid var(--c-bg);
     border-radius: 50%;
@@ -309,14 +374,16 @@
     font-size: var(--fs-sm);
     color: #e6edf3;
   }
-  .dsr-calc__verdict .dot { box-shadow: 0 0 0 3px rgba(255,255,255,0.10); }
+  .dsr-calc__verdict .dot {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+  }
   .dsr-calc__num {
     display: flex;
     align-items: baseline;
     gap: var(--sp-2);
     padding-block: var(--sp-2);
-    border-top: 1px solid rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
   .dsr-calc__dsr {
     font-size: 2.5rem;
@@ -347,10 +414,23 @@
     height: 60px;
     margin-top: var(--sp-1);
   }
-  .dsr-calc__axis { stroke: rgba(255,255,255,0.10); stroke-width: 1; }
-  .dsr-calc__threshold { stroke: rgba(212, 160, 23, 0.4); stroke-width: 1; stroke-dasharray: 2,3; }
-  .dsr-calc__mark { stroke: #d4a017; stroke-width: 2; }
-  .dsr-calc__axis-label { fill: rgba(230, 237, 243, 0.5); font-size: 8px; }
+  .dsr-calc__axis {
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 1;
+  }
+  .dsr-calc__threshold {
+    stroke: rgba(212, 160, 23, 0.4);
+    stroke-width: 1;
+    stroke-dasharray: 2, 3;
+  }
+  .dsr-calc__mark {
+    stroke: #d4a017;
+    stroke-width: 2;
+  }
+  .dsr-calc__axis-label {
+    fill: rgba(230, 237, 243, 0.5);
+    font-size: 8px;
+  }
   .dsr-calc__formula {
     margin-top: var(--sp-4);
     padding-top: var(--sp-3);
@@ -377,22 +457,37 @@
   }
   .dsr-calc__why-summary::before {
     content: '+ ';
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-family: var(--ff-mono);
   }
-  .dsr-calc__why[open] .dsr-calc__why-summary::before { content: '− '; }
+  .dsr-calc__why[open] .dsr-calc__why-summary::before {
+    content: '− ';
+  }
   .dsr-calc__why-body {
     padding: 0 var(--sp-3) var(--sp-3);
     font-size: var(--fs-xs);
     color: var(--c-ink-2);
     line-height: var(--lh-loose);
   }
-  .dsr-calc__why-body p { margin-bottom: var(--sp-2); }
-  .dsr-calc__why-body p:last-child { margin-bottom: 0; }
-  .dsr-calc__why-body strong { color: var(--c-ink); font-weight: 600; }
-  .dsr-calc__why-mono { font-family: var(--ff-mono); font-size: 0.7rem; color: var(--c-ink-3); }
+  .dsr-calc__why-body p {
+    margin-bottom: var(--sp-2);
+  }
+  .dsr-calc__why-body p:last-child {
+    margin-bottom: 0;
+  }
+  .dsr-calc__why-body strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+  .dsr-calc__why-mono {
+    font-family: var(--ff-mono);
+    font-size: 0.7rem;
+    color: var(--c-ink-3);
+  }
 
   @media (max-width: 720px) {
-    .dsr-calc__body { grid-template-columns: 1fr; }
+    .dsr-calc__body {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

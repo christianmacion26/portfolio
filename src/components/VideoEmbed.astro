@@ -19,15 +19,7 @@ interface Props {
   tone?: 'paper' | 'tape';
 }
 
-const {
-  src,
-  poster,
-  title,
-  duration,
-  caption,
-  mode = 'inline',
-  tone = 'paper',
-} = Astro.props;
+const { src, poster, title, duration, caption, mode = 'inline', tone = 'paper' } = Astro.props;
 
 const isGallery = mode === 'gallery';
 ---
@@ -45,11 +37,14 @@ const isGallery = mode === 'gallery';
       playsinline
       preload={isGallery ? 'metadata' : 'none'}
       aria-label={title}
-      class="video-embed__video"
-    />
-    {!isGallery && duration && (
-      <span class="video-embed__duration mono" aria-hidden="true">{duration}s</span>
-    )}
+      class="video-embed__video"></video>
+    {
+      !isGallery && duration && (
+        <span class="video-embed__duration mono" aria-hidden="true">
+          {duration}s
+        </span>
+      )
+    }
   </div>
   {caption && <figcaption class="video-embed__cap">{caption}</figcaption>}
 </figure>
@@ -92,7 +87,7 @@ const isGallery = mode === 'gallery';
     right: var(--sp-2);
     padding: 2px 8px;
     background: rgba(13, 17, 23, 0.78);
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-size: var(--fs-xs);
     border-radius: 3px;
     letter-spacing: 0.06em;

@@ -32,20 +32,22 @@ const {
 } = Astro.props;
 
 // Compute path
-const xs = points.map((_, i) => i);
 const minY = Math.min(...points);
 const maxY = Math.max(...points);
 const rangeY = maxY - minY || 1;
 const pad = 2;
 const stepX = points.length > 1 ? (width - pad * 2) / (points.length - 1) : 0;
-const path = points.map((p, i) => {
-  const x = pad + i * stepX;
-  const y = pad + (height - pad * 2) * (1 - (p - minY) / rangeY);
-  return `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
-}).join(' ');
+const path = points
+  .map((p, i) => {
+    const x = pad + i * stepX;
+    const y = pad + (height - pad * 2) * (1 - (p - minY) / rangeY);
+    return `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
+  })
+  .join(' ');
 const areaPath = `${path} L ${(width - pad).toFixed(2)} ${(height - pad).toFixed(2)} L ${pad} ${(height - pad).toFixed(2)} Z`;
 const gradId = `spk-${Math.random().toString(36).slice(2, 9)}`;
 ---
+
 <svg
   class="sparkline"
   width={width}
@@ -55,26 +57,36 @@ const gradId = `spk-${Math.random().toString(36).slice(2, 9)}`;
   aria-label={ariaLabel}
   preserveAspectRatio="none"
 >
-  {fill !== 'transparent' && (
-    <>
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color={stroke} stop-opacity="0.30" />
-          <stop offset="100%" stop-color={stroke} stop-opacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={areaPath} fill={`url(#${gradId})`} />
-    </>
-  )}
-  <path d={path} fill="none" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-  {points.length > 0 && (
-    <circle
-      cx={pad + (points.length - 1) * stepX}
-      cy={pad + (height - pad * 2) * (1 - (points[points.length - 1] - minY) / rangeY)}
-      r="1.8"
-      fill={stroke}
-    />
-  )}
+  {
+    fill !== 'transparent' && (
+      <>
+        <defs>
+          <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color={stroke} stop-opacity="0.30" />
+            <stop offset="100%" stop-color={stroke} stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={areaPath} fill={`url(#${gradId})`} />
+      </>
+    )
+  }
+  <path
+    d={path}
+    fill="none"
+    stroke={stroke}
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+  {
+    points.length > 0 && (
+      <circle
+        cx={pad + (points.length - 1) * stepX}
+        cy={pad + (height - pad * 2) * (1 - (points[points.length - 1] - minY) / rangeY)}
+        r="1.8"
+        fill={stroke}
+      />
+    )
+  }
 </svg>
 
 <style>

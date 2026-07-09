@@ -15,27 +15,34 @@ const { href, title, summary, metrics, lane, order, status } = Astro.props;
 const laneLabel = lane === 'ai' ? 'AI' : 'Quant';
 const laneClass = lane === 'ai' ? 'pill--brand' : 'pill--accent';
 ---
+
 <article class="proj-card">
   <header class="proj-card__head">
     <div class="proj-card__lane">
-      <span class:list={["pill", laneClass]}>{laneLabel}</span>
-      {order !== undefined && <span class="proj-card__ord mono">#{String(order).padStart(2, '0')}</span>}
+      <span class:list={['pill', laneClass]}>{laneLabel}</span>
+      {
+        order !== undefined && (
+          <span class="proj-card__ord mono">#{String(order).padStart(2, '0')}</span>
+        )
+      }
     </div>
     {status && <span class="pill pill--gold">{status}</span>}
   </header>
   <h3 class="proj-card__title"><a href={href}>{title}</a></h3>
   <p class="proj-card__summary">{summary}</p>
-  {metrics.length > 0 && (
-    <dl class="proj-card__metrics">
-      {metrics.slice(0, 3).map(m => (
-        <div class="proj-card__metric">
-          <dt class="proj-card__metric-label">{m.label}</dt>
-          <dd class="proj-card__metric-value mono">{m.value}</dd>
-          {m.sub && <dd class="proj-card__metric-sub faint">{m.sub}</dd>}
-        </div>
-      ))}
-    </dl>
-  )}
+  {
+    metrics.length > 0 && (
+      <dl class="proj-card__metrics">
+        {metrics.slice(0, 3).map((m) => (
+          <div class="proj-card__metric">
+            <dt class="proj-card__metric-label">{m.label}</dt>
+            <dd class="proj-card__metric-value mono">{m.value}</dd>
+            {m.sub && <dd class="proj-card__metric-sub faint">{m.sub}</dd>}
+          </div>
+        ))}
+      </dl>
+    )
+  }
   <a class="proj-card__more" href={href} aria-label={`Read more about ${title}`}>
     Read more <span aria-hidden="true">→</span>
   </a>
@@ -50,7 +57,10 @@ const laneClass = lane === 'ai' ? 'pill--brand' : 'pill--accent';
     background: var(--c-bg);
     border: var(--border);
     border-radius: var(--radius);
-    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition),
+      transform var(--transition);
   }
   .proj-card:hover {
     border-color: var(--c-ink-3);

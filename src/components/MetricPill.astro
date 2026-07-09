@@ -8,9 +8,9 @@ interface Props {
   sub?: string;
   tone?: 'brand' | 'accent' | 'gold' | 'pass';
 }
-const { label, value, sub, tone = 'brand' } = Astro.props;
-const pillClass = tone === 'pass' ? 'pill--accent' : `pill--${tone}`;
+const { label, value, sub } = Astro.props;
 ---
+
 <div class="metric">
   <div class="metric__value mono">{value}</div>
   <div class="metric__label">{label}</div>
@@ -32,7 +32,7 @@ const pillClass = tone === 'pass' ? 'pill--accent' : `pill--${tone}`;
     line-height: 1;
     margin-bottom: var(--sp-2);
     font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
+    font-feature-settings: 'tnum' 1;
   }
   .metric__label {
     font-size: var(--fs-xs);

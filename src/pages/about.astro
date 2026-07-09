@@ -11,14 +11,33 @@ import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 
 const education = [
-  { degree: 'Certified Technical Analyst Program',  institution: 'Society of Technical Analysts of the Philippines (STA Tier-1)', year: 'Dec 2025' },
-  { degree: 'Financial Management Studies (in progress)', institution: 'University of Mindanao (UM)', year: '1st Sem, AY 2026-27 (enrolled)' },
-  { degree: 'Engineering Studies (units completed)', institution: 'University of Southeastern Philippines (USeP)', year: '2022 – 2024' },
-  { degree: 'Philippine Science High School', institution: 'PSHS System — Southern Mindanao Campus', year: 'Graduated 2022' },
+  {
+    degree: 'Certified Technical Analyst Program',
+    institution: 'Society of Technical Analysts of the Philippines (STA Tier-1)',
+    year: 'Dec 2025',
+  },
+  {
+    degree: 'Financial Management Studies (in progress)',
+    institution: 'University of Mindanao (UM)',
+    year: '1st Sem, AY 2026-27 (enrolled)',
+  },
+  {
+    degree: 'Engineering Studies (units completed)',
+    institution: 'University of Southeastern Philippines (USeP)',
+    year: '2022 – 2024',
+  },
+  {
+    degree: 'Philippine Science High School',
+    institution: 'PSHS System — Southern Mindanao Campus',
+    year: 'Graduated 2022',
+  },
 ];
 ---
-<BaseLayout title="About" description="Operator + researcher building eval-first multi-agent AI systems and systematic trading research.">
 
+<BaseLayout
+  title="About"
+  description="Operator + researcher building eval-first multi-agent AI systems and systematic trading research."
+>
   <header class="page-head">
     <div class="container container-narrow">
       <Avatar
@@ -26,7 +45,9 @@ const education = [
         size={200}
       />
       <p class="section__eyebrow"><span class="mono">about/</span> · operator + researcher</p>
-      <h1 class="page-head__title">A research-desk operator with <span class="hl">one method</span>.</h1>
+      <h1 class="page-head__title">
+        A research-desk operator with <span class="hl">one method</span>.
+      </h1>
 
       <div class="head-eq">
         <Equation
@@ -39,7 +60,12 @@ const education = [
       <div class="head-stats">
         <Stat value={profile.stats.certCount} label="certs" sub="11-month arc" formula="c(t)" />
         <Stat value={profile.stats.evalGates} label="gates" sub="G1–G31" formula="g" />
-        <Stat value={profile.stats.aiAgentCount} label="agents" sub="orch + workers" formula="|\mathcal{A}|" />
+        <Stat
+          value={profile.stats.aiAgentCount}
+          label="agents"
+          sub="orch + workers"
+          formula="|\mathcal{A}|"
+        />
         <Stat value={profile.stats.locPython} label="LOC" sub="light-dep" formula="|\mathcal{L}|" />
       </div>
     </div>
@@ -47,11 +73,13 @@ const education = [
 
   <section class="section">
     <div class="container container-narrow">
-
       <div class="about-prose">
         <p class="lead">
-          I work at the intersection of <strong>multi-agent LLM systems</strong> and <strong>systematic trading research</strong>.
-          The through-line is a single engineering principle: <em>don't ship what hasn't passed a measurable quality gate.</em>
+          I work at the intersection of <strong>multi-agent LLM systems</strong> and <strong
+            >systematic trading research</strong
+          >. The through-line is a single engineering principle: <em
+            >don't ship what hasn't passed a measurable quality gate.</em
+          >
           Eleven agents in an orchestrator-worker topology. A 31-gate statistical evaluation harness.
           Pre-registered research windows. Public-data reproducibility. Headline metrics you can verify.
         </p>
@@ -59,47 +87,60 @@ const education = [
         <p>
           I was previously the AI Systems Engineer / Quantitative Researcher on the
           <strong>19V Capital</strong> desk under PM Evan Ferioli (closed past contract, 03/2026 – 06/2026),
-          where the same eval harness served both LLM outputs and systematic trading strategies.
-          Before that I shipped a 7-agent venture-incubation pipeline under Macion Ventures, an 8-agent
-          content-production pipeline for editorial automation, and a portfolio of runnable AI projects
-          (RAG scorecard, ReAct tool-calling agent, MCP eval server, LLM-as-judge harness, reflection
-          agent, AI-slop evaluation gate).
+          where the same eval harness served both LLM outputs and systematic trading strategies. Before
+          that I shipped a 7-agent venture-incubation pipeline under Macion Ventures, an 8-agent content-production
+          pipeline for editorial automation, and a portfolio of runnable AI projects (RAG scorecard, ReAct
+          tool-calling agent, MCP eval server, LLM-as-judge harness, reflection agent, AI-slop evaluation
+          gate).
         </p>
 
         <p>
           On the quant side I design and backtest systematic strategies on crypto and equities —
-          nine reproducible public-data projects spanning multiple-testing (Deflated Sharpe), cross-sectional
-          and time-series alpha, volatility carry, cointegration, funding-carry, regime overlays,
-          transaction-cost realism, and look-ahead-bias audits. Every project ships with the
-          standard senior-research discipline: locked OOS windows, block-bootstrap CIs,
-          and the methodology stated up-front, not bolted on at the end.
+          nine reproducible public-data projects spanning multiple-testing (Deflated Sharpe),
+          cross-sectional and time-series alpha, volatility carry, cointegration, funding-carry,
+          regime overlays, transaction-cost realism, and look-ahead-bias audits. Every project ships
+          with the standard senior-research discipline: locked OOS windows, block-bootstrap CIs, and
+          the methodology stated up-front, not bolted on at the end.
         </p>
 
         <p>
-          I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available 20 hrs/wk remote.
-          I hold 102 professional certifications across AI, finance, math/statistics, and event flagships,
-          built up in 11 months. I write about what I'm learning and ship the things I'm building.
+          I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available 20 hrs/wk remote. I
+          hold 102 professional certifications across AI, finance, math/statistics, and event
+          flagships, built up in 11 months. I write about what I'm learning and ship the things I'm
+          building.
         </p>
       </div>
 
       <h2 class="about-h2">Education</h2>
       <ol class="edu">
-        {education.map(e => (
-          <li class="edu__item">
-            <div class="edu__body">
-              <div class="edu__degree">{e.degree}</div>
-              <div class="edu__inst muted">{e.institution}</div>
-            </div>
-            <div class="edu__year mono">{e.year}</div>
-          </li>
-        ))}
+        {
+          education.map((e) => (
+            <li class="edu__item">
+              <div class="edu__body">
+                <div class="edu__degree">{e.degree}</div>
+                <div class="edu__inst muted">{e.institution}</div>
+              </div>
+              <div class="edu__year mono">{e.year}</div>
+            </li>
+          ))
+        }
       </ol>
 
       <h2 class="about-h2">What I'm not</h2>
       <ul class="neg-list">
-        <li>I don't claim a current role at any NDA-protected employer. The 19V Capital role is a <strong>closed past contract</strong> (03/2026 – 06/2026).</li>
-        <li>I don't reference proprietary data sources or fund-renames on this site. The portfolio here is built on public data with reproducible methodology.</li>
-        <li>I don't share per-strategy t-stats, bps figures, or live Sharpe numbers from the desk. The headline metrics I cite are from public-data work or from open-source runnable projects.</li>
+        <li>
+          I don't claim a current role at any NDA-protected employer. The 19V Capital role is a <strong
+            >closed past contract</strong
+          > (03/2026 – 06/2026).
+        </li>
+        <li>
+          I don't reference proprietary data sources or fund-renames on this site. The portfolio
+          here is built on public data with reproducible methodology.
+        </li>
+        <li>
+          I don't share per-strategy t-stats, bps figures, or live Sharpe numbers from the desk. The
+          headline metrics I cite are from public-data work or from open-source runnable projects.
+        </li>
       </ul>
     </div>
   </section>
@@ -111,7 +152,6 @@ const education = [
     secondaryLabel="Download resume ↓"
     secondaryHref={path('/resume')}
   />
-
 </BaseLayout>
 
 <style>
@@ -119,8 +159,7 @@ const education = [
     padding-block: var(--sp-9) var(--sp-7);
     background:
       radial-gradient(1200px 600px at 80% -100px, rgba(212, 160, 23, 0.14), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
-      var(--c-paper);
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.1), transparent 60%), var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -151,8 +190,14 @@ const education = [
     font-size: var(--fs-xl);
     color: var(--c-ink);
   }
-  .about-prose strong { color: var(--c-primary); font-weight: 600; }
-  .about-prose em { color: var(--c-primary-2); font-style: italic; }
+  .about-prose strong {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+  .about-prose em {
+    color: var(--c-primary-2-deep);
+    font-style: italic;
+  }
   .about-h2 {
     margin-top: var(--sp-7);
     margin-bottom: var(--sp-4);
@@ -173,8 +218,12 @@ const education = [
     padding-block: var(--sp-3);
     border-bottom: 1px solid var(--c-rule-soft);
   }
-  .edu__item:last-child { border-bottom: none; }
-  .edu__degree { font-weight: 600; }
+  .edu__item:last-child {
+    border-bottom: none;
+  }
+  .edu__degree {
+    font-weight: 600;
+  }
   .edu__year {
     color: var(--c-ink-2);
     font-size: var(--fs-sm);
@@ -198,9 +247,14 @@ const education = [
     color: var(--c-fail);
     font-weight: 600;
   }
-  .neg-list strong { color: var(--c-ink); font-weight: 600; }
+  .neg-list strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
 
   @media (max-width: 880px) {
-    .head-stats { grid-template-columns: 1fr 1fr; }
+    .head-stats {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

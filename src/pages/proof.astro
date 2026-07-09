@@ -13,12 +13,12 @@ import VideoEmbed from '@components/VideoEmbed.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
 ---
+
 <BaseLayout
   title="Proof"
   description="A gallery of public, NDA-clean artifacts that back up the claims on /experience, /certifications, and /now."
   type="profile"
 >
-
   <header class="proof-head">
     <div class="container container-narrow">
       <p class="section__eyebrow"><span class="mono">proof/</span> · show your work</p>
@@ -26,12 +26,12 @@ import { path } from '@utils/url';
         Things I can <span class="hl">show you</span>.
       </h1>
       <p class="proof-head__sub">
-        A gallery of public, NDA-clean artifacts — recordings, charts, co-signed
-        certificates — that back up the claims on
+        A gallery of public, NDA-clean artifacts — recordings, charts, co-signed certificates — that
+        back up the claims on
         <a href={path('/experience')}>/experience</a>,
         <a href={path('/certifications')}>/certifications</a>, and
-        <a href={path('/now')}>/now</a>.
-        Five items today. Updated when something new ships; never deleted when something expires.
+        <a href={path('/now')}>/now</a>. Five items today. Updated when something new ships; never
+        deleted when something expires.
       </p>
     </div>
   </header>
@@ -43,9 +43,9 @@ import { path } from '@utils/url';
         <h2 class="section__title">Two public talks, full provenance on-disk.</h2>
         <p class="section__sub">
           The same Manobo / ICC / IPs lecture for <strong>USeP EGE 313</strong>, delivered in
-          September 2024 — first as a ChatGPT-assisted draft (the AI-engineering workflow),
-          then as a live Presenter-view delivery. Both recordings are public; the PowerPoint
-          file metadata in the Edit-mode frame proves provenance.
+          September 2024 — first as a ChatGPT-assisted draft (the AI-engineering workflow), then as
+          a live Presenter-view delivery. Both recordings are public; the PowerPoint file metadata
+          in the Edit-mode frame proves provenance.
         </p>
       </header>
       <div class="proof-grid proof-grid--video">
@@ -75,9 +75,9 @@ import { path } from '@utils/url';
         <p class="section__eyebrow">Operator-discretion chart</p>
         <h2 class="section__title">Same operator. Different book.</h2>
         <p class="section__sub">
-          The systematic book on <a href={path('/positions')}>/positions</a> runs vol-target
-          time-series momentum on BTC/USDT. This is the discretionary side of the same operator:
-          Elliott Wave on tokenized gold, under a public TradingView handle.
+          The systematic book on <a href={path('/positions')}>/positions</a> runs vol-target time-series
+          momentum on BTC/USDT. This is the discretionary side of the same operator: Elliott Wave on tokenized
+          gold, under a public TradingView handle.
         </p>
       </header>
       <ProofCard
@@ -104,7 +104,7 @@ import { path } from '@utils/url';
       <ProofCard
         src={path('/proof/ateneo-american-corner-2025-11.jpg')}
         alt="Co-signed certificate from Ateneo de Davao University and US Embassy American Spaces Philippines for the AI for the Modern Workforce workshop, Nov 8 2025."
-        caption='AI for the Modern Workforce: From Blockchain to the MOVE Language — Ateneo de Davao University + US Embassy American Spaces Philippines, Nov 8 2025. Signed by Lorgina Samson (Director, University Libraries & American Corner) and Kevin Punzalan (American Spaces Philippines Specialist, US Embassy in the Philippines).'
+        caption="AI for the Modern Workforce: From Blockchain to the MOVE Language — Ateneo de Davao University + US Embassy American Spaces Philippines, Nov 8 2025. Signed by Lorgina Samson (Director, University Libraries & American Corner) and Kevin Punzalan (American Spaces Philippines Specialist, US Embassy in the Philippines)."
         credit="Ateneo de Davao + US Embassy · Nov 8 2025"
         href={path('/certifications')}
         aspect="3/2"
@@ -115,11 +115,11 @@ import { path } from '@utils/url';
   <section class="section section--tight">
     <div class="container container-narrow">
       <p class="proof-neg">
-        <strong>What's not here:</strong> photos of the 19V Capital office. Screenshots of
-        proprietary strategy outputs. Calendar entries with client names. The 19V Capital
-        role is a <strong>closed past contract</strong> (03/2026 – 06/2026), and everything on
-        this page is public-data or self-owned. If the proof you need isn't on this page,
-        email me — if it's public, I'll send it within 24 hours.
+        <strong>What's not here:</strong> photos of the 19V Capital office. Screenshots of proprietary
+        strategy outputs. Calendar entries with client names. The 19V Capital role is a <strong
+          >closed past contract</strong
+        > (03/2026 – 06/2026), and everything on this page is public-data or self-owned. If the proof
+        you need isn't on this page, email me — if it's public, I'll send it within 24 hours.
       </p>
     </div>
   </section>
@@ -131,7 +131,6 @@ import { path } from '@utils/url';
     secondaryLabel="Read /experience"
     secondaryHref={path('/experience')}
   />
-
 </BaseLayout>
 
 <style>
@@ -139,8 +138,7 @@ import { path } from '@utils/url';
     padding-block: var(--sp-9) var(--sp-7);
     background:
       radial-gradient(1200px 600px at 80% -100px, rgba(212, 160, 23, 0.14), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
-      var(--c-paper);
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.1), transparent 60%), var(--c-paper);
     border-bottom: var(--border);
   }
   .proof-head__title {
@@ -162,8 +160,8 @@ import { path } from '@utils/url';
     text-underline-offset: 3px;
   }
   .proof-head__sub a:hover {
-    text-decoration-color: var(--c-primary-2);
-    color: var(--c-primary-2);
+    text-decoration-color: var(--c-primary-2-deep);
+    color: var(--c-primary-2-deep);
   }
 
   .proof-grid {
@@ -190,6 +188,8 @@ import { path } from '@utils/url';
   }
 
   @media (max-width: 720px) {
-    .proof-grid--video { grid-template-columns: 1fr; }
+    .proof-grid--video {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

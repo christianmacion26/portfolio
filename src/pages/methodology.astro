@@ -5,41 +5,72 @@
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
-import Stat from '@components/Stat.astro';
 import CTABanner from '@components/CTABanner.astro';
 import DSRCalculator from '@components/DSRCalculator.astro';
 import { path } from '@utils/url';
 
 const gates = [
-  { range: 'G1–G5',   name: 'Mechanical validity',  desc: 'Schema conformance, exit-0 contract, structured output parse, JSON Schema strict-mode, byte-length budget.' },
-  { range: 'G6–G10',  name: 'Statistical nulls',     desc: 'Block-bootstrap CIs, random-timing nulls, regime-shuffle, parameter-prior sensitivity, Monte-Carlo coverage.' },
-  { range: 'G11–G15', name: 'Walk-forward & OOS',    desc: 'Locked OOS windows, 5-era stability, expanding/rolling windows, frozen-spec evaluation, embargoed test set.' },
-  { range: 'G16–G20', name: 'Multiple testing',      desc: 'Deflated Sharpe Ratio (DSR), CSCV-based Probability of Backtest Overfit (PBO), Minimum Backtest Length (MinBTL), Bonferroni–Holm, BH-FDR.' },
-  { range: 'G21–G25', name: 'Look-ahead discipline', desc: 'Point-in-time dataset verification, survivorship-bias check, rebalance-vs-signal timing, frozen-spec, no-leakage to scoring.' },
-  { range: 'G26–G31', name: 'Economic & cost realism', desc: 'Spread/slippage/latency per asset class, capacity-constraint report, funding-carry, borrow cost, vol-targeted sizing, regime overlay.' },
+  {
+    range: 'G1–G5',
+    name: 'Mechanical validity',
+    desc: 'Schema conformance, exit-0 contract, structured output parse, JSON Schema strict-mode, byte-length budget.',
+  },
+  {
+    range: 'G6–G10',
+    name: 'Statistical nulls',
+    desc: 'Block-bootstrap CIs, random-timing nulls, regime-shuffle, parameter-prior sensitivity, Monte-Carlo coverage.',
+  },
+  {
+    range: 'G11–G15',
+    name: 'Walk-forward & OOS',
+    desc: 'Locked OOS windows, 5-era stability, expanding/rolling windows, frozen-spec evaluation, embargoed test set.',
+  },
+  {
+    range: 'G16–G20',
+    name: 'Multiple testing',
+    desc: 'Deflated Sharpe Ratio (DSR), CSCV-based Probability of Backtest Overfit (PBO), Minimum Backtest Length (MinBTL), Bonferroni–Holm, BH-FDR.',
+  },
+  {
+    range: 'G21–G25',
+    name: 'Look-ahead discipline',
+    desc: 'Point-in-time dataset verification, survivorship-bias check, rebalance-vs-signal timing, frozen-spec, no-leakage to scoring.',
+  },
+  {
+    range: 'G26–G31',
+    name: 'Economic & cost realism',
+    desc: 'Spread/slippage/latency per asset class, capacity-constraint report, funding-carry, borrow cost, vol-targeted sizing, regime overlay.',
+  },
 ];
 
 const routing = [
-  { tier: 'Opus',     role: 'judgment / hardest autonomous decisions',  ratio: '~1 dispatch per analysis chain' },
-  { tier: 'Sonnet',   role: 'assembly / structured generation',          ratio: '~3–5 dispatches per chain' },
-  { tier: 'Haiku',    role: 'mechanical / fast deterministic steps',     ratio: '~10–30 dispatches per chain' },
-  { tier: 'Fable',    role: 'long-horizon autonomous research',          ratio: 'one off, overnight' },
+  {
+    tier: 'Opus',
+    role: 'judgment / hardest autonomous decisions',
+    ratio: '~1 dispatch per analysis chain',
+  },
+  { tier: 'Sonnet', role: 'assembly / structured generation', ratio: '~3–5 dispatches per chain' },
+  {
+    tier: 'Haiku',
+    role: 'mechanical / fast deterministic steps',
+    ratio: '~10–30 dispatches per chain',
+  },
+  { tier: 'Fable', role: 'long-horizon autonomous research', ratio: 'one off, overnight' },
 ];
 
 const charter = [
-  { tag: 'role',     value: 'A specific function, never generic "AI assistant"' },
-  { tag: 'inputs',   value: 'Typed input contract (JSON Schema, fail-closed)' },
-  { tag: 'outputs',  value: 'Typed output contract with strict validation' },
+  { tag: 'role', value: 'A specific function, never generic "AI assistant"' },
+  { tag: 'inputs', value: 'Typed input contract (JSON Schema, fail-closed)' },
+  { tag: 'outputs', value: 'Typed output contract with strict validation' },
   { tag: 'handoffs', value: 'What this agent must NOT do (anti-charter)' },
-  { tag: 'gates',    value: 'Which of G1–G31 apply, with exit codes' },
+  { tag: 'gates', value: 'Which of G1–G31 apply, with exit codes' },
   { tag: 'evidence', value: 'What the agent must attach as proof' },
 ];
 ---
+
 <BaseLayout
   title="Methodology"
   description="The eval-first discipline. G1–G31 statistical gate stack. Model-routing policy. Agent charter pattern."
 >
-
   <header class="method-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">methodology/</span> · eval-first discipline</p>
@@ -47,8 +78,8 @@ const charter = [
         Don't ship what hasn't passed a <span class="hl">measurable gate</span>.
       </h1>
       <p class="method-head__sub">
-        One engineering principle. Applied to LLM outputs and to systematic trading strategies with the
-        same gate stack. The method is what scales; the tools change.
+        One engineering principle. Applied to LLM outputs and to systematic trading strategies with
+        the same gate stack. The method is what scales; the tools change.
       </p>
 
       <div class="method-head__eq-block">
@@ -67,22 +98,24 @@ const charter = [
         <p class="section__eyebrow">The gate stack</p>
         <h2 class="section__title">G1–G31. Six families. One contract.</h2>
         <p class="section__sub">
-          Every candidate — LLM output, systematic strategy, content artifact — passes through the same
-          gate stack. Gates are mechanical (exit-0 contract), not opinionated. A pass means the
+          Every candidate — LLM output, systematic strategy, content artifact — passes through the
+          same gate stack. Gates are mechanical (exit-0 contract), not opinionated. A pass means the
           candidate is allowed to surface; a fail means it isn't.
         </p>
       </header>
 
       <div class="gates">
-        {gates.map(g => (
-          <article class="gate">
-            <header class="gate__head">
-              <span class="gate__range mono">{g.range}</span>
-              <h3 class="gate__name">{g.name}</h3>
-            </header>
-            <p class="gate__desc">{g.desc}</p>
-          </article>
-        ))}
+        {
+          gates.map((g) => (
+            <article class="gate">
+              <header class="gate__head">
+                <span class="gate__range mono">{g.range}</span>
+                <h3 class="gate__name">{g.name}</h3>
+              </header>
+              <p class="gate__desc">{g.desc}</p>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -99,13 +132,15 @@ const charter = [
       </header>
 
       <div class="routing">
-        {routing.map(r => (
-          <div class="route">
-            <div class="route__tier mono">{r.tier}</div>
-            <div class="route__role">{r.role}</div>
-            <div class="route__ratio mono">{r.ratio}</div>
-          </div>
-        ))}
+        {
+          routing.map((r) => (
+            <div class="route">
+              <div class="route__tier mono">{r.tier}</div>
+              <div class="route__role">{r.role}</div>
+              <div class="route__ratio mono">{r.ratio}</div>
+            </div>
+          ))
+        }
       </div>
 
       <div class="routing-eq">
@@ -122,8 +157,8 @@ const charter = [
         <p class="section__eyebrow">Interactive · G16</p>
         <h2 class="section__title">Try the deflated Sharpe calculator.</h2>
         <p class="section__sub">
-          See how the same in-sample Sharpe can pass or fail G16 depending on how many strategies you actually tried.
-          This is the gate that turns "1.14 looks great" into "DSR 0.70 — fail."
+          See how the same in-sample Sharpe can pass or fail G16 depending on how many strategies
+          you actually tried. This is the gate that turns "1.14 looks great" into "DSR 0.70 — fail."
         </p>
       </header>
 
@@ -143,12 +178,14 @@ const charter = [
       </header>
 
       <div class="charter">
-        {charter.map(c => (
-          <div class="charter__row">
-            <div class="charter__tag mono">{c.tag}</div>
-            <div class="charter__val">{c.value}</div>
-          </div>
-        ))}
+        {
+          charter.map((c) => (
+            <div class="charter__row">
+              <div class="charter__tag mono">{c.tag}</div>
+              <div class="charter__val">{c.value}</div>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -160,9 +197,17 @@ const charter = [
         <h2 class="section__title">Negative-space as design.</h2>
       </header>
       <ul class="neg">
-        <li>I will not claim current employment at any NDA-protected firm. The 19V Capital engagement is a <strong>closed past contract</strong> (03/2026 – 06/2026).</li>
-        <li>I will not reference proprietary data sources, fund renames, or per-strategy t-stats from any NDA-protected desk.</li>
-        <li>I will not share a "Sharpe = X.X" number without showing the gate stack that produced it.</li>
+        <li>
+          I will not claim current employment at any NDA-protected firm. The 19V Capital engagement
+          is a <strong>closed past contract</strong> (03/2026 – 06/2026).
+        </li>
+        <li>
+          I will not reference proprietary data sources, fund renames, or per-strategy t-stats from
+          any NDA-protected desk.
+        </li>
+        <li>
+          I will not share a "Sharpe = X.X" number without showing the gate stack that produced it.
+        </li>
         <li>I will not ship an agent without an exit-0 mechanical-validator contract.</li>
         <li>I will not present a backtest without capacity, slippage, and a locked OOS window.</li>
       </ul>
@@ -175,9 +220,9 @@ const charter = [
         <p class="section__eyebrow">What I'd build first</p>
         <h2 class="section__title">If you hired me onto a quant desk.</h2>
         <p class="section__sub">
-          These are the first 90 days, ordered by leverage. A new QR on a 2–5 person pod
-          doesn't start with alpha — they start by making the existing book defensible to a
-          risk manager and a PM. The discipline compounds; the alpha is downstream.
+          These are the first 90 days, ordered by leverage. A new QR on a 2–5 person pod doesn't
+          start with alpha — they start by making the existing book defensible to a risk manager and
+          a PM. The discipline compounds; the alpha is downstream.
         </p>
       </header>
       <ol class="plan">
@@ -186,9 +231,9 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Backtest-engine audit + look-ahead scan</h3>
             <p class="plan__body-p">
-              Run the one-bar shift test (project 09) on every strategy in the book.
-              Quantify the phantom-Sharpe gap. This is the gate that catches the most expensive
-              error class first.
+              Run the one-bar shift test (project 09) on every strategy in the book. Quantify the
+              phantom-Sharpe gap. This is the gate that catches the most expensive error class
+              first.
             </p>
             <div class="plan__gates mono">G21–G25 · look-ahead discipline</div>
           </div>
@@ -199,8 +244,8 @@ const charter = [
             <h3 class="plan__title">Cost-model calibration + break-even turnaround</h3>
             <p class="plan__body-p">
               Per-strategy slippage / impact / spread estimate. For every strategy, ship the
-              break-even turnaround cost (project 08). Strategies that win gross and lose net
-              come off the book.
+              break-even turnaround cost (project 08). Strategies that win gross and lose net come
+              off the book.
             </p>
             <div class="plan__gates mono">G26–G31 · economic & cost realism</div>
           </div>
@@ -210,9 +255,9 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Multiple-testing correction across the book</h3>
             <p class="plan__body-p">
-              Re-rank every strategy by DSR (project 01), not raw Sharpe. Re-rank by
-              CSCV-based PBO (prob. of backtest overfit). The book's "best strategy" is rarely
-              the strategy with the highest raw Sharpe.
+              Re-rank every strategy by DSR (project 01), not raw Sharpe. Re-rank by CSCV-based PBO
+              (prob. of backtest overfit). The book's "best strategy" is rarely the strategy with
+              the highest raw Sharpe.
             </p>
             <div class="plan__gates mono">G16–G20 · multiple testing</div>
           </div>
@@ -231,9 +276,8 @@ const charter = [
       </ol>
 
       <div class="plan__note">
-        <strong>The pattern:</strong> defenses before alpha. A QR who can defend the book
-        is hireable; a QR who can find alpha is hireable-and-defensible. The first 90 days
-        establish the defense.
+        <strong>The pattern:</strong> defenses before alpha. A QR who can defend the book is hireable;
+        a QR who can find alpha is hireable-and-defensible. The first 90 days establish the defense.
       </div>
     </div>
   </section>
@@ -245,15 +289,13 @@ const charter = [
     secondaryLabel="View solutions"
     secondaryHref={path('/solutions')}
   />
-
 </BaseLayout>
 
 <style>
   .method-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.1), transparent 60%), var(--c-bg);
     border-bottom: var(--border);
   }
   .method-head__title {
@@ -291,7 +333,10 @@ const charter = [
     border-radius: var(--radius);
     transition: border-color var(--transition);
   }
-  .gate:hover { border-color: var(--c-primary); border-left-color: var(--c-primary-2); }
+  .gate:hover {
+    border-color: var(--c-primary);
+    border-left-color: var(--c-primary-2-deep);
+  }
   .gate__head {
     display: flex;
     align-items: baseline;
@@ -303,8 +348,16 @@ const charter = [
     color: var(--c-primary);
     font-weight: 700;
   }
-  .gate__name { font-size: var(--fs-base); margin: 0; }
-  .gate__desc { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0; }
+  .gate__name {
+    font-size: var(--fs-base);
+    margin: 0;
+  }
+  .gate__desc {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
 
   .routing {
     display: grid;
@@ -326,8 +379,16 @@ const charter = [
     color: var(--c-primary);
     font-weight: 700;
   }
-  .route__role { font-size: var(--fs-sm); color: var(--c-ink); line-height: var(--lh-normal); }
-  .route__ratio { font-size: var(--fs-xs); color: var(--c-ink-3); margin-top: var(--sp-1); }
+  .route__role {
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    line-height: var(--lh-normal);
+  }
+  .route__ratio {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    margin-top: var(--sp-1);
+  }
 
   .routing-eq {
     padding: var(--sp-5);
@@ -354,7 +415,9 @@ const charter = [
     border-bottom: 1px solid var(--c-rule-soft);
     align-items: center;
   }
-  .charter__row:last-child { border-bottom: none; }
+  .charter__row:last-child {
+    border-bottom: none;
+  }
   .charter__tag {
     color: var(--c-primary);
     font-weight: 600;
@@ -362,7 +425,11 @@ const charter = [
     font-size: var(--fs-xs);
     letter-spacing: 0.08em;
   }
-  .charter__val { color: var(--c-ink); font-size: var(--fs-sm); line-height: var(--lh-normal); }
+  .charter__val {
+    color: var(--c-ink);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+  }
 
   .neg {
     list-style: none;
@@ -386,10 +453,16 @@ const charter = [
     font-weight: 600;
     font-family: var(--ff-mono);
   }
-  .neg strong { color: var(--c-ink); font-weight: 600; }
+  .neg strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
 
   @media (max-width: 720px) {
-    .charter__row { grid-template-columns: 1fr; gap: var(--sp-1); }
+    .charter__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
   }
 
   /* === WHAT I'D BUILD FIRST === */
@@ -413,7 +486,7 @@ const charter = [
   }
   .plan__week {
     font-size: var(--fs-sm);
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-weight: 700;
     letter-spacing: 0.06em;
   }
@@ -449,9 +522,15 @@ const charter = [
     line-height: var(--lh-loose);
     max-width: 760px;
   }
-  .plan__note strong { color: var(--c-ink); font-weight: 600; }
+  .plan__note strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
 
   @media (max-width: 720px) {
-    .plan__row { grid-template-columns: 1fr; gap: var(--sp-2); }
+    .plan__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-2);
+    }
   }
 </style>

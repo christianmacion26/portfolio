@@ -5,7 +5,6 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import { profile } from '@utils/profile';
-import { path } from '@utils/url';
 
 const channels = [
   {
@@ -64,15 +63,18 @@ const platforms = [
   },
 ];
 ---
-<BaseLayout title="Contact" description={`Email ${profile.contact.email} with a JD, or reach me via LinkedIn, GitHub, or phone. Reply within 24h on weekdays.`}>
 
+<BaseLayout
+  title="Contact"
+  description={`Email ${profile.contact.email} with a JD, or reach me via LinkedIn, GitHub, or phone. Reply within 24h on weekdays.`}
+>
   <header class="contact-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">contact/</span> · 24h reply · NDA-safe</p>
       <h1 class="contact-head__title">Five channels. Pick the one that fits.</h1>
       <p class="contact-head__sub">
-        Each tile is named by <em>intent</em>, not by platform. For open roles, the
-        email-with-JD path gets the richest reply (problem → approach → evidence → outcome → proof).
+        Each tile is named by <em>intent</em>, not by platform. For open roles, the email-with-JD
+        path gets the richest reply (problem → approach → evidence → outcome → proof).
       </p>
 
       <div class="contact-head__eq">
@@ -87,31 +89,46 @@ const platforms = [
   <section class="section">
     <div class="container">
       <div class="contact-grid">
-        {channels.map(c => (
-          <a
-            class:list={["contact-card", { "contact-card--primary": c.primary }]}
-            href={c.href}
-            target={c.external ? "_blank" : undefined}
-            rel={c.external ? "noopener" : undefined}
-          >
-            <div class="contact-card__label">
-              {c.label}
-              {c.external && <span class="contact-card__ext" aria-hidden="true">↗</span>}
-            </div>
-            <div class="contact-card__sub">{c.sub}</div>
-            <div class="contact-card__value mono">{c.value}</div>
-            <div class="contact-card__hint">{c.use}</div>
-          </a>
-        ))}
+        {
+          channels.map((c) => (
+            <a
+              class:list={['contact-card', { 'contact-card--primary': c.primary }]}
+              href={c.href}
+              target={c.external ? '_blank' : undefined}
+              rel={c.external ? 'noopener' : undefined}
+            >
+              <div class="contact-card__label">
+                {c.label}
+                {c.external && (
+                  <span class="contact-card__ext" aria-hidden="true">
+                    ↗
+                  </span>
+                )}
+              </div>
+              <div class="contact-card__sub">{c.sub}</div>
+              <div class="contact-card__value mono">{c.value}</div>
+              <div class="contact-card__hint">{c.use}</div>
+            </a>
+          ))
+        }
       </div>
 
       <aside class="loc-card">
         <h2 class="loc-card__title">Location & availability</h2>
         <ul class="mono">
           <li><strong>Based in</strong> {profile.location.display}</li>
-          <li><strong>Availability</strong> {profile.availability.mode} · {profile.availability.hours}</li>
-          <li><strong>Open to</strong> AI Engineer · Quantitative Researcher · Quant Developer · Trading Research Assistant roles</li>
-          <li><strong>Overlap with</strong> US East (UTC-5) = 21:00 – 02:00 PHT · EU (UTC+1) = 15:00 – 23:00 PHT · APAC (UTC+9) = 09:00 – 18:00 PHT</li>
+          <li>
+            <strong>Availability</strong>
+            {profile.availability.mode} · {profile.availability.hours}
+          </li>
+          <li>
+            <strong>Open to</strong> AI Engineer · Quantitative Researcher · Quant Developer · Trading
+            Research Assistant roles
+          </li>
+          <li>
+            <strong>Overlap with</strong> US East (UTC-5) = 21:00 – 02:00 PHT · EU (UTC+1) = 15:00 – 23:00
+            PHT · APAC (UTC+9) = 09:00 – 18:00 PHT
+          </li>
         </ul>
       </aside>
     </div>
@@ -123,19 +140,20 @@ const platforms = [
         <p class="section__eyebrow">Freelance platforms</p>
         <h2 class="section__title">If you're sourcing on a marketplace.</h2>
         <p class="section__sub">
-          These stay useful for Filipino-remote and short-engagement sourcing, but the
-          channels above are the primary path. I treat OJP/Upwork as supplementary,
-          not as the first stop.
+          These stay useful for Filipino-remote and short-engagement sourcing, but the channels
+          above are the primary path. I treat OJP/Upwork as supplementary, not as the first stop.
         </p>
       </header>
       <div class="platforms-grid">
-        {platforms.map(p => (
-          <a class="platform-card" href={p.href} target="_blank" rel="noopener">
-            <div class="platform-card__label mono">{p.label}</div>
-            <div class="platform-card__value mono">{p.value}</div>
-            <div class="platform-card__hint">{p.use}</div>
-          </a>
-        ))}
+        {
+          platforms.map((p) => (
+            <a class="platform-card" href={p.href} target="_blank" rel="noopener">
+              <div class="platform-card__label mono">{p.label}</div>
+              <div class="platform-card__value mono">{p.value}</div>
+              <div class="platform-card__hint">{p.use}</div>
+            </a>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -158,34 +176,42 @@ const platforms = [
           <div class="how-i-reply__num mono">02</div>
           <div class="how-i-reply__body">
             <h3>Read the JD fully</h3>
-            <p>If a JD is attached, I'll read it end-to-end before replying. I'll surface the gates from G1–G31 that already apply to your stack.</p>
+            <p>
+              If a JD is attached, I'll read it end-to-end before replying. I'll surface the gates
+              from G1–G31 that already apply to your stack.
+            </p>
           </div>
         </li>
         <li>
           <div class="how-i-reply__num mono">03</div>
           <div class="how-i-reply__body">
             <h3>Solution sketch</h3>
-            <p>You'll get a structured response: problem → approach → evidence → outcome → proof pointer. Same shape as the solutions page.</p>
+            <p>
+              You'll get a structured response: problem → approach → evidence → outcome → proof
+              pointer. Same shape as the solutions page.
+            </p>
           </div>
         </li>
         <li>
           <div class="how-i-reply__num mono">04</div>
           <div class="how-i-reply__body">
             <h3>Tailored resume if appropriate</h3>
-            <p>For open roles, I'll send a tailored PDF within 24h. Three resume shapes already exist (unified / AI-only / Quant one-pager).</p>
+            <p>
+              For open roles, I'll send a tailored PDF within 24h. Three resume shapes already exist
+              (unified / AI-only / Quant one-pager).
+            </p>
           </div>
         </li>
       </ol>
     </div>
   </section>
-
 </BaseLayout>
 
 <style>
   .contact-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
+      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.1), transparent 60%),
       var(--c-paper);
     border-bottom: var(--border);
   }
@@ -224,7 +250,10 @@ const platforms = [
     border-radius: var(--radius);
     color: var(--c-ink);
     text-decoration: none;
-    transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    transition:
+      border-color var(--transition),
+      transform var(--transition),
+      box-shadow var(--transition);
   }
   .contact-card:hover {
     border-color: var(--c-primary);
@@ -247,7 +276,7 @@ const platforms = [
     justify-content: space-between;
   }
   .contact-card__ext {
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-family: var(--ff-mono);
     font-size: var(--fs-sm);
   }
@@ -299,7 +328,7 @@ const platforms = [
   }
   .platform-card__value {
     font-size: var(--fs-sm);
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     margin-bottom: var(--sp-2);
     word-break: break-all;
   }
@@ -320,15 +349,24 @@ const platforms = [
     margin-bottom: var(--sp-3);
     color: #fff;
   }
-  .loc-card ul { list-style: none; padding: 0; }
+  .loc-card ul {
+    list-style: none;
+    padding: 0;
+  }
   .loc-card li {
     padding-block: var(--sp-2);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     line-height: var(--lh-loose);
     font-size: var(--fs-sm);
   }
-  .loc-card li:last-child { border-bottom: none; }
-  .loc-card strong { color: #fff; font-weight: 600; margin-right: var(--sp-2); }
+  .loc-card li:last-child {
+    border-bottom: none;
+  }
+  .loc-card strong {
+    color: #fff;
+    font-weight: 600;
+    margin-right: var(--sp-2);
+  }
 
   .how-i-reply {
     list-style: none;
@@ -354,10 +392,21 @@ const platforms = [
     font-weight: 700;
     line-height: 1;
   }
-  .how-i-reply__body h3 { font-size: var(--fs-base); margin-bottom: var(--sp-1); }
-  .how-i-reply__body p { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin: 0; }
+  .how-i-reply__body h3 {
+    font-size: var(--fs-base);
+    margin-bottom: var(--sp-1);
+  }
+  .how-i-reply__body p {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
 
   @media (max-width: 720px) {
-    .how-i-reply li { grid-template-columns: 1fr; gap: var(--sp-2); }
+    .how-i-reply li {
+      grid-template-columns: 1fr;
+      gap: var(--sp-2);
+    }
   }
 </style>

@@ -12,32 +12,36 @@ import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { getCollection, render } from 'astro:content';
 
-const entries = (await getCollection('experience'))
-  .sort((a, b) => a.data.order - b.data.order);
+const entries = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
 
 // Pre-render each entry's content
 const rendered = await Promise.all(
-  entries.map(async e => {
+  entries.map(async (e) => {
     const { Content } = await render(e);
     return { entry: e, Content };
-  })
+  }),
 );
 
 // Aggregate metrics across all experiences (NDA-safe — only counts and labels)
-const totalContributions = rendered.reduce((sum, { entry }) => sum + (entry.data.contributions?.length ?? 0), 0);
+const totalContributions = rendered.reduce(
+  (sum, { entry }) => sum + (entry.data.contributions?.length ?? 0),
+  0,
+);
 const totalProofs = rendered.reduce((sum, { entry }) => sum + (entry.data.proofs?.length ?? 0), 0);
 const totalEntries = rendered.length;
 const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
 ---
+
 <BaseLayout
   title="Experience"
   description="Operator and researcher experience across multi-agent AI platforms, venture incubation, content automation, and systematic trading research."
 >
-
   <header class="page-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">experience/</span> · engagements + proofs</p>
-      <h1 class="page-head__title">Where the work happened — and how to <span class="hl">verify</span> it.</h1>
+      <h1 class="page-head__title">
+        Where the work happened — and how to <span class="hl">verify</span> it.
+      </h1>
       <p class="page-head__sub">
         {entries.length} engagements. Each entry lists the contributions made and points to public artifacts
         that prove them. The 19V Capital role is a <strong>closed past contract</strong>
@@ -54,8 +58,20 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
 
       <div class="head-stats">
         <Stat value={String(totalEntries)} label="engagements" sub="multi-hat" formula="|E|" />
-        <Stat value={String(totalContributions)} label="contributions" sub="declared" formula="\sum c_e" trend="up" />
-        <Stat value={String(totalProofs)} label="proof pointers" sub="public artifacts" formula="\sum p_e" trend="up" />
+        <Stat
+          value={String(totalContributions)}
+          label="contributions"
+          sub="declared"
+          formula="\sum c_e"
+          trend="up"
+        />
+        <Stat
+          value={String(totalProofs)}
+          label="proof pointers"
+          sub="public artifacts"
+          formula="\sum p_e"
+          trend="up"
+        />
         <Stat value={`${totalMonths}`} label="months" sub="2024-12 → 2026-05" formula="\Delta t" />
       </div>
     </div>
@@ -64,21 +80,23 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
   <section class="section">
     <div class="container container-narrow">
       <div class="timeline">
-        {rendered.map(({ entry, Content }) => (
-          <TimelineEntry
-            title={entry.data.title}
-            company={entry.data.company}
-            location={entry.data.location}
-            startDate={entry.data.startDate}
-            endDate={entry.data.endDate}
-            isCurrent={entry.data.isCurrent}
-            summary={entry.data.summary}
-            contributions={entry.data.contributions}
-            proofs={entry.data.proofs}
-          >
-            <Content />
-          </TimelineEntry>
-        ))}
+        {
+          rendered.map(({ entry, Content }) => (
+            <TimelineEntry
+              title={entry.data.title}
+              company={entry.data.company}
+              location={entry.data.location}
+              startDate={entry.data.startDate}
+              endDate={entry.data.endDate}
+              isCurrent={entry.data.isCurrent}
+              summary={entry.data.summary}
+              contributions={entry.data.contributions}
+              proofs={entry.data.proofs}
+            >
+              <Content />
+            </TimelineEntry>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -87,7 +105,6 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     title="Need a deeper reference list?"
     sub="Contact me and I'll share a tailored reference pack — name, role, brief context — within 24 hours."
   />
-
 </BaseLayout>
 
 <style>
@@ -95,8 +112,7 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     padding-block: var(--sp-9) var(--sp-7);
     background:
       radial-gradient(1200px 600px at 80% -100px, rgba(212, 160, 23, 0.14), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
-      var(--c-paper);
+      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.1), transparent 60%), var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -111,7 +127,10 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     max-width: 64ch;
     margin-bottom: var(--sp-6);
   }
-  .page-head__sub strong { color: var(--c-ink); font-weight: 600; }
+  .page-head__sub strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
   .head-eq {
     padding: var(--sp-4) var(--sp-5);
     background: var(--c-bg);
@@ -125,9 +144,13 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     grid-template-columns: repeat(4, 1fr);
     gap: var(--sp-3);
   }
-  .timeline { padding-block: var(--sp-5); }
+  .timeline {
+    padding-block: var(--sp-5);
+  }
 
   @media (max-width: 880px) {
-    .head-stats { grid-template-columns: 1fr 1fr; }
+    .head-stats {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

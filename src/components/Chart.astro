@@ -50,7 +50,10 @@ const {
 } = Astro.props;
 
 // Layout constants
-const padL = 44, padR = 16, padT = 20, padB = 36;
+const padL = 44,
+  padR = 16,
+  padT = 20,
+  padB = 36;
 const innerW = width - padL - padR;
 const innerH = height - padT - padB;
 
@@ -64,11 +67,13 @@ function buildLinePath(values: number[]): string {
   const minV = yMin ?? Math.min(...values);
   const maxV = yMax ?? Math.max(...values);
   const range = maxV - minV || 1;
-  return values.map((v, i) => {
-    const x = padL + (i / Math.max(1, values.length - 1)) * innerW;
-    const y = padT + innerH - ((v - minV) / range) * innerH;
-    return `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
-  }).join(' ');
+  return values
+    .map((v, i) => {
+      const x = padL + (i / Math.max(1, values.length - 1)) * innerW;
+      const y = padT + innerH - ((v - minV) / range) * innerH;
+      return `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
+    })
+    .join(' ');
 }
 
 function buildLineArea(values: number[]): string {
@@ -86,17 +91,19 @@ function buildHistPath(values: number[], bins = 30): string {
   const maxV = Math.max(...values);
   const w = (maxV - minV) / bins;
   const counts = new Array(bins).fill(0);
-  values.forEach(v => {
+  values.forEach((v) => {
     const idx = Math.min(bins - 1, Math.floor((v - minV) / w));
     counts[idx]++;
   });
   const maxC = Math.max(...counts);
-  return counts.map((c, i) => {
-    const x = padL + (i / bins) * innerW;
-    const h = (c / maxC) * innerH * 0.85;
-    const y = padT + innerH - h;
-    return `M ${x.toFixed(2)} ${(padT + innerH).toFixed(2)} L ${x.toFixed(2)} ${y.toFixed(2)} L ${(x + innerW / bins - 1).toFixed(2)} ${y.toFixed(2)} L ${(x + innerW / bins - 1).toFixed(2)} ${(padT + innerH).toFixed(2)} Z`;
-  }).join(' ');
+  return counts
+    .map((c, i) => {
+      const x = padL + (i / bins) * innerW;
+      const h = (c / maxC) * innerH * 0.85;
+      const y = padT + innerH - h;
+      return `M ${x.toFixed(2)} ${(padT + innerH).toFixed(2)} L ${x.toFixed(2)} ${y.toFixed(2)} L ${(x + innerW / bins - 1).toFixed(2)} ${y.toFixed(2)} L ${(x + innerW / bins - 1).toFixed(2)} ${(padT + innerH).toFixed(2)} Z`;
+    })
+    .join(' ');
 }
 
 function buildNullPdf(mu: number, sigma: number, xMin: number, xMax: number, steps = 60): string {
@@ -108,20 +115,24 @@ function buildNullPdf(mu: number, sigma: number, xMin: number, xMax: number, ste
     pts.push([x, y]);
     if (y > maxY) maxY = y;
   }
-  return pts.map(([x, y], i) => {
-    const px = padL + ((x - xMin) / (xMax - xMin)) * innerW;
-    const py = padT + innerH - (y / maxY) * innerH * 0.85;
-    return `${i === 0 ? 'M' : 'L'} ${px.toFixed(2)} ${py.toFixed(2)}`;
-  }).join(' ');
+  return pts
+    .map(([x, y], i) => {
+      const px = padL + ((x - xMin) / (xMax - xMin)) * innerW;
+      const py = padT + innerH - (y / maxY) * innerH * 0.85;
+      return `${i === 0 ? 'M' : 'L'} ${px.toFixed(2)} ${py.toFixed(2)}`;
+    })
+    .join(' ');
 }
 
 // === BAR ===
-function buildBars(items: { value: number; label?: string }[]): { x: number; y: number; w: number; h: number; value: number; label: string }[] {
+function buildBars(
+  items: { value: number; label?: string }[],
+): { x: number; y: number; w: number; h: number; value: number; label: string }[] {
   if (items.length === 0) return [];
-  const maxV = yMax ?? Math.max(...items.map(i => i.value));
-  const minV = yMin ?? Math.min(0, ...items.map(i => i.value));
+  const maxV = yMax ?? Math.max(...items.map((i) => i.value));
+  const minV = yMin ?? Math.min(0, ...items.map((i) => i.value));
   const range = maxV - minV || 1;
-  const barW = innerW / items.length * 0.7;
+  const barW = (innerW / items.length) * 0.7;
   return items.map((it, i) => {
     const cx = padL + (i + 0.5) * (innerW / items.length);
     const h = Math.abs((it.value - minV) / range) * innerH;
@@ -131,8 +142,24 @@ function buildBars(items: { value: number; label?: string }[]): { x: number; y: 
 }
 
 // Build paths
-let mainPath = '', areaPath = '', nullPath = '', histBars = '', bars: any[] = [], xMin = 0, xMax = 0;
-let isHist = false, isBar = false, isLine = false;
+interface Bar {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  label: string;
+  value: number;
+}
+let mainPath = '',
+  areaPath = '',
+  nullPath = '',
+  histBars = '',
+  bars: Bar[] = [],
+  xMin = 0,
+  xMax = 0;
+let isHist = false,
+  isBar = false,
+  isLine = false;
 
 if (type === 'line') {
   const values = data as number[];
@@ -165,66 +192,128 @@ if (isLine) {
   const vals = data as number[];
   const minV = yMin ?? Math.min(...vals);
   const maxV = yMax ?? Math.max(...vals);
-  yTicks = Array.from({ length: yTickCount + 1 }, (_, i) => minV + (i / yTickCount) * (maxV - minV));
+  yTicks = Array.from(
+    { length: yTickCount + 1 },
+    (_, i) => minV + (i / yTickCount) * (maxV - minV),
+  );
 }
 ---
+
 <figure class="chart">
   {title && <figcaption class="chart__title">{title}</figcaption>}
-  <svg class="chart__svg" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={title ?? 'chart'}>
+  <svg
+    class="chart__svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label={title ?? 'chart'}
+  >
     <defs>
       <linearGradient id={`chart-grad-${type}`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color={color} stop-opacity="0.25" />
-        <stop offset="100%" stop-color={color} stop-opacity="0" />
+        <stop offset="0%" stop-color={color} stop-opacity="0.25"></stop>
+        <stop offset="100%" stop-color={color} stop-opacity="0"></stop>
       </linearGradient>
     </defs>
 
     {/* Y grid + ticks */}
-    {yTicks.map(t => {
-      const y = padT + innerH - ((t - (yMin ?? 0)) / ((yMax ?? 1) - (yMin ?? 0) || 1)) * innerH;
-      return (
-        <g>
-          <line x1={padL} y1={y} x2={padL + innerW} y2={y} class="chart__grid" />
-          <text x={padL - 6} y={y + 3} class="chart__tick mono" text-anchor="end">{t.toFixed(2)}</text>
-        </g>
-      );
-    })}
+    {
+      yTicks.map((t) => {
+        const y = padT + innerH - ((t - (yMin ?? 0)) / ((yMax ?? 1) - (yMin ?? 0) || 1)) * innerH;
+        return (
+          <g>
+            <line x1={padL} y1={y} x2={padL + innerW} y2={y} class="chart__grid" />
+            <text x={padL - 6} y={y + 3} class="chart__tick mono" text-anchor="end">
+              {t.toFixed(2)}
+            </text>
+          </g>
+        );
+      })
+    }
 
     {/* X axis */}
-    <line x1={padL} y1={padT + innerH} x2={padL + innerW} y2={padT + innerH} class="chart__axis" />
+    <line x1={padL} y1={padT + innerH} x2={padL + innerW} y2={padT + innerH} class="chart__axis"
+    ></line>
 
     {isLine && areaPath && <path d={areaPath} fill={`url(#chart-grad-line)`} />}
-    {isLine && mainPath && <path d={mainPath} fill="none" stroke={color} stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />}
-
-    {isHist && histBars && <path d={histBars} fill="var(--c-bg-3)" stroke="var(--c-rule)" stroke-width="0.5" />}
-
-    {nullPath && <path d={nullPath} fill="none" stroke="var(--c-fail)" stroke-width="1.5" stroke-dasharray="3,3" />}
-
-    {dataX !== undefined && nullMean !== undefined && nullStd !== undefined && (
-      <g>
-        <line
-          x1={padL + ((dataX - xMin) / (xMax - xMin)) * innerW}
-          y1={padT}
-          x2={padL + ((dataX - xMin) / (xMax - xMin)) * innerW}
-          y2={padT + innerH}
-          stroke="var(--c-primary)"
+    {
+      isLine && mainPath && (
+        <path
+          d={mainPath}
+          fill="none"
+          stroke={color}
           stroke-width="2"
+          stroke-linejoin="round"
+          stroke-linecap="round"
         />
-        <text
-          x={padL + ((dataX - xMin) / (xMax - xMin)) * innerW}
-          y={padT - 4}
-          text-anchor="middle"
-          class="chart__mark mono"
-        >SR̂ = {dataX.toFixed(2)}</text>
-      </g>
-    )}
+      )
+    }
 
-    {isBar && bars.map((b: any) => (
-      <g>
-        <rect x={b.x} y={b.y} width={b.w} height={b.h} fill={b.value >= 0 ? 'var(--c-pass)' : 'var(--c-fail)'} opacity="0.85" />
-        <text x={b.x + b.w / 2} y={padT + innerH + 14} text-anchor="middle" class="chart__bar-label mono">{b.label}</text>
-        <text x={b.x + b.w / 2} y={b.y - 4} text-anchor="middle" class="chart__bar-val mono">{b.value.toFixed(2)}</text>
-      </g>
-    ))}
+    {
+      isHist && histBars && (
+        <path d={histBars} fill="var(--c-bg-3)" stroke="var(--c-rule)" stroke-width="0.5" />
+      )
+    }
+
+    {
+      nullPath && (
+        <path
+          d={nullPath}
+          fill="none"
+          stroke="var(--c-fail)"
+          stroke-width="1.5"
+          stroke-dasharray="3,3"
+        />
+      )
+    }
+
+    {
+      dataX !== undefined && nullMean !== undefined && nullStd !== undefined && (
+        <g>
+          <line
+            x1={padL + ((dataX - xMin) / (xMax - xMin)) * innerW}
+            y1={padT}
+            x2={padL + ((dataX - xMin) / (xMax - xMin)) * innerW}
+            y2={padT + innerH}
+            stroke="var(--c-primary)"
+            stroke-width="2"
+          />
+          <text
+            x={padL + ((dataX - xMin) / (xMax - xMin)) * innerW}
+            y={padT - 4}
+            text-anchor="middle"
+            class="chart__mark mono"
+          >
+            SR̂ = {dataX.toFixed(2)}
+          </text>
+        </g>
+      )
+    }
+
+    {
+      isBar &&
+        bars.map((b) => (
+          <g>
+            <rect
+              x={b.x}
+              y={b.y}
+              width={b.w}
+              height={b.h}
+              fill={b.value >= 0 ? 'var(--c-pass)' : 'var(--c-fail)'}
+              opacity="0.85"
+            />
+            <text
+              x={b.x + b.w / 2}
+              y={padT + innerH + 14}
+              text-anchor="middle"
+              class="chart__bar-label mono"
+            >
+              {b.label}
+            </text>
+            <text x={b.x + b.w / 2} y={b.y - 4} text-anchor="middle" class="chart__bar-val mono">
+              {b.value.toFixed(2)}
+            </text>
+          </g>
+        ))
+    }
   </svg>
   {caption && <figcaption class="chart__caption">{caption}</figcaption>}
 </figure>
@@ -247,12 +336,32 @@ if (isLine) {
     border: 1px solid var(--c-rule);
     border-radius: var(--radius-sm);
   }
-  .chart__grid { stroke: var(--c-rule-soft); stroke-width: 1; }
-  .chart__axis { stroke: var(--c-rule); stroke-width: 1; }
-  .chart__tick { font-size: 9px; fill: var(--c-ink-2); }
-  .chart__bar-label { font-size: 8px; fill: var(--c-ink-2); }
-  .chart__bar-val { font-size: 9px; fill: var(--c-ink); font-weight: 600; }
-  .chart__mark { font-size: 9px; fill: var(--c-primary); font-weight: 700; }
+  .chart__grid {
+    stroke: var(--c-rule-soft);
+    stroke-width: 1;
+  }
+  .chart__axis {
+    stroke: var(--c-rule);
+    stroke-width: 1;
+  }
+  .chart__tick {
+    font-size: 9px;
+    fill: var(--c-ink-2);
+  }
+  .chart__bar-label {
+    font-size: 8px;
+    fill: var(--c-ink-2);
+  }
+  .chart__bar-val {
+    font-size: 9px;
+    fill: var(--c-ink);
+    font-weight: 600;
+  }
+  .chart__mark {
+    font-size: 9px;
+    fill: var(--c-primary);
+    font-weight: 700;
+  }
   .chart__caption {
     font-size: var(--fs-xs);
     color: var(--c-ink-2);

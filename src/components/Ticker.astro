@@ -9,27 +9,30 @@
  * Items live in component (no props). Update inline if numbers change.
  */
 const items = [
-  { sym: 'DSR',     val: 'Bailey & López de Prado (2014)',  delta: '·',  color: 'muted' },
-  { sym: 'OOS',     val: 'locked windows',                   delta: '✓',  color: 'pass' },
-  { sym: 'PBO',     val: 'CSCV-based',                        delta: '·',  color: 'muted' },
-  { sym: 'SHARPE',  val: 'deflated — not raw',                delta: '·',  color: 'muted' },
-  { sym: 'GATES',   val: 'G1–G31 mechanical',                 delta: '✓',  color: 'pass' },
-  { sym: 'NDA',     val: 'clean — public data only',          delta: '✓',  color: 'pass' },
-  { sym: 'PROJ',    val: '15 reproducible',                   delta: '✓',  color: 'pass' },
-  { sym: 'CTA',     val: 'Tier-1 STA',                        delta: '✓',  color: 'pass' },
-  { sym: 'PIT',     val: 'point-in-time enforced',            delta: '✓',  color: 'pass' },
-  { sym: 'UTC',     val: '+8 PHT',                            delta: '·',  color: 'muted' },
+  { sym: 'DSR', val: 'Bailey & López de Prado (2014)', delta: '·', color: 'muted' },
+  { sym: 'OOS', val: 'locked windows', delta: '✓', color: 'pass' },
+  { sym: 'PBO', val: 'CSCV-based', delta: '·', color: 'muted' },
+  { sym: 'SHARPE', val: 'deflated — not raw', delta: '·', color: 'muted' },
+  { sym: 'GATES', val: 'G1–G31 mechanical', delta: '✓', color: 'pass' },
+  { sym: 'NDA', val: 'clean — public data only', delta: '✓', color: 'pass' },
+  { sym: 'PROJ', val: '15 reproducible', delta: '✓', color: 'pass' },
+  { sym: 'CTA', val: 'Tier-1 STA', delta: '✓', color: 'pass' },
+  { sym: 'PIT', val: 'point-in-time enforced', delta: '✓', color: 'pass' },
+  { sym: 'UTC', val: '+8 PHT', delta: '·', color: 'muted' },
 ];
 ---
+
 <div class="ticker" role="marquee" aria-label="headline signals">
   <div class="ticker__track">
-    {[...items, ...items].map(it => (
-      <span class:list={["ticker__item", `ticker__item--${it.color}`]}>
-        <span class="ticker__sym mono">{it.sym}</span>
-        <span class="ticker__val">{it.val}</span>
-        <span class="ticker__delta mono">{it.delta}</span>
-      </span>
-    ))}
+    {
+      [...items, ...items].map((it) => (
+        <span class:list={['ticker__item', `ticker__item--${it.color}`]}>
+          <span class="ticker__sym mono">{it.sym}</span>
+          <span class="ticker__val">{it.val}</span>
+          <span class="ticker__delta mono">{it.delta}</span>
+        </span>
+      ))
+    }
   </div>
 </div>
 
@@ -49,13 +52,20 @@ const items = [
   .ticker::after {
     content: '';
     position: absolute;
-    top: 0; bottom: 0;
+    top: 0;
+    bottom: 0;
     width: 80px;
     z-index: 2;
     pointer-events: none;
   }
-  .ticker::before { left: 0;  background: linear-gradient(90deg, var(--c-tape), transparent); }
-  .ticker::after  { right: 0; background: linear-gradient(-90deg, var(--c-tape), transparent); }
+  .ticker::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--c-tape), transparent);
+  }
+  .ticker::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--c-tape), transparent);
+  }
 
   .ticker__track {
     display: flex;
@@ -81,19 +91,38 @@ const items = [
     color: #e6edf3;
     font-weight: 600;
   }
-  .ticker__delta { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ticker__delta {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
 
-  .ticker__item--pass  .ticker__delta { color: #3fb950; }
-  .ticker__item--fail  .ticker__delta { color: #f85149; }
-  .ticker__item--warn  .ticker__delta { color: #d29922; }
-  .ticker__item--info  .ticker__delta { color: #58a6ff; }
-  .ticker__item--muted .ticker__delta { color: #6e7681; }
+  .ticker__item--pass .ticker__delta {
+    color: #3fb950;
+  }
+  .ticker__item--fail .ticker__delta {
+    color: #f85149;
+  }
+  .ticker__item--warn .ticker__delta {
+    color: #d29922;
+  }
+  .ticker__item--info .ticker__delta {
+    color: #58a6ff;
+  }
+  .ticker__item--muted .ticker__delta {
+    color: #6e7681;
+  }
 
   @keyframes ticker-scroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .ticker__track { animation: none; }
+    .ticker__track {
+      animation: none;
+    }
   }
 </style>

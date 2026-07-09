@@ -10,7 +10,7 @@ import { path } from '@utils/url';
 
 export async function getStaticPaths() {
   const projects = await getCollection('project');
-  return projects.map(p => ({
+  return projects.map((p) => ({
     params: { slug: p.id },
     props: { project: p },
   }));
@@ -22,43 +22,55 @@ const { title, summary_long, stack, metrics, sourceLink, tags, status, role } = 
 const laneLabel = role === 'ai' ? 'AI Engineer' : 'Quantitative Researcher';
 const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
 ---
+
 <BaseLayout title={title} description={summary_long ?? project.data.summary} type="article">
-
   <article class="proj">
-
     <header class="proj__head">
       <div class="container container-narrow">
         <p class="proj__crumb">
           <a href={path('/projects')}>← Projects</a>
           <span class="proj__crumb-sep">·</span>
-          <span class:list={["pill", laneClass]}>{laneLabel}</span>
+          <span class:list={['pill', laneClass]}>{laneLabel}</span>
         </p>
         <h1 class="proj__title">{title}</h1>
         {summary_long && <p class="proj__sub">{summary_long}</p>}
 
-        {metrics.length > 0 && (
-          <div class="proj__metrics">
-            {metrics.map(m => (
-              <MetricPill label={m.label} value={m.value} sub={m.sub} tone={role === 'ai' ? 'brand' : 'accent'} />
-            ))}
-          </div>
-        )}
+        {
+          metrics.length > 0 && (
+            <div class="proj__metrics">
+              {metrics.map((m) => (
+                <MetricPill
+                  label={m.label}
+                  value={m.value}
+                  sub={m.sub}
+                  tone={role === 'ai' ? 'brand' : 'accent'}
+                />
+              ))}
+            </div>
+          )
+        }
 
         <div class="proj__meta">
-          {status && (
-            <div>
-              <div class="proj__meta-label">Status</div>
-              <div class="proj__meta-value">{status}</div>
-            </div>
-          )}
-          {sourceLink && (
-            <div>
-              <div class="proj__meta-label">Repo</div>
-              <div class="proj__meta-value">
-                <a href={sourceLink} target="_blank" rel="noopener">GitHub ↗</a>
+          {
+            status && (
+              <div>
+                <div class="proj__meta-label">Status</div>
+                <div class="proj__meta-value">{status}</div>
               </div>
-            </div>
-          )}
+            )
+          }
+          {
+            sourceLink && (
+              <div>
+                <div class="proj__meta-label">Repo</div>
+                <div class="proj__meta-value">
+                  <a href={sourceLink} target="_blank" rel="noopener">
+                    GitHub ↗
+                  </a>
+                </div>
+              </div>
+            )
+          }
         </div>
       </div>
     </header>
@@ -68,41 +80,44 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
         <Content />
       </div>
 
-      {stack.length > 0 && (
-        <aside class="proj__sidebar">
-          <section class="proj__panel">
-            <h3 class="proj__panel-title">Stack</h3>
-            <ul class="proj__stack">
-              {stack.map(s => <li>{s}</li>)}
-            </ul>
-          </section>
-          {tags.length > 0 && (
+      {
+        stack.length > 0 && (
+          <aside class="proj__sidebar">
             <section class="proj__panel">
-              <h3 class="proj__panel-title">Topics</h3>
-              <div class="proj__tags">
-                {tags.map(t => <span class="pill">{t}</span>)}
-              </div>
+              <h3 class="proj__panel-title">Stack</h3>
+              <ul class="proj__stack">
+                {stack.map((s) => (
+                  <li>{s}</li>
+                ))}
+              </ul>
             </section>
-          )}
-        </aside>
-      )}
+            {tags.length > 0 && (
+              <section class="proj__panel">
+                <h3 class="proj__panel-title">Topics</h3>
+                <div class="proj__tags">
+                  {tags.map((t) => (
+                    <span class="pill">{t}</span>
+                  ))}
+                </div>
+              </section>
+            )}
+          </aside>
+        )
+      }
     </div>
-
   </article>
 
   <CTABanner
     title="Want to see this project in your stack?"
     sub="Every project is runnable in one command. The scorecard is the contract."
   />
-
 </BaseLayout>
 
 <style>
   .proj__head {
     padding-block: var(--sp-8) var(--sp-6);
     background:
-      radial-gradient(800px 400px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
-      var(--c-bg);
+      radial-gradient(800px 400px at 80% 0%, rgba(212, 160, 23, 0.1), transparent 60%), var(--c-bg);
     border-bottom: var(--border);
   }
   .proj__crumb {
@@ -113,7 +128,9 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
     font-size: var(--fs-sm);
     margin-bottom: var(--sp-4);
   }
-  .proj__crumb-sep { color: var(--c-ink-3); }
+  .proj__crumb-sep {
+    color: var(--c-ink-3);
+  }
   .proj__title {
     font-size: clamp(2rem, 4vw, 3rem);
     letter-spacing: -0.02em;
@@ -170,7 +187,10 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
     line-height: var(--lh-loose);
     margin-bottom: var(--sp-4);
   }
-  .proj__prose :global(strong) { color: var(--c-primary); font-weight: 600; }
+  .proj__prose :global(strong) {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
   .proj__prose :global(blockquote) {
     border-left: 3px solid var(--c-primary);
     padding: var(--sp-3) var(--sp-5);
@@ -194,7 +214,11 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
     overflow-x: auto;
     margin-block: var(--sp-4);
   }
-  .proj__prose :global(pre code) { background: none; padding: 0; color: inherit; }
+  .proj__prose :global(pre code) {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
   .proj__prose :global(ul) {
     margin-bottom: var(--sp-4);
   }
@@ -203,9 +227,15 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
     line-height: var(--lh-loose);
   }
   @media (min-width: 960px) {
-    .proj__body { grid-template-columns: minmax(0, 1fr) 260px; }
+    .proj__body {
+      grid-template-columns: minmax(0, 1fr) 260px;
+    }
   }
-  .proj__sidebar { display: flex; flex-direction: column; gap: var(--sp-5); }
+  .proj__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+  }
   .proj__panel {
     padding: var(--sp-5);
     background: var(--c-bg-2);
@@ -219,7 +249,13 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
     color: var(--c-ink-2);
     margin-bottom: var(--sp-3);
   }
-  .proj__stack { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .proj__stack {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
   .proj__stack li {
     font-size: var(--fs-sm);
     color: var(--c-ink);
@@ -231,7 +267,11 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
     content: '▸';
     position: absolute;
     left: 0;
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
   }
-  .proj__tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+  .proj__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
 </style>

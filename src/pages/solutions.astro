@@ -8,20 +8,19 @@ import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { getCollection } from 'astro:content';
-import { profile } from '@utils/profile';
-import { path } from '@utils/url';
 
-const solutions = (await getCollection('solution'))
-  .sort((a, b) => a.data.order - b.data.order);
-const aiSolutions  = solutions.filter(s => s.data.lane === 'ai');
-const quantSolutions = solutions.filter(s => s.data.lane === 'quant');
-const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.data.lane === 'systems');
+const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
+const aiSolutions = solutions.filter((s) => s.data.lane === 'ai');
+const quantSolutions = solutions.filter((s) => s.data.lane === 'quant');
+const eduSolutions = solutions.filter(
+  (s) => s.data.lane === 'education' || s.data.lane === 'systems',
+);
 ---
+
 <BaseLayout
   title="Solutions"
   description="Selected case studies. Problem → approach → evidence → outcome → proof. NDA-safe, public-data reproducible."
 >
-
   <header class="solutions-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">solutions/</span> · case studies</p>
@@ -29,9 +28,9 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
         I do <span class="hl">solutions</span>.
       </h1>
       <p class="solutions-head__sub">
-        Each entry below is a real engagement or self-directed project: the problem, the approach, the
-        evidence, the outcome, and the proof. Every claim is <em>verifiable</em>. None of it relies
-        on proprietary data sources.
+        Each entry below is a real engagement or self-directed project: the problem, the approach,
+        the evidence, the outcome, and the proof. Every claim is <em>verifiable</em>. None of it
+        relies on proprietary data sources.
       </p>
 
       <div class="solutions-head__ribbon">
@@ -50,7 +49,13 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
       <div class="solutions-head__stats">
         <Stat value={String(solutions.length)} label="solutions shipped" size="md" formula="|S|" />
         <Stat value="102" label="professional certs" sub="11-month arc" size="md" formula="c(t)" />
-        <Stat value="76.5k" label="LOC light-dep Python" sub="numpy/pandas/boto3" size="md" formula="|\mathcal{L}|" />
+        <Stat
+          value="76.5k"
+          label="LOC light-dep Python"
+          sub="numpy/pandas/boto3"
+          size="md"
+          formula="|\mathcal{L}|"
+        />
         <Stat value="31" label="eval gates" sub="G1–G31 statistical" size="md" formula="g" />
       </div>
     </div>
@@ -63,117 +68,16 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
         <h2 class="section__title">Multi-agent systems that pass validation.</h2>
       </header>
       <div class="sol-grid">
-        {aiSolutions.map(s => (
-          <article class="sol-card">
-            <header class="sol-card__head">
-              <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
-              <span class="pill pill--brand">AI</span>
-            </header>
-            <h3 class="sol-card__title">{s.data.title}</h3>
-            <div class="sol-card__client mono">{s.data.client}</div>
-
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Problem</div>
-              <p class="sol-card__row-body">{s.data.problem}</p>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Approach</div>
-              <p class="sol-card__row-body">{s.data.approach}</p>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Evidence</div>
-              <ul class="sol-card__evidence mono">
-                {s.data.evidence.map(e => <li>{e}</li>)}
-              </ul>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Outcome</div>
-              <p class="sol-card__row-body">{s.data.outcome}</p>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Proof</div>
-              <ul class="sol-card__proof">
-                {s.data.proof.map(p => <li>{p}</li>)}
-              </ul>
-            </div>
-            {s.data.tags.length > 0 && (
-              <footer class="sol-card__tags">
-                {s.data.tags.map(t => <span class="pill">{t}</span>)}
-              </footer>
-            )}
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <header class="section__head">
-        <p class="section__eyebrow">Lane · Quantitative Research</p>
-        <h2 class="section__title">Strategies that survive multiple-testing.</h2>
-      </header>
-      <div class="sol-grid">
-        {quantSolutions.map(s => (
-          <article class="sol-card sol-card--quant">
-            <header class="sol-card__head">
-              <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
-              <span class="pill pill--accent">Quant</span>
-            </header>
-            <h3 class="sol-card__title">{s.data.title}</h3>
-            <div class="sol-card__client mono">{s.data.client}</div>
-
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Problem</div>
-              <p class="sol-card__row-body">{s.data.problem}</p>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Approach</div>
-              <p class="sol-card__row-body">{s.data.approach}</p>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Evidence</div>
-              <ul class="sol-card__evidence mono">
-                {s.data.evidence.map(e => <li>{e}</li>)}
-              </ul>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Outcome</div>
-              <p class="sol-card__row-body">{s.data.outcome}</p>
-            </div>
-            <div class="sol-card__row">
-              <div class="sol-card__row-label">Proof</div>
-              <ul class="sol-card__proof">
-                {s.data.proof.map(p => <li>{p}</li>)}
-              </ul>
-            </div>
-            {s.data.tags.length > 0 && (
-              <footer class="sol-card__tags">
-                {s.data.tags.map(t => <span class="pill">{t}</span>)}
-              </footer>
-            )}
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  {eduSolutions.length > 0 && (
-    <section class="section section--alt">
-      <div class="container">
-        <header class="section__head">
-          <p class="section__eyebrow">Lane · Education & Outreach</p>
-          <h2 class="section__title">Public-facing work.</h2>
-        </header>
-        <div class="sol-grid">
-          {eduSolutions.map(s => (
+        {
+          aiSolutions.map((s) => (
             <article class="sol-card">
               <header class="sol-card__head">
                 <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
-                <span class="pill pill--gold">Public</span>
+                <span class="pill pill--brand">AI</span>
               </header>
               <h3 class="sol-card__title">{s.data.title}</h3>
               <div class="sol-card__client mono">{s.data.client}</div>
+
               <div class="sol-card__row">
                 <div class="sol-card__row-label">Problem</div>
                 <p class="sol-card__row-body">{s.data.problem}</p>
@@ -185,7 +89,9 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
               <div class="sol-card__row">
                 <div class="sol-card__row-label">Evidence</div>
                 <ul class="sol-card__evidence mono">
-                  {s.data.evidence.map(e => <li>{e}</li>)}
+                  {s.data.evidence.map((e) => (
+                    <li>{e}</li>
+                  ))}
                 </ul>
               </div>
               <div class="sol-card__row">
@@ -195,15 +101,136 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
               <div class="sol-card__row">
                 <div class="sol-card__row-label">Proof</div>
                 <ul class="sol-card__proof">
-                  {s.data.proof.map(p => <li>{p}</li>)}
+                  {s.data.proof.map((p) => (
+                    <li>{p}</li>
+                  ))}
                 </ul>
               </div>
+              {s.data.tags.length > 0 && (
+                <footer class="sol-card__tags">
+                  {s.data.tags.map((t) => (
+                    <span class="pill">{t}</span>
+                  ))}
+                </footer>
+              )}
             </article>
-          ))}
-        </div>
+          ))
+        }
       </div>
-    </section>
-  )}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Lane · Quantitative Research</p>
+        <h2 class="section__title">Strategies that survive multiple-testing.</h2>
+      </header>
+      <div class="sol-grid">
+        {
+          quantSolutions.map((s) => (
+            <article class="sol-card sol-card--quant">
+              <header class="sol-card__head">
+                <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
+                <span class="pill pill--accent">Quant</span>
+              </header>
+              <h3 class="sol-card__title">{s.data.title}</h3>
+              <div class="sol-card__client mono">{s.data.client}</div>
+
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Problem</div>
+                <p class="sol-card__row-body">{s.data.problem}</p>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Approach</div>
+                <p class="sol-card__row-body">{s.data.approach}</p>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Evidence</div>
+                <ul class="sol-card__evidence mono">
+                  {s.data.evidence.map((e) => (
+                    <li>{e}</li>
+                  ))}
+                </ul>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Outcome</div>
+                <p class="sol-card__row-body">{s.data.outcome}</p>
+              </div>
+              <div class="sol-card__row">
+                <div class="sol-card__row-label">Proof</div>
+                <ul class="sol-card__proof">
+                  {s.data.proof.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              </div>
+              {s.data.tags.length > 0 && (
+                <footer class="sol-card__tags">
+                  {s.data.tags.map((t) => (
+                    <span class="pill">{t}</span>
+                  ))}
+                </footer>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    eduSolutions.length > 0 && (
+      <section class="section section--alt">
+        <div class="container">
+          <header class="section__head">
+            <p class="section__eyebrow">Lane · Education & Outreach</p>
+            <h2 class="section__title">Public-facing work.</h2>
+          </header>
+          <div class="sol-grid">
+            {eduSolutions.map((s) => (
+              <article class="sol-card">
+                <header class="sol-card__head">
+                  <span class="sol-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
+                  <span class="pill pill--gold">Public</span>
+                </header>
+                <h3 class="sol-card__title">{s.data.title}</h3>
+                <div class="sol-card__client mono">{s.data.client}</div>
+                <div class="sol-card__row">
+                  <div class="sol-card__row-label">Problem</div>
+                  <p class="sol-card__row-body">{s.data.problem}</p>
+                </div>
+                <div class="sol-card__row">
+                  <div class="sol-card__row-label">Approach</div>
+                  <p class="sol-card__row-body">{s.data.approach}</p>
+                </div>
+                <div class="sol-card__row">
+                  <div class="sol-card__row-label">Evidence</div>
+                  <ul class="sol-card__evidence mono">
+                    {s.data.evidence.map((e) => (
+                      <li>{e}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div class="sol-card__row">
+                  <div class="sol-card__row-label">Outcome</div>
+                  <p class="sol-card__row-body">{s.data.outcome}</p>
+                </div>
+                <div class="sol-card__row">
+                  <div class="sol-card__row-label">Proof</div>
+                  <ul class="sol-card__proof">
+                    {s.data.proof.map((p) => (
+                      <li>{p}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <CTABanner
     title="Want a deep-dive on any of these?"
@@ -211,15 +238,14 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
     primaryLabel="Email me"
     secondaryLabel="Download resume ↓"
   />
-
 </BaseLayout>
 
 <style>
   .solutions-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.10), transparent 60%),
-      radial-gradient(900px 500px at 0% 100%, rgba(212, 160, 23, 0.10), transparent 60%),
+      radial-gradient(1200px 600px at 80% 0%, rgba(11, 61, 92, 0.1), transparent 60%),
+      radial-gradient(900px 500px at 0% 100%, rgba(212, 160, 23, 0.1), transparent 60%),
       var(--c-paper);
     border-bottom: var(--border);
   }
@@ -236,7 +262,10 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
     max-width: 64ch;
     margin-bottom: var(--sp-7);
   }
-  .solutions-head__sub em { color: var(--c-primary-2); font-style: italic; }
+  .solutions-head__sub em {
+    color: var(--c-primary-2-deep);
+    font-style: italic;
+  }
 
   .solutions-head__ribbon {
     display: grid;
@@ -251,7 +280,9 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
     margin-bottom: var(--sp-7);
     overflow-x: auto;
   }
-  .solutions-head__ribbon-eq { text-align: center; }
+  .solutions-head__ribbon-eq {
+    text-align: center;
+  }
   .solutions-head__ribbon-note {
     max-width: 280px;
     font-size: var(--fs-sm);
@@ -261,7 +292,7 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
     font-size: var(--fs-xs);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     margin-bottom: var(--sp-2);
   }
 
@@ -286,7 +317,9 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
     border: 1px solid var(--c-rule);
     border-radius: var(--radius);
     position: relative;
-    transition: border-color var(--transition), box-shadow var(--transition);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
   }
   .sol-card:hover {
     border-color: var(--c-primary);
@@ -322,11 +355,15 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
     padding-bottom: var(--sp-3);
     border-bottom: 1px dashed var(--c-rule-soft);
   }
-  .sol-card__row { display: flex; flex-direction: column; gap: var(--sp-1); }
+  .sol-card__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
   .sol-card__row-label {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.10em;
+    letter-spacing: 0.1em;
     color: var(--c-primary);
     font-weight: 600;
     margin-top: var(--sp-2);
@@ -377,7 +414,7 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
     content: '↗';
     position: absolute;
     left: 0;
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-family: var(--ff-mono);
     font-weight: 700;
   }
@@ -391,8 +428,14 @@ const eduSolutions  = solutions.filter(s => s.data.lane === 'education' || s.dat
   }
 
   @media (max-width: 720px) {
-    .solutions-head__stats { grid-template-columns: 1fr 1fr; }
-    .solutions-head__ribbon { grid-template-columns: 1fr; }
-    .sol-grid { grid-template-columns: 1fr; }
+    .solutions-head__stats {
+      grid-template-columns: 1fr 1fr;
+    }
+    .solutions-head__ribbon {
+      grid-template-columns: 1fr;
+    }
+    .sol-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

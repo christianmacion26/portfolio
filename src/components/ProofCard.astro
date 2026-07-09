@@ -16,45 +16,29 @@ interface Props {
   tone?: 'paper' | 'tape';
 }
 
-const {
-  src,
-  alt,
-  caption,
-  credit,
-  href,
-  aspect = '16/9',
-  tone = 'paper',
-} = Astro.props;
+const { src, alt, caption, credit, href, aspect = '16/9', tone = 'paper' } = Astro.props;
 
 const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect};`;
 ---
 
 <figure class={`proof-card proof-card--${tone}`} style={figureStyle}>
-  {href ? (
-    <a href={href} class="proof-card__link" target="_blank" rel="noopener">
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        class="proof-card__img"
-      />
-    </a>
-  ) : (
-    <img
-      src={src}
-      alt={alt}
-      loading="lazy"
-      decoding="async"
-      class="proof-card__img"
-    />
-  )}
-  {(caption || credit) && (
-    <figcaption class="proof-card__cap">
-      {caption && <span class="proof-card__caption">{caption}</span>}
-      {credit && <span class="proof-card__credit mono">{credit}</span>}
-    </figcaption>
-  )}
+  {
+    href ? (
+      <a href={href} class="proof-card__link" target="_blank" rel="noopener">
+        <img src={src} alt={alt} loading="lazy" decoding="async" class="proof-card__img" />
+      </a>
+    ) : (
+      <img src={src} alt={alt} loading="lazy" decoding="async" class="proof-card__img" />
+    )
+  }
+  {
+    (caption || credit) && (
+      <figcaption class="proof-card__cap">
+        {caption && <span class="proof-card__caption">{caption}</span>}
+        {credit && <span class="proof-card__credit mono">{credit}</span>}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
@@ -88,7 +72,7 @@ const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect};`;
     border-radius: var(--radius-sm);
   }
   /* Aspect-ratio guard for CLS prevention — when set via inline --proof-aspect */
-  .proof-card[style*="--proof-aspect"] .proof-card__img {
+  .proof-card[style*='--proof-aspect'] .proof-card__img {
     aspect-ratio: var(--proof-aspect);
     object-fit: cover;
   }
@@ -104,7 +88,8 @@ const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect};`;
   .proof-card--tape .proof-card__cap {
     color: rgba(230, 237, 243, 0.75);
   }
-  .proof-card__caption { }
+  .proof-card__caption {
+  }
   .proof-card__credit {
     font-size: var(--fs-xs);
     color: var(--c-ink-3);

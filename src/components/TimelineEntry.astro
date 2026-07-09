@@ -14,7 +14,17 @@ interface Props {
   contributions?: { label: string; evidence: string; proof?: string }[];
   proofs?: string[];
 }
-const { title, company, location, startDate, endDate, isCurrent, summary, contributions = [], proofs = [] } = Astro.props;
+const {
+  title,
+  company,
+  location,
+  startDate,
+  endDate,
+  isCurrent,
+  summary,
+  contributions = [],
+  proofs = [],
+} = Astro.props;
 
 function formatDate(iso: string): string {
   if (iso.toLowerCase() === 'present') return 'Present';
@@ -24,6 +34,7 @@ function formatDate(iso: string): string {
 }
 const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
 ---
+
 <article class="tl">
   <div class="tl__rail" aria-hidden="true">
     <span class="tl__dot"></span>
@@ -45,34 +56,42 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     {summary && <p class="tl__summary">{summary}</p>}
     <div class="tl__content"><slot /></div>
 
-    {contributions.length > 0 && (
-      <div class="tl__contributions">
-        <div class="tl__contributions-label mono">CONTRIBUTIONS · EVIDENCE · PROOF</div>
-        <ul class="tl__contributions-list">
-          {contributions.map(c => (
-            <li>
-              <div class="tl__contribution-label">{c.label}</div>
-              <div class="tl__contribution-evidence">{c.evidence}</div>
-              {c.proof && <div class="tl__contribution-proof mono"><span class="dot dot--pass"></span> {c.proof}</div>}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+    {
+      contributions.length > 0 && (
+        <div class="tl__contributions">
+          <div class="tl__contributions-label mono">CONTRIBUTIONS · EVIDENCE · PROOF</div>
+          <ul class="tl__contributions-list">
+            {contributions.map((c) => (
+              <li>
+                <div class="tl__contribution-label">{c.label}</div>
+                <div class="tl__contribution-evidence">{c.evidence}</div>
+                {c.proof && (
+                  <div class="tl__contribution-proof mono">
+                    <span class="dot dot--pass" /> {c.proof}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
 
-    {proofs.length > 0 && (
-      <div class="tl__proofs">
-        <div class="tl__contributions-label mono">PROOF POINTERS</div>
-        <ul class="tl__proofs-list">
-          {proofs.map(p => (
-            <li>
-              <span class="tl__proof-glyph mono">↗</span>
-              {p}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+    {
+      proofs.length > 0 && (
+        <div class="tl__proofs">
+          <div class="tl__contributions-label mono">PROOF POINTERS</div>
+          <ul class="tl__proofs-list">
+            {proofs.map((p) => (
+              <li>
+                <span class="tl__proof-glyph mono">↗</span>
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
   </div>
 </article>
 
@@ -84,7 +103,9 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     padding-block: var(--sp-6);
     border-bottom: 1px solid var(--c-rule-soft);
   }
-  .tl:last-child { border-bottom: none; }
+  .tl:last-child {
+    border-bottom: none;
+  }
   .tl__rail {
     position: relative;
     display: flex;
@@ -97,7 +118,7 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     height: 12px;
     border-radius: 50%;
     background: var(--c-primary);
-    box-shadow: 0 0 0 4px rgba(11, 61, 92, 0.10);
+    box-shadow: 0 0 0 4px rgba(11, 61, 92, 0.1);
   }
   .tl__line {
     width: 2px;
@@ -112,7 +133,10 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     gap: var(--sp-4);
     flex-wrap: wrap;
   }
-  .tl__role { font-size: var(--fs-lg); margin: 0; }
+  .tl__role {
+    font-size: var(--fs-lg);
+    margin: 0;
+  }
   .tl__meta {
     margin-top: 0.25rem;
     display: flex;
@@ -122,9 +146,16 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     font-size: var(--fs-sm);
     color: var(--c-ink-2);
   }
-  .tl__company { font-weight: 500; color: var(--c-ink); }
-  .tl__sep { color: var(--c-ink-3); }
-  .tl__current { margin-left: var(--sp-2); }
+  .tl__company {
+    font-weight: 500;
+    color: var(--c-ink);
+  }
+  .tl__sep {
+    color: var(--c-ink-3);
+  }
+  .tl__current {
+    margin-left: var(--sp-2);
+  }
   .tl__date {
     font-size: var(--fs-sm);
     color: var(--c-ink-2);
@@ -161,7 +192,10 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     border-radius: 50%;
     background: var(--c-primary-2);
   }
-  .tl__content :global(strong) { color: var(--c-primary); font-weight: 600; }
+  .tl__content :global(strong) {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
 
   /* === Contributions === */
   .tl__contributions {
@@ -174,8 +208,8 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
   .tl__contributions-label {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.10em;
-    color: var(--c-primary-2);
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
     font-weight: 600;
     margin-bottom: var(--sp-3);
   }
@@ -190,8 +224,18 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     border-left: 2px solid var(--c-primary);
     padding-left: var(--sp-3);
   }
-  .tl__contribution-label { font-size: var(--fs-sm); font-weight: 600; color: var(--c-ink); margin-bottom: 0.25rem; }
-  .tl__contribution-evidence { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: var(--lh-loose); margin-bottom: 0.25rem; }
+  .tl__contribution-label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-ink);
+    margin-bottom: 0.25rem;
+  }
+  .tl__contribution-evidence {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-bottom: 0.25rem;
+  }
   .tl__contribution-proof {
     font-size: var(--fs-xs);
     color: var(--c-pass);
@@ -218,7 +262,7 @@ const dateRange = `${formatDate(startDate)} — ${formatDate(endDate)}`;
     gap: var(--sp-2);
   }
   .tl__proof-glyph {
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-weight: 700;
   }
 </style>

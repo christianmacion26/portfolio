@@ -16,12 +16,7 @@ interface Props {
   fetchpriority?: 'high' | 'low' | 'auto';
 }
 
-const {
-  alt,
-  size = 200,
-  loading = 'eager',
-  fetchpriority = 'high',
-} = Astro.props;
+const { alt, size = 200, loading = 'eager', fetchpriority = 'high' } = Astro.props;
 
 // 2× the requested size for retina. Astro emits AVIF + WebP variants by default.
 const widths = [size, Math.round(size * 1.5), size * 2];
@@ -61,6 +56,8 @@ const widths = [size, Math.round(size * 1.5), size * 2];
     display: block;
   }
   @media (max-width: 720px) {
-    .avatar { margin-bottom: var(--sp-3); }
+    .avatar {
+      margin-bottom: var(--sp-3);
+    }
   }
 </style>

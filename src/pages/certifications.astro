@@ -11,24 +11,23 @@ import ProofCard from '@components/ProofCard.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
-const groups = (await getCollection('certGroup'))
-  .sort((a, b) => a.data.order - b.data.order);
+const groups = (await getCollection('certGroup')).sort((a, b) => a.data.order - b.data.order);
 
 const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
 const flagshipCount = groups.reduce(
-  (sum, g) => sum + g.data.items.filter(c => c.flagship).length,
-  0
+  (sum, g) => sum + g.data.items.filter((c) => c.flagship).length,
+  0,
 );
 const tier1Count = groups.reduce(
-  (sum, g) => sum + g.data.items.filter(c => c.tier === 1).length,
-  0
+  (sum, g) => sum + g.data.items.filter((c) => c.tier === 1).length,
+  0,
 );
 ---
+
 <BaseLayout
   title="Certifications"
   description={`Curated ${totalCount}+ of 102 professional certifications, grouped by domain and Tier-1 issuer.`}
 >
-
   <header class="page-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">certs/</span> · 102 total, curated below</p>
@@ -37,7 +36,8 @@ const tier1Count = groups.reduce(
       </h1>
       <p class="page-head__sub">
         102 professional certifications across AI, finance, math/statistics, and event flagships —
-        collected in 11 months (Nov 2022 → May 2026). Curated below by domain; Tier-1 issuers flagged.
+        collected in 11 months (Nov 2022 → May 2026). Curated below by domain; Tier-1 issuers
+        flagged.
       </p>
 
       <div class="head-eq">
@@ -51,65 +51,76 @@ const tier1Count = groups.reduce(
       <div class="head-stats">
         <Stat value={String(totalCount)} label="curated" sub="below" formula="c_{shown}" />
         <Stat value="102" label="total" sub="all-time" formula="c(t)" trend="up" />
-        <Stat value={String(flagshipCount)} label="flagships" sub="NASA · Meta · IBM · IMC" formula="\sum f" />
+        <Stat
+          value={String(flagshipCount)}
+          label="flagships"
+          sub="NASA · Meta · IBM · IMC"
+          formula="\sum f"
+        />
         <Stat value={String(tier1Count)} label="tier-1" sub="STA · SEC · BSP" formula="\sum t_1" />
       </div>
     </div>
   </header>
 
-  {groups.map((group, idx) => (
-    <section class:list={["section", { "section--alt": idx % 2 === 1 }]}>
-      <div class="container">
-        <header class="section__head">
-          <p class="section__eyebrow">Domain {idx + 1}</p>
-          <h2 class="section__title">{group.data.title}</h2>
-          <p class="section__sub">{group.data.blurb}</p>
-        </header>
-        {group.data.featuredImg && (
-          <div class="cert-featured">
-            <ProofCard
-              src={path(group.data.featuredImg)}
-              alt={group.data.featuredAlt ?? ''}
-              caption={group.data.featuredCaption ?? ''}
-              href={group.data.featuredHref ? path(group.data.featuredHref) : undefined}
-              aspect="3/2"
-            />
-          </div>
-        )}
-        <ul class="certs">
-          {group.data.items.map(item => (
-            <li class:list={["cert", { "cert--tier1": item.tier === 1, "cert--flagship": item.flagship }]}>
-              <div class="cert__name">{item.name}</div>
-              <div class="cert__issuer">{item.issuer}</div>
-              <div class="cert__year mono">{item.year ?? ''}</div>
-              {item.flagship && <span class="pill pill--gold cert__tag">Flagship</span>}
-              {item.tier === 1 && !item.flagship && <span class="pill cert__tag">Tier 1</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  ))}
+  {
+    groups.map((group, idx) => (
+      <section class:list={['section', { 'section--alt': idx % 2 === 1 }]}>
+        <div class="container">
+          <header class="section__head">
+            <p class="section__eyebrow">Domain {idx + 1}</p>
+            <h2 class="section__title">{group.data.title}</h2>
+            <p class="section__sub">{group.data.blurb}</p>
+          </header>
+          {group.data.featuredImg && (
+            <div class="cert-featured">
+              <ProofCard
+                src={path(group.data.featuredImg)}
+                alt={group.data.featuredAlt ?? ''}
+                caption={group.data.featuredCaption ?? ''}
+                href={group.data.featuredHref ? path(group.data.featuredHref) : undefined}
+                aspect="3/2"
+              />
+            </div>
+          )}
+          <ul class="certs">
+            {group.data.items.map((item) => (
+              <li
+                class:list={[
+                  'cert',
+                  { 'cert--tier1': item.tier === 1, 'cert--flagship': item.flagship },
+                ]}
+              >
+                <div class="cert__name">{item.name}</div>
+                <div class="cert__issuer">{item.issuer}</div>
+                <div class="cert__year mono">{item.year ?? ''}</div>
+                {item.flagship && <span class="pill pill--gold cert__tag">Flagship</span>}
+                {item.tier === 1 && !item.flagship && <span class="pill cert__tag">Tier 1</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
 
   <section class="section section--tight">
     <div class="container container-narrow">
       <p class="footnote">
         <strong>Full list:</strong> the curated {totalCount} above is the highlight reel. The complete
         list of 102 (issuer + date + verifiable credential ID where applicable) lives in the
-        <a href={path('/resume')}> tailored resume package</a>. Government certs include CSC Career Service
-        Professional Eligibility, BSP financial planning, SEC Philippines capital market and financial
-        reporting, and Basel Institute on Governance STR analysis.
+        <a href={path('/resume')}> tailored resume package</a>. Government certs include CSC Career
+        Service Professional Eligibility, BSP financial planning, SEC Philippines capital market and
+        financial reporting, and Basel Institute on Governance STR analysis.
       </p>
     </div>
   </section>
-
 </BaseLayout>
 
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% -100px, rgba(184, 134, 11, 0.10), transparent 60%),
+      radial-gradient(1200px 600px at 80% -100px, rgba(184, 134, 11, 0.1), transparent 60%),
       var(--c-paper);
     border-bottom: var(--border);
   }
@@ -161,7 +172,9 @@ const tier1Count = groups.reduce(
     position: relative;
     transition: border-color var(--transition);
   }
-  .cert:hover { border-color: var(--c-ink-3); }
+  .cert:hover {
+    border-color: var(--c-ink-3);
+  }
   .cert__name {
     font-weight: 600;
     color: var(--c-ink);
@@ -187,7 +200,7 @@ const tier1Count = groups.reduce(
     margin-top: var(--sp-2);
   }
   .cert--flagship {
-    border-color: var(--c-gold);
+    border-color: var(--c-amber-deep);
     background: linear-gradient(180deg, rgba(184, 134, 11, 0.04), var(--c-bg));
   }
   .footnote {
@@ -201,6 +214,8 @@ const tier1Count = groups.reduce(
   }
 
   @media (max-width: 880px) {
-    .head-stats { grid-template-columns: 1fr 1fr; }
+    .head-stats {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

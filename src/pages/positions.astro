@@ -17,11 +17,11 @@ import Chart from '@components/Chart.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
 ---
+
 <BaseLayout
   title="Live paper-trading"
   description="Currently-running strategies. Public data, no live capital, weekly updates."
 >
-
   <header class="positions-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">positions/</span> · live paper-trading</p>
@@ -30,9 +30,9 @@ import { path } from '@utils/url';
       </h1>
       <p class="positions-head__sub">
         A backtest is what a strategy <em>would have done</em>. A paper-trade is what it
-        <em>actually does</em>. The cheapest way to find out which differences matter is to
-        run the strategy on real data, with no look-ahead, for long enough that at least one
-        regime change has happened. This page is the canonical record of that run.
+        <em>actually does</em>. The cheapest way to find out which differences matter is to run the
+        strategy on real data, with no look-ahead, for long enough that at least one regime change
+        has happened. This page is the canonical record of that run.
       </p>
 
       <div class="positions-head__disclosures">
@@ -45,12 +45,13 @@ import { path } from '@utils/url';
 
   <section class="section section--alt">
     <div class="container">
-
       <header class="positions-card__head">
         <div>
           <p class="section__eyebrow mono">POSITION 01 · ACTIVE</p>
           <h2 class="positions-card__title">Vol-target time-series momentum · BTC/USDT</h2>
-          <p class="positions-card__sub mono">project 03 · running since 2026-04-21 · 50 trading days · vol target 30% annualized</p>
+          <p class="positions-card__sub mono">
+            project 03 · running since 2026-04-21 · 50 trading days · vol target 30% annualized
+          </p>
         </div>
         <div class="positions-card__status">
           <span class="dot dot--pass"></span>
@@ -61,11 +62,10 @@ import { path } from '@utils/url';
       <Chart
         type="line"
         data={[
-          100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4,
-          102.0, 101.4, 100.9, 101.6, 102.3, 102.7, 103.1, 102.5, 101.9, 102.2,
-          102.8, 103.4, 102.9, 103.6, 104.2, 103.8, 104.5, 105.1, 104.6, 105.3,
-          105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5, 109.2,
-          109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
+          100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4, 102.0, 101.4, 100.9,
+          101.6, 102.3, 102.7, 103.1, 102.5, 101.9, 102.2, 102.8, 103.4, 102.9, 103.6, 104.2, 103.8,
+          104.5, 105.1, 104.6, 105.3, 105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5,
+          109.2, 109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
         ]}
         color="var(--c-primary-2)"
         title="Equity curve · normalized to 100 · BTC/USDT vol-target momentum"
@@ -79,16 +79,20 @@ import { path } from '@utils/url';
           <img
             src={path('/proof/cryptoneeds-christ-chart.jpg')}
             alt="TradingView chart of XAUT/USDT (tokenized gold) on the 1-hour timeframe with Elliott Wave counts, by @CryptoneedsChrist."
-            width="220" height="160"
-            loading="lazy" decoding="async"
+            width="220"
+            height="160"
+            loading="lazy"
+            decoding="async"
             class="positions-proof__img"
           />
           <div class="positions-proof__copy">
             <div class="positions-proof__title mono">Operator-discretion · XAUT/USDT</div>
             <p>
-              Public TradingView chart by <strong>@CryptoneedsChrist</strong>. Same operator, different
-              instrument family than the systematic book above — discretionary Elliott Wave work
-              on tokenized gold. <a href={path('/proof')} class="positions-proof__cta">See full chart + provenance on /proof →</a>
+              Public TradingView chart by <strong>@CryptoneedsChrist</strong>. Same operator,
+              different instrument family than the systematic book above — discretionary Elliott
+              Wave work on tokenized gold. <a href={path('/proof')} class="positions-proof__cta"
+                >See full chart + provenance on /proof →</a
+              >
             </p>
           </div>
         </a>
@@ -131,16 +135,21 @@ import { path } from '@utils/url';
         <h3 class="positions-tradeoffs__title">Tradeoffs observed vs backtest</h3>
         <ul class="positions-tradeoffs__list">
           <li>
-            <strong>Slippage matches:</strong> 4.2 bps/side realized vs 5 bps modeled. The linear-impact assumption is honest at this size.
+            <strong>Slippage matches:</strong> 4.2 bps/side realized vs 5 bps modeled. The linear-impact
+            assumption is honest at this size.
           </li>
           <li>
-            <strong>Regime stability:</strong> the period was dominated by a calm regime. The backtest's worst-drawdown number (−30%) has <em>not</em> been tested in this window. The next regime event will be the test.
+            <strong>Regime stability:</strong> the period was dominated by a calm regime. The backtest's
+            worst-drawdown number (−30%) has <em>not</em> been tested in this window. The next regime
+            event will be the test.
           </li>
           <li>
-            <strong>Latency:</strong> Binance kline timestamp drift is real but small at the 1-day cadence. Not a concern at this strategy frequency.
+            <strong>Latency:</strong> Binance kline timestamp drift is real but small at the 1-day cadence.
+            Not a concern at this strategy frequency.
           </li>
           <li>
-            <strong>Survivorship:</strong> only one instrument. The strategy hasn't been tested across the asset universe in production; the backtest is the cross-asset claim.
+            <strong>Survivorship:</strong> only one instrument. The strategy hasn't been tested across
+            the asset universe in production; the backtest is the cross-asset claim.
           </li>
         </ul>
       </div>
@@ -148,15 +157,28 @@ import { path } from '@utils/url';
       <div class="positions-changes">
         <h3 class="positions-changes__title">What I'd change before going live</h3>
         <ol class="positions-changes__list">
-          <li>Add a kill-switch on &gt;20% weekly drawdown (current code has none — this is a backtest-engineering gap, not a strategy gap).</li>
-          <li>Add a per-trade log with size, slippage realized, and execution timestamp for capacity testing at $1M / $5M / $10M tiers.</li>
-          <li>Cross-check the signal against Binance.US and Coinbase klines to rule out venue-specific artifacts.</li>
+          <li>
+            Add a kill-switch on &gt;20% weekly drawdown (current code has none — this is a
+            backtest-engineering gap, not a strategy gap).
+          </li>
+          <li>
+            Add a per-trade log with size, slippage realized, and execution timestamp for capacity
+            testing at $1M / $5M / $10M tiers.
+          </li>
+          <li>
+            Cross-check the signal against Binance.US and Coinbase klines to rule out venue-specific
+            artifacts.
+          </li>
         </ol>
       </div>
 
       <div class="positions-code">
         <span class="mono">code:</span>
-        <a href="https://github.com/christianmacion26/timeseries-momentum-voltarget" target="_blank" rel="noopener">
+        <a
+          href="https://github.com/christianmacion26/timeseries-momentum-voltarget"
+          target="_blank"
+          rel="noopener"
+        >
           github.com/christianmacion26/timeseries-momentum-voltarget
         </a>
       </div>
@@ -177,7 +199,10 @@ import { path } from '@utils/url';
       <ul class="neg">
         <li>I am not running live capital. Paper-trading only.</li>
         <li>I am not running on proprietary data. Binance BTC/USDT 1d klines are public.</li>
-        <li>I am not claiming the live period validates the backtest. The next regime event will be the test.</li>
+        <li>
+          I am not claiming the live period validates the backtest. The next regime event will be
+          the test.
+        </li>
         <li>I am not running more strategies than I can document. One position, fully logged.</li>
       </ul>
     </div>
@@ -190,15 +215,13 @@ import { path } from '@utils/url';
     secondaryLabel="Read the backtest"
     secondaryHref={path('/projects/quant/03-timeseries-momentum-voltarget')}
   />
-
 </BaseLayout>
 
 <style>
   .positions-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1000px 500px at 80% 0%, rgba(212, 160, 23, 0.10), transparent 60%),
-      var(--c-bg);
+      radial-gradient(1000px 500px at 80% 0%, rgba(212, 160, 23, 0.1), transparent 60%), var(--c-bg);
     border-bottom: var(--border);
   }
   .positions-head__title {
@@ -289,8 +312,8 @@ import { path } from '@utils/url';
   .positions-proof__title {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.10em;
-    color: var(--c-primary-2);
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
     margin-bottom: var(--sp-2);
     font-weight: 600;
   }
@@ -305,15 +328,19 @@ import { path } from '@utils/url';
     font-weight: 600;
   }
   .positions-proof__cta {
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     text-decoration-color: rgba(212, 160, 23, 0.4);
   }
   .positions-proof__cta:hover {
-    text-decoration-color: var(--c-primary-2);
+    text-decoration-color: var(--c-primary-2-deep);
   }
   @media (max-width: 720px) {
-    .positions-proof__link { grid-template-columns: 1fr; }
-    .positions-proof__img { max-width: 220px; }
+    .positions-proof__link {
+      grid-template-columns: 1fr;
+    }
+    .positions-proof__img {
+      max-width: 220px;
+    }
   }
 
   .positions-grid {
@@ -379,7 +406,7 @@ import { path } from '@utils/url';
     content: '–';
     position: absolute;
     left: 0;
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-weight: 700;
   }
   .positions-changes__list {
@@ -389,10 +416,10 @@ import { path } from '@utils/url';
     counter-increment: change;
   }
   .positions-changes__list li::before {
-    content: counter(change) ".";
+    content: counter(change) '.';
     position: absolute;
     left: 0;
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-family: var(--ff-mono);
     font-weight: 700;
   }
@@ -411,7 +438,7 @@ import { path } from '@utils/url';
     font-size: var(--fs-sm);
   }
   .positions-code .mono {
-    color: var(--c-primary-2);
+    color: var(--c-primary-2-deep);
     font-weight: 600;
     margin-right: var(--sp-2);
   }
@@ -444,10 +471,16 @@ import { path } from '@utils/url';
   }
 
   @media (max-width: 720px) {
-    .positions-card__head { flex-direction: column; }
-    .positions-grid { grid-template-columns: 1fr 1fr; }
+    .positions-card__head {
+      flex-direction: column;
+    }
+    .positions-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
   @media (max-width: 480px) {
-    .positions-grid { grid-template-columns: 1fr; }
+    .positions-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

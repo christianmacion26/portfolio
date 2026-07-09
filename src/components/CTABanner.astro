@@ -23,6 +23,7 @@ const {
 const primary = primaryHref ?? path('/resume');
 const secondary = secondaryHref ?? path('/contact');
 ---
+
 <section class="cta">
   <div class="container cta__inner">
     <div>
@@ -50,9 +51,22 @@ const secondary = secondaryHref ?? path('/contact');
     align-items: center;
     gap: var(--sp-5);
   }
-  .cta__title { color: #fff; font-size: var(--fs-2xl); margin: 0; }
-  .cta__sub { color: rgba(255,255,255,0.85); font-size: var(--fs-base); margin-top: var(--sp-2); max-width: 56ch; }
-  .cta__actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+  .cta__title {
+    color: #fff;
+    font-size: var(--fs-2xl);
+    margin: 0;
+  }
+  .cta__sub {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: var(--fs-base);
+    margin-top: var(--sp-2);
+    max-width: 56ch;
+  }
+  .cta__actions {
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
   .cta .btn--primary {
     background: #fff;
     color: var(--c-primary);
@@ -62,14 +76,16 @@ const secondary = secondaryHref ?? path('/contact');
     color: var(--c-primary-deep);
   }
   .cta .btn--ghost {
-    border-color: rgba(255,255,255,0.4);
+    border-color: rgba(255, 255, 255, 0.4);
     color: #fff;
   }
   .cta .btn--ghost:hover {
     border-color: #fff;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255, 255, 255, 0.08);
   }
   @media (max-width: 720px) {
-    .cta__inner { grid-template-columns: 1fr; }
+    .cta__inner {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
