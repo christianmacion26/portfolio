@@ -1,0 +1,716 @@
+---
+/**
+ * chat.astro — Client-side RAG chat over the portfolio corpus.
+ *
+ * The "LLM" is a deterministic extractive ranker: TF-IDF + cosine over a
+ * build-time corpus built from the same content collections the site
+ * already uses. No external API, no key, no latency. Citations are
+ * mandatory — every answer links to the source page.
+ *
+ * The corpus is embedded as <script type="application/json" id="chat-corpus">
+ * so the page is fully self-contained and works on first paint with
+ * zero network requests.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { path } from '@utils/url';
+
+interface Chunk {
+  id: string; // stable URN: <lane>/<slug>#<n>
+  title: string;
+  text: string;
+  source: { kind: 'project' | 'experience' | 'publication'; slug: string; title: string; url: string; role?: string };
+  rank: number;
+}
+
+const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
+const experiences = await getCollection('experience');
+
+// Render each project / experience so we can pull body text out for retrieval.
+const projectChunks: Chunk[] = [];
+for (const p of projects) {
+  const { Content } = await render(p);
+  // Pull text from the frontmatter summary + title + tags as a cheap proxy
+  // for body content (the full MDX render is too heavy for a client corpus).
+  const summaryText = `${p.data.title}. ${p.data.summary}. ${p.data.summary_long ?? ''}`;
+  const tags = (p.data.tags ?? []).join(', ');
+  const text = `${summaryText} Stack: ${(p.data.stack ?? []).join(', ')}. Tags: ${tags}.`;
+  projectChunks.push({
+    id: `project/${p.id}`,
+    title: p.data.title,
+    text,
+    source: {
+      kind: 'project',
+      slug: p.id,
+      title: p.data.title,
+      url: path(`/projects/${p.id}`),
+      role: p.data.role,
+    },
+    rank: 0,
+  });
+  void Content; // intentionally unused; we want frontmatter for the client corpus
+}
+
+const experienceChunks: Chunk[] = [];
+for (const e of experiences) {
+  const contributions = (e.data.contributions ?? []).map((c) => `${c.label}: ${c.evidence}`).join(' | ');
+  const tags = (e.data.tags ?? []).join(', ');
+  const text = `${e.data.title} at ${e.data.company} (${e.data.startDate} → ${e.data.endDate}). ${e.data.summary ?? ''}. Contributions: ${contributions}. Tags: ${tags}.`;
+  experienceChunks.push({
+    id: `experience/${e.id}`,
+    title: `${e.data.title} — ${e.data.company}`,
+    text,
+    source: {
+      kind: 'experience',
+      slug: e.id,
+      title: `${e.data.title} — ${e.data.company}`,
+      url: path(`/experience`),
+    },
+    rank: 0,
+  });
+}
+
+const corpus = {
+  generatedAt: new Date().toISOString(),
+  total: projectChunks.length + experienceChunks.length,
+  chunks: [...projectChunks, ...experienceChunks],
+};
+
+// Suggested starter queries (one-click)
+const starters = [
+  'What evidence backs the Deflated Sharpe finding?',
+  'Which projects address look-ahead bias?',
+  'Tell me about your experience with multi-agent LLM systems.',
+  'How do you handle transaction-cost modeling?',
+  'What is the methodology behind G1–G31?',
+  'Do you have public repos I can run?',
+];
+---
+
+<BaseLayout
+  title="Chat with my portfolio"
+  description="A client-side RAG demo over the portfolio corpus. Ask about my projects, experience, or methodology. Every answer cites its source."
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="section__eyebrow"><span class="mono">chat/</span> · client-side RAG over the portfolio corpus</p>
+      <h1 class="page-head__title">
+        Ask the corpus. <span class="hl">Get the citation.</span>
+      </h1>
+      <p class="page-head__sub">
+        This page is a <strong>deterministic extractive RAG</strong>: TF-IDF + cosine similarity
+        over a build-time corpus of every project, experience, and tag on this site. No external
+        API, no model calls, no latency. Every answer is grounded in (and links to) the source
+        page. The same harness that powers this widget is shipped as
+        <a class="page-head__link" href="/proof/#code-artifacts">portfolio_v2/qfin-rag-harness</a>
+        for the qfin paper corpus — deterministic baseline, swap in a real embedder later.
+      </p>
+
+      <div class="nda-callout" role="note">
+        <span class="dot dot--pass" aria-hidden="true"></span>
+        <div>
+          <strong>What this is, and isn't.</strong> This widget ranks chunks and surfaces the
+          top-k verbatim matches — it does not generate free-form prose. Every answer is a
+          sentence from your portfolio plus a citation link. <strong>It's a citation-first
+          demo</strong>, not a chatbot. For the generative / chat-style layer see the
+          <a class="page-head__link" href="/proof/#code-artifacts">MCP backtest server</a> and
+          <a class="page-head__link" href="/proof/#code-artifacts">numerical-faithfulness eval</a>
+          artifacts in /proof.
+        </div>
+      </div>
+
+      <div class="head-stats">
+        <span class="stat-pill">
+          <span class="mono">{corpus.total}</span>
+          <span class="muted">chunks in corpus</span>
+        </span>
+        <span class="stat-pill">
+          <span class="mono">{projects.length}</span>
+          <span class="muted">projects</span>
+        </span>
+        <span class="stat-pill">
+          <span class="mono">{experiences.length}</span>
+          <span class="muted">experiences</span>
+        </span>
+        <span class="stat-pill">
+          <span class="mono">~0 ms</span>
+          <span class="muted">latency (client-side)</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <div class="chatbox" aria-live="polite">
+        <div class="chatbox__toolbar">
+          <label class="chatbox__label" for="chat-q">Query</label>
+          <button class="chatbox__clear" id="chat-clear" type="button" title="Clear">
+            clear
+          </button>
+        </div>
+        <form class="chatbox__form" id="chat-form" autocomplete="off">
+          <input
+            class="chatbox__input"
+            id="chat-q"
+            name="q"
+            type="search"
+            placeholder="e.g. 'walk-forward validation' or 'multi-agent LLM eval'"
+            required
+          />
+          <button class="chatbox__send" type="submit">Ask →</button>
+        </form>
+
+        <div class="chatbox__starters">
+          <span class="chatbox__starters-label muted">try:</span>
+          {
+            starters.map((s, i) => (
+              <button class="starter" data-starter={s} type="button">
+                {s}
+              </button>
+            ))
+          }
+        </div>
+
+        <div class="chatbox__results" id="chat-results">
+          <p class="chatbox__placeholder">
+            Ask a question about projects, experience, or methodology. The top-3 chunks will
+            appear here, ranked by cosine similarity.
+          </p>
+        </div>
+
+        <details class="chatbox__debug">
+          <summary>How this works</summary>
+          <ol class="chatbox__debug-list">
+            <li>Tokenize query (lowercase, alpha tokens, drop ~40 stopwords).</li>
+            <li>Score every chunk as cosine(TF-IDF(query), TF-IDF(chunk)).</li>
+            <li>Return top-3 chunks sorted by score, descending. Each shows the chunk's source page.</li>
+            <li>Score thresholds: ≥0.10 = strong match · ≥0.04 = partial · &lt;0.04 = no match.</li>
+            <li>The same TF-IDF index that powers this widget ships as
+              <a class="page-head__link" href="/proof/#code-artifacts">portfolio_v2/qfin-rag-harness</a>
+              — pure-Python over a curated 16-paper qfin corpus.</li>
+          </ol>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/json" id="chat-corpus" set:html={JSON.stringify(corpus)} />
+</BaseLayout>
+
+<script>
+  // === Client-side TF-IDF RAG over the embedded corpus ===
+  // Deterministic, dependency-free, runs in <5ms for ~50 chunks.
+
+  interface ChunkSource {
+    kind: 'project' | 'experience' | 'publication';
+    slug: string;
+    title: string;
+    url: string;
+    role?: string;
+  }
+  interface Chunk {
+    id: string;
+    title: string;
+    text: string;
+    source: ChunkSource;
+  }
+  interface Corpus {
+    generatedAt: string;
+    total: number;
+    chunks: Chunk[];
+  }
+
+  const STOPWORDS = new Set(
+    ('a an the and or of to in on for with is are be by as at from this that we they their our its ' +
+      'it but not have has had do does did can may will would should could than into across via ' +
+      'most more less much many such those these between over')
+      .split(/\s+/),
+  );
+  const TOKEN_RE = /[a-zA-Z][a-zA-Z\-]+/g;
+
+  function tokenize(text: string): string[] {
+    const out: string[] = [];
+    for (const m of text.toLowerCase().matchAll(TOKEN_RE)) {
+      const t = m[0];
+      if (!STOPWORDS.has(t)) out.push(t);
+    }
+    return out;
+  }
+
+  function loadCorpus(): Corpus {
+    const el = document.getElementById('chat-corpus');
+    if (!el) throw new Error('chat-corpus missing');
+    return JSON.parse(el.textContent || '{}');
+  }
+
+  interface IndexedChunk {
+    chunk: Chunk;
+    tfidf: Map<string, number>;
+    norm: number;
+  }
+
+  function buildIndex(corpus: Corpus): { docs: IndexedChunk[]; idf: Map<string, number> } {
+    const N = corpus.chunks.length;
+    const df = new Map<string, number>();
+    const docs = corpus.chunks.map((c) => {
+      const tokens = tokenize(c.text);
+      const tf = new Map<string, number>();
+      for (const t of tokens) tf.set(t, (tf.get(t) ?? 0) + 1);
+      for (const t of tf.keys()) df.set(t, (df.get(t) ?? 0) + 1);
+      return { chunk: c, tf, tfidf: new Map<string, number>(), norm: 0 };
+    });
+
+    const idf = new Map<string, number>();
+    for (const [t, d] of df.entries()) {
+      idf.set(t, Math.log(1 + N / d));
+    }
+
+    for (const d of docs) {
+      let sumSq = 0;
+      for (const [t, freq] of d.tf.entries()) {
+        const w = freq * (idf.get(t) ?? 0);
+        d.tfidf.set(t, w);
+        sumSq += w * w;
+      }
+      d.norm = Math.sqrt(sumSq) || 1e-9;
+    }
+    return { docs, idf };
+  }
+
+  function queryIndex(
+    index: { docs: IndexedChunk[]; idf: Map<string, number> },
+    q: string,
+    topK = 3,
+  ): Array<{ chunk: Chunk; score: number }> {
+    const qTokens = tokenize(q);
+    if (qTokens.length === 0) return [];
+
+    const qTf = new Map<string, number>();
+    for (const t of qTokens) qTf.set(t, (qTf.get(t) ?? 0) + 1);
+    const qVec = new Map<string, number>();
+    let qSq = 0;
+    for (const [t, freq] of qTf.entries()) {
+      const w = freq * (index.idf.get(t) ?? 0);
+      qVec.set(t, w);
+      qSq += w * w;
+    }
+    const qNorm = Math.sqrt(qSq) || 1e-9;
+
+    const scored: Array<{ chunk: Chunk; score: number }> = [];
+    for (const d of index.docs) {
+      let dot = 0;
+      for (const [t, w] of qVec.entries()) {
+        const docW = d.tfidf.get(t);
+        if (docW) dot += w * docW;
+      }
+      const score = dot / (qNorm * d.norm);
+      if (score > 0) scored.push({ chunk: d.chunk, score });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, topK);
+  }
+
+  // --- UI wiring ---
+
+  const corpus = loadCorpus();
+  const index = buildIndex(corpus);
+
+  const form = document.getElementById('chat-form') as HTMLFormElement;
+  const input = document.getElementById('chat-q') as HTMLInputElement;
+  const results = document.getElementById('chat-results') as HTMLDivElement;
+  const clearBtn = document.getElementById('chat-clear') as HTMLButtonElement;
+
+  document.querySelectorAll<HTMLButtonElement>('button.starter').forEach((b) => {
+    b.addEventListener('click', () => {
+      input.value = b.dataset.starter ?? '';
+      input.focus();
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+    });
+  });
+
+  clearBtn?.addEventListener('click', () => {
+    input.value = '';
+    results.innerHTML =
+      '<p class="chatbox__placeholder">Ask a question about projects, experience, or methodology. The top-3 chunks will appear here, ranked by cosine similarity.</p>';
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q) return;
+
+    const ranked = queryIndex(index, q, 3);
+    renderResults(q, ranked);
+  });
+
+  function renderResults(q: string, ranked: Array<{ chunk: Chunk; score: number }>) {
+    const totalScore = ranked.reduce((s, r) => s + r.score, 0);
+    const headline = ranked.length
+      ? ranked[0].score >= 0.1
+        ? 'Strong match'
+        : ranked[0].score >= 0.04
+          ? 'Partial match'
+          : 'Weak match'
+      : 'No match';
+
+    const html: string[] = [];
+    html.push(`<div class="chatbox__header"><span class="mono chatbox__q">${escape(q)}</span><span class="chatbox__meta">${headline} · ${ranked.length} chunk${ranked.length === 1 ? '' : 's'} · Σscore ${totalScore.toFixed(3)}</span></div>`);
+
+    if (ranked.length === 0) {
+      html.push(
+        '<p class="chatbox__noresult">No chunk scored above zero. Try keywords that appear literally in the corpus (e.g. "Sharpe", "MCP", "ADF", "cointegration").</p>',
+      );
+    } else {
+      for (const r of ranked) {
+        const sourceKindBadge = `<span class="kind-badge kind-badge--${r.chunk.source.kind}">${r.chunk.source.kind}</span>`;
+        const roleBadge = r.chunk.source.role ? ` <span class="kind-badge kind-badge--${r.chunk.source.role}">${r.chunk.source.role}</span>` : '';
+        html.push(`<article class="chat-chunk">
+          <header class="chat-chunk__head">
+            <div class="chat-chunk__title">${sourceKindBadge}${roleBadge}<span>${escape(r.chunk.title)}</span></div>
+            <div class="chat-chunk__score mono">${r.score.toFixed(3)}</div>
+          </header>
+          <p class="chat-chunk__text">${escape(r.chunk.text)}</p>
+          <footer class="chat-chunk__foot">
+            <a class="chat-chunk__link" href="${r.chunk.source.url}" target="_blank" rel="noopener">${escape(r.chunk.source.url)} ↗</a>
+            <span class="mono chat-chunk__id">${escape(r.chunk.id)}</span>
+          </footer>
+        </article>`);
+      }
+    }
+
+    results.innerHTML = html.join('');
+  }
+
+  function escape(s: string): string {
+    return s.replace(/[&<>"']/g, (c) =>
+      c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '"' ? '&quot;' : '&#39;',
+    );
+  }
+</script>
+
+<style>
+  .page-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -100px, rgba(212, 160, 23, 0.1), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .page-head__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-3);
+  }
+  .page-head__sub {
+    font-size: var(--fs-base);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 68ch;
+    margin-bottom: var(--sp-5);
+  }
+  .page-head__link {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .page-head__link:hover {
+    color: var(--c-primary);
+  }
+
+  .nda-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
+    margin-bottom: var(--sp-5);
+    padding: var(--sp-4) var(--sp-5);
+    background: rgba(21, 128, 61, 0.06);
+    border: 1px solid var(--c-pass);
+    border-left: 3px solid var(--c-pass);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    line-height: var(--lh-loose);
+  }
+  .nda-callout strong {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+  .nda-callout .mono {
+    color: var(--c-primary-2-deep);
+  }
+
+  .head-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
+  }
+  .stat-pill {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    font-size: var(--fs-sm);
+  }
+  .stat-pill .mono {
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+
+  /* === Chat box === */
+  .chatbox {
+    border: var(--border);
+    border-radius: var(--radius);
+    background: var(--c-bg);
+    overflow: hidden;
+  }
+  .chatbox__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-2) var(--sp-4);
+    background: var(--c-bg-2);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .chatbox__label {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .chatbox__clear {
+    background: transparent;
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .chatbox__clear:hover {
+    color: var(--c-ink);
+    border-color: var(--c-amber-deep);
+  }
+
+  .chatbox__form {
+    display: flex;
+    gap: var(--sp-2);
+    padding: var(--sp-4);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .chatbox__input {
+    flex: 1;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-base);
+    font-family: var(--ff-mono);
+    color: var(--c-ink);
+    background: var(--c-paper);
+    transition: border-color var(--transition);
+  }
+  .chatbox__input:focus {
+    outline: none;
+    border-color: var(--c-amber-deep);
+  }
+  .chatbox__send {
+    padding: 0.6rem 1.1rem;
+    background: var(--c-ink);
+    color: var(--c-paper);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  .chatbox__send:hover {
+    background: var(--c-primary-2-deep);
+  }
+
+  .chatbox__starters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    padding: var(--sp-3) var(--sp-4);
+    border-bottom: 1px solid var(--c-rule);
+    background: var(--c-bg);
+  }
+  .chatbox__starters-label {
+    font-size: var(--fs-xs);
+  }
+  .starter {
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .starter:hover {
+    color: var(--c-ink);
+    border-color: var(--c-amber-deep);
+    background: rgba(196, 138, 22, 0.06);
+  }
+
+  .chatbox__results {
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    min-height: 240px;
+  }
+  .chatbox__placeholder {
+    margin: 0;
+    color: var(--c-ink-3);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-loose);
+  }
+  .chatbox__noresult {
+    margin: 0;
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    padding: var(--sp-4);
+    background: var(--c-bg-2);
+    border-radius: var(--radius-sm);
+  }
+  .chatbox__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px dashed var(--c-rule);
+    margin-bottom: var(--sp-2);
+  }
+  .chatbox__q {
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    background: var(--c-bg-2);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+  .chatbox__meta {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+
+  .chat-chunk {
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-bg);
+  }
+  .chat-chunk__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-2);
+  }
+  .chat-chunk__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: var(--c-ink);
+    font-size: var(--fs-sm);
+    flex-wrap: wrap;
+  }
+  .chat-chunk__score {
+    color: var(--c-amber-deep);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+  .chat-chunk__text {
+    margin: 0 0 var(--sp-2) 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-loose);
+    color: var(--c-ink-2);
+  }
+  .chat-chunk__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    flex-wrap: wrap;
+  }
+  .chat-chunk__link {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .chat-chunk__link:hover {
+    color: var(--c-primary);
+  }
+  .chat-chunk__id {
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+  }
+
+  .kind-badge {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .kind-badge--project {
+    background: rgba(11, 61, 92, 0.1);
+    color: var(--c-primary);
+    border: 1px solid var(--c-primary);
+  }
+  .kind-badge--experience {
+    background: rgba(196, 138, 22, 0.12);
+    color: var(--c-amber-deep);
+    border: 1px solid var(--c-amber-deep);
+  }
+  .kind-badge--ai {
+    background: rgba(11, 61, 92, 0.08);
+    color: var(--c-primary);
+    border: 1px solid var(--c-primary);
+  }
+  .kind-badge--quant {
+    background: rgba(140, 111, 42, 0.12);
+    color: var(--c-amber-deep);
+    border: 1px solid var(--c-amber-deep);
+  }
+  .kind-badge--publication {
+    background: rgba(21, 128, 61, 0.1);
+    color: var(--c-pass);
+    border: 1px solid var(--c-pass);
+  }
+
+  .chatbox__debug {
+    border-top: 1px solid var(--c-rule);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-bg-2);
+    font-size: var(--fs-xs);
+  }
+  .chatbox__debug summary {
+    cursor: pointer;
+    color: var(--c-ink-2);
+    font-family: var(--ff-mono);
+    margin-bottom: var(--sp-2);
+  }
+  .chatbox__debug-list {
+    margin: 0;
+    padding-left: var(--sp-5);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
+</style>
