@@ -7,7 +7,7 @@
  * technologists. mathematicians."). It demonstrates a firm's discipline
  * by rotating through complete sentences — not just vocabulary.
  *
- * Auto-advances every 5s. Pauses on hover or keyboard focus. Dots
+ * Auto-advances every 3s. Pauses on hover or keyboard focus. Dots
  * indicator below for manual navigation. Respects prefers-reduced-motion
  * (no auto-advance, no fade).
  *
@@ -39,7 +39,7 @@
 interface Props {
   /** Statements to rotate through. Defaults match the canonical site-wide set. */
   statements?: string[];
-  /** Auto-advance interval in milliseconds. Default 5000ms. */
+  /** Auto-advance interval in milliseconds. Default 3000ms. */
   intervalMs?: number;
   /** Optional label for screen readers. */
   label?: string;
@@ -54,7 +54,7 @@ const {
     '11 agents. ↦ One method.',
     '102 certs. ↦ One discipline.',
   ] as string[],
-  intervalMs = 5000,
+  intervalMs = 3000,
   label = 'Discipline statements — rotating',
 } = Astro.props;
 ---
