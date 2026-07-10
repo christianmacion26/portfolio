@@ -23,27 +23,27 @@ const gates = [
   {
     range: 'G6–G10',
     name: 'Statistical nulls',
-    desc: '<a href={path("/glossary/block-bootstrap")}>block-bootstrap</a> CIs, random-timing nulls, <a href={path("/glossary/regime")}>regime</a>-shuffle, parameter-prior sensitivity, Monte-Carlo coverage.',
+    desc: `<a href="${path('/glossary/block-bootstrap')}">block-bootstrap</a> CIs, random-timing nulls, <a href="${path('/glossary/regime')}">regime</a>-shuffle, parameter-prior sensitivity, Monte-Carlo coverage.`,
   },
   {
     range: 'G11–G15',
     name: 'Walk-forward & OOS',
-    desc: 'Locked <a href={path("/glossary/oos")}>OOS</a> windows, 5-era stability, expanding/rolling <a href={path("/glossary/walk-forward")}>walk-forward</a> windows, frozen-spec evaluation, <a href={path("/glossary/embargo")}>embargoed</a> test set.',
+    desc: `Locked <a href="${path('/glossary/oos')}">OOS</a> windows, 5-era stability, expanding/rolling <a href="${path('/glossary/walk-forward')}">walk-forward</a> windows, frozen-spec evaluation, <a href="${path('/glossary/embargo')}">embargoed</a> test set.`,
   },
   {
     range: 'G16–G20',
     name: 'Multiple testing',
-    desc: '<a href={path("/glossary/deflated-sharpe")}>Deflated Sharpe Ratio</a> (DSR), <a href={path("/glossary/cscv-pbo")}>CSCV-based Probability of Backtest Overfit</a> (PBO), <a href={path("/glossary/minbtl")}>Minimum Backtest Length</a> (MinBTL), <a href={path("/glossary/bonferroni-holm")}>Bonferroni–Holm</a>, BH-FDR.',
+    desc: `<a href="${path('/glossary/deflated-sharpe')}">Deflated Sharpe Ratio</a> (DSR), <a href="${path('/glossary/cscv-pbo')}">CSCV-based Probability of Backtest Overfit</a> (PBO), <a href="${path('/glossary/minbtl')}">Minimum Backtest Length</a> (MinBTL), <a href="${path('/glossary/bonferroni-holm')}">Bonferroni–Holm</a>, BH-FDR.`,
   },
   {
     range: 'G21–G25',
     name: 'Look-ahead discipline',
-    desc: 'Point-in-time dataset verification, <a href={path("/glossary/survivorship-bias")}>survivorship-bias</a> check, rebalance-vs-signal timing, frozen-spec, no-leakage to scoring.',
+    desc: `Point-in-time dataset verification, <a href="${path('/glossary/survivorship-bias')}">survivorship-bias</a> check, rebalance-vs-signal timing, frozen-spec, no-leakage to scoring.`,
   },
   {
     range: 'G26–G31',
     name: 'Economic & cost realism',
-    desc: 'Spread/<a href={path("/glossary/slippage")}>slippage</a>/latency per asset class, capacity-constraint report, funding-carry, borrow cost, vol-targeted sizing, <a href={path("/glossary/regime")}>regime</a> overlay.',
+    desc: `Spread/<a href="${path('/glossary/slippage')}">slippage</a>/latency per asset class, capacity-constraint report, funding-carry, borrow cost, vol-targeted sizing, <a href="${path('/glossary/regime')}">regime</a> overlay.`,
   },
 ];
 
@@ -175,7 +175,7 @@ const charter = [
                 <span class="gate__range mono">{g.range}</span>
                 <h3 class="gate__name">{g.name}</h3>
               </header>
-              <p class="gate__desc">{g.desc}</p>
+              <p class="gate__desc" set:html={g.desc} />
             </article>
           ))
         }
