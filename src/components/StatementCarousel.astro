@@ -80,62 +80,13 @@ const {
   </ol>
 </div>
 
-<script>
-  // Lightweight carousel driver. Auto-advances on a timer, pauses on
-  // hover or focus-within, and exposes data-stmt-dot buttons for manual
-  // navigation. Respects prefers-reduced-motion (no auto-advance).
-  function initCarousel(root: HTMLElement) {
-    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-stmt-index]'));
-    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-stmt-dot]'));
-    if (slides.length === 0) return;
-
-    const intervalMs = Number(root.dataset.interval ?? '5000');
-    let active = 0;
-    let timer: ReturnType<typeof setInterval> | null = null;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function show(i: number) {
-      active = ((i % slides.length) + slides.length) % slides.length;
-      slides.forEach((s, idx) => {
-        const on = idx === active;
-        s.classList.toggle('is-active', on);
-        s.setAttribute('aria-hidden', on ? 'false' : 'true');
-      });
-      dots.forEach((d, idx) => {
-        const on = idx === active;
-        d.classList.toggle('is-active', on);
-        d.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-    }
-
-    function start() {
-      if (reduced) return;
-      stop();
-      timer = setInterval(() => show(active + 1), intervalMs);
-    }
-    function stop() {
-      if (timer) clearInterval(timer);
-      timer = null;
-    }
-
-    dots.forEach((d) =>
-      d.addEventListener('click', () => {
-        const idx = Number(d.dataset.stmtDot);
-        show(idx);
-        start(); // restart timer on manual nav
-      }),
-    );
-
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
-    root.addEventListener('focusin', stop);
-    root.addEventListener('focusout', start);
-
-    start();
-  }
-
-  document.querySelectorAll<HTMLElement>('[data-stmt-carousel]').forEach(initCarousel);
-</script>
+<!-- Driver is in src/scripts/carousel.ts, imported via BaseLayout.
+     Astro 7 was dropping per-component <script> blocks during the build
+     (the chunk never materialised in dist/_astro/), so the carousel
+     silently rendered as static HTML with no behavior. Routing the
+     driver through the BaseLayout bundle — alongside reveal-on-scroll,
+     odometer, active-nav, copy-button, scroll-progress — guarantees it
+     ships on every page that includes the carousel. -->
 
 <style>
   .stmt-carousel {
