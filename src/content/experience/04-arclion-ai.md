@@ -1,6 +1,6 @@
 ---
 title: 'Trading Platform Testing & AI-Workflow Research Analyst (contract)'
-company: 'Arclion AI'
+company: 'AI-engineering consultancy (closed past contract; 04/2026 – 06/2026)'
 role: 'experience'
 order: 4
 location: 'Remote'
@@ -12,7 +12,7 @@ tags: [trading-platforms, ux-research, ai-tools, prompt-engineering]
 contributions:
   - label: 'Onboarding-flow testing'
     evidence: 'End-to-end onboarding as a fresh user; documented every friction point with priority-ordered remediation set'
-    proof: '12-page remediation brief delivered to Arclion Q3 scope'
+    proof: '12-page remediation brief delivered to client Q3 scope'
   - label: 'Execution-clarity analysis'
     evidence: 'Reviewed order-execution copy, fee disclosures, risk warnings; flagged 14 ambiguities'
     proof: 'Documented in remediation brief'
@@ -23,7 +23,7 @@ contributions:
     evidence: 'Identified breakdown points in order placement, setup processes, and trading workflow comprehension'
     proof: 'Operational-friction report delivered'
 proofs:
-  - '12-page remediation brief (delivered to Arclion)'
+  - '12-page remediation brief (delivered to client)'
   - 'Operational-friction report (delivered)'
 ---
 

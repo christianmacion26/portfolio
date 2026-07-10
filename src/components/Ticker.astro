@@ -82,7 +82,10 @@ const { items = [
     display: flex;
     gap: var(--sp-6);
     white-space: nowrap;
-    animation: ticker-scroll 60s linear infinite;
+    /* Phase D-6: ticker easing clamp. Loop was 60s linear; v5.2 uses 45s
+       with cubic-bezier(0.4, 0, 0.2, 1) for a softer, more institutional
+       feel. Still ≤5s of motion at a time per PROPOSAL-v3.5 note. */
+    animation: ticker-scroll 45s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     will-change: transform;
   }
 

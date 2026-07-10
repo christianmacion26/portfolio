@@ -28,15 +28,35 @@ const jsonDir = join(__dirname, 'resumes');
 const publicDir = join(repoRoot, 'public');
 
 // OJP/Upwork builder lives outside this repo. Override via OJP_BUILDER env var
-// if you move it. Default path matches the Contengency/OnlineJobs_PH_Applications
-// venv used during development.
+// if you move it. Default discovers the builder & venv at known convention
+// paths (Contengency/OnlineJobs_PH_Applications/03_TEMPLATES) relative to the
+// user's HOME — never hard-coded to a single host. On a CI runner or a
+// different dev machine, OJP_BUILDER / OJP_PYTHON env vars override.
+const HOME = process.env.HOME || process.env.USERPROFILE || '';
 const OJP_BUILDER =
   process.env.OJP_BUILDER ||
-  '/Users/christianmacion/Contingency/OnlineJobs_PH_Applications/03_TEMPLATES/scripts/build_resume.py';
+  `${HOME}/Contingency/OnlineJobs_PH_Applications/03_TEMPLATES/scripts/build_resume.py`;
 
-const PYTHON =
-  process.env.OJP_PYTHON ||
-  '/Users/christianmacion/Contingency/OnlineJobs_PH_Applications/03_TEMPLATES/.venv/bin/python';
+// Discover the OJP venv interpreter. Prefer `python3` on PATH (system Python
+// in a fresh venv is fine for `python-docx` + `soffice`); fall back to the
+// venv's `python` only if it exists. The hard-code to a single machine has
+// been removed — anyone can clone this repo and the script will find the
+// toolchain or skip cleanly.
+function defaultPython() {
+  if (process.env.OJP_PYTHON) return process.env.OJP_PYTHON;
+  // Candidate interpreters, first-existing wins.
+  const candidates = [
+    `${HOME}/Contingency/OnlineJobs_PH_Applications/03_TEMPLATES/.venv/bin/python`,
+    'python3',
+    'python',
+  ];
+  for (const c of candidates) {
+    if (c.includes('/') && existsSync(c)) return c;
+    if (!c.includes('/')) return c; // bare command — resolved by spawnSync
+  }
+  return 'python3';
+}
+const PYTHON = defaultPython();
 
 // variants: array of {json, pdf, docx} entries
 const VARIANTS = [
@@ -71,9 +91,13 @@ function log(prefix, msg) {
 // Returns true when the OJP toolchain is reachable. CI runners don't have the
 // local venv or the builder script, so they fall through to "skip" instead of
 // failing the prebuild — the committed PDFs in public/ are the source of truth
-// for what ships.
+// for what ships. Bare commands like "python3" are always considered reachable
+// since PATH resolution handles them; only absolute paths trigger the FS check.
 function toolchainAvailable() {
-  return existsSync(PYTHON) && existsSync(OJP_BUILDER);
+  const builderOk = OJP_BUILDER.startsWith('/') ? existsSync(OJP_BUILDER) : true;
+  const pythonOk =
+    PYTHON.includes('/') || PYTHON.includes('\\') ? existsSync(PYTHON) : true;
+  return builderOk && pythonOk;
 }
 
 function render(variant) {

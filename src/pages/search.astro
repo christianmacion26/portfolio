@@ -1,0 +1,479 @@
+---
+/**
+ * search.astro — client-side full-text search via Pagefind.
+ *
+ * Pagefind indexes the static `dist/` tree at build time (postbuild hook in
+ * package.json). The Pagefind UI is NOT bundled by Astro — it ships as a
+ * pre-built bundle inside `dist/_pagefind/` and is loaded lazily by this
+ * page. The result is zero-JS on the rest of the site, ~30 KB JS + ~50 KB
+ * fragmented index chunks on /search/ only.
+ *
+ * Empty state (before the user types): a curated 6-card "popular
+ * destinations" grid so the page is useful even without a query.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { path } from '@utils/url';
+import fs from 'node:fs';
+import nodePath from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// Last build stamp for the footer note. The Pagefind index itself doesn't
+// carry a build date, so we surface the deploy timestamp from Astro.props
+// (set by the build via --define or read from fs.statSync at build time).
+// For simplicity we ship a static stamp; the next content-bearing build
+// will bump this string in the source.
+const lastBuild = '2026-07-10';
+
+// Live page count — read directly from the Pagefind manifest at build time.
+// This avoids the previous stale literal "33 documents indexed" (which was
+// correct for v5.x but stale by v6.0.4 when the spine added 40 new pages).
+// Pagefind writes `dist/_pagefind/pagefind-entry.json` AFTER the Astro build
+// (via the `postbuild` npm script), so during the Astro build phase the
+// manifest doesn't yet exist. We therefore try THREE sources in order of
+// preference:
+//
+//   1. `dist/_pagefind/pagefind-entry.json` (from a previous build — survives
+//      across rebuilds when pagefind was run after a prior build).
+//   2. Walk `dist/` (will fail during the FIRST Astro build since dist doesn't
+//      exist yet, but works on subsequent rebuilds).
+//   3. Fall back to a static count (current true number, will be visibly wrong
+//      if a new page is added without updating this string — that's the bug
+//      we're fixing).
+//
+// The walker logic counts one route per top-level HTML file or per
+// `<route>/index.html` directory under `dist/`, excluding the 404 page and
+// asset bundles under _astro / _pagefind.
+const here = nodePath.dirname(fileURLToPath(import.meta.url));
+const projectRoot = nodePath.resolve(here, '../../');
+
+let pageCount = 80;
+try {
+  // Try manifest first
+  const manifest = nodePath.join(projectRoot, 'dist/_pagefind/pagefind-entry.json');
+  if (fs.existsSync(manifest)) {
+    const parsed = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+    pageCount = parsed?.languages?.en?.page_count ?? pageCount;
+  } else {
+    // Walk dist
+    const dist = nodePath.join(projectRoot, 'dist');
+    if (fs.existsSync(dist)) {
+      const htmlFiles: string[] = [];
+      const walk = (dir: string) => {
+        for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+          const p = nodePath.join(dir, ent.name);
+          if (ent.isDirectory()) {
+            if (ent.name.startsWith('_')) continue;
+            walk(p);
+          } else if (ent.name.endsWith('.html')) {
+            htmlFiles.push(p);
+          }
+        }
+      };
+      walk(dist);
+      // Group: each <route>/index.html → 1 route, each <file>.html at dist root → 1 route.
+      // 404.html is excluded. RSS/XML feeds aren't HTML so they don't appear.
+      const routes = new Set<string>();
+      for (const f of htmlFiles) {
+        const rel = f.slice(dist.length + 1);
+        if (rel === '404.html') continue;
+        routes.add(rel.endsWith('/index.html') ? rel.slice(0, -'/index.html'.length) : rel);
+      }
+      pageCount = routes.size;
+    }
+  }
+} catch {
+  // Keep the literal fallback.
+}
+
+const popular = [
+  {
+    href: path('/for-recruiters'),
+    title: 'For recruiters',
+    sub: '60-second skim · status, seniority, location, resume, contact.',
+  },
+  {
+    href: path('/glossary'),
+    title: 'Glossary',
+    sub: 'Quant + AI jargon decoded in one paragraph each.',
+  },
+  {
+    href: path('/methodology'),
+    title: 'Methodology',
+    sub: 'How the strategy is built, validated, and stress-tested.',
+  },
+  {
+    href: path('/proof'),
+    title: 'Proof',
+    sub: 'Receipts: code, notebooks, backtests, eval harness output.',
+  },
+  {
+    href: path('/now'),
+    title: 'Now',
+    sub: 'Dated one-pager · shipping, open-to, where, how to reach me.',
+  },
+  {
+    href: path('/uses'),
+    title: 'Uses',
+    sub: 'Tools, models, hardware — the full /uses stack list.',
+  },
+];
+---
+
+<BaseLayout
+  title="Search"
+  description="Client-side full-text search across the portfolio — projects, methods, glossary, receipts."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Search", href: "/search" }]}
+>
+  <header class="search-head">
+    <div class="container">
+      <p class="section__eyebrow"><span class="mono">search/</span></p>
+      <h1 class="search-head__title">Search · <span class="mono">{pageCount} documents indexed.</span></h1>
+      <p class="search-head__sub">
+        Type to search across every static page, project, glossary term, and proof asset. Results
+        are scored and ranked by Pagefind at the edge — no server, no query log.
+      </p>
+    </div>
+  </header>
+
+  <section class="search-body">
+    <div class="container">
+      {/* Pagefind mounts itself into this root. The UI lives in /_pagefind/. */}
+      <div id="search-root"></div>
+
+      {/* Empty state — hidden once the user starts typing. Pure CSS via
+          the .search-root.has-query class that the script below toggles. */}
+      <section id="search-empty" class="search-empty" aria-label="Popular destinations">
+        <h2 class="search-empty__title">Popular destinations</h2>
+        <p class="search-empty__hint">Or pick a starting point below.</p>
+        <ul class="search-empty__grid" role="list">
+          {
+            popular.map((p) => (
+              <li>
+                <a class="search-card" href={p.href}>
+                  <span class="search-card__title">{p.title}</span>
+                  <span class="search-card__sub">{p.sub}</span>
+                  <span class="search-card__arrow" aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <footer class="search-foot">
+        <p class="search-foot__note">
+          Index built by <a href="https://pagefind.app" rel="noopener">Pagefind</a> ·
+          last build <span class="mono">{lastBuild}</span>
+        </p>
+        <p class="search-foot__back">
+          <a href={path('/')}>← back to home</a>
+        </p>
+      </footer>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  /**
+   * Wire the Pagefind UI to #search-root.
+   *
+   * Pagefind's UI ships as a pre-built bundle inside `/_pagefind/`. We import
+   * the JS + CSS dynamically so the rest of the site stays JS-free.
+   *
+   * Auto-focus rule:
+   *   - If URL has ?focus=1 (the nav search button uses this), focus the input.
+   *   - If URL has ?q=<term>, pre-fill the input.
+   */
+  async function mountPagefind() {
+    const root = document.getElementById('search-root');
+    const empty = document.getElementById('search-empty');
+    if (!root || !empty) return;
+
+    // Pre-fill from ?q=
+    const params = new URLSearchParams(window.location.search);
+    const presetQ = params.get('q') ?? '';
+    const focus = params.get('focus') === '1';
+
+    // Dynamically inject the Pagefind UI assets. Astro does not bundle
+    // these — they live as static files in dist/_pagefind/ after postbuild.
+    await import(/* @vite-ignore */ '/_pagefind/pagefind-ui.js');
+
+    // The Pagefind UI module exposes `PagefindUI` on `window` after load.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const PagefindUI = (window as any).PagefindUI;
+    if (!PagefindUI) return;
+
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    new PagefindUI({
+      element: '#search-root',
+      resetStyles: false,
+      // Use absolute path so it works on both GH Pages (/portfolio/) and
+      // the Cloudflare mirror (/). Pagefind's UI hits `bundlePath/pagefind.js`
+      // for the search worker, so we point it at the real /_pagefind/ dir.
+      bundlePath: '/_pagefind/',
+      showImages: false,
+      showEmptyFilters: false,
+      autofocus: focus,
+      // ?q=foo preset — Pagefind reads the URL on its own, but we mirror
+      // it into the input so the empty state hides immediately.
+      ...(presetQ ? { query: presetQ } : {}),
+      processResult: (result: any) => {
+        // Make the empty state hide the moment any query (even empty after
+        // backspace) is in flight. Pagefind calls this on each render.
+        return result;
+      },
+    });
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+
+    // Hide empty state once the user types — observe the input Pagefind
+    // mounts. The input is dynamically created inside #search-root.
+    const observer = new MutationObserver(() => {
+      const input = root.querySelector<HTMLInputElement>('input[type="search"], input');
+      if (!input) return;
+      const sync = () => {
+        const has = input.value.trim().length > 0;
+        root.classList.toggle('has-query', has);
+        empty.style.display = has ? 'none' : '';
+      };
+      input.addEventListener('input', sync);
+      input.addEventListener('change', sync);
+      // Initial sync
+      if (presetQ) {
+        input.value = presetQ;
+        sync();
+      }
+      observer.disconnect();
+      // Re-observe in case Pagefind re-creates the input on reset
+      setTimeout(() => {
+        const newInput = root.querySelector<HTMLInputElement>('input[type="search"], input');
+        if (newInput && newInput !== input) {
+          newInput.addEventListener('input', sync);
+        }
+      }, 100);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+  }
+
+  mountPagefind().catch((err) => {
+    console.error('[search] Pagefind failed to mount:', err);
+    const empty = document.getElementById('search-empty');
+    if (empty) {
+      empty.innerHTML =
+        '<p style="color: var(--c-ink-2)">Search index unavailable. Run <code>npm run build</code> to regenerate.</p>';
+    }
+  });
+</script>
+
+<style>
+  .search-head {
+    padding: var(--sp-8) 0 var(--sp-5);
+    border-bottom: var(--border);
+    background: var(--c-bg);
+  }
+  .search-head__title {
+    font-size: var(--fs-3xl);
+    line-height: 1.15;
+    margin: var(--sp-2) 0 var(--sp-3);
+    letter-spacing: -0.02em;
+  }
+  .search-head__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-lg);
+    max-width: 60ch;
+  }
+
+  .search-body {
+    padding: var(--sp-6) 0 var(--sp-9);
+  }
+
+  /* === Pagefind UI overrides — match site palette ===
+     Pagefind writes its own .pagefind-ui__* classes. We restyle the
+     input + results to match the amber+black design system and to
+     respect both [data-theme="dark"] and prefers-color-scheme. */
+  :global(#search-root .pagefind-ui__form) {
+    margin-bottom: var(--sp-5);
+  }
+  :global(#search-root .pagefind-ui__search-input) {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-size: var(--fs-lg);
+    font-family: inherit;
+    color: var(--c-ink);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+  :global(#search-root .pagefind-ui__search-input:focus) {
+    border-color: var(--c-primary-2-deep);
+    box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.2);
+  }
+  :global(#search-root .pagefind-ui__search-clear) {
+    color: var(--c-ink-3);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0 var(--sp-2);
+  }
+  :global(#search-root .pagefind-ui__results-area) {
+    margin-top: var(--sp-4);
+    min-height: 8rem;
+  }
+  :global(#search-root .pagefind-ui__result) {
+    padding: var(--sp-4) 0;
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  :global(#search-root .pagefind-ui__result:last-child) {
+    border-bottom: none;
+  }
+  :global(#search-root .pagefind-ui__result-title) {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-1);
+  }
+  :global(#search-root .pagefind-ui__result-title a) {
+    color: var(--c-ink);
+    text-decoration: none;
+  }
+  :global(#search-root .pagefind-ui__result-title a:hover) {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+  }
+  :global(#search-root .pagefind-ui__result-excerpt) {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    margin: 0;
+  }
+  :global(#search-root .pagefind-ui__result-excerpt mark) {
+    background: rgba(212, 160, 23, 0.25);
+    color: var(--c-ink);
+    padding: 0 0.15em;
+    border-radius: 2px;
+  }
+  :global(#search-root .pagefind-ui__result-link) {
+    color: var(--c-ink-3);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--fs-xs);
+  }
+  :global(#search-root .pagefind-ui__message) {
+    color: var(--c-ink-3);
+    font-size: var(--fs-sm);
+    margin-bottom: var(--sp-3);
+  }
+
+  /* === Empty state — popular destinations grid === */
+  .search-empty {
+    margin-top: var(--sp-6);
+  }
+  .search-empty__title {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    margin: 0 0 var(--sp-1);
+    font-weight: 600;
+  }
+  .search-empty__hint {
+    color: var(--c-ink-3);
+    font-size: var(--fs-sm);
+    margin: 0 0 var(--sp-4);
+  }
+  .search-empty__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--sp-3);
+  }
+  .search-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    color: var(--c-ink);
+    text-decoration: none;
+    transition:
+      border-color var(--transition),
+      transform var(--transition),
+      background var(--transition);
+    position: relative;
+  }
+  .search-card:hover {
+    border-color: var(--c-primary-2-deep);
+    transform: translateY(-1px);
+  }
+  .search-card__title {
+    font-weight: 600;
+    font-size: var(--fs-base);
+  }
+  .search-card__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: 1.45;
+  }
+  .search-card__arrow {
+    position: absolute;
+    right: var(--sp-3);
+    top: var(--sp-3);
+    color: var(--c-ink-3);
+    transition:
+      color var(--transition),
+      transform var(--transition);
+  }
+  .search-card:hover .search-card__arrow {
+    color: var(--c-primary-2-deep);
+    transform: translateX(2px);
+  }
+
+  /* === Footer === */
+  .search-foot {
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--c-rule-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .search-foot__note {
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+    margin: 0;
+  }
+  .search-foot__note a {
+    color: var(--c-ink-2);
+    text-decoration: underline;
+    text-decoration-color: var(--c-rule);
+    text-underline-offset: 2px;
+  }
+  .search-foot__back {
+    margin: 0;
+  }
+  .search-foot__back a {
+    color: var(--c-primary-2-deep);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+  }
+
+  /* Dark-mode-aware fallbacks — Pagefind's own CSS is light-only, so
+     we lean on the input + result styles above which already use CSS
+     vars. The :root[data-theme="dark"] token swaps already cover both
+     data-theme and prefers-color-scheme (handled in tokens.css). */
+
+  @media (max-width: 600px) {
+    .search-head__title {
+      font-size: var(--fs-2xl);
+    }
+    .search-foot {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

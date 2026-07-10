@@ -15,19 +15,31 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Chart from '@components/Chart.astro';
 import CTABanner from '@components/CTABanner.astro';
+import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+
+const lastRefreshed = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
+const email = profile.contact.email;
 ---
 
 <BaseLayout
   title="Live paper-trading"
   description="Currently-running strategies. Public data, no live capital, weekly updates."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Positions", href: "/positions" }]}
 >
   <header class="positions-head">
     <div class="container">
+      <p class="positions-status mono">
+        <span class="dot dot--pass" aria-hidden="true"></span>
+        Status: open to conversations · last refreshed {lastRefreshed}
+      </p>
       <p class="section__eyebrow"><span class="mono">positions/</span> · live paper-trading</p>
       <h1 class="positions-head__title">
         What I'm <span class="hl">currently running</span>.
       </h1>
+      <p class="positions-head__voice voice-line">
+        Paper-trade first. Real capital only after the gates pass — never before.
+      </p>
       <p class="positions-head__sub">
         A backtest is what a strategy <em>would have done</em>. A paper-trade is what it
         <em>actually does</em>. The cheapest way to find out which differences matter is to run the
@@ -193,6 +205,186 @@ import { path } from '@utils/url';
   <section class="section">
     <div class="container">
       <header class="section__head">
+        <p class="section__eyebrow">Open conversations · the live book</p>
+        <h2 class="section__title">Conversations I'd pick up the phone for.</h2>
+        <p class="section__sub">
+          Five seats that fit my operating constraints — quant, AI, eval, OSS. Not a JD
+          wishlist; a list of the conversations I'd actually take a 30-min call about. If your
+          role isn't on the list, email me anyway with the JD — I read every one.
+        </p>
+      </header>
+
+      <aside class="positions-cal" aria-label="Intro-call availability">
+        <p class="positions-cal__note mono">
+          I do 30-min intro calls on Tue/Wed/Thu 18:00–22:00 PHT (10:00–14:00 UTC). Email
+          first — booking link in reply.
+        </p>
+        <a
+          class="btn btn--primary positions-cal__cta"
+          href={`mailto:${email}?subject=Intro%20call%20request`}
+        >
+          Email for intro call →
+        </a>
+      </aside>
+
+      <div class="role-grid">
+        <article class="role-card">
+          <p class="role-card__eyebrow mono">CONVERSATION 01</p>
+          <h3 class="role-card__title">Senior Quantitative Researcher</h3>
+          <p class="role-card__sub">
+            Hedge fund or family office · remote-first · US-premarket or APAC overlap
+          </p>
+          <div class="role-card__body">
+            <div>
+              <p class="role-card__label mono">Looking for</p>
+              <p class="role-card__text">
+                Multi-strategy pod, eval-first research, async-friendly cadence.
+              </p>
+            </div>
+            <div>
+              <p class="role-card__label mono">I'm a fit because</p>
+              <p class="role-card__text">
+                11-agent platform + 31-gate statistical eval harness, NDA-clean by construction.
+              </p>
+            </div>
+          </div>
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/for-recruiters')}
+            >Next step: /for-recruiters →</a
+          >
+        </article>
+
+        <article class="role-card">
+          <p class="role-card__eyebrow mono">CONVERSATION 02</p>
+          <h3 class="role-card__title">AI Research Engineer</h3>
+          <p class="role-card__sub">
+            Frontier AI lab (HF / Replicate / HuggingFace / Conjecture) · remote · model
+            eval + RAG infrastructure
+          </p>
+          <div class="role-card__body">
+            <div>
+              <p class="role-card__label mono">Looking for</p>
+              <p class="role-card__text">
+                Engineer who ships eval harnesses + RAG scorecards, not just prompts.
+              </p>
+            </div>
+            <div>
+              <p class="role-card__label mono">I'm a fit because</p>
+              <p class="role-card__text">
+                Eval-first MCP, RAG scorecard, slop gate, 76.5k LOC Python.
+              </p>
+            </div>
+          </div>
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/for-recruiters')}
+            >Next step: /for-recruiters →</a
+          >
+        </article>
+
+        <article class="role-card">
+          <p class="role-card__eyebrow mono">CONVERSATION 03</p>
+          <h3 class="role-card__title">Quant Research Engineer</h3>
+          <p class="role-card__sub">
+            Crypto prop desk / market-making shop · remote · public-data discipline
+          </p>
+          <div class="role-card__body">
+            <div>
+              <p class="role-card__label mono">Looking for</p>
+              <p class="role-card__text">
+                Cost-model treated as a first-class artifact, not an afterthought.
+              </p>
+            </div>
+            <div>
+              <p class="role-card__label mono">I'm a fit because</p>
+              <p class="role-card__text">
+                Funding-carry, cost-aware backtests, public-data rigor (Binance / Coinbase /
+                EDGAR / FRED).
+              </p>
+            </div>
+          </div>
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/contact')}
+            >Next step: /contact →</a
+          >
+        </article>
+
+        <article class="role-card">
+          <p class="role-card__eyebrow mono">CONVERSATION 04</p>
+          <h3 class="role-card__title">NLP Evaluation Engineer</h3>
+          <p class="role-card__sub">
+            AI safety / evals org · remote · spec-driven methodology
+          </p>
+          <div class="role-card__body">
+            <div>
+              <p class="role-card__label mono">Looking for</p>
+              <p class="role-card__text">
+                LLM-as-judge harness, position-bias checks, frozen-spec eval.
+              </p>
+            </div>
+            <div>
+              <p class="role-card__label mono">I'm a fit because</p>
+              <p class="role-card__text">
+                31-gate eval harness, position-bias controls, frozen-spec discipline.
+              </p>
+            </div>
+          </div>
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/contact')}
+            >Next step: /contact →</a
+          >
+        </article>
+
+        <article class="role-card">
+          <p class="role-card__eyebrow mono">CONVERSATION 05</p>
+          <h3 class="role-card__title">Open-source Maintainer</h3>
+          <p class="role-card__sub">
+            OSS foundation / grant-funded org · async · public-impact work
+          </p>
+          <div class="role-card__body">
+            <div>
+              <p class="role-card__label mono">Looking for</p>
+              <p class="role-card__text">
+                Public, evaluable, reproducible artifacts — not private magic.
+              </p>
+            </div>
+            <div>
+              <p class="role-card__label mono">I'm a fit because</p>
+              <p class="role-card__text">
+                15 public repos, 102 certs, eval-first discipline, NDA-clean by construction.
+              </p>
+            </div>
+          </div>
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/contact')}
+            >Next step: /contact →</a
+          >
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Off the table</p>
+        <h2 class="section__title">Not currently looking for.</h2>
+        <p class="section__sub">
+          Three seat types that don't fit my operating constraints. No judgment if you run
+          one — just not where I'm spending the next 12 months.
+        </p>
+      </header>
+      <ul class="neg">
+        <li>
+          HFT colocation-dependent seats (Digos is +8 from NYSE; latency kills the edge)
+        </li>
+        <li>
+          Sell-side black-box vendor roles (I prefer open-data / open-source provenance)
+        </li>
+        <li>
+          Crypto market-making seats that require &lt; 100ms latency (same reason)
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
         <p class="section__eyebrow">What's not on this page</p>
         <h2 class="section__title">Negative space as design.</h2>
         <p class="section__sub">
@@ -235,6 +427,29 @@ import { path } from '@utils/url';
     line-height: 1.05;
     margin-block: var(--sp-4) var(--sp-5);
     max-width: 22ch;
+  }
+  .positions-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .positions-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .positions-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
   .positions-head__sub {
     font-size: var(--fs-lg);
@@ -522,5 +737,128 @@ import { path } from '@utils/url';
     .positions-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* === Status banner (above eyebrow) === */
+  .positions-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 6px 14px;
+    margin-bottom: var(--sp-4);
+    background: var(--c-pass-soft);
+    color: var(--c-pass);
+    border: 1px solid var(--c-pass);
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  /* === Calendly / cal.com CTA strip === */
+  .positions-cal {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--sp-4);
+    margin-block: var(--sp-5);
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary-2);
+    border-radius: var(--radius);
+  }
+  .positions-cal__note {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-normal);
+    max-width: 64ch;
+  }
+  .positions-cal__cta {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  @media (max-width: 720px) {
+    .positions-cal {
+      grid-template-columns: 1fr;
+    }
+    .positions-cal__cta {
+      justify-self: start;
+    }
+  }
+
+  /* === Target-role cards (5 conversations) === */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--sp-4);
+    margin-top: var(--sp-6);
+  }
+  .role-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: var(--border);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition),
+      transform var(--transition);
+  }
+  .role-card:hover {
+    border-color: var(--c-ink-3);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .role-card__eyebrow {
+    margin: 0;
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .role-card__title {
+    margin: 0;
+    font-size: var(--fs-lg);
+    color: var(--c-ink);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .role-card__sub {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-3);
+    line-height: var(--lh-normal);
+  }
+  .role-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-3) 0;
+    margin-block: var(--sp-1);
+    border-top: 1px solid var(--c-rule-soft);
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  .role-card__label {
+    margin: 0 0 var(--sp-1) 0;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .role-card__text {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-normal);
+  }
+  .role-card__next {
+    margin-top: auto;
+    align-self: flex-start;
   }
 </style>

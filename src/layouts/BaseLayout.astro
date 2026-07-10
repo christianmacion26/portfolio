@@ -16,7 +16,7 @@ import 'katex/dist/katex.min.css';
 import Nav from '@components/Nav.astro';
 import Footer from '@components/Footer.astro';
 import { profile } from '@utils/profile';
-import { buildMeta, personJsonLd, websiteJsonLd } from '@utils/seo';
+import { buildMeta, personJsonLd, websiteJsonLd, breadcrumbJsonLd } from '@utils/seo';
 import { path } from '@utils/url';
 
 interface Props {
@@ -26,9 +26,11 @@ interface Props {
   type?: 'website' | 'article' | 'profile';
   className?: string;
   extraJsonLd?: unknown; // optional page-specific JSON-LD (e.g. ItemList, CreativeWork)
+  breadcrumbs?: Array<{ name: string; href: string }>; // optional BreadcrumbList JSON-LD
 }
 
-const { title, description, image, type = 'website', className, extraJsonLd } = Astro.props;
+const { title, description, image, type = 'website', className, extraJsonLd, breadcrumbs } =
+  Astro.props;
 const meta = buildMeta({
   title,
   description: description ?? profile.titles.secondary,
@@ -49,6 +51,7 @@ const jsonLd = personJsonLd({
   awards: profile.awards,
 });
 const siteJsonLd = websiteJsonLd();
+const crumbsJsonLd = breadcrumbs ? breadcrumbJsonLd(breadcrumbs) : null;
 ---
 
 <!doctype html>
@@ -61,6 +64,14 @@ const siteJsonLd = websiteJsonLd();
     <title>{meta.title}</title>
     <meta name="description" content={meta.description} />
     <link rel="canonical" href={meta.canonical} />
+
+    {/* === v6.0 · security meta baseline ===
+        Defense in depth alongside CF Pages CDN headers.
+        JSON-LD <script type="application/ld+json"> is exempt from
+        `script-src` by every modern browser (CSP3 spec, also Chromium
+        exempts it for compatibility). The CSP still blocks inline JS. */}
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com data:; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <meta property="og:type" content={meta.openGraph.type} />
     <meta property="og:title" content={meta.openGraph.title} />
@@ -91,10 +102,30 @@ const siteJsonLd = websiteJsonLd();
       title={`${profile.fullName} — Portfolio Updates`}
       href={path('/feed.xml')}
     />
+    {/* LLM-friendly alternates — short index + full concatenated Markdown.
+         Crawlers respect rel=alternate type=text/markdown as a first-class
+         signal (llmstxt.org convention). See public/llms.txt and
+         public/llms-full.txt. */}
+    <link
+      rel="alternate"
+      type="text/markdown"
+      title={`${profile.fullName} — llms.txt (curated index)`}
+      href={path('/llms.txt')}
+    />
+    <link
+      rel="alternate"
+      type="text/markdown"
+      title={`${profile.fullName} — llms-full.txt (full content)`}
+      href={path('/llms-full.txt')}
+    />
     <meta name="theme-color" content="#0a0e14" />
+
+    {/* === v6.1.0 — theme toggle REMOVED. The site is always cream
+         paper with institutional-tape sections. No light/dark flip. === */}
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
+    {crumbsJsonLd && <script type="application/ld+json" set:html={JSON.stringify(crumbsJsonLd)} />}
     {extraJsonLd && <script type="application/ld+json" set:html={JSON.stringify(extraJsonLd)} />}
   </head>
   <body class={className}>
@@ -104,5 +135,17 @@ const siteJsonLd = websiteJsonLd();
       <slot />
     </main>
     <Footer />
+
+    {/* === v6.1.0 · institutional motion bundle ===
+        All scripts are pure-defer; total minified+gzipped < 4KB.
+        They respect prefers-reduced-motion on their own.
+        theme-toggle removed; everything else preserved. */}
+    <script>
+      import '@scripts/reveal-on-scroll.ts';
+      import '@scripts/odometer.ts';
+      import '@scripts/active-nav.ts';
+      import '@scripts/copy-button.ts';
+      import '@scripts/scroll-progress.ts';
+    </script>
   </body>
 </html>

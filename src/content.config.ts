@@ -27,6 +27,13 @@ const project = defineCollection({
     status: z.enum(['production', 'open-source', 'internal', 'archived']).default('open-source'),
     tags: z.array(z.string()).default([]),
     date: z.coerce.date().optional(),
+    // Optional pin flag. When true, the project is sorted to the top of
+    // /projects and /proof with a "Pinned" mono pill. Pattern from
+    // Neel Nanda (pinned posts) and Hugo PaperMod (sticky-until-read).
+    pinned: z.boolean().default(false),
+    readMinutes: z.number().optional(),
+    topic: z.enum(['quant', 'ai', 'oss', 'teaching']).optional(),
+    assetType: z.enum(['code', 'writeup', 'talk', 'live-demo']).optional(),
     // Optional hero image rendered at the top of the detail page.
     // Used to anchor visuals for backtests / eval dashboards / etc.
     hero: z

@@ -24,7 +24,7 @@ contributions:
     proof: 'Logging + audit trail on disk'
 proofs:
   - 'Public slop-scanner repo with scorecard'
-  - 'Reuse pattern documented in 19V engagement methodology'
+  - 'Reuse pattern documented in systematic-strategy desk engagement methodology'
 ---
 
 Built an **8-agent content-production pipeline** (topic-scout → researcher → drafter → editor → producer → art-director → chart-maker → exporter) and a 290-line **AI-output (slop) evaluator** scoring drafts on 13 literature-grounded metrics; drove a real draft from **HEAVY (index 81) to CLEAN (index 3)**.

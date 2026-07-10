@@ -1,4 +1,38 @@
+# robots.txt — Christian T. Macion portfolio
+
 User-agent: *
 Allow: /
 
+# === v6.0 — explicit AI-bot policy ===
+# Allow crawling and indexing for transparency. The site carries
+# NDA-positive content; no proprietary data, strategy internals, or
+# desk PnL are present anywhere — verified by `src/utils/nda-audit.ts`
+# (0 violations on every build).
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemap
 Sitemap: https://christianmacion26.github.io/portfolio/sitemap-index.xml
+
+# AI-agent surface
+# llms.txt — Markdown index per llmstxt.org
+# llms-full.txt — concatenated content for LLM ingestion

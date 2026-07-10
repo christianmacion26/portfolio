@@ -1,13 +1,13 @@
 ---
 /**
- * ProcessStrip.astro — horizontal process visualization for the AI lane.
+ * ProcessStrip.astro — process visualization for the AI lane.
  *
- * Each step = number + title + short description. Used on the home page
- * after the stat-row to communicate "how AI engineering work is shipped
- * here" at a glance.
- *
- * Renders as horizontal flex on desktop, vertical on mobile.
+ * v3.5: switched from a flat grid of bars to PipelineDiagram.astro,
+ * an inline SVG flowchart with a feedback loop. Same public API:
+ * `steps`, `title`, `subtitle`, `tone`. Callers (index.astro) don't
+ * change.
  */
+import PipelineDiagram from '@components/PipelineDiagram.astro';
 interface Props {
   steps: { num: string; title: string; desc: string }[];
   title?: string;
@@ -27,19 +27,9 @@ const { steps, title, subtitle, tone = 'paper' } = Astro.props;
       </header>
     )
   }
-  <ol class="process__steps">
-    {
-      steps.map((s) => (
-        <li class="step">
-          <div class="step__num mono">{s.num}</div>
-          <div class="step__body">
-            <div class="step__title">{s.title}</div>
-            <p class="step__desc">{s.desc}</p>
-          </div>
-        </li>
-      ))
-    }
-  </ol>
+  <div class="process__diagram">
+    <PipelineDiagram steps={steps} tone={tone} />
+  </div>
 </section>
 
 <style>
@@ -73,75 +63,10 @@ const { steps, title, subtitle, tone = 'paper' } = Astro.props;
   .process--tape .process__sub {
     color: rgba(230, 237, 243, 0.7);
   }
-  .process__steps {
-    display: grid;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .process__diagram {
     max-width: var(--container-max);
-    counter-reset: step;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0;
-  }
-  .step {
-    counter-increment: step;
-    position: relative;
-    padding: var(--sp-5) var(--sp-4);
-    background: var(--c-bg);
-    border-right: 1px dashed var(--c-rule);
-    min-height: 180px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-2);
-  }
-  .process--tape .step {
-    background: var(--c-tape-2);
-    border-right-color: var(--c-tape-2);
-    color: var(--ink-on-tape);
-  }
-  .step:last-child {
-    border-right: none;
-  }
-  .step__num {
-    font-size: var(--fs-2xl);
-    font-weight: 800;
-    color: var(--c-primary-2-deep);
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-  .process--tape .step__num {
-    color: #d4a017;
-  }
-  .step__title {
-    font-size: var(--fs-base);
-    font-weight: 700;
-    color: var(--c-primary);
-    letter-spacing: -0.01em;
-  }
-  .process--tape .step__title {
-    color: #fff;
-  }
-  .step__desc {
-    font-size: var(--fs-sm);
-    color: var(--c-ink-2);
-    line-height: var(--lh-snug);
-    margin: 0;
-  }
-  .process--tape .step__desc {
-    color: rgba(230, 237, 243, 0.78);
-  }
-
-  @media (max-width: 880px) {
-    .process__steps {
-      grid-template-columns: 1fr;
-    }
-    .step {
-      border-right: none;
-      border-bottom: 1px dashed var(--c-rule);
-      min-height: 0;
-    }
-    .step:last-child {
-      border-bottom: none;
-    }
+    margin: 0 auto;
+    padding-inline: var(--sp-4);
   }
 </style>
+

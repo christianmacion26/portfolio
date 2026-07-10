@@ -68,7 +68,43 @@ const workbooks = [
   },
 ];
 
-const press = [
+const pressUnsorted = [
+  {
+    date: '2026-07-10',
+    year: 2026,
+    title: 'v6.0.5 site patch — three real bugs shipped (Atom feed base path, AI H1 slugs, methodology cross-linking)',
+    venue: 'portfolio.os · commit history',
+    detail:
+      'Three post-deploy audit fixes shipped: (1) feed.xml/feed-projects.xml/feed-solutions.xml entry URLs now include the /portfolio base path; (2) AI research page H1s now show human titles (RAG Recall Eval, Tool-Call Agent, LLM-as-Judge Harness, Eval MCP Server, Reflect-Revise Loop, Slop Scanner) instead of filename slugs; (3) /methodology now cross-links 12 unique glossary terms (DSR, PBO, walk-forward, block-bootstrap, embargo, OOS, slippage, Sharpe, regime, Bonferroni-Holm, MinBTL, survivorship) into the /glossary/{id} deep pages, up from zero.',
+    url: 'https://github.com/christianmacion26/portfolio/commits/main',
+  },
+  {
+    date: '2026-07-10',
+    year: 2026,
+    title: 'v6.0.4 spine shipped — 25 glossary deep pages + 15 research citation pages',
+    venue: 'portfolio.os · release notes',
+    detail:
+      'Two new content surfaces: /glossary/{slug} (25 deep pages, one per glossary term, with extended prose + 3-6 related-term cross-links each) and /research/{lane}/{0N-slug} (15 academic citation pages, one per quant + AI project, where the numeric prefix comes from MDX filename order; URLs rendered as /research/quant/01-deflated-sharpe-ratio etc., with auto-generated BibTeX entries + copy-to-clipboard button + canonical-link row to /projects). Total 80 pages indexed. FlagshipCard self-link bug fixed (3 certs now point to issuer URLs). All build-time dates switched to UTC+8.',
+    url: '/proof',
+  },
+  {
+    date: '2026-04-21',
+    year: 2026,
+    title: 'Vol-target time-series momentum paper-trade — live publication on /positions',
+    venue: 'portfolio.os · /positions',
+    detail:
+      'Live paper-trade started on project 03 (BTC/USDT, 30% annualized vol target). Public-data reproducible end-to-end. Currently in regime 2 (50+ trading days), tracking slippage against the 5 bps linear-impact model — 4.2 bps realized.',
+    url: '/positions',
+  },
+  {
+    date: '2026-03-22',
+    year: 2026,
+    title: 'Slop-scanner app released — 13-metric literature-grounded AI-output quality gate',
+    venue: 'github.com/christianmacion26/slop-scanner',
+    detail:
+      'Streamlit app that scores a draft on 13 literature-grounded quality metrics (vocabulary entropy, hedge-word density, generic-template phrases, repetition n-grams) and outputs a single SLOP index from HEAVY to CLEAN. Stdlib scoring core needs no LLM and no API key. Drove a real draft from HEAVY (81) to CLEAN (3).',
+    url: '/projects/ai/06-slop-scanner',
+  },
   {
     date: '2024-09-15',
     year: 2024,
@@ -115,12 +151,21 @@ const press = [
   },
 ];
 
+// Sort press items by date desc (then by year desc as tiebreaker). The source-of-truth order in
+// `pressUnsorted` is "most-recent-first as I wrote them"; this ensures a stable AQR-style
+// date-DESC render even when I forget to physically reorder the array.
+const press = [...pressUnsorted].sort((a, b) => {
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+  return (b.year ?? 0) - (a.year ?? 0);
+});
+
 const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.length;
 ---
 
 <BaseLayout
   title="Publications"
   description="Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Publications", href: "/publications" }]}
 >
   {/* === CSS-only topic filter (no JS) === */}
   <input
@@ -162,11 +207,14 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   <header class="pub-head">
     <div class="container">
       <p class="section__eyebrow">
-        <span class="mono">publications/</span> · public work log · {totalCount} artifacts
+        <span class="mono">publications/</span> · {totalCount} artifacts
       </p>
       <h1 class="pub-head__title">
         Things I have <span class="hl">written, built, and said</span> in public.
       </h1>
+      <p class="pub-head__voice voice-line">
+        Dated. Linkable. If a row says I did something, the proof is in the same row.
+      </p>
       <p class="pub-head__sub">
         Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No
         proprietary data sources. No NDA-protected content.
@@ -424,45 +472,45 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     /* not quite — use sibling cascade */
   }
   .topic-input--all:checked ~ * label[for='topic-all'] {
-    background: var(--c-primary);
+    background: var(--c-amber-deep);
     color: #fff;
-    border-color: var(--c-primary);
+    border-color: var(--c-amber);
   }
   .topic-input--all:checked ~ * label[for='topic-all'] .topic-count {
     color: rgba(255, 255, 255, 0.7);
     background: rgba(255, 255, 255, 0.1);
   }
   .topic-input--papers:checked ~ * label[for='topic-papers'] {
-    background: var(--c-primary);
+    background: var(--c-amber-deep);
     color: #fff;
-    border-color: var(--c-primary);
+    border-color: var(--c-amber);
   }
   .topic-input--papers:checked ~ * label[for='topic-papers'] .topic-count {
     color: rgba(255, 255, 255, 0.7);
     background: rgba(255, 255, 255, 0.1);
   }
   .topic-input--oss:checked ~ * label[for='topic-oss'] {
-    background: var(--c-primary);
+    background: var(--c-amber-deep);
     color: #fff;
-    border-color: var(--c-primary);
+    border-color: var(--c-amber);
   }
   .topic-input--oss:checked ~ * label[for='topic-oss'] .topic-count {
     color: rgba(255, 255, 255, 0.7);
     background: rgba(255, 255, 255, 0.1);
   }
   .topic-input--workbooks:checked ~ * label[for='topic-workbooks'] {
-    background: var(--c-primary);
+    background: var(--c-amber-deep);
     color: #fff;
-    border-color: var(--c-primary);
+    border-color: var(--c-amber);
   }
   .topic-input--workbooks:checked ~ * label[for='topic-workbooks'] .topic-count {
     color: rgba(255, 255, 255, 0.7);
     background: rgba(255, 255, 255, 0.1);
   }
   .topic-input--press:checked ~ * label[for='topic-press'] {
-    background: var(--c-primary);
+    background: var(--c-amber-deep);
     color: #fff;
-    border-color: var(--c-primary);
+    border-color: var(--c-amber);
   }
   .topic-input--press:checked ~ * label[for='topic-press'] .topic-count {
     color: rgba(255, 255, 255, 0.7);
@@ -527,6 +575,29 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     line-height: var(--lh-loose);
     max-width: 60ch;
     margin-bottom: 0;
+  }
+  .pub-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .pub-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .pub-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
 
   .pub-list {

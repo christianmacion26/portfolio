@@ -7,7 +7,7 @@
     "layout": "D compact (HIRED FlowCV pattern, single-page)",
     "skill_pattern": "S5 quant-heavy (~24 skills, JD-mirror dense)",
     "cert_structure": "4-group (Finance + Math/Stats + AI + Events)",
-    "nda_protections_applied": "role-level only — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics, no fund rename; 19V Capital framed as past contract 03/2026 – 06/2026; Alpha Apex NEVER mentioned (NDA-protected rename); title is 'Quant Researcher' not 'Junior QR' or 'Analyst'",
+    "nda_protections_applied": "role-level only — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics, no fund rename; systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026); Alpha Apex NEVER mentioned (NDA-protected rename); title is 'Quant Researcher' not 'Junior QR' or 'Analyst'",
     "jd_keyword_mirror_target": "QR / research-engineer / QR-rotational JDs (numerai, HF, prop-firm, family-office)"
   },
   "header": {
@@ -20,7 +20,7 @@
     {
       "heading": "SUMMARY",
       "layout_cols": 1,
-      "content": "Quant Researcher who builds, statistically validates, and honestly retires systematic strategies under a pre-registration-aware, multiple-testing-controlled framework. I treat false positives as enforced methodology — banking each one into a reusable research-integrity playbook — and ship an automated monthly forward-out-of-sample monitoring pipeline so the live track record is un-gameable.\n\nI previously served as an AI Systems Engineer / Quantitative Researcher on a systematic-strategy desk (PM Evan Ferioli, 03/2026 – 06/2026 contract), where I evaluated 40+ strategy families across 5 asset classes (equity-index, crypto, energy, metals, agriculture) under a 31-gate statistical filter; built 10+ point-in-time, look-ahead-disciplined data pipelines from scratch on free public sources; and implemented the modern selection-bias stack — Deflated Sharpe Ratio, Probability of Backtest Overfitting via CSCV, Minimum Backtest Length — scipy-free in numpy.\n\nI design with reproducibility and adversarial verification as the first-class concern, not the final step. My strategies carry a cost-routed multi-agent AI research architecture (11 agents) alongside them — used to compress expert time and to keep an honest, versioned audit trail of how the research was actually run. Available 30 hrs/wk for a QR / Research Engineer seat that values bank-the-lesson honesty over headline Sharpe."
+      "content": "Quant Researcher who builds, statistically validates, and honestly retires systematic strategies under a pre-registration-aware, multiple-testing-controlled framework. I treat false positives as enforced methodology — banking each one into a reusable research-integrity playbook — and ship an automated monthly forward-out-of-sample monitoring pipeline so the live track record is un-gameable.\n\nI previously served as an AI Systems Engineer / Quantitative Researcher on the systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026) (PM with publicly attributable initials, NDA-protected desk), where I evaluated 40+ strategy families across 5 asset classes (equity-index, crypto, energy, metals, agriculture) under a 31-gate statistical filter; built 10+ point-in-time, look-ahead-disciplined data pipelines from scratch on free public sources; and implemented the modern selection-bias stack — Deflated Sharpe Ratio, Probability of Backtest Overfitting via CSCV, Minimum Backtest Length — scipy-free in numpy.\n\nI design with reproducibility and adversarial verification as the first-class concern, not the final step. My strategies carry a cost-routed multi-agent AI research architecture (11 agents) alongside them — used to compress expert time and to keep an honest, versioned audit trail of how the research was actually run. Available 30 hrs/wk for a QR / Research Engineer seat that values bank-the-lesson honesty over headline Sharpe."
     },
     {
       "heading": "Core Skills",
@@ -99,7 +99,7 @@
       "items": [
         {
           "role": "AI Systems Engineer / Quantitative Researcher (contract)",
-          "company": "19V Capital",
+          "company": "systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)",
           "location": "Remote",
           "dates": "03/2026 – 06/2026",
           "bullets": [
@@ -197,9 +197,9 @@
     "Title: 'Quant Researcher' — NOT 'Junior' (per portfolio-positioning-level memory).",
     "Callout box: 'FIT FOR: Quant Researcher · Research Engineer · QR-Rotational · Strategy Research · Risk Research' to give the one-pager a strong 'pick me' signal at the top.",
     "Skills list is 22 bullets (slightly trimmed from 28-skill HIRED list to fit on one page) and lead with quant-specific entries (Deflated Sharpe, PBO/CSCV, MinBTL, walk-forward, point-in-time).",
-    "Experience: 3 roles only (19V + Self-Directed + Ledger51) — the active engagements with verifiable evidence. Removed Arclion AI (AI-focused, no quant angle) and the Financial Educator line (NDA-safe but off-topic for a quant one-pager).",
-    "All 19V bullets NDA-clean at role level: methodology + scale + tools + integrity narrative — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics (Polymarket/Kalshi/NOAA/USDA), no fund rename.",
-    "Alpha Apex NEVER mentioned. 19V framed as past contract 03/2026 – 06/2026 with PM-by-name only (Evan Ferioli, public association OK).",
+    "Experience: 3 roles only (systematic-strategy desk + Self-Directed + Ledger51) — the active engagements with verifiable evidence. Removed AI-engineering consultancy (AI-focused, no quant angle) and the Financial Educator line (NDA-safe but off-topic for a quant one-pager).",
+    "All desk bullets NDA-clean at role level: methodology + scale + tools + integrity narrative — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics (Polymarket/Kalshi/NOAA/USDA), no fund rename.",
+    "Alpha Apex NEVER mentioned. systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026) with PM-with-publicly-attributable-initials cue (NDA-protected desk).",
     "Certs: 4-group structure (Finance + Math/Stats + AI + Events) — matches HIRED sample. Lead with Finance + AI; Math/Stats and Events as support.",
     "Voice: 20–40 word analytical/process bullets (V4 Researcher / Quant). NOT achievement-driven. Slightly academic/formal — matches research JD expectations."
   ]

@@ -1,8 +1,13 @@
 ---
 /**
- * 404.astro — v2: math/quant aesthetic.
+ * 404.astro — v6.0: math/quant aesthetic + AI-agent surface.
  *
  * Equation: ∄ x ∈ site : URL(x) = requested. Try one of these.
+ *
+ * v6.0 changes:
+ *   - <meta name="robots" content="noindex"> to prevent SEO leakage.
+ *   - Quick-link cards (3): /proof, /now, /contact — institutional defaults.
+ *   - Search box (Pagefind) so visitors can pivot to a known query.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
@@ -16,9 +21,34 @@ const links = [
   { href: path('/certifications'), label: 'Certifications' },
   { href: path('/contact'), label: 'Contact' },
 ];
+
+// v6.0: 3 quick-link cards for the skim-reader
+const quickCards = [
+  {
+    href: path('/proof'),
+    label: 'Proof',
+    sub: 'Six sections. Identity → credentials → shipped code → research → track record → disclosure.',
+  },
+  {
+    href: path('/now'),
+    label: 'Now',
+    sub: 'Dated one-pager. What I am doing this month and why it matters.',
+  },
+  {
+    href: path('/contact'),
+    label: 'Contact',
+    sub: 'Email · LinkedIn · GitHub · Medium. Reply within 24 hours on weekdays.',
+  },
+];
 ---
 
-<BaseLayout title="404 — Page not found" description="The page you're looking for isn't here.">
+<BaseLayout
+  title="404 — Off the path"
+  description="The page you were looking for isn't here. Try one of the canonical routes below."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "404", href: "/404" }]}
+>
+  <meta slot="head" name="robots" content="noindex" />
+
   <section class="not-found">
     <div class="container container-narrow not-found__inner">
       <p class="section__eyebrow mono">404 · off the path</p>
@@ -36,7 +66,39 @@ const links = [
         />
       </div>
 
+      {/* v6.0 — three quick-link cards */}
+      <div class="not-found__quick">
+        {
+          quickCards.map((c) => (
+            <a href={c.href} class="quick-card">
+              <span class="quick-card__label">{c.label}</span>
+              <span class="quick-card__sub">{c.sub}</span>
+              <span class="quick-card__arrow" aria-hidden="true">→</span>
+            </a>
+          ))
+        }
+      </div>
+
+      {/* v6.0 — search box fallback */}
+      <form class="not-found__search" action={path('/search')} method="get" role="search">
+        <label for="not-found-q" class="not-found__search-label mono">
+          Or search · pagefind
+        </label>
+        <div class="not-found__search-row">
+          <input
+            type="search"
+            id="not-found-q"
+            name="q"
+            placeholder="e.g. deflated sharpe · MCP · methodology"
+            autocomplete="off"
+            class="not-found__search-input"
+          />
+          <button type="submit" class="btn btn--primary btn--sm">Search →</button>
+        </div>
+      </form>
+
       <nav class="not-found__nav" aria-label="404 navigation">
+        <p class="not-found__nav-eyebrow mono">All canonical routes</p>
         {
           links.map((l) => (
             <a href={l.href} class="btn btn--ghost">
@@ -52,7 +114,7 @@ const links = [
 <style>
   .not-found {
     padding-block: var(--sp-9);
-    min-height: 60vh;
+    min-height: 70vh;
     display: flex;
     align-items: center;
     background:
@@ -84,10 +146,105 @@ const links = [
     overflow-x: auto;
     display: inline-block;
   }
+
+  /* === v6.0 — quick-link cards === */
+  .not-found__quick {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-6);
+    text-align: left;
+  }
+  @media (max-width: 720px) {
+    .not-found__quick {
+      grid-template-columns: 1fr;
+    }
+  }
+  .quick-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--c-ink);
+    transition:
+      border-color var(--transition),
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+  .quick-card:hover {
+    border-color: var(--c-primary-2-deep);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  .quick-card__label {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .quick-card__sub {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-snug);
+  }
+  .quick-card__arrow {
+    align-self: flex-end;
+    color: var(--c-primary-2-deep);
+    font-family: var(--ff-mono);
+    font-size: var(--fs-base);
+  }
+
+  /* === v6.0 — search box === */
+  .not-found__search {
+    margin-bottom: var(--sp-6);
+    text-align: left;
+    max-width: 56ch;
+    margin-inline: auto;
+  }
+  .not-found__search-label {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: var(--sp-2);
+    text-align: center;
+  }
+  .not-found__search-row {
+    display: flex;
+    gap: var(--sp-2);
+  }
+  .not-found__search-input {
+    flex: 1;
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--ff-mono);
+    font-size: var(--fs-sm);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    color: var(--c-ink);
+  }
+  .not-found__search-input:focus {
+    outline: none;
+    border-color: var(--c-primary-2-deep);
+  }
+
   .not-found__nav {
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-3);
     justify-content: center;
+  }
+  .not-found__nav-eyebrow {
+    width: 100%;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--sp-2);
   }
 </style>

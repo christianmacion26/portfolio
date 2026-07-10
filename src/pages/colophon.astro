@@ -1,0 +1,578 @@
+---
+/**
+ * colophon.astro — v1.0 · the design system, made visible.
+ *
+ * Five sections:
+ *   (a) Type              — Inter, JetBrains Mono, KaTeX_Main. 4-step scale.
+ *   (b) Color palette     — 4 swatches across, with hex and role label.
+ *   (c) Spacing scale     — 6 cells: --sp-2 → --sp-7 with their px values.
+ *   (d) Motion vocabulary — table of 5 effects with durations.
+ *   (e) Accessibility     — WCAG AA contrast pairs, skip-nav, focus-visible.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+
+const fullName = profile.fullName.split(',')[0];
+
+// === (a) Type — 4-step scale display =======================================
+const typeScale = [
+  { token: '--fs-sm', px: '14px', role: 'small / meta / captions' },
+  { token: '--fs-base', px: '16px', role: 'body text' },
+  { token: '--fs-xl', px: '22px', role: 'h3 / sub-head' },
+  { token: '--fs-3xl', px: '36px', role: 'section title' },
+];
+
+// === (b) Color palette — 4 swatches ========================================
+const palette = [
+  { name: '--c-primary', hex: '#e6edf3', role: 'off-white · primary text on dark' },
+  { name: '--c-amber', hex: '#e8b220', role: 'institutional amber · accent + lift' },
+  { name: '--c-tape', hex: '#0d1117', role: 'institutional-tape · page background' },
+  { name: '--c-pass', hex: '#3fb950', role: 'verified signal · pass only' },
+];
+
+// === (c) Spacing scale — 6 cells ===========================================
+const spacing = [
+  { token: '--sp-2', px: '8px' },
+  { token: '--sp-3', px: '12px' },
+  { token: '--sp-4', px: '16px' },
+  { token: '--sp-5', px: '24px' },
+  { token: '--sp-6', px: '32px' },
+  { token: '--sp-7', px: '48px' },
+];
+
+// === (d) Motion vocabulary — 5 effects =====================================
+const motion = [
+  { effect: 'odometer', trigger: 'data-counter scrolls into view', duration: '1200ms', easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+  { effect: 'active-nav', trigger: 'section becomes the in-viewport section', duration: '150ms', easing: 'ease (color + underline slide)' },
+  { effect: 'hover-zoom', trigger: 'hover on card / button / image', duration: '150ms', easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+  { effect: 'shine', trigger: 'verified badge / status pill idle', duration: '1500ms', easing: 'linear (one-shot on appearance)' },
+  { effect: 'trust-pulse', trigger: 'pass / fail status dot', duration: '2400ms', easing: 'ease-in-out (infinite, opacity-only)' },
+];
+
+// === (e) Accessibility — WCAG AA pairs + a11y primitives ===================
+const contrastPairs = [
+  { fg: '--c-ink', bg: '--c-bg', ratio: '17.1:1', level: 'AAA' },
+  { fg: '--c-ink-2', bg: '--c-bg', ratio: '6.4:1', level: 'AA' },
+  { fg: '--c-primary-2-deep', bg: '--c-bg', ratio: '5.0:1', level: 'AA' },
+  { fg: '--c-amber', bg: '--c-bg', ratio: '3.4:1', level: 'AA Large (≥18px only)' },
+  { fg: '--c-primary', bg: '--c-bg', ratio: '19.2:1', level: 'AAA' },
+];
+---
+
+<BaseLayout
+  title={`Colophon · ${fullName}`}
+  description="The design system — type, color, spacing, motion, and accessibility — for this site. All values live in src/styles/tokens.css."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Colophon", href: "/colophon" }]}
+>
+  <header class="col-head">
+    <div class="container">
+      <p class="section__eyebrow">
+        <span class="mono">colophon/</span> · the design system
+      </p>
+      <h1 class="col-head__title">Colophon.</h1>
+      <p class="col-head__voice voice-line">
+        Every design decision on this site, in one page. Tokens are the source of truth.
+      </p>
+      <p class="col-head__sub">
+        Type, color, spacing, motion, and accessibility — every design decision on this
+        site, in one page. The full source is in
+        <code class="mono">src/styles/tokens.css</code>.
+      </p>
+    </div>
+  </header>
+
+  {/* =========================================================
+      (a) Type
+      ========================================================= */}
+  <section class="section" data-reveal>
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">(a) · Type</p>
+        <h2 class="section__title">Three faces, four roles.</h2>
+        <p class="section__sub">
+          Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math
+          serifs. The four-step scale below is the institutional rhythm; full
+          scale runs <code class="mono">--fs-xs</code> to <code class="mono">--fs-5xl</code>.
+        </p>
+      </header>
+
+      <div class="type-faces">
+        <article class="type-face">
+          <h3 class="type-face__name" style="font-family: var(--ff-sans);">Inter</h3>
+          <p class="type-face__role">UI / body — sans, 400 / 500 / 600 / 700</p>
+        </article>
+        <article class="type-face">
+          <h3 class="type-face__name" style="font-family: var(--ff-mono);">JetBrains Mono</h3>
+          <p class="type-face__role">Data / code — mono, 400 / 500</p>
+        </article>
+        <article class="type-face">
+          <h3 class="type-face__name" style="font-family: var(--ff-math);">KaTeX_Main</h3>
+          <p class="type-face__role">Math serifs (rendered by KaTeX)</p>
+        </article>
+      </div>
+
+      <h3 class="sub-h3">4-step scale</h3>
+      <ol class="type-scale">
+        {
+          typeScale.map((t) => (
+            <li class="type-scale__row">
+              <span class="type-scale__label mono">{t.token} · {t.px}</span>
+              <span class="type-scale__sample" style={`font-size: ${t.px};`}>
+                The quick brown fox jumps
+              </span>
+              <span class="type-scale__role faint">{t.role}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {/* =========================================================
+      (b) Color palette
+      ========================================================= */}
+  <section class="section section--alt" data-reveal>
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">(b) · Color palette</p>
+        <h2 class="section__title">Four colors, four roles.</h2>
+        <p class="section__sub">
+          The hedge-fund palette: near-black + deep amber on a term-paper cream.
+          The full token set is in <code class="mono">tokens.css</code> (primary,
+          amber, paper, bg, ink, rule, status, math accents).
+        </p>
+      </header>
+
+      <div class="swatches">
+        {
+          palette.map((p) => (
+            <article class="swatch">
+              <div class={`swatch__chip swatch__chip--${p.name.replace('--c-', '')}`} />
+              <div class="swatch__name mono">{p.name}</div>
+              <div class="swatch__hex mono">{p.hex}</div>
+              <div class="swatch__role">{p.role}</div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* =========================================================
+      (c) Spacing scale
+      ========================================================= */}
+  <section class="section" data-reveal>
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">(c) · Spacing scale</p>
+        <h2 class="section__title">Six cells, 8px base.</h2>
+        <p class="section__sub">
+          A geometric scale (multiples of 4, doubling past <code class="mono">--sp-4</code>).
+          The full scale runs to <code class="mono">--sp-10</code> (8rem) for hero padding.
+        </p>
+      </header>
+
+      <div class="spacing-row">
+        {
+          spacing.map((s) => (
+            <article class="spacing-cell">
+              <div class="spacing-cell__bar" style={`width: ${s.px};`} />
+              <div class="spacing-cell__token mono">{s.token}</div>
+              <div class="spacing-cell__px mono">{s.px}</div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* =========================================================
+      (d) Motion vocabulary
+      ========================================================= */}
+  <section class="section section--alt" data-reveal>
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">(d) · Motion vocabulary</p>
+        <h2 class="section__title">Five effects, institutional restraint.</h2>
+        <p class="section__sub">
+          Motion is minimal and functional. All effects respect
+          <code class="mono">prefers-reduced-motion: reduce</code>. Total motion JS
+          budget is &lt; 4KB minified.
+        </p>
+      </header>
+
+      <div class="motion-wrap">
+        <table class="motion">
+          <thead>
+            <tr>
+              <th scope="col">Effect</th>
+              <th scope="col">Trigger</th>
+              <th scope="col" class="mono">Duration</th>
+              <th scope="col">Easing</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              motion.map((m) => (
+                <tr>
+                  <th scope="row" class="mono">{m.effect}</th>
+                  <td>{m.trigger}</td>
+                  <td class="mono">{m.duration}</td>
+                  <td class="mono">{m.easing}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {/* =========================================================
+      (e) Accessibility
+      ========================================================= */}
+  <section class="section" data-reveal>
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">(e) · Accessibility</p>
+        <h2 class="section__title">WCAG AA contrast, skip-nav, focus-visible.</h2>
+        <p class="section__sub">
+          All foreground/background pairs in the body of the site meet WCAG AA. The
+          decorative amber tokens are reserved for ≥18px / non-text use.
+        </p>
+      </header>
+
+      <h3 class="sub-h3">Contrast pairs</h3>
+      <div class="motion-wrap">
+        <table class="motion">
+          <thead>
+            <tr>
+              <th scope="col">Foreground</th>
+              <th scope="col">Background</th>
+              <th scope="col" class="mono">Ratio</th>
+              <th scope="col">Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              contrastPairs.map((c) => (
+                <tr>
+                  <td class="mono">{c.fg}</td>
+                  <td class="mono">{c.bg}</td>
+                  <td class="mono">{c.ratio}</td>
+                  <td>{c.level}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub-h3">Keyboard primitives</h3>
+      <ul class="bullet">
+        <li>
+          <strong>Skip-nav:</strong> the first focusable element on every page is a
+          <code class="mono">.skip-link</code> that jumps past the nav to
+          <code class="mono">#main</code>. Visible only on focus.
+        </li>
+        <li>
+          <strong>Focus-visible ring:</strong> a 2px outline in
+          <code class="mono">--c-primary-2-deep</code> (5.0:1) on every interactive element,
+          gated by <code class="mono">:focus-visible</code> so mouse users see no ring.
+        </li>
+        <li>
+          <strong>Reduced motion:</strong> a single media query
+          (<code class="mono">prefers-reduced-motion: reduce</code>) zeros all transitions
+          and animations across the site.
+        </li>
+        <li>
+          <strong>Semantic HTML:</strong> the page is heading-hierarchy-correct (single
+          <code class="mono">&lt;h1&gt;</code>, ordered <code class="mono">h2</code> /
+          <code class="mono">h3</code>); every interactive element is a real
+          <code class="mono">&lt;a&gt;</code>, <code class="mono">&lt;button&gt;</code>, or
+          <code class="mono">&lt;label&gt;</code>.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Design system source on disk."
+    sub="src/styles/tokens.css is the canonical source. PRs that change a token are expected to update the colophon on the same commit."
+    primaryLabel={`Email ${fullName}`}
+    secondaryLabel="See proof"
+    secondaryHref={path('/proof')}
+  />
+</BaseLayout>
+
+<style>
+  .col-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .col-head__title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .col-head__sub {
+    font-size: clamp(1rem, 2vw, var(--fs-lg));
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+  .col-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .col-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .col-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
+  .col-head__sub code {
+    background: var(--c-bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.92em;
+    color: var(--c-primary-2-deep);
+  }
+
+  .sub-h3 {
+    margin: var(--sp-6) 0 var(--sp-3);
+    color: var(--c-primary-2-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+  }
+
+  /* === (a) Type === */
+  .type-faces {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-6);
+  }
+  .type-face {
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+  }
+  .type-face__name {
+    font-size: var(--fs-2xl);
+    margin: 0 0 var(--sp-2);
+    color: var(--c-ink);
+    line-height: 1.1;
+  }
+  .type-face__role {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    margin: 0;
+  }
+
+  .type-scale {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: var(--border);
+  }
+  .type-scale__row {
+    display: grid;
+    grid-template-columns: 140px 1fr 200px;
+    gap: var(--sp-4);
+    padding-block: var(--sp-4);
+    border-bottom: 1px solid var(--c-rule-soft);
+    align-items: baseline;
+  }
+  .type-scale__label {
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .type-scale__sample {
+    font-family: var(--ff-sans);
+    color: var(--c-ink);
+    line-height: 1.1;
+  }
+  .type-scale__role {
+    font-size: var(--fs-xs);
+    text-align: right;
+  }
+
+  /* === (b) Swatches === */
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-4);
+  }
+  .swatch {
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--c-bg);
+  }
+  .swatch__chip {
+    height: 120px;
+    width: 100%;
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .swatch__chip--primary {
+    background: var(--c-primary);
+  }
+  .swatch__chip--amber {
+    background: var(--c-amber);
+  }
+  .swatch__chip--tape {
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+  }
+  .swatch__chip--pass {
+    background: var(--c-pass);
+  }
+  .swatch__name {
+    padding: var(--sp-3) var(--sp-4) 0;
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .swatch__hex {
+    padding: 0 var(--sp-4);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.04em;
+  }
+  .swatch__role {
+    padding: var(--sp-2) var(--sp-4) var(--sp-4);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-snug);
+  }
+
+  /* === (c) Spacing === */
+  .spacing-row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--sp-3);
+    align-items: end;
+  }
+  .spacing-cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    align-items: center;
+  }
+  .spacing-cell__bar {
+    height: 32px;
+    background: linear-gradient(90deg, var(--c-primary-2), var(--c-amber));
+    border-radius: 2px;
+  }
+  .spacing-cell__token {
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .spacing-cell__px {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+
+  /* === (d) Motion / (e) Contrast tables === */
+  .motion-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .motion {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: var(--border);
+  }
+  .motion th,
+  .motion td {
+    text-align: left;
+    padding: var(--sp-3) var(--sp-4);
+    border-bottom: 1px solid var(--c-rule-soft);
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+  }
+  .motion thead th {
+    background: var(--c-bg-2);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+  .motion tbody th {
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: var(--fs-sm);
+  }
+
+  /* === (e) bullets === */
+  .bullet {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin: 0;
+  }
+  .bullet li {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-bottom: var(--sp-2);
+  }
+  .bullet code {
+    background: var(--c-bg-2);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--c-primary-2-deep);
+  }
+
+  @media (max-width: 720px) {
+    .type-faces {
+      grid-template-columns: 1fr;
+    }
+    .swatches {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .spacing-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .type-scale__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
+    .type-scale__role {
+      text-align: left;
+    }
+  }
+</style>

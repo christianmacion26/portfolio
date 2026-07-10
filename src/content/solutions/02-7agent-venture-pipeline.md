@@ -21,10 +21,10 @@ evidence:
 outcome: |
   Produced a clean separation-of-duties trail — every proposal had a corresponding validator hand-off,
   the validator never originated the proposal, and every decision was ledgered for later audit.
-  The same separation-of-duties principle was reused at 19V for LLM research validation.
+  The same separation-of-duties principle was reused at the systematic-strategy desk for LLM research validation.
 proof:
   - '31 artifacts on disk (charters, briefs, ledgers)'
-  - 'Reuse pattern documented in 19V engagement methodology'
+  - 'Reuse pattern documented in systematic-strategy desk engagement methodology'
 tags: [multi-agent, governance, venture, prompts, separation-of-duties]
 lane: 'ai'
 ---

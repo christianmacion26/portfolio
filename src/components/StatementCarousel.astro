@@ -1,0 +1,258 @@
+---
+/**
+ * StatementCarousel.astro — single-line rotating statement carousel.
+ *
+ * Per UI/UX research synthesis (v6.0.7), the institutional "rotating
+ * statement" pattern is the HRT signature ("innovators. engineers.
+ * technologists. mathematicians."). It demonstrates a firm's discipline
+ * by rotating through complete sentences — not just vocabulary.
+ *
+ * Auto-advances every 5s. Pauses on hover or keyboard focus. Dots
+ * indicator below for manual navigation. Respects prefers-reduced-motion
+ * (no auto-advance).
+ *
+ * Usage:
+ *   <StatementCarousel />
+ *   <StatementCarousel
+ *     statements={[
+ *       'Eval-first. ↦ Ship-ready.',
+ *       'NDA-clean. ↦ Reproducible.',
+ *     ]}
+ *   />
+ */
+
+interface Props {
+  /** Statements to rotate through. Defaults match the canonical site-wide set. */
+  statements?: string[];
+  /** Auto-advance interval in milliseconds. Default 5000ms. */
+  intervalMs?: number;
+  /** Optional label for screen readers. */
+  label?: string;
+}
+
+const {
+  statements = [
+    'Eval-first. ↦ Ship-ready.',
+    'NDA-clean. ↦ Public-data reproducible.',
+    '31 gates. ↦ Zero rollbacks.',
+    'PBO-tested. ↦ OOS-validated.',
+    '11 agents. ↦ One method.',
+    '102 certs. ↦ One discipline.',
+  ] as string[],
+  intervalMs = 5000,
+  label = 'Discipline statements — rotating',
+} = Astro.props;
+---
+
+<div class="stmt-carousel" data-stmt-carousel data-interval={String(intervalMs)} aria-roledescription="carousel" aria-label={label}>
+  <div class="stmt-carousel__viewport">
+    <ol class="stmt-carousel__track">
+      {statements.map((s, i) => (
+        <li
+          class:list={['stmt-carousel__slide', { 'is-active': i === 0 }]}
+          aria-hidden={i === 0 ? 'false' : 'true'}
+          data-stmt-index={i}
+        >
+          {/* Inner span is required so the text wraps inside the flex
+              slide. With `display: flex` on the <li> and a bare text node,
+              the text becomes an anonymous flex item with min-width: auto,
+              so the line refuses to wrap — it overflows the viewport (which
+              has `overflow: hidden`) and only the centered character
+              renders. Wrapping in a span gives us a real block child that
+              honors `text-wrap: balance` and `max-width: 100%`. */}
+          <span class="stmt-carousel__text">{s}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <ol class="stmt-carousel__dots" role="tablist" aria-label="Choose statement">
+    {statements.map((_s, i) => (
+      <li>
+        <button
+          type="button"
+          class:list={['stmt-carousel__dot', { 'is-active': i === 0 }]}
+          data-stmt-dot={i}
+          aria-label={`Show statement ${i + 1}`}
+          aria-pressed={i === 0 ? 'true' : 'false'}
+        ></button>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<script>
+  // Lightweight carousel driver. Auto-advances on a timer, pauses on
+  // hover or focus-within, and exposes data-stmt-dot buttons for manual
+  // navigation. Respects prefers-reduced-motion (no auto-advance).
+  function initCarousel(root: HTMLElement) {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-stmt-index]'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-stmt-dot]'));
+    if (slides.length === 0) return;
+
+    const intervalMs = Number(root.dataset.interval ?? '5000');
+    let active = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function show(i: number) {
+      active = ((i % slides.length) + slides.length) % slides.length;
+      slides.forEach((s, idx) => {
+        const on = idx === active;
+        s.classList.toggle('is-active', on);
+        s.setAttribute('aria-hidden', on ? 'false' : 'true');
+      });
+      dots.forEach((d, idx) => {
+        const on = idx === active;
+        d.classList.toggle('is-active', on);
+        d.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+
+    function start() {
+      if (reduced) return;
+      stop();
+      timer = setInterval(() => show(active + 1), intervalMs);
+    }
+    function stop() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    dots.forEach((d) =>
+      d.addEventListener('click', () => {
+        const idx = Number(d.dataset.stmtDot);
+        show(idx);
+        start(); // restart timer on manual nav
+      }),
+    );
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+
+    start();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-stmt-carousel]').forEach(initCarousel);
+</script>
+
+<style>
+  .stmt-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-4) 0;
+    border-top: 1px solid var(--c-rule-soft);
+    border-bottom: 1px solid var(--c-rule-soft);
+    background: var(--c-bg);
+  }
+
+  .stmt-carousel__viewport {
+    width: 100%;
+    max-width: 760px;
+    overflow: hidden;
+    text-align: center;
+    min-height: 4em; /* reserve space for 2-line wrap so layout doesn't jump */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stmt-carousel__track {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    height: 4em; /* matches viewport — keeps cross-fade stacked cleanly */
+  }
+
+  .stmt-carousel__slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+    line-height: 1.4;
+    color: var(--c-ink);
+    letter-spacing: -0.005em;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 320ms var(--ease-out),
+      transform 320ms var(--ease-out);
+    pointer-events: none;
+    padding: 0;
+  }
+  .stmt-carousel__text {
+    display: block;
+    text-align: center;
+    text-wrap: balance;
+    max-width: 100%;
+    padding-inline: var(--sp-4);
+  }
+  .stmt-carousel__slide.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .stmt-carousel__dots {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: var(--sp-2);
+  }
+  .stmt-carousel__dots li {
+    display: flex;
+  }
+  .stmt-carousel__dot {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transition:
+      background var(--transition),
+      border-color var(--transition),
+      transform var(--transition);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Inner visual dot is the visible 6px circle; the 44px button is the hit area. */
+  .stmt-carousel__dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: 1px solid var(--c-ink-3);
+    background: transparent;
+    transition:
+      background var(--transition),
+      border-color var(--transition),
+      transform var(--transition);
+  }
+  .stmt-carousel__dot:hover::before {
+    border-color: var(--c-primary-2);
+  }
+  .stmt-carousel__dot.is-active::before {
+    background: var(--c-primary-2);
+    border-color: var(--c-primary-2);
+    transform: scale(1.4);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stmt-carousel__slide {
+      transition: none;
+    }
+  }
+</style>

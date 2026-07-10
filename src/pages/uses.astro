@@ -1,11 +1,18 @@
 ---
 /**
- * uses.astro — the /uses pattern (Werkzeug, Swyx, Bryan Cantrill school).
+ * uses.astro — v2.0 · polished /uses page (Werkzeug, Swyx, Bryan Cantrill school).
  *
- * A short, dated page that names the actual hardware, software, and AI tools
- * used to do the work on this site and in projects. Recruiter signal: "this
- * person is a working researcher using modern tooling, not a 2018-era ML
- * engineer still running Jupyter-only."
+ * Seven structured sections. Each row is `tool name` + `category tag` +
+ * `why this and not that`. Updated 2026-07-09.
+ *
+ * Sections (left-to-right is "concrete → abstract"):
+ *   1. Hardware
+ *   2. Editor & OS
+ *   3. Language toolchain
+ *   4. Data vendors (free / open)
+ *   5. Hosting & CDN
+ *   6. Monitoring & analytics (none)
+ *   7. MDX / Astro toolchain
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
@@ -13,165 +20,228 @@ import { path } from '@utils/url';
 
 const lastUpdated = '2026-07-09';
 
-const sections = [
+interface UseRow {
+  name: string;
+  detail: string;
+  tag: string;
+  why: string;
+}
+interface UseSection {
+  id: string;
+  title: string;
+  blurb?: string;
+  items: UseRow[];
+}
+
+const sections: UseSection[] = [
   {
+    id: 'hardware',
     title: 'Hardware',
+    blurb: 'The metal. Two screens, one keyboard, one phone for comms only.',
     items: [
       {
-        name: 'Primary laptop',
-        detail: 'Apple MacBook Pro 14" (M-series)',
-        why: 'Runs Python + Astro + KaTeX builds comfortably; instant resume.',
+        name: 'MacBook Pro 14" (M-series)',
+        detail: 'Primary laptop',
+        tag: 'compute',
+        why: 'Apple silicon compiles Python + Astro + KaTeX in seconds; battery + instant resume are non-negotiable.',
       },
       {
-        name: 'Secondary monitor',
-        detail: 'LG 27" 4K UltraFine',
-        why: 'Single-column reading + multi-pane code/terminal.',
+        name: 'LG 27" 4K UltraFine',
+        detail: 'External display',
+        tag: 'display',
+        why: 'Single-column reading at 1× and a multi-pane code/terminal at 2× — the only monitor spec that matters.',
       },
       {
-        name: 'Phone',
-        detail: 'Standard Android',
-        why: 'Not on the engineering loop; for comms only.',
+        name: 'Standard Android',
+        detail: 'Phone',
+        tag: 'comms',
+        why: 'Not on the engineering loop; a phone is a comms device, not a workstation.',
       },
     ],
   },
   {
-    title: 'Editor & shell',
+    id: 'editor-os',
+    title: 'Editor & OS',
+    blurb: 'Modal editing, GPU terminal, themeable shell. Nothing in this section is new since 2024.',
     items: [
       {
-        name: 'Editor',
-        detail: 'Neovim (LazyVim distribution)',
-        why: 'Modal editing + LSP for Python / TypeScript / MDX.',
+        name: 'Neovim (LazyVim)',
+        detail: 'Editor',
+        tag: 'editor',
+        why: 'LSP for Python / TypeScript / MDX, modal editing, and zero startup tax — the only editor that has never broken a flow.',
       },
       {
-        name: 'Shell',
-        detail: 'zsh + oh-my-zsh + starship prompt',
-        why: 'Fast, themeable, portable across macOS sessions.',
+        name: 'Ghostty',
+        detail: 'Terminal',
+        tag: 'terminal',
+        why: 'GPU-accelerated, low-latency, minimal chrome. iTerm2 was good until Ghostty was free.',
       },
-      { name: 'Terminal', detail: 'Ghostty', why: 'GPU-accelerated, low-latency, minimal chrome.' },
       {
-        name: 'Git CLI',
-        detail: 'git + gh + delta',
-        why: 'gh for the GitHub-aware workflows; delta for diff review.',
+        name: 'zsh + oh-my-zsh + starship',
+        detail: 'Shell + prompt',
+        tag: 'shell',
+        why: 'Portable across macOS sessions, themeable, and fast — the shell is upstream of the prompt.',
+      },
+      {
+        name: 'git + gh + delta',
+        detail: 'Version control CLI',
+        tag: 'vcs',
+        why: 'gh for GitHub-aware workflows (PRs, releases, issue triage); delta for diffs that are actually readable.',
       },
     ],
   },
   {
-    title: 'Languages & frameworks',
+    id: 'language',
+    title: 'Language toolchain',
+    blurb: 'Python + TypeScript + SQL + Pine Script. No TA-Lib, no Lean, no backtrader — the point of the projects is shipping the engine from scratch.',
     items: [
       {
         name: 'Python',
-        detail: 'numpy / pandas / matplotlib / scipy-stack',
-        why: '~76.5k LOC of the public work. No TA-Lib — pure stdlib math.',
+        detail: 'numpy / pandas / matplotlib / scipy',
+        tag: 'python',
+        why: '~76.5k LOC of the public work. Pure stdlib math — no TA-Lib, no Lean, no backtrader.',
       },
       {
-        name: 'TypeScript / JS',
-        detail: 'Astro 5 / MDX / KaTeX',
-        why: 'This site. Astro static-first is the right tool for a content-heavy portfolio.',
+        name: 'TypeScript / JavaScript',
+        detail: 'Astro / MDX / KaTeX',
+        tag: 'typescript',
+        why: 'This site. Astro static-first is the right tool for a content-heavy portfolio with no runtime needs.',
       },
       {
         name: 'SQL',
-        detail: 'postgres + sqlite + duckdb (parquet on-disk)',
-        why: 'DuckDB increasingly replaces pandas for parquet-native analysis.',
+        detail: 'postgres + sqlite + DuckDB (parquet on-disk)',
+        tag: 'sql',
+        why: 'DuckDB increasingly replaces pandas for parquet-native analysis; sqlite remains the local default.',
       },
       {
         name: 'Pine Script',
         detail: 'TradingView',
-        why: 'For the charting side when working with non-Python researchers.',
+        tag: 'dsl',
+        why: 'For the charting side when working with non-Python researchers; not a research language, a sharing format.',
       },
     ],
   },
   {
-    title: 'Data & backtesting',
+    id: 'data',
+    title: 'Data vendors (free / open)',
+    blurb: 'Every artifact in /projects and /positions is reproducible from the sources below. No proprietary data.',
     items: [
-      {
-        name: 'Databento',
-        detail: 'US equities + futures tick/rebar',
-        why: 'Point-in-time dataset with embargo-aware access.',
-      },
-      {
-        name: 'Binance public klines',
-        detail: 'BTC/USDT 1d',
-        why: 'For /positions paper-trade record. Public, no auth.',
-      },
       {
         name: 'Yahoo Finance (yfinance)',
-        detail: 'For backtesting at the OOS layer only',
-        why: 'Look-ahead-free is the gate; yfinance passes G22 only after revision history checks.',
+        detail: 'Equities & ETFs',
+        tag: 'equities',
+        why: 'Free, point-in-time after revision-history check. Passes G22 of the eval stack with the embargo pattern.',
       },
       {
-        name: 'Custom numpy backtester',
-        detail: 'No Lean / backtrader / vectorbt',
-        why: 'The point of the quant projects is shipping the engine from scratch.',
-      },
-    ],
-  },
-  {
-    title: 'AI / agent stack',
-    items: [
-      {
-        name: 'Claude',
-        detail: 'Anthropic API (Opus / Sonnet / Haiku routing)',
-        why: 'Tiered dispatch policy lives on /methodology. ~15× cost vs single-agent is the constraint.',
+        name: 'CoinGecko / Binance public klines',
+        detail: 'BTC/USDT 1d (and 18 altcoins)',
+        tag: 'crypto',
+        why: 'For the /positions paper-trade record. Public, no auth, deterministic on a symbol seed.',
       },
       {
-        name: 'Agent runtime',
-        detail: 'Claude Agent SDK + MCP server (eval-mcp-server)',
-        why: 'Structured-output contracts gated by a mechanical validator.',
+        name: 'FRED (St. Louis Fed)',
+        detail: 'Macro series',
+        tag: 'macro',
+        why: 'VIX percentile, fed funds, CPI — the macro overlay inputs. Free, public, revision-history-aware.',
       },
       {
-        name: 'Eval & measurement',
-        detail: 'katex / ragas (subset) / Cohen’s κ tooling',
-        why: 'Eval-first discipline is the throughline; G1–G31 gates apply to LLMs.',
+        name: 'EDGAR / SEC filings',
+        detail: 'Issuer fundamentals',
+        tag: 'fundamentals',
+        why: 'Primary-source fundamentals when the artifact needs them. XBRL is ugly; the truthfulness is the point.',
       },
       {
-        name: 'Containerization',
-        detail: 'Docker (compose, not swarm)',
-        why: 'Reproducible env for /projects/quant repos that have non-Python deps.',
+        name: 'Public CME / CBOE chains',
+        detail: 'Options chains',
+        tag: 'derivatives',
+        why: 'Where options data is needed. Free, no auth, but chain histories are patchy — G22 gates it accordingly.',
       },
     ],
   },
   {
-    title: 'Cloud & infra',
+    id: 'hosting',
+    title: 'Hosting & CDN',
+    blurb: 'Free tier, fast, tied to the commit history. Custom domain planned.',
     items: [
       {
-        name: 'AWS S3',
-        detail: 'public-bucket versioned artifacts',
-        why: 'For dataset snapshots + plot fixtures. Idempotent incremental pulls (PyArrow).',
+        name: 'Cloudflare Pages',
+        detail: 'Primary hosting (CDN edge)',
+        tag: 'hosting',
+        why: 'Primary live URL is the Cloudflare Pages mirror; CDN edge is reliable in PH/sandbox where GH Pages is not.',
       },
       {
         name: 'GitHub Pages',
-        detail: 'static hosting for this site',
-        why: 'Free, fast, tied to the commit history. Custom domain planned.',
+        detail: 'Secondary / fallback',
+        tag: 'hosting',
+        why: 'Kept as a fallback for redundancy; not the primary live URL after the regional edge incident.',
       },
       {
         name: 'GitHub Actions',
         detail: 'CI: build + deploy + NDA audit',
-        why: 'Build-time NDA guardrail (`src/utils/nda-audit.ts`) fails the build on violation.',
-      },
-      {
-        name: 'No k8s / no terraform',
-        detail: 'Not at this scale',
-        why: 'Reproducibility via git + requirements.txt + lock files.',
+        tag: 'ci',
+        why: 'Build-time NDA guardrail (`src/utils/nda-audit.ts`) fails the build on any violation — the guardrail is the CI step.',
       },
     ],
   },
   {
-    title: 'Notes & writing',
+    id: 'monitoring',
+    title: 'Monitoring & analytics',
+    blurb: 'None. By design.',
     items: [
       {
-        name: 'PKM',
-        detail: 'Plain Markdown in git (no Obsidian / Notion)',
-        why: 'A repo is reproducible; a Notion workspace is not.',
+        name: 'No third-party analytics',
+        detail: 'No Google Analytics, no Plausible, no Fathom',
+        tag: 'privacy',
+        why: 'Privacy-by-default; the audience signal that matters (recruiter / founder email) is captured by direct contact, not by JS pixels.',
       },
       {
-        name: 'Long-form math',
-        detail: 'KaTeX (client + server-side)',
-        why: 'Server-side for /methodology, /projects, /now. Discord-style [ ] delimiters where MDX risks eating braces.',
+        name: 'No uptime monitor',
+        detail: 'No external pinger',
+        tag: 'privacy',
+        why: 'Static site on a CDN edge — when it goes down, the CDN itself is the canary. Adding a third-party monitor would defeat the privacy posture.',
       },
       {
-        name: 'Reading',
-        detail: 'arXiv SSRN + López de Prado primary sources',
-        why: 'Never summarize an arXiv abstract I haven’t read; cite the primary source.',
+        name: 'No error tracking',
+        detail: 'No Sentry, no LogRocket',
+        tag: 'privacy',
+        why: 'There is no client runtime to throw client errors. The only errors that matter are build-time and NDA-audit catches those.',
+      },
+    ],
+  },
+  {
+    id: 'mdx-astro',
+    title: 'MDX / Astro toolchain',
+    blurb: 'The build pipeline for this site. Static-first; zero JS by default.',
+    items: [
+      {
+        name: 'Astro 7',
+        detail: 'Static site generator',
+        tag: 'framework',
+        why: 'Static-first, zero-JS by default, content-collections + MDX for the /projects corpus. The right tool for a content-heavy portfolio.',
+      },
+      {
+        name: 'KaTeX',
+        detail: 'Math typesetting (server + client)',
+        tag: 'math',
+        why: 'Server-side for /methodology, /projects, /now; client-side for inline use. Discord-style [ ] delimiters where MDX risks eating braces.',
+      },
+      {
+        name: 'Inter + JetBrains Mono',
+        detail: 'UI/body + data/math typefaces',
+        tag: 'type',
+        why: 'Inter for UI, JetBrains Mono for data and code. Two typefaces, two roles, no third family.',
+      },
+      {
+        name: 'sharp + astro-expressive-code',
+        detail: 'Asset pipeline + code blocks',
+        tag: 'pipeline',
+        why: 'sharp for image optimization; expressive-code for the syntax-highlighted code blocks in the /proof artifacts.',
+      },
+      {
+        name: 'Vanilla CSS (tokens.css + global.css)',
+        detail: 'No Tailwind, no CSS-in-JS',
+        tag: 'styles',
+        why: 'Design tokens are CSS custom properties; the dark-mode flip is a media query, not a JS library. Total CSS budget < 12KB.',
       },
     ],
   },
@@ -180,33 +250,56 @@ const sections = [
 
 <BaseLayout
   title="Uses"
-  description="The hardware, software, and AI tooling used to ship the projects, methodology, and this site. Dated 2026-07-09."
+  description="The hardware, software, and AI tooling used to ship the projects, methodology, and this site. Updated 2026-07-09."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Uses", href: "/uses" }]}
 >
   <header class="uses-head">
-    <div class="container container-narrow">
-      <p class="section__eyebrow"><span class="mono">uses/</span> · last updated {lastUpdated}</p>
+    <div class="container">
+      <p class="section__eyebrow">
+        <span class="mono">uses/</span> · last updated {lastUpdated}
+      </p>
       <h1 class="uses-head__title">
         What I use to <span class="hl">do the work</span>.
       </h1>
+      <p class="uses-head__voice voice-line">
+        A working researcher's stack — not a 2018-era ML engineer's. Updated quarterly.
+      </p>
       <p class="uses-head__sub">
         The /uses pattern — named, dated, no marketing. Recruiter signal: this is a working
-        researcher’s stack, not a 2018-era ML-engineer’s. Update cadence is quarterly or on tooling
-        event.
+        researcher's stack, not a 2018-era ML engineer's. Update cadence is quarterly or on
+        tooling event. Every row is `tool name` · `category tag` · `why this and not that`.
       </p>
     </div>
   </header>
 
   <section class="section">
-    <div class="container container-narrow">
+    <div class="container">
+      {/* Section TOC — quick jump to each section */}
+      <nav class="uses-toc" aria-label="Uses sections">
+        {
+          sections.map((s) => (
+            <a class="uses-toc__link mono" href={`#${s.id}`}>
+              {s.title}
+            </a>
+          ))
+        }
+      </nav>
+
       {
         sections.map((s) => (
-          <article class="uses-block">
-            <h2 class="uses-block__title">{s.title}</h2>
+          <article id={s.id} class="uses-block">
+            <header class="uses-block__head">
+              <h2 class="uses-block__title">{s.title}</h2>
+              {s.blurb && <p class="uses-block__blurb">{s.blurb}</p>}
+            </header>
             <ul class="uses-list">
               {s.items.map((item) => (
                 <li class="uses-row">
-                  <div class="uses-row__name">{item.name}</div>
-                  <div class="uses-row__detail mono">{item.detail}</div>
+                  <div class="uses-row__name mono">{item.name}</div>
+                  <div class="uses-row__tag">
+                    <span class="pill pill--accent">{item.tag}</span>
+                    <span class="uses-row__detail mono">{item.detail}</span>
+                  </div>
                   <div class="uses-row__why">{item.why}</div>
                 </li>
               ))}
@@ -256,7 +349,57 @@ const sections = [
     line-height: var(--lh-loose);
     max-width: 60ch;
   }
+  .uses-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .uses-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .uses-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
 
+  /* === Section TOC === */
+  .uses-toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-6);
+    padding-bottom: var(--sp-4);
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  .uses-toc__link {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-primary-2-deep);
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    text-decoration: none;
+    background: var(--c-bg);
+  }
+  .uses-toc__link:hover {
+    background: var(--c-amber-deep);
+    color: #fff;
+    border-color: var(--c-amber);
+  }
+
+  /* === Section block === */
   .uses-block {
     margin-bottom: var(--sp-6);
     padding: var(--sp-5);
@@ -264,12 +407,24 @@ const sections = [
     border: 1px solid var(--c-rule);
     border-left: 3px solid var(--c-primary);
     border-radius: var(--radius);
+    scroll-margin-top: 80px;
+  }
+  .uses-block__head {
+    margin-bottom: var(--sp-4);
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--c-rule-soft);
   }
   .uses-block__title {
     font-size: var(--fs-lg);
     color: var(--c-ink);
-    margin: 0 0 var(--sp-4);
+    margin: 0 0 var(--sp-1);
     letter-spacing: -0.01em;
+  }
+  .uses-block__blurb {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
   }
   .uses-list {
     list-style: none;
@@ -277,7 +432,7 @@ const sections = [
   }
   .uses-row {
     display: grid;
-    grid-template-columns: 180px 1fr 1.2fr;
+    grid-template-columns: 200px 1fr 1.4fr;
     gap: var(--sp-4);
     padding: var(--sp-3) 0;
     border-bottom: 1px dashed var(--c-rule-soft);
@@ -288,13 +443,19 @@ const sections = [
   }
   .uses-row__name {
     font-size: var(--fs-sm);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--c-ink);
   }
+  .uses-row__tag {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-2);
+  }
   .uses-row__detail {
-    font-size: var(--fs-sm);
-    color: var(--c-primary-2-deep);
-    word-break: break-word;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.04em;
   }
   .uses-row__why {
     font-size: var(--fs-sm);

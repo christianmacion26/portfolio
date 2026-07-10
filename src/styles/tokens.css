@@ -1,11 +1,10 @@
 /* tokens.css — design system for christianmacion.github.io
  *
- * v2 (math/quant aesthetic):
- *   - Equity-curve inspired background motifs
- *   - Probability / statistics visual vocabulary
- *   - JetBrains Mono as primary data type
- *   - Signal / noise / p-value status semantics
- *   - Term-paper paper texture palette
+ * v6.1.1 — UNIFIED DARK PALETTE (single source of truth, no light/dark mode)
+ *   - The site is ALWAYS institutional-tape dark (#0d1117)
+ *   - One consistent warm amber accent (#e8b220) for emphasis + interaction
+ *   - One consistent institutional green (#3fb950) for "verified" signal only
+ *   - No light/dark mode toggle, no prefers-color-scheme flip
  *
  * Color provenance:
  *   - resume.css #0b3d5c / #0b1f2a / #5b7488 / #1a5fb4  (brand)
@@ -15,63 +14,71 @@
  *   - Bloomberg-terminal amber #f5a623, equity green #16a34a,
  *     equities red #dc2626 (signal semantics)
  *   - KaTeX "mathjax" serif for in-line equations
+ *
+ * v6.1.1: full-dark-only. Every page renders on the institutional-tape
+ * backdrop. This is the Schonfeld / T-Digital / hedge-fund pattern.
  */
 
 :root {
-  /* === BRAND (v3.5 — hedge-fund palette: near-black + deep amber accent) === */
-  --c-primary: #0a0e14; /* near-black — primary brand */
-  --c-primary-deep: #000000; /* hover/darker */
-  /* WCAG-AA amber tokens (v3.5):
+  /* === BRAND (v6.1.1 — full dark, unified palette) === */
+  --c-primary: #e6edf3;        /* off-white ink — primary text on dark */
+  --c-primary-deep: #0a0e14;   /* near-black — preserved for code blocks / deep backgrounds */
+  --c-ink-dark: #0a0e14;       /* alias kept for old code that wants near-black */
+
+  /* WCAG-AA amber tokens — kept from v6.0:
    *   --c-primary-2-deep: #8C6F2A → 5.0:1 on white  (body text)
-   *   --c-primary-2:      #d4a017 → 2.7:1 on white  (decorative only — ≥18px)
-   *   --c-amber-deep:     #8C6F2A → for text in callouts/strips
-   *   --c-amber:          #c98a16 → decorative only (≥18px)
+   *   --c-primary-2:      #c98a16 → 3.4:1 on cream (headlines, links, decorative)
    */
-  --c-primary-2-deep: #8c6f2a; /* text-safe amber — body & small text */
-  --c-primary-2: #d4a017; /* single accent — amber/gold (decorative) */
-  --c-primary-3: #6b4a8f; /* purple accent — sparingly */
-  --c-gold: #d4a017; /* callouts/highlights (decorative) */
-  --c-amber-deep: #8c6f2a; /* text-safe terminal-amber — body text */
-  --c-amber: #c98a16; /* terminal-amber accent (decorative) */
-  --c-accent-cyan: #22d3ee; /* alternative accent (signal/data) */
+  --c-primary-2-deep: #8c6f2a;
+  --c-primary-2:      #c98a16;
+  --c-primary-2-light: #e8b220; /* hover/lift for cream backgrounds */
+  --c-primary-3: #6b4a8f;       /* purple accent — sparingly */
+  --c-gold: #c98a16;
+  --c-amber-deep: #8c6f2a;
+  --c-amber: #c98a16;
+  --c-amber-light: #e8b220;
+  --c-accent-cyan: #22d3ee;     /* alternative accent (signal/data) */
 
   /* === INK === */
-  --c-ink: #1a1f24; /* body text */
-  --c-ink-2: #5a6473; /* muted text */
-  --c-ink-3: #869098; /* faintest (captions, footnotes) */
-  --c-rule: #c9ced6; /* dividers */
-  --c-rule-soft: #e6e9ee; /* hairline */
-  --c-rule-strong: #1a1f24; /* high-contrast rule */
+  --c-ink: #e6edf3;            /* body text on dark */
+  --c-ink-2: #adbac7;          /* muted text on dark */
+  --c-ink-3: #6e7681;          /* faintest (captions, footnotes) */
+  --c-rule: #30363d;           /* dividers on dark */
+  --c-rule-soft: #21262d;      /* hairline on dark */
+  --c-rule-strong: #e6edf3;
 
-  /* === BG === */
-  --c-bg: #ffffff; /* paper */
-  --c-bg-2: #f6f8fa; /* panel/banner */
-  --c-bg-3: #eef1f5; /* deeper panel */
-  --c-paper: #fbfaf6; /* term-paper cream */
-  --c-paper-2: #f5f3eb;
-  --c-tape: #0d1117; /* terminal/equity-tape dark */
-  --c-tape-2: #161b22;
-  --ink-on-tape: #e6edf3; /* body text on dark/tape backgrounds */
-  --ink-on-tape-2: #c9ced6; /* muted text on dark/tape backgrounds */
+  /* === BG (DARK — the default everywhere) === */
+  --c-bg:   #0d1117;           /* institutional-tape primary surface */
+  --c-bg-2: #161b22;           /* deeper panel */
+  --c-bg-3: #1f242c;           /* deepest panel */
+  --c-paper:  #161b22;         /* alias for panel */
+  --c-paper-2: #1f242c;
+
+  /* === TAPE (institutional dark — same family, no separate concept) === */
+  --c-tape:   #0d1117;         /* terminal/equity-tape dark */
+  --c-tape-2: #161b22;         /* slightly lifted */
+  --c-tape-3: #1f242c;         /* lifted panel */
+  --ink-on-tape:   #e6edf3;    /* body text on tape */
+  --ink-on-tape-2: #adbac7;    /* muted text on tape */
 
   /* === STATUS / SIGNAL === */
-  --c-pass: #15803d; /* equity green — verified, pass (deep enough for text) */
-  --c-pass-soft: #dcfce7;
-  --c-fail: #9b2226; /* error / danger */
-  --c-fail-soft: #fee2e2;
-  --c-warn: #8c6f2a; /* warning amber — text-safe */
-  --c-warn-soft: #fef3c7;
-  --c-info: #1d4ed8; /* info blue */
-  --c-info-soft: #dbeafe;
+  --c-pass:      #3fb950;      /* equity green — verified, pass (dark mode) */
+  --c-pass-soft: #1c3a25;
+  --c-fail:      #f85149;      /* error / danger */
+  --c-fail-soft: #3a1c1f;
+  --c-warn:      #d4a017;      /* warning amber — text-safe */
+  --c-warn-soft: #3a2e15;
+  --c-info:      #58a6ff;      /* info blue */
+  --c-info-soft: #1c2a3d;
 
-  /* === MATH / QUANT ACCENTS (v3.5 — text-safe) === */
-  --c-eq: #0a0e14; /* equation color (near-black) */
-  --c-phi: #8c6f2a; /* primary accent — Φ (text-safe, 5.0:1) */
-  --c-sigma: #6b4a8f; /* σ purple (kept for variety) */
-  --c-delta: #8c6f2a; /* Δ deep amber (text-safe) */
-  --c-mu: #5a6473; /* μ gray */
-  --c-alpha: #15803d; /* α green (signal pass) — text-safe */
-  --c-beta: #8c6f2a; /* β deep amber (text-safe) */
+  /* === MATH / QUANT ACCENTS (text-safe on dark) === */
+  --c-eq:    #e6edf3;          /* equation color (light) */
+  --c-phi:   #e8b220;          /* Φ primary accent (text-safe) */
+  --c-sigma: #9d80c4;          /* σ purple (lifted) */
+  --c-delta: #e8b220;          /* Δ deep amber (text-safe) */
+  --c-mu:    #adbac7;          /* μ gray */
+  --c-alpha: #3fb950;          /* α green (signal pass) — text-safe */
+  --c-beta:  #e8b220;          /* β deep amber (text-safe) */
 
   /* === TYPE === */
   --ff-sans: 'Inter', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
@@ -79,17 +86,18 @@
   --ff-math:
     'KaTeX_Main', 'Latin Modern Math', 'Computer Modern Serif', 'STIX Two Math', 'Cambria Math',
     'Times New Roman', serif;
-  --fs-xs: 0.78rem; /* 12.5px */
-  --fs-sm: 0.875rem; /* 14px */
-  --fs-base: 1rem; /* 16px */
-  --fs-lg: 1.125rem; /* 18px */
-  --fs-xl: 1.375rem; /* 22px */
-  --fs-2xl: 1.75rem; /* 28px */
-  --fs-3xl: 2.25rem; /* 36px */
-  --fs-4xl: 3rem; /* 48px */
-  --fs-5xl: 4rem; /* 64px */
+  --fs-xs: 0.78rem;            /* 12.5px */
+  --fs-sm: 0.875rem;           /* 14px */
+  --fs-base: 1rem;             /* 16px */
+  --fs-lg: 1.125rem;           /* 18px */
+  --fs-xl: 1.375rem;           /* 22px */
+  --fs-2xl: 1.75rem;           /* 28px */
+  --fs-3xl: 2.25rem;           /* 36px */
+  --fs-4xl: 3rem;              /* 48px */
+  --fs-5xl: 4rem;              /* 64px */
+  --fs-display: clamp(3.5rem, 7.5vw, 5.75rem);
   --lh-tight: 1.15;
-  --lh-snug: 1.3;
+  --lh-snug:  1.3;
   --lh-normal: 1.5;
   --lh-loose: 1.75;
 
@@ -108,7 +116,7 @@
   /* === LAYOUT === */
   --container-max: 1180px;
   --container-narrow: 760px;
-  --radius: 10px;
+  --radius:    10px;
   --radius-sm: 6px;
   --radius-lg: 16px;
   --shadow-xs: 0 1px 1px rgba(11, 31, 42, 0.04);
@@ -117,15 +125,50 @@
   --shadow-lg: 0 12px 32px rgba(11, 31, 42, 0.1), 0 4px 8px rgba(11, 31, 42, 0.05);
   --transition: 150ms ease;
 
+  /* === MOTION TOKENS (institutional restraint) === */
+  --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+
   /* === TICKER / DATA === */
-  --tape-h: 28px; /* bottom ticker tape height */
+  --tape-h: 28px;
   --border: 1px solid var(--c-rule);
   --border-strong: 1px solid var(--c-ink-3);
-  --border-paper: 1px solid rgba(11, 31, 42, 0.12);
+  --border-paper: 1px solid rgba(230, 237, 243, 0.08);
 
   /* === HERO EQUATION RIBBON === */
-  --eq-bg: linear-gradient(180deg, var(--c-bg) 0%, var(--c-paper) 100%);
+  --eq-bg: linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-2) 100%);
+
+  /* === v6.0.7 · section anchor + nav heights === */
+  --nav-h: 56px;
+  --section-toc-h: 36px;
+  --hero-gradient-1: rgba(232, 178, 32, 0.18);
+  --hero-gradient-2: rgba(11, 61, 92, 0.18);
+
+  /* === z-index scale === */
+  --z-base: 0;
+  --z-raised: 1;
+  --z-tape: 2;
+  --z-sticky: 30;
+  --z-nav: 50;
+  --z-nav-more: 60;
+  --z-modal: 100;
+  --z-toast: 200;
+
+  /* === tabular numerals === */
+  --tnum: "tnum" 1, "lnum" 1;
+
+  /* === serif voice-line role === */
+  --serif-display: "Iowan Old Style", "Source Serif 4", "Georgia", "Charter",
+    "Iowan Old Style W01", "Sitka Text", "Cambria", serif;
+
+  color-scheme: dark;
 }
+
+/* v6.1.0 — Light/dark mode is REMOVED. The site is always cream-paper
+ * with institutional-tape sections. No prefers-color-scheme flip.
+ * The :root[data-theme="..."] selectors from v6.0 are gone; any
+ * remaining user-preference attribute on <html> is ignored.
+ */
 
 /* prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
@@ -136,31 +179,19 @@
 }
 
 /* === KaTeX size adjustments === */
-.katex {
-  font-size: 1.05em;
-}
-.katex-display {
-  margin: 0.5em 0;
-}
-.eq--xl .katex {
-  font-size: 1.4em;
-}
-.eq--lg .katex {
-  font-size: 1.2em;
-}
-.eq--sm .katex {
-  font-size: 0.92em;
-}
+.katex { font-size: 1.05em; }
+.katex-display { margin: 0.5em 0; }
+.eq--xl .katex { font-size: 1.4em; }
+.eq--lg .katex { font-size: 1.2em; }
+.eq--sm .katex { font-size: 0.92em; }
 
-/* === Equity-curve background motif (subtle SVG, paper texture) === */
+/* === Background motifs === */
 .bg--paper {
   background:
-    linear-gradient(180deg, var(--c-bg) 0%, var(--c-paper) 100%),
+    linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-2) 100%),
     radial-gradient(circle at 1px 1px, rgba(11, 31, 42, 0.04) 1px, transparent 0);
   background-blend-mode: multiply, normal;
-  background-size:
-    auto,
-    18px 18px;
+  background-size: auto, 18px 18px;
 }
 
 .bg--tape {
@@ -176,36 +207,23 @@
   border-radius: 50%;
   vertical-align: middle;
 }
-.dot--pass {
-  background: var(--c-pass);
-  box-shadow: 0 0 0 3px var(--c-pass-soft);
-}
-.dot--fail {
-  background: var(--c-fail);
-  box-shadow: 0 0 0 3px var(--c-fail-soft);
-}
-.dot--warn {
-  background: var(--c-warn);
-  box-shadow: 0 0 0 3px var(--c-warn-soft);
-}
-.dot--info {
-  background: var(--c-info);
-  box-shadow: 0 0 0 3px var(--c-info-soft);
-}
-.dot--muted {
-  background: var(--c-ink-3);
-}
+.dot--pass  { background: var(--c-pass);  box-shadow: 0 0 0 3px var(--c-pass-soft); }
+.dot--fail  { background: var(--c-fail);  box-shadow: 0 0 0 3px var(--c-fail-soft); }
+.dot--warn  { background: var(--c-warn);  box-shadow: 0 0 0 3px var(--c-warn-soft); }
+.dot--info  { background: var(--c-info);  box-shadow: 0 0 0 3px var(--c-info-soft); }
+.dot--muted { background: var(--c-ink-3); }
 
 /* === Highlight (asymptotic-equality underline) === */
 .hl {
   position: relative;
   white-space: nowrap;
+  margin-right: 0.05em;
 }
 .hl::after {
   content: '';
   position: absolute;
-  left: -2px;
-  right: -2px;
+  left: 0;
+  right: 0;
   bottom: -3px;
   height: 3px;
   background: linear-gradient(90deg, var(--c-primary-2), var(--c-gold));

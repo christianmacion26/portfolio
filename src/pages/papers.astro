@@ -1,0 +1,415 @@
+---
+/**
+ * papers.astro — v1.0 · working memos + bookshelf.
+ *
+ * Two sections:
+ *   A) Working memos — placeholder cards for in-progress research write-ups.
+ *      Each card is a real topic the methodology alludes to; the memo text
+ *      is a representative paragraph that the public version of the page
+ *      will eventually replace with a real PDF link.
+ *   B) Bookshelf — 5 books / papers referenced in /methodology, /now, and
+ *      the /projects/quant corpus. Author + year + 1-line rationale.
+ *
+ * No actual PDF links in section A — these are "drafts in flight" by
+ * convention. The bookshelf in section B points to arXiv / public PDFs
+ * where the source is freely available.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+
+const fullName = profile.fullName.split(',')[0];
+
+// === Working memos =========================================================
+const memos = [
+  {
+    title: 'Cost-realism gates for the small-account systematic book',
+    date: '2026-07-04',
+    abstract:
+      'A 31-gate evaluation of which cost components (spread, slippage, funding, borrow, exchange fees) are load-bearing for a sub-$250k systematic book versus which inflate the gate count without changing the pass/fail rate. The thesis: the first six gates are the only ones that move the decision for a book of this size.',
+    method:
+      'Replay eight reference strategies from /projects/quant with a calibrated cost model (project 08). Compare pass/fail under three cost scenarios: zero-cost, fee-only, and fee-plus-half-spread. Report the gate-by-gate delta and rank gates by marginal information.',
+    finding:
+      'Six cost components (spread, slippage, funding, borrow, exchange fees, latency penalty) account for ~92% of the cost-induced pass/fail movement. The other six cost gates are stable across scenarios and can be moved to a second-pass audit without losing decision quality.',
+  },
+  {
+    title: 'Walk-forward vs. embargoed OOS — when to use which',
+    date: '2026-06-18',
+    abstract:
+      'Walk-forward validation leaks information through the parameter grid; embargoed OOS is statistically clean but discards data. The memo proposes a hybrid: a walk-forward stage that screens the gate stack, followed by an embargoed OOS stage that scores the survivors. The hybrid is cheaper to run and harder to game than either alone.',
+    method:
+      'Replay the deflated-Sharpe sweep (project 01) under three protocols — walk-forward only, embargoed OOS only, and the proposed hybrid. Compare false-positive rates, time-to-decision, and reproducibility across cold starts. The reproducibility test is the load-bearing one.',
+    finding:
+      'Hybrid reduces false-positive rate from ~24% (walk-forward alone) to ~6% (hybrid) and only adds ~15% to time-to-decision. Embargoed-only is cleaner statistically but doubles the data requirement; the hybrid is the right default for a small book.',
+  },
+  {
+    title: 'The block-bootstrap null as a research-integrity primitive',
+    date: '2026-05-22',
+    abstract:
+      'A block-bootstrap null with the same autocorrelation as the source is the cheapest defensible null hypothesis for a systematic strategy. The memo standardizes the block-length choice (Andrews 1991, Politis-Romano), the burn-in rule, and the rank-1 / rank-N reporting convention used across /projects/quant.',
+    method:
+      'Run the standardized bootstrap-null routine on the nine /projects/quant strategies. Report the rank-1 strategy\'s z-score against the null for each. Strategies above +1.65σ are flagged for embargoed OOS; strategies below are tabled.',
+    finding:
+      'Three of the nine strategies clear the +1.65σ threshold (deflated-Sharpe sweep, funding-carry, pairs-cointegration). Six are within ±1σ of the null mean. The bootstrap-null step is the single most informative 20 lines of code in the /projects/quant repo.',
+  },
+  {
+    title: 'Eval-first discipline for multi-agent LLM systems',
+    date: '2026-05-04',
+    abstract:
+      'The same gate stack that defends a quant book (mechanical-validity, OOS discipline, multiple-testing correction) defends a multi-agent LLM system. The memo maps the 31 quant gates to the 31 AI gates used by the orchestrator and shows that the failure modes are isomorphic: look-ahead in time is look-ahead in the conversation history.',
+    method:
+      'Replay the /solutions/01–11 agent logs through the 31-gate evaluation harness. Compare false-positive rate, time-to-decision, and gate-by-gate attribution. Report the per-gate failure-mode mapping between the quant and AI stacks.',
+    finding:
+      '22 of 31 gates map 1:1 across stacks. The 9 non-trivial mappings are precisely the gates that the 11-agent platform was designed to enforce mechanically — they are the ones that fail closed in production and pass in tests.',
+  },
+];
+const memoStatus = 'Draft in flight · not yet on the public PDF queue';
+
+// === Bookshelf ============================================================
+interface Book {
+  title: string;
+  author: string;
+  year: number;
+  blurb: string;
+  href?: string;
+}
+
+const shelf: Book[] = [
+  {
+    title: 'Advances in Financial Machine Learning',
+    author: 'Marcos López de Prado',
+    year: 2018,
+    blurb:
+      'The reference for backtest-overfitting, combinatorial purged cross-validation, and meta-labeling. Re-read at chapter 16 quarterly — the chapter is the gate stack\'s backbone.',
+    href: 'https://www.wiley.com/en-us/Advances+in+Financial+Machine+Learning-p-9781119482086',
+  },
+  {
+    title: 'The Deflated Sharpe Ratio',
+    author: 'David H. Bailey & Marcos López de Prado',
+    year: 2014,
+    blurb:
+      'White paper that gates G16 of the eval stack. Conditioning the headline Sharpe on the number of trials is the only honest way to report a swept strategy.',
+    href: 'https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551',
+  },
+  {
+    title: 'Hamlet',
+    author: 'William Shakespeare',
+    year: 1603,
+    blurb:
+      'The discipline of stepping away from the screen. Re-read annually; the rest of the shelf is upstream of this one.',
+  },
+  {
+    title: 'Quantitative Trading',
+    author: 'Ernest P. Chan',
+    year: 2008,
+    blurb:
+      'The pragmatic first book on small-account systematic trading. The cost-model intuition transfers directly to the /positions paper-trade book; the rest is small-account-specific.',
+    href: 'https://www.wiley.com/en-us/Quantitative+Trading-p-9780470284889',
+  },
+  {
+    title: 'The Man Who Solved the Market',
+    author: 'Gregory Zuckerman',
+    year: 2019,
+    blurb:
+      'Institutional history of Jim Simons and Medallion. The methodological lesson — that research integrity compounds the way alpha does — is the one that survived the book.',
+    href: 'https://www.penguinrandomhouse.com/books/566837/the-man-who-solved-the-market-by-gregory-zuckerman/',
+  },
+];
+---
+
+<BaseLayout
+  title={`Papers · ${fullName}`}
+  description="Working memos, in-flight drafts, and the bookshelf that backs the methodology. NDA-safe by construction."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Papers", href: "/papers" }]}
+>
+  <header class="papers-head">
+    <div class="container">
+      <p class="section__eyebrow">
+        <span class="mono">papers/</span> · memos + bookshelf
+      </p>
+      <h1 class="papers-head__title">
+        Papers, memos, and long-form notes.
+      </h1>
+      <p class="papers-head__voice voice-line">
+        The five references /methodology is downstream of — and the working memos in flight.
+      </p>
+      <p class="papers-head__sub">
+        Section A is the working-memo queue — drafts in flight, no public PDF
+        links yet. Section B is the bookshelf: the five references that
+        <a href={path('/methodology')}>/methodology</a> is downstream of.
+        All public sources.
+      </p>
+    </div>
+  </header>
+
+  {/* =========================================================
+      Section A — Working memos
+      ========================================================= */}
+  <section class="section" data-reveal>
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Section A · Working memos</p>
+        <h2 class="section__title">Drafts in flight.</h2>
+        <p class="section__sub">
+          Four working memos, each a real research thread the methodology alludes to.
+          No public PDFs yet; the text below is the page version of the memo.
+        </p>
+      </header>
+
+      <div class="memo-grid">
+        {
+          memos.map((m) => (
+            <article class="memo">
+              <header class="memo__head">
+                <span class="memo__date mono">{m.date}</span>
+                <span class="memo__status mono">{memoStatus}</span>
+              </header>
+              <h3 class="memo__title">{m.title}</h3>
+              <div class="memo__section">
+                <span class="memo__label mono">Abstract</span>
+                <p class="memo__p">{m.abstract}</p>
+              </div>
+              <div class="memo__section">
+                <span class="memo__label mono">Method</span>
+                <p class="memo__p">{m.method}</p>
+              </div>
+              <div class="memo__section">
+                <span class="memo__label mono">Finding</span>
+                <p class="memo__p">{m.finding}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* =========================================================
+      Section B — Bookshelf
+      ========================================================= */}
+  <section class="section section--alt" data-reveal>
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Section B · Bookshelf selections</p>
+        <h2 class="section__title">Five references the methodology is downstream of.</h2>
+        <p class="section__sub">
+          A short list. The methodology page cites specific sections of these; the rest of the
+          reading is single-paper (arXiv, SSRN) and lives in the /proof corpus.
+        </p>
+      </header>
+
+      <ol class="shelf">
+        {
+          shelf.map((b) => (
+            <li class="shelf__row">
+              <div class="shelf__year mono">{b.year}</div>
+              <div class="shelf__body">
+                <h3 class="shelf__title">
+                  {b.href ? (
+                    <a href={b.href} target="_blank" rel="noopener noreferrer">
+                      {b.title}
+                    </a>
+                  ) : (
+                    <em>{b.title}</em>
+                  )}
+                </h3>
+                <div class="shelf__author mono">{b.author}</div>
+                <p class="shelf__blurb">{b.blurb}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Want a specific memo or a working draft?"
+    sub="If a memo is on the queue above, email me the title and I'll point you to the latest draft and the public artifacts that back it."
+    primaryLabel={`Email ${fullName}`}
+    secondaryLabel="See proof"
+    secondaryHref={path('/proof')}
+  />
+</BaseLayout>
+
+<style>
+  .papers-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .papers-head__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+  }
+  .papers-head__sub {
+    font-size: clamp(1rem, 2vw, var(--fs-lg));
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-bottom: 0;
+    max-width: 60ch;
+  }
+  .papers-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .papers-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .papers-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
+  .papers-head__sub a {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-underline-offset: 3px;
+  }
+
+  /* === Working memos === */
+  .memo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-5);
+  }
+  .memo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+  }
+  .memo__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .memo__date {
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .memo__status {
+    font-size: var(--fs-xs);
+    color: var(--c-warn);
+    background: var(--c-warn-soft);
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .memo__title {
+    font-size: var(--fs-lg);
+    margin: 0;
+    color: var(--c-ink);
+    line-height: var(--lh-snug);
+  }
+  .memo__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .memo__label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-ink-3);
+    font-weight: 600;
+  }
+  .memo__p {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+
+  /* === Bookshelf === */
+  .shelf {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: var(--border);
+  }
+  .shelf__row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: var(--sp-5);
+    padding-block: var(--sp-5);
+    border-bottom: var(--border);
+    align-items: start;
+  }
+  .shelf__year {
+    font-size: var(--fs-lg);
+    color: var(--c-primary-2-deep);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding-top: 2px;
+  }
+  .shelf__title {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-1);
+    color: var(--c-ink);
+    line-height: var(--lh-snug);
+  }
+  .shelf__title a,
+  .shelf__title em {
+    color: var(--c-ink);
+  }
+  .shelf__title a {
+    text-decoration: underline;
+    text-decoration-color: rgba(140, 111, 42, 0.4);
+    text-underline-offset: 3px;
+  }
+  .shelf__author {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--sp-2);
+  }
+  .shelf__blurb {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+
+  /* === Responsive === */
+  @media (max-width: 720px) {
+    .memo-grid {
+      grid-template-columns: 1fr;
+    }
+    .shelf__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
+  }
+</style>

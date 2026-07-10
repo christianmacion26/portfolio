@@ -1,0 +1,396 @@
+---
+/**
+ * reading.astro — v6.0: the shelf.
+ *
+ * Derek Sivers /nownownow.com pattern: a dated, opinionated list of
+ * what the author is reading and re-reading. Each row: title (mono) ·
+ * author · year · status (reading / re-read / reference) · 1-line
+ * "why this is on the shelf".
+ *
+ * Public-data only. No proprietary data sources, no NDA-protected
+ * materials referenced anywhere on this page.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+interface ShelfItem {
+  title: string;
+  author: string;
+  year: number | string;
+  status: 'reading' | 're-read' | 'reference';
+  blurb: string;
+  href?: string;
+}
+
+const now: ShelfItem[] = [
+  {
+    title: 'Advances in Financial Machine Learning',
+    author: 'Marcos López de Prado',
+    year: 2018,
+    status: 'reference',
+    blurb:
+      "The textbook that names everything I've built a backtest around: deflated Sharpe, PBO, CSCV, fractional differentiation. Re-read twice a year.",
+    href: 'https://www.wiley.com/en-us/Advances+in+Financial+Machine+Learning-p-9781119482086',
+  },
+  {
+    title: 'The Deflated Sharpe Ratio',
+    author: 'Bailey & López de Prado',
+    year: 2014,
+    status: 'reference',
+    blurb:
+      "The 12-page paper that started it. Every multi-trial strategy I ship gets the DSR test before deploy.",
+  },
+  {
+    title: 'Algorithmic Trading',
+    author: 'Ernest Chan',
+    year: 2008,
+    status: 're-read',
+    blurb:
+      "The textbook that taught me how to write a backtest that doesn't lie. Re-read every time I touch a new cost model.",
+  },
+  {
+    title: 'Trading and Exchanges',
+    author: 'Larry Harris',
+    year: 2002,
+    status: 're-read',
+    blurb:
+      "Market microstructure for the practitioner. The chapter on order types is the only correct one I have ever read.",
+  },
+  {
+    title: 'Hamlet',
+    author: 'William Shakespeare',
+    year: 1603,
+    status: 're-read',
+    blurb:
+      "Not finance. But: 'There is nothing either good or bad, but thinking makes it so.' Worth re-reading between every drawdown.",
+  },
+  {
+    title: 'A Man for All Markets',
+    author: 'Edward O. Thorp',
+    year: 2017,
+    status: 'reference',
+    blurb:
+      "The autobiographical proof that an academic with a card-counting edge can survive translation to a hedge fund. The chapter on Kelly sizing is the reason I cap every vol-target at 0.5× Kelly.",
+  },
+];
+
+const queue: ShelfItem[] = [
+  {
+    title: 'The Mathematics of Financial Derivatives',
+    author: 'Paul Wilmott',
+    year: 1995,
+    status: 'reading',
+    blurb:
+      "Re-deriving the Greeks by hand. Slow, deliberate. The only way the math actually sticks.",
+  },
+  {
+    title: 'Heard on the Street',
+    author: 'Timothy Falcon Crack',
+    year: 2008,
+    status: 'reading',
+    blurb:
+      "Quantitative interview prep, but the chapters on Brownian motion are a clean refresher before each new factor model.",
+  },
+  {
+    title: 'Antifragile',
+    author: 'Nassim Taleb',
+    year: 2012,
+    status: 're-read',
+    blurb:
+      "Optionality, convexity, and the difference between 'robust' and 'antifragile'. Useful for sizing.",
+  },
+];
+
+const reference: ShelfItem[] = [
+  {
+    title: 'Numerical Recipes',
+    author: 'Press et al.',
+    year: 2007,
+    status: 'reference',
+    blurb:
+      "Open the relevant chapter before using any optimizer. Saves hours of debugging local-minima surprises.",
+  },
+  {
+    title: 'Information Theory, Inference, and Learning Algorithms',
+    author: 'David MacKay',
+    year: 2003,
+    status: 'reference',
+    blurb:
+      "The KL-divergence chapter is the cleanest derivation I know. The RAG eval gate borrows the cross-entropy framing.",
+  },
+  {
+    title: 'Reinforcement Learning',
+    author: 'Sutton & Barto',
+    year: 2018,
+    status: 'reference',
+    blurb:
+      "The reference. The reflect-revise agent is a degenerate policy-gradient loop over a single trajectory.",
+  },
+];
+
+function statusPill(s: ShelfItem['status']): string {
+  return s === 'reading'
+    ? 'reading'
+    : s === 're-read'
+      ? 're-read'
+      : 'reference';
+}
+---
+
+<BaseLayout
+  title="Reading · shelf"
+  description="What I'm reading, re-reading, and keeping on the reference shelf. Public-data only."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Reading", href: "/reading" }]}
+>
+  <section class="section">
+    <div class="container container-narrow">
+      <p class="section__eyebrow mono">reading · shelf · v6.0</p>
+      <h1>Reading. Re-reading. Reference shelf.</h1>
+      <p class="hero__voice voice-line">
+        The re-reads matter more than the first reads.
+      </p>
+      <p class="lede">
+        A dated, opinionated list of what I'm reading and re-reading. Public-data only — no proprietary data
+        sources, no NDA-protected materials. Inspired by <a href="https://sivers.org/book">Derek Sivers</a>'s
+        <span class="mono">/book</span> shelf and the institutional library conventions at AQR / Jane Street.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <p class="section__eyebrow mono">currently · {new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10)}</p>
+      <h2 class="section__title">On the desk right now.</h2>
+      <ol class="shelf">
+        {
+          now.map((b) => (
+            <li class="shelf__row">
+              <div class="shelf__meta">
+                <span class="shelf__status shelf__status--{b.status}">{statusPill(b.status)}</span>
+                <span class="shelf__year mono">{b.year}</span>
+              </div>
+              <div class="shelf__body">
+                <h3 class="shelf__title">
+                  {b.href ? (
+                    <a href={b.href} rel="noopener">{b.title}</a>
+                  ) : (
+                    b.title
+                  )}
+                </h3>
+                <p class="shelf__author">
+                  {b.author}
+                </p>
+                <p class="shelf__blurb">{b.blurb}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="section__eyebrow mono">in queue</p>
+      <h2 class="section__title">In the queue.</h2>
+      <ol class="shelf">
+        {
+          queue.map((b) => (
+            <li class="shelf__row">
+              <div class="shelf__meta">
+                <span class="shelf__status shelf__status--{b.status}">{statusPill(b.status)}</span>
+                <span class="shelf__year mono">{b.year}</span>
+              </div>
+              <div class="shelf__body">
+                <h3 class="shelf__title">
+                  {b.title}
+                </h3>
+                <p class="shelf__author">
+                  {b.author}
+                </p>
+                <p class="shelf__blurb">{b.blurb}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <p class="section__eyebrow mono">reference shelf · permanent</p>
+      <h2 class="section__title">Permanent reference.</h2>
+      <ol class="shelf">
+        {
+          reference.map((b) => (
+            <li class="shelf__row">
+              <div class="shelf__meta">
+                <span class="shelf__status shelf__status--{b.status}">{statusPill(b.status)}</span>
+                <span class="shelf__year mono">{b.year}</span>
+              </div>
+              <div class="shelf__body">
+                <h3 class="shelf__title">
+                  {b.title}
+                </h3>
+                <p class="shelf__author">
+                  {b.author}
+                </p>
+                <p class="shelf__blurb">{b.blurb}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <p class="mono section__eyebrow">policy</p>
+      <h2 class="section__title">What is and isn't here.</h2>
+      <ul class="policy-list">
+        <li>
+          <strong>Public data only.</strong> Every book listed is either a public-domain text, a publicly-sold
+          textbook, or an open-access paper.
+        </li>
+        <li>
+          <strong>No proprietary material.</strong> I do not list strategy-specific books from NDA-protected
+          desks. If you saw it referenced there, that's the only category I'd ask you not to ask about.
+        </li>
+        <li>
+          <strong>Updated quarterly.</strong> This page refreshes with the queue when a book finishes its
+          turn on the desk. Last refresh: <span class="mono">{new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10)}</span>.
+        </li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .hero__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .hero__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
+  .shelf {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-5) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .shelf__row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: var(--sp-5);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--transition),
+      transform var(--transition);
+  }
+  .shelf__row:hover {
+    border-color: var(--c-primary-2-deep);
+    transform: translateY(-1px);
+  }
+  @media (max-width: 640px) {
+    .shelf__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-2);
+    }
+  }
+  .shelf__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .shelf__status {
+    display: inline-block;
+    padding: 0.2em 0.6em;
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+  .shelf__status--reading {
+    background: rgba(212, 160, 23, 0.18);
+    color: var(--c-amber-deep);
+  }
+  .shelf__status--re-read {
+    background: rgba(21, 128, 61, 0.14);
+    color: var(--c-pass);
+  }
+  .shelf__status--reference {
+    background: rgba(107, 74, 143, 0.12);
+    color: var(--c-primary-3);
+  }
+  .shelf__year {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+  }
+  .shelf__title {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-1);
+    letter-spacing: -0.01em;
+  }
+  .shelf__title a {
+    color: var(--c-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .shelf__title a:hover {
+    border-bottom-color: var(--c-primary-2-deep);
+  }
+  .shelf__author {
+    margin: 0 0 var(--sp-2);
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+  }
+  .shelf__blurb {
+    margin: 0;
+    color: var(--c-ink);
+    line-height: var(--lh-loose);
+  }
+
+  .policy-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-4) 0 0;
+  }
+  .policy-list li {
+    padding: var(--sp-4) 0;
+    border-top: 1px solid var(--c-rule-soft);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
+  .policy-list li:last-child {
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  .policy-list strong {
+    color: var(--c-primary);
+    font-weight: 600;
+  }
+</style>

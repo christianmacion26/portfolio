@@ -21,13 +21,17 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  /* v6.0.11 — guard against horizontal overflow on narrow viewports.
+     `clip` is preferred over `hidden` because it doesn't establish a
+     scroll container (preserves `position: sticky` semantics). */
+  overflow-x: clip;
 }
 
 body {
   min-height: 100dvh;
   font-size: var(--fs-base);
   background: var(--c-bg);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Allow content panels to scroll horizontally on narrow viewports
@@ -80,13 +84,23 @@ a {
     text-decoration-color var(--transition);
 }
 a:hover {
-  color: var(--c-primary-deep);
+  color: var(--c-primary-2-light);
   text-decoration-color: currentColor;
 }
 a:focus-visible {
-  outline: 2px solid var(--c-primary);
+  outline: 2px solid var(--c-primary-2-deep);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* === v6.0 · universal focus-visible ring for keyboard nav === */
+*:focus-visible {
+  outline: 2px solid var(--c-primary-2-deep);
+  outline-offset: 2px;
+}
+/* Hide focus outline for mouse users (heuristic: only show on :focus-visible, not :focus) */
+*:focus:not(:focus-visible) {
+  outline: none;
 }
 
 h1,
@@ -133,6 +147,36 @@ li {
   line-height: var(--lh-loose);
 }
 
+/* === v6.0.7 · INSTITUTIONAL UTILITIES === */
+
+/* Tabular numerals — apply to any number display so digit columns align.
+ * Wired to a CSS variable so the feature-settings list is single-source. */
+.tnum {
+  font-feature-settings: var(--tnum);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Italic serif "voice line" — used on the home hero and the manifesto.
+ * This is the Anthropic / Schonfeld signature move: a single editorial
+ * sentence in italic serif that re-anchors the page. */
+.voice-line {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  color: var(--c-ink-2);
+}
+
+/* All-caps tracked eyebrow (universal across reference sites). */
+.eyebrow {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-ink-2);
+}
+
 /* === LAYOUT PRIMITIVES === */
 
 .container {
@@ -150,11 +194,15 @@ li {
 }
 
 .section {
-  padding-block: var(--sp-8);
+  padding-block: var(--sp-10);
 }
 
 .section--alt {
-  background: var(--c-bg-2);
+  /* v6.1.0 — full dark palette. Alt sections are a slightly-lifted panel
+     (--c-tape-2) for rhythm without changing the world. */
+  background: var(--c-tape-2);
+  color: var(--ink-on-tape);
+  border-block: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .section--tight {
@@ -172,6 +220,14 @@ li {
   letter-spacing: 0.12em;
   color: var(--c-primary-2-deep);
   margin-bottom: var(--sp-3);
+}
+
+/* === v6.0.7 · PROSE CLAMP ===
+ * Clamp the prose intro below a section heading to a 65ch (~720px) column
+ * even when the section itself uses the wide container. This is the
+ * Anthropic / Shreya signature: prose should breathe, not stretch. */
+.section__sub {
+  max-width: 65ch;
 }
 
 .section__title {
@@ -236,21 +292,22 @@ li {
 }
 
 .btn--primary {
-  background: var(--c-primary);
+  background: var(--c-amber-deep);
   color: #fff;
+  border-color: var(--c-amber);
 }
 .btn--primary:hover {
-  background: var(--c-primary-deep);
-  color: #fff;
+  background: var(--c-amber);
+  color: #0a0d12;
 }
 
 .btn--ghost {
   background: transparent;
-  color: var(--c-primary);
+  color: var(--c-amber-deep);
   border-color: var(--c-rule);
 }
 .btn--ghost:hover {
-  border-color: var(--c-primary);
+  border-color: var(--c-amber);
   background: var(--c-bg-2);
 }
 
@@ -304,6 +361,31 @@ li {
   color: #8a6506;
   border-color: rgba(212, 160, 23, 0.25);
 }
+.pill--pass {
+  background: var(--c-pass-soft);
+  color: var(--c-pass);
+  border-color: rgba(21, 128, 61, 0.3);
+}
+.pill--warn {
+  background: var(--c-warn-soft);
+  color: var(--c-warn);
+  border-color: rgba(140, 111, 42, 0.3);
+}
+.pill--purple {
+  background: rgba(107, 74, 143, 0.1);
+  color: var(--c-primary-3);
+  border-color: rgba(107, 74, 143, 0.3);
+}
+.pill--mute {
+  background: var(--c-bg-3);
+  color: var(--c-ink-2);
+  border-color: var(--c-rule);
+}
+.pill--ink {
+  background: var(--c-bg-3);
+  color: var(--c-ink);
+  border-color: var(--c-rule);
+}
 
 /* === ACCESSIBILITY === */
 .sr-only {
@@ -333,6 +415,50 @@ li {
   border: 2px solid var(--c-primary);
 }
 
+/* === Phase D · Reveal-on-scroll (one-shot, opacity 0→1 + 8px translateY) ===
+   Activated by src/scripts/reveal-on-scroll.ts. The JS adds `.is-revealed`
+   to each [data-reveal] target when it scrolls into view. Two safety nets:
+
+   1) Sections without JS render visible immediately (no opacity:0 in the
+      default state — `.is-revealed` IS the default).
+   2) prefers-reduced-motion users see everything immediately. */
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 320ms var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 320ms var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+:root.js [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(8px);
+  will-change: opacity, transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* === Phase D · Tighter, snappier default transition on interactive atoms === */
+.btn,
+.hero__link,
+.proof-list__title,
+.gate-tile,
+.flagship {
+  transition-timing-function: var(--ease-snappy);
+}
+
+/* === Phase D · Active-section indicator on sticky nav ===
+   nav__link--active is server-rendered; client wires a `.is-active` class
+   on scroll. CSS slides the underline + color via the existing rule. */
+.nav__link.is-active {
+  color: var(--c-primary);
+  border-bottom-color: var(--c-primary);
+}
+
 /* === RESPONSIVE === */
 
 @media (max-width: 720px) {
@@ -343,7 +469,7 @@ li {
     font-size: var(--fs-2xl);
   }
   .section {
-    padding-block: var(--sp-7);
+    padding-block: var(--sp-8);
   }
   .section--tight {
     padding-block: var(--sp-5);
@@ -421,5 +547,20 @@ li {
   }
   .container {
     padding-inline: var(--sp-3);
+  }
+}
+
+/* === v6.x · Mobile KaTeX scaling (P0-3) ===
+   Block math renders at desktop sizes, overflow on 375px phones.
+   Shrink to 0.74em, allow horizontal scroll inside the block. */
+@media (max-width: 600px) {
+  .katex-display {
+    font-size: 0.74em;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .katex-display > .katex {
+    white-space: nowrap;
   }
 }

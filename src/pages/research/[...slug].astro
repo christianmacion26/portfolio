@@ -1,0 +1,399 @@
+---
+/**
+ * research/[slug].astro — academic-citation surface for every quant and AI project.
+ *
+ * This is a lean citation hub (not a duplicate of /projects/[slug]). It renders:
+ *   - H1 project title (from the project collection)
+ *   - 1-line abstract (from `summary`)
+ *   - auto-generated BibTeX entry, copy-to-clipboardable
+ *   - canonical-link block pointing at /projects/[slug]
+ *   - re-route block listing the surfaced metrics + canonical URL
+ *
+ * The full long-form, citations, and figures stay at /projects/[slug]. This page
+ * exists so academic/citation tools (Google Scholar, BibTeX managers, conference
+ * organisers) have a stable surface to index and link back to.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { getCollection } from 'astro:content';
+import { path } from '@utils/url';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('project');
+  return projects.map((p) => ({
+    params: { slug: p.id },
+    props: { project: p },
+  }));
+}
+
+interface Props {
+  project: Awaited<ReturnType<typeof getCollection<'project'>>>[number];
+}
+
+const { project } = Astro.props;
+const data = project.data;
+
+// Build a cite-able author/year key for the BibTeX entry.
+// Christian T. Macion is the sole author on every project; year comes from `date`.
+// `date` may be a YAML string ("YYYY-MM-DD") or a Date object; handle both.
+const rawDate = data.date as unknown;
+const year = typeof rawDate === 'string'
+  ? rawDate.slice(0, 4)
+  : rawDate instanceof Date
+    ? String(rawDate.getFullYear())
+    : String(rawDate).slice(0, 4);
+const isoDate = typeof rawDate === 'string'
+  ? rawDate
+  : rawDate instanceof Date
+    ? rawDate.toISOString().slice(0, 10)
+    : String(rawDate);
+const citeKey = `macion${year}${project.id.replace(/[^a-z0-9]/gi, '')}`;
+const canonicalUrl = `https://christianmacion-portfolio.pages.dev/projects/${project.id}/`;
+const bibtex = `@techreport{${citeKey},
+  author       = {Macion, Christian T.},
+  title        = {${data.title}},
+  institution  = {Independent research},
+  year         = {${year}},
+  date         = {${isoDate}},
+  note         = {Public-data reproducible. Canonical long-form: ${canonicalUrl}},
+  url          = {${canonicalUrl}}
+}`;
+const topicLabel = data.role === 'ai' ? 'AI Engineering Research Note' : 'Quantitative Research Note';
+const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
+---
+
+<BaseLayout
+  title={`${data.title} · Research note`}
+  description={data.summary}
+  type="article"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Research', href: '/research' },
+    { name: data.title, href: `/research/${project.id}` },
+  ]}
+>
+  <section class="hero">
+    <div class="container container-narrow">
+      <p class="eyebrow mono">
+        <span>{topicLabel}</span>
+        <span aria-hidden="true">·</span>
+        <span>{year}</span>
+        <span aria-hidden="true">·</span>
+        <a href={path(`/projects/${project.id}`)}>Canonical long-form →</a>
+      </p>
+      <h1 class="hero__title">{data.title}</h1>
+      <p class="hero__sub">{data.summary}</p>
+      <p class="hero__meta">
+        <span class:list={['pill', laneClass]}>{data.role === 'ai' ? 'AI Engineering' : 'Quantitative Research'}</span>
+        <span class="hero__date mono">Published {data.date}</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <header class="section__head">
+        <h2 class="section__title">Cite this research note</h2>
+        <p class="section__sub">
+          A copy-pasteable BibTeX entry. The canonical long-form with figures, code,
+          and full methodology lives at the URL in the entry — please link there, not
+          here, when citing in a paper or a thread.
+        </p>
+      </header>
+
+      <div class="cite-card">
+        <pre class="cite-bib mono"><code>{bibtex}</code></pre>
+        <button type="button" class="cite-copy" data-copy-target={citeKey} aria-label="Copy BibTeX entry">
+          <span class="cite-copy__label">Copy BibTeX</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container container-narrow">
+      <header class="section__head">
+        <h2 class="section__title">Canonical surface</h2>
+        <p class="section__sub">
+          The full research note — methodology, code, gates run, and reproduced
+          metrics — lives on the projects index.
+        </p>
+      </header>
+      <ul class="canon">
+        <li class="canon__row">
+          <span class="canon__label">Canonical URL</span>
+          <a href={path(`/projects/${project.id}`)} class="canon__link mono">
+            /projects/{project.id} ↗
+          </a>
+        </li>
+        {
+          data.metrics.length > 0 && (
+            <li class="canon__row">
+              <span class="canon__label">Headline metric(s)</span>
+              <ul class="canon__metrics">
+                {data.metrics.map((m) => (
+                  <li>
+                    <span class="canon__metric-value mono">{m.value}</span>
+                    <span class="canon__metric-label">{m.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          )
+        }
+        {
+          data.tags && data.tags.length > 0 && (
+            <li class="canon__row">
+              <span class="canon__label">Tags</span>
+              <ul class="canon__tags">
+                {data.tags.map((t) => <li><span class="canon__tag">{t}</span></li>)}
+              </ul>
+            </li>
+          )
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Read the full research note."
+    sub="The canonical long-form on /projects walks through the methodology, evaluation gates, code, and reproducibility manifest."
+    primaryLabel="Open full note"
+    primaryHref={path(`/projects/${project.id}`)}
+    secondaryLabel="Browse all research"
+    secondaryHref={path('/projects')}
+  />
+</BaseLayout>
+
+<script>
+  // Wire the copy-to-clipboard on the BibTeX card.
+  // Uses navigator.clipboard; falls back to a hidden textarea for older browsers.
+  document.querySelectorAll<HTMLButtonElement>('.cite-copy').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const card = btn.closest('.cite-card') as HTMLElement | null;
+      const pre = card?.querySelector('pre.cite-bib code') as HTMLElement | null;
+      const text = pre?.textContent ?? '';
+      const labelEl = btn.querySelector('.cite-copy__label');
+      const setLabel = (label: string) => {
+        if (labelEl) labelEl.textContent = label;
+      };
+      try {
+        await navigator.clipboard.writeText(text);
+        setLabel('Copied ✓');
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          setLabel('Copied ✓');
+        } catch {
+          setLabel('Press ⌘C');
+        }
+        ta.remove();
+      }
+      setTimeout(() => setLabel('Copy BibTeX'), 1800);
+    });
+  });
+</script>
+
+<style>
+  .hero {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+  }
+  .eyebrow a {
+    color: var(--c-primary-2-deep);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--c-rule);
+    transition: border-color var(--transition);
+  }
+  .eyebrow a:hover {
+    border-bottom-color: var(--c-amber);
+  }
+  .hero__title {
+    font-size: clamp(1.75rem, 4.5vw, var(--fs-3xl));
+    line-height: 1.18;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+  }
+  .hero__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+    margin-bottom: var(--sp-5);
+  }
+  .hero__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .hero__date {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .section {
+    padding-block: var(--sp-9);
+  }
+  .section--alt {
+    background: var(--c-bg-2);
+  }
+  .section__head {
+    margin-bottom: var(--sp-6);
+  }
+  .section__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .section__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+
+  .cite-card {
+    position: relative;
+    background: var(--c-primary-deep);
+    border-radius: var(--radius);
+    border: 1px solid var(--c-rule);
+    overflow: hidden;
+  }
+  .cite-bib {
+    margin: 0;
+    padding: var(--sp-5);
+    color: #e0e6ed;
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    overflow-x: auto;
+    font-family: var(--ff-mono);
+    scrollbar-width: thin;
+  }
+  .cite-copy {
+    position: absolute;
+    top: var(--sp-3);
+    right: var(--sp-3);
+    background: var(--c-amber-deep);
+    color: #fff;
+    border: 1px solid var(--c-amber);
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-xs);
+    font-family: var(--ff-mono);
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  .cite-copy:hover {
+    background: var(--c-amber);
+    color: #0a0d12;
+  }
+  .cite-copy__label {
+    color: inherit;
+    font-weight: 600;
+  }
+
+  .canon {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .canon__row {
+    padding-block: var(--sp-3);
+    border-bottom: 1px solid var(--c-rule);
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--sp-4);
+  }
+  .canon__label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-3);
+    font-weight: 700;
+  }
+  .canon__link {
+    color: var(--c-primary-2-deep);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--c-rule);
+    word-break: break-word;
+  }
+  .canon__link:hover {
+    border-bottom-color: var(--c-amber);
+  }
+  .canon__metrics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .canon__metric-value {
+    color: var(--c-amber-deep);
+    font-weight: 700;
+    font-size: var(--fs-base);
+    margin-right: var(--sp-2);
+  }
+  .canon__metric-label {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+  }
+  .canon__tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .canon__tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+  }
+  @media (max-width: 640px) {
+    .canon__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
+    .cite-copy {
+      position: static;
+      margin: 0 var(--sp-3) var(--sp-3);
+      width: calc(100% - 2 * var(--sp-3));
+    }
+  }
+</style>

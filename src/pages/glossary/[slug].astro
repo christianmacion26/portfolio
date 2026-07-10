@@ -1,0 +1,247 @@
+---
+/**
+ * /glossary/[slug].astro — long-form per-term deep page.
+ *
+ * One page per GlossaryTerm in src/data/glossary-terms.ts. Each page
+ * surfaces the short definition, the extended prose, a category-anchored
+ * "where it shows up on this site" stub, the related-terms cross-link
+ * ring, and a nav-back to /glossary.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { terms } from '../../data/glossary-terms';
+import { path } from '@utils/url';
+
+export async function getStaticPaths() {
+  return terms.map((t) => ({
+    params: { slug: t.id },
+    props: { term: t },
+  }));
+}
+
+interface Props {
+  term: (typeof terms)[number];
+}
+
+const { term } = Astro.props;
+
+// Resolve the related-terms list once on the server so the deep page
+// only ships the 3-6 cross-links instead of the entire 25-term table.
+const relatedTerms = term.related
+  .map((id) => terms.find((t) => t.id === id))
+  .filter(Boolean);
+
+// Category breadcrumb — top of page
+const categoryHref = term.category === 'Quant' ? '/methodology' : '/proof';
+const categoryLabel = term.category === 'Quant' ? 'Quant methodology' : 'AI proof';
+
+const categoryColor = term.category === 'Quant' ? 'pill--accent' : 'pill--brand';
+---
+
+<BaseLayout
+  title={`${term.term} · Glossary`}
+  description={term.short}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Glossary', href: '/glossary' },
+    { name: term.term, href: `/glossary/${term.id}` },
+  ]}
+>
+  <section class="hero">
+    <div class="container container-narrow">
+      <p class="eyebrow mono">
+        <a href={path('/glossary')}>← All {terms.length} terms</a>
+        <span aria-hidden="true">·</span>
+        <span>{categoryLabel}</span>
+      </p>
+      <h1 class="hero__title">{term.term}</h1>
+      <p class="hero__sub">
+        <span class:list={['pill', categoryColor]}>{term.category}</span>
+        <span class="hero__short">{term.short}</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <header class="section__head">
+        <h2 class="section__title">Full definition</h2>
+      </header>
+      <div class="def-extended">
+        {term.extended.split(/\n\n+/).map((para) => <p>{para}</p>)}
+      </div>
+    </div>
+  </section>
+
+  {
+    relatedTerms.length > 0 && (
+      <section class="section section--alt">
+        <div class="container container-narrow">
+          <header class="section__head">
+            <h2 class="section__title">Related terms</h2>
+            <p class="section__sub">
+              Each link opens the long-form definition of a closely related term.
+            </p>
+          </header>
+          <ul class="related">
+            {relatedTerms.map((rt) => (
+              <li class="related__item">
+                <a href={path(`/glossary/${rt!.id}`)} class="related__link">
+                  <span class="related__term">{rt!.term}</span>
+                  <span class="related__short">{rt!.short}</span>
+                </a>
+                <span class:list={['pill', rt!.category === 'Quant' ? 'pill--accent' : 'pill--brand']}>
+                  {rt!.category}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CTABanner
+    title="See this term in action."
+    sub={`The ${term.category === 'Quant' ? '/methodology' : '/proof'} page maps every term to the gate or artifact that implements it on this site.`}
+    primaryLabel={term.category === 'Quant' ? 'Read methodology' : 'Read /proof'}
+    primaryHref={path(categoryHref)}
+    secondaryLabel="Back to glossary"
+    secondaryHref={path('/glossary')}
+  />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+  }
+  .eyebrow a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted var(--c-rule);
+    transition: border-color var(--transition);
+  }
+  .eyebrow a:hover {
+    border-bottom-color: var(--c-amber);
+  }
+  .hero__title {
+    font-size: clamp(1.75rem, 4.5vw, var(--fs-3xl));
+    line-height: 1.15;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .hero__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: baseline;
+  }
+  .hero__short {
+    flex: 1 1 100%;
+  }
+
+  .section {
+    padding-block: var(--sp-9);
+  }
+  .section--alt {
+    background: var(--c-bg-2);
+  }
+  .section__head {
+    margin-bottom: var(--sp-6);
+  }
+  .section__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .section__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+
+  .def-extended p {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: var(--lh-loose);
+    margin-bottom: var(--sp-4);
+    max-width: 64ch;
+  }
+  .def-extended p:last-child {
+    margin-bottom: 0;
+  }
+
+  .related {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .related__item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+  .related__item:hover {
+    border-color: var(--c-amber);
+    box-shadow: var(--shadow-sm);
+  }
+  .related__link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: var(--c-ink);
+    text-decoration: none;
+    min-width: 0;
+  }
+  .related__term {
+    font-weight: 700;
+    color: var(--c-primary);
+    font-size: var(--fs-base);
+    letter-spacing: -0.005em;
+  }
+  .related__short {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-loose);
+  }
+  @media (max-width: 720px) {
+    .related__item {
+      flex-wrap: wrap;
+    }
+  }
+</style>

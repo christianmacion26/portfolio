@@ -9,6 +9,8 @@ import Stat from '@components/Stat.astro';
 import CTABanner from '@components/CTABanner.astro';
 import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
+import SectionTOC from '@components/SectionTOC.astro';
+import StatementCarousel from '@components/StatementCarousel.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 
@@ -23,6 +25,7 @@ const eduSolutions = solutions.filter(
 <BaseLayout
   title="Solutions"
   description="Selected case studies. Problem → approach → evidence → outcome → proof. NDA-safe, public-data reproducible."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Solutions", href: "/solutions" }]}
 >
   <header class="solutions-head">
     <div class="container">
@@ -30,10 +33,29 @@ const eduSolutions = solutions.filter(
       <h1 class="solutions-head__title">
         I do <span class="hl">solutions</span>.
       </h1>
+      <p class="solutions-head__voice voice-line">
+        Every claim links to a falsifiable test. None of it relies on proprietary data.
+      </p>
+
+      <div class="solutions-head__carousel">
+        <StatementCarousel
+          statements={[
+            'Problem → Approach → Evidence → Outcome → Proof.',
+            'Every claim has a falsifiable test behind it.',
+            'Public data only. NDA-safe by construction.',
+            'No live capital. Paper-trade first.',
+            'No proprietary data sources. Ever.',
+            'PBO-tested. Walk-forward validated.',
+          ]}
+          label="Solutions discipline — six rules, rotating"
+          intervalMs={5500}
+        />
+      </div>
+
       <p class="solutions-head__sub">
         Each entry below is a real engagement or self-directed project: the problem, the approach,
-        the evidence, the outcome, and the proof. Every claim links to a falsifiable test. None
-        of it relies on proprietary data sources.
+        the evidence, the outcome, and the proof — in that order. Public data only, NDA-safe by
+        construction.
       </p>
 
       <div class="solutions-head__ribbon">
@@ -50,16 +72,15 @@ const eduSolutions = solutions.filter(
       </div>
 
       <div class="solutions-head__stats">
-        <Stat value={String(solutions.length)} label="solutions shipped" size="md" formula="|S|" />
-        <Stat value="102" label="professional certs" sub="11-month arc" size="md" formula="c(t)" />
+        <Stat value={String(solutions.length)} label="solutions shipped" size="md" />
+        <Stat value="102" label="professional certs" sub="11-month arc" size="md" />
         <Stat
           value="76.5k"
           label="LOC light-dep Python"
           sub="numpy/pandas/boto3"
           size="md"
-          formula="|\mathcal{L}|"
         />
-        <Stat value="31" label="eval gates" sub="G1–G31 statistical" size="md" formula="g" />
+        <Stat value="31" label="eval gates" sub="G1–G31 statistical" size="md" />
       </div>
     </div>
   </header>
@@ -70,11 +91,20 @@ const eduSolutions = solutions.filter(
     <ReadMeta minutes={9} updatedIso="2026-07-09" href={path('/proof')} />
   </div>
 
-  <section class="section section--alt">
+  <SectionTOC
+    label="On this solutions page"
+    items={[
+      { id: 'ai', label: 'AI engineering' },
+      { id: 'quant', label: 'Quantitative research' },
+      { id: 'edu', label: 'Education' },
+    ]}
+  />
+
+  <section class="section section--alt" data-toc-id="ai" data-toc-label="AI engineering">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Lane · AI Engineering</p>
-        <h2 class="section__title">Multi-agent systems that pass validation.</h2>
+        <h2 class="section__title" id="ai">Multi-agent systems that pass validation.</h2>
       </header>
       <div class="sol-grid">
         {
@@ -129,11 +159,11 @@ const eduSolutions = solutions.filter(
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" data-toc-id="quant" data-toc-label="Quantitative research">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Lane · Quantitative Research</p>
-        <h2 class="section__title">Strategies that survive multiple-testing.</h2>
+        <h2 class="section__title" id="quant">Strategies that survive multiple-testing.</h2>
       </header>
       <div class="sol-grid">
         {
@@ -190,11 +220,11 @@ const eduSolutions = solutions.filter(
 
   {
     eduSolutions.length > 0 && (
-      <section class="section section--alt">
+      <section class="section section--alt" data-toc-id="edu" data-toc-label="Education">
         <div class="container">
           <header class="section__head">
             <p class="section__eyebrow">Lane · Education & Outreach</p>
-            <h2 class="section__title">Public-facing work.</h2>
+            <h2 class="section__title" id="edu">Public-facing work.</h2>
           </header>
           <div class="sol-grid">
             {eduSolutions.map((s) => (
@@ -263,6 +293,29 @@ const eduSolutions = solutions.filter(
     letter-spacing: -0.03em;
     line-height: 1;
     margin-block: var(--sp-4) var(--sp-5);
+  }
+  .solutions-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .solutions-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .solutions-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
   .solutions-head__sub {
     font-size: var(--fs-lg);

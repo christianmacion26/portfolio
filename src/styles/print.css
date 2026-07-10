@@ -1,44 +1,89 @@
-/* print.css — friendly print stylesheet for resumes / solutions */
+/* print.css — friendly print stylesheet for resumes / solutions / any page */
 
 @media print {
   :root {
     --c-bg: #fff;
     --c-bg-2: #fff;
+    --c-paper: #fff;
     --c-ink: #000;
   }
   .nav,
   .footer,
   .skip-link,
+  .toc,                    /* v6.0 · sticky TOC */
+  .theme-toggle,           /* v6.0 · theme toggle button */
+  .ticker,                 /* home page ticker */
+  .trust-strip,            /* home page truststrip */
+  .reveal,
+  [data-reveal],
+  .video-embed video,
   .no-print {
     display: none !important;
   }
   body {
     font-size: 11pt;
+    line-height: 1.4;
+    color: #000;
+    background: #fff;
   }
   a {
-    color: var(--c-ink);
+    color: #000;
     text-decoration: underline;
+  }
+  /* Append URL after every link so recruiters printing a PDF
+     can see where each link points. Cheap via CSS only. */
+  a[href^="http"]::after,
+  a[href^="/"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555;
+    word-break: break-all;
   }
   .container {
     max-width: 100%;
     padding: 0;
   }
-  section {
-    padding-block: 1rem !important;
+  section,
+  .section {
+    padding-block: 0.75rem !important;
     page-break-inside: avoid;
   }
-  h1,
-  h2,
-  h3 {
+  h1, h2, h3 {
     page-break-after: avoid;
+    color: #000;
   }
+  h1 { font-size: 22pt; }
+  h2 { font-size: 16pt; }
+  h3 { font-size: 13pt; }
   .sol-card,
   .pub,
   .gate,
-  .contact-card {
+  .contact-card,
+  .proof-card,
+  .code-proof-card,
+  .toc__link,
+  .kv tr,
+  .faq__item {
     page-break-inside: avoid;
   }
   .hero {
     padding: 1rem 0 !important;
+    background: #fff !important;
+  }
+  .hero__motif,
+  .brand-motif,
+  .eq-cell,
+  img[loading="lazy"] {
+    break-inside: avoid;
+  }
+  /* Print the v6.0 kv table cleanly */
+  .kv {
+    width: 100% !important;
+    border: 1px solid #000;
+  }
+  .kv th,
+  .kv td {
+    border-bottom: 1px solid #888 !important;
+    padding: 4pt 8pt !important;
   }
 }

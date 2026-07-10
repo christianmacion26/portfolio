@@ -23,7 +23,7 @@ interface Props {
   fit?: 'cover' | 'contain';
 }
 
-const { src, alt, caption, credit, href, aspect = '16/9', tone = 'paper', fit = 'cover' } = Astro.props;
+const { src, alt, caption, credit, href, aspect = '16/9', tone = 'paper', fit = 'cover', eager = false } = Astro.props;
 
 const figureStyle =
   aspect === 'auto'
@@ -35,10 +35,10 @@ const figureStyle =
   {
     href ? (
       <a href={href} class="proof-card__link" target="_blank" rel="noopener">
-        <img src={src} alt={alt} loading="lazy" decoding="async" class="proof-card__img" />
+        <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" class="proof-card__img" />
       </a>
     ) : (
-      <img src={src} alt={alt} loading="lazy" decoding="async" class="proof-card__img" />
+      <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" class="proof-card__img" />
     )
   }
   {

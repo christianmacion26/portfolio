@@ -1,68 +1,628 @@
 ---
 /**
- * proof.astro — single-page gallery of public, NDA-clean proof artifacts.
+ * proof.astro — the proof spine. v5.3 six-section narrative.
  *
- * Anchors the site with one shareable URL a recruiter can DM or attach to a
- * Loom response. Distributed proof (headshot on /about, chart thumb on
- * /positions, cert card on /certifications, lecture videos on /experience)
- * all flows back to this page.
+ * Order matters. Each section is a "tier" of proof depth:
+ *   P.1 Identity              — who, on disk
+ *   P.2 Flagship credentials  — Tier-1 cert flagships
+ *   P.3 Shipped code          — the eval-first artifacts in code
+ *   P.4 Research artifacts    — 9 quant + 6 AI + 10 solutions lists
+ *   P.5 Public track record   — lectures, charts, RSS
+ *   P.6 Disclosure + contact  — what's not here, and how to ask
+ *
+ * Data sources for sections P.4 below are loaded from content collections.
+ * Sub-page routing anchors at #identity / #credentials / #code / #research / #track.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProofCard from '@components/ProofCard.astro';
 import CodeProofCard from '@components/CodeProofCard.astro';
+import FlagshipCard from '@components/FlagshipCard.astro';
 import BrandMotif from '@components/BrandMotif.astro';
 import VideoEmbed from '@components/VideoEmbed.astro';
 import CTABanner from '@components/CTABanner.astro';
 import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
+import SectionTOC from '@components/SectionTOC.astro';
+import StatementCarousel from '@components/StatementCarousel.astro';
+import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
+import { profile } from '@utils/profile';
+
+// === Data: 4 flagship credentials (3 from certGroup.featured* + 1 standalone Bitget) ===
+const certGroups = (await getCollection('certGroup')).sort((a, b) => a.data.order - b.data.order);
+const flagshipCerts = certGroups
+  .filter((g) => g.data.featuredImg)
+  .map((g) => ({
+    group: g.data.group,
+    title: g.data.title,
+    blurb: g.data.blurb,
+    src: g.data.featuredImg!,
+    alt: g.data.featuredAlt ?? `${g.data.title} flagship certificate`,
+    caption: g.data.featuredCaption ?? g.data.blurb,
+    href: g.data.featuredHref ?? path('/certifications'),
+  }));
+
+// === Data: 4 CodeProofCard entries (3 v3.5 + 1 eval-mcp-server) ===
+const codeArtifacts = [
+  {
+    title: 'mcp-backtest-server',
+    kind: 'MCP server' as const,
+    tagline: 'IP-clean backtest tools over the Model Context Protocol. Three tools, four textbook strategies, zero market data.',
+    metric: '100% offline · 4 strategies · 0 lines of proprietary data',
+    preview: `$ uv run server.py
+# FastMCP server listening on stdio
+{"tools":["get_ohlcv","run_backtest","compute_metrics"]}`,
+    outputLines: [
+      'smoke · 262 bars returned',
+      'sma_cross sharpe=0.471 cagr=0.079 max_dd=-0.21',
+      'buy_and_hold sharpe=-0.490',
+      'PASS · deterministic from symbol seed',
+    ],
+    repoPath: '~/portfolio_v2/mcp-backtest-server/',
+    href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/mcp-backtest-server',
+  },
+  {
+    title: 'qfin-rag-harness',
+    kind: 'Python package' as const,
+    tagline: 'Citation-grounded retrieval harness over a curated corpus of 16 canonical q-fin papers. Pure-Python TF-IDF cosine, no LLM call.',
+    metric: '16 papers · 0 API keys · 0 LLM dependency',
+    preview: `$ python -m qfin_rag "How do I correct factor significance for data mining?"
+
+# Citations for: How do I correct ...
+## Harvey (2016) — And the Cross-Section ...
+*Review of Financial Studies, 2016* (relevance: 0.173)`,
+    outputLines: [
+      'query → 16-paper curated corpus',
+      'top-3 by TF-IDF cosine',
+      'citation-grounded prompt template',
+      'NO network calls',
+    ],
+    repoPath: '~/portfolio_v2/qfin-rag-harness/',
+    href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/qfin-rag-harness',
+  },
+  {
+    title: 'numerical-faithfulness-eval',
+    kind: 'Eval harness' as const,
+    tagline: 'Verify LLM numerical claims against deterministic fixtures. Catches the most common LLM failure mode — wrong numbers — in under one second.',
+    metric: '10 demo claims · 5 pass · 5 fail by design',
+    preview: `$ python -m eval_harness
+[FAIL] btc_2024_sma_cross_20_50 / sharpe: claimed=5.0,
+       truth=0.4707, diff=4.5293 > tol 0.05
+=== summary ===
+  5/10 passed (50.0%)`,
+    outputLines: [
+      'fixtures computed deterministically from seeded backtest',
+      'tolerances per metric (Sharpe atol=0.05, CAGR=0.02)',
+      'per-claim reason + diff vs tolerance',
+      'exit code = number of failed claims',
+    ],
+    repoPath: '~/portfolio_v2/numerical-faithfulness-eval/',
+    href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/numerical-faithfulness-eval',
+  },
+  {
+    title: 'eval-mcp-server',
+    kind: 'MCP server' as const,
+    tagline: 'Slop-evaluation gate exposed as an MCP tool. Tools / Resources / Prompts — 20/20 conformance, 100% round-trip parity.',
+    metric: 'MCP conformance 20/20 · round-trip parity 100% · primitives 3/3',
+    preview: `$ uv run eval_mcp_server.py
+# MCP server with the slop-evaluation gate
+{"primitives":["tools","resources","prompts"],
+ "tools":["evaluate_text","score_metrics","emit_report"]}`,
+    outputLines: [
+      '20/20 conformance cases pass',
+      'round-trip parity across all 3 primitives',
+      'Tools · Resources · Prompts all live',
+      'PASS · slop score reproducible per call',
+    ],
+    repoPath: '~/portfolio_v2/eval-mcp-server/',
+    href: 'https://github.com/christianmacion26/eval-mcp-server',
+  },
+];
+
+// === Data: 9 quant + 6 AI projects + 10 solutions, surfaced as compact rows ===
+const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
+const quantProjects = projects.filter((p) => p.data.role === 'quant');
+const aiProjects = projects.filter((p) => p.data.role === 'ai');
+const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
+
+const formatProjectMetric = (p: typeof projects[number]) => {
+  if (!p.data.metrics?.length) return null;
+  const first = p.data.metrics[0];
+  return { label: first.label, value: first.value, sub: first.sub };
+};
+
+const formatSolutionMetric = (s: typeof solutions[number]) =>
+  s.data.evidence?.[0] ?? s.data.outcome.slice(0, 80);
+
+// === Status → tone + label mapping (for status pills) ===
+// production → Live (green), open-source → Open Source (amber),
+// internal → Internal (purple), archived → Archived (gray).
+type StatusTone = 'pass' | 'warn' | 'purple' | 'mute';
+type StatusInfo = { label: string; tone: StatusTone };
+const STATUS_MAP: Record<string, StatusInfo> = {
+  production: { label: 'Live', tone: 'pass' },
+  'open-source': { label: 'Open Source', tone: 'warn' },
+  internal: { label: 'Internal', tone: 'purple' },
+  archived: { label: 'Archived', tone: 'mute' },
+};
+const statusInfo = (s?: string): StatusInfo | null => (s && STATUS_MAP[s]) || null;
+
+// === Filter attributes (Topic × Type) ===
+// Topic: quant | ai | oss (solutions get topic from their lane)
+// Type: code | writeup | talk | live-demo
+const projectTopic = (p: typeof projects[number]) => p.data.topic ?? null;
+const projectType = (p: typeof projects[number]) => p.data.assetType ?? null;
+const solutionTopic = (s: typeof solutions[number]): 'quant' | 'ai' | 'oss' | null => {
+  if (s.data.lane === 'quant' || s.data.lane === 'ai') return s.data.lane;
+  // education / systems lanes are public writeups → OSS
+  return 'oss';
+};
+const solutionType = (_s: typeof solutions[number]) => 'writeup' as const;
+
+// === Per-list pagination: page size 6 ===
+const PAGE_SIZE = 6;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const paginate = (items: any[]) => {
+  // pinned first, then in original order
+  const sorted = [...items].sort((a, b) => {
+    const ap = a.data.pinned ? 1 : 0;
+    const bp = b.data.pinned ? 1 : 0;
+    if (ap !== bp) return bp - ap;
+    return a.data.order - b.data.order;
+  });
+  return sorted.map((item, idx) => {
+    let page: number;
+    if (idx < PAGE_SIZE) {
+      // page 1 = pinned + first (PAGE_SIZE - pinnedCount) unpinned
+      page = 1;
+    } else {
+      const offset = idx - PAGE_SIZE;
+      page = 2 + Math.floor(offset / PAGE_SIZE);
+    }
+    return { item, page };
+  });
+};
 ---
 
 <BaseLayout
   title="Proof"
-  description="A gallery of public, NDA-clean artifacts that back up the claims on /experience, /certifications, and /now."
+  description="Decision-grade artefacts that back the claims on /experience, /certifications, and /now. Tier-1 credentials, 4 open-source artifacts, 9 quant projects, 6 AI projects, 10 case studies — all NDA-clean by construction."
   type="profile"
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Proof", href: "/proof" }]}
+  extraJsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Christian T. Macion — Proof',
+    description:
+      'Six-tier proof spine: P.1 identity · P.2 flagship credentials · P.3 shipped code · P.4 research artifacts · P.5 public track record · P.6 NDA-positive disclosure.',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'Christian T. Macion — Portfolio',
+      url: 'https://christianmacion-portfolio.pages.dev/',
+    },
+    hasPart: [
+      { '@type': 'CreativeWork', name: 'Tier-1 credentials (CTA, Ateneo + US Embassy, BIDA × Meta, Bitget)', url: 'https://christianmacion-portfolio.pages.dev/proof#credentials' },
+      { '@type': 'SoftwareSourceCode', name: 'Shipped code (mcp-backtest-server, qfin-rag-harness, numerical-faithfulness-eval, eval-mcp-server)', url: 'https://christianmacion-portfolio.pages.dev/proof#code' },
+      { '@type': 'ItemList', name: '9 quant projects + 6 AI projects + 10 case studies', url: 'https://christianmacion-portfolio.pages.dev/proof#research' },
+      { '@type': 'CreativeWork', name: 'Public track record (lectures, charts, Atom feeds)', url: 'https://christianmacion-portfolio.pages.dev/proof#track' },
+      { '@type': 'CreativeWork', name: 'External accounts (Numerai, HuggingFace, GitHub, TradingView, Medium)', url: 'https://christianmacion-portfolio.pages.dev/proof#public-track' },
+      { '@type': 'DisclosureDocument', name: 'NDA-positive disclosure', url: 'https://christianmacion-portfolio.pages.dev/proof#disclosure' },
+    ],
+  }}
 >
-  <header class="proof-head">
+  <header class="proof-head" id="identity" data-toc-id="identity" data-toc-label="Identity" data-reveal>
     <div class="container container-narrow">
       <p class="section__eyebrow"><span class="mono">proof/</span> · show your work</p>
       <h1 class="proof-head__title">
-        Things I can <span class="hl">show you</span>.
+        Proof. <span class="hl">Public or self-owned only</span>.
       </h1>
+      <p class="proof-head__voice voice-line">
+        If it isn't reproducible from public data, it isn't here.
+      </p>
+
+      {/* === Proof discipline carousel — six core rules, rotating === */}
+      <div class="proof-head__carousel">
+        <StatementCarousel
+          statements={[
+            'Every cert links to its issuer. No exceptions.',
+            'Every claim links to a public artifact or a self-owned file.',
+            'Every project ships with the runnable code, not a slide deck.',
+            'Every metric is real. Headline numbers come from disk.',
+            'Every testimonial is an attestable paper trail, not a quote.',
+            'Every NDA-protected engagement is closed past contract.',
+          ]}
+          label="Proof discipline — six rules, rotating"
+          intervalMs={5500}
+        />
+      </div>
+
       <div class="proof-head__motif">
         <BrandMotif width={320} caption="proof/ · G1–G31 gates emit the artefacts below" />
       </div>
       <p class="proof-head__sub">
-        A gallery of public, NDA-clean artifacts — recordings, charts, co-signed certificates — that
-        back up the claims on
+        A gallery of public, NDA-clean artifacts — records, charts, co-signed certificates —
+        that back up the claims on
         <a href={path('/experience')}>/experience</a>,
-        <a href={path('/certifications')}>/certifications</a>, and
-        <a href={path('/now')}>/now</a>. Five items today. Updated when something new ships; never
-        deleted when something expires.
+        <a href={path('/certifications')}>/certifications</a>,
+        and <a href={path('/now')}>/now</a>. Thirty-one artifacts on disk, twenty-two surfaced below.
+        Updated when something new ships; never deleted when something expires.
       </p>
+
+      {/* === Headline stats — oversized, above the fold === */}
+      <div class="proof-head__stats">
+        <div class="proof-head__stat">
+          <span class="proof-head__stat-num tnum">22</span>
+          <span class="proof-head__stat-lbl">artifacts on this page</span>
+        </div>
+        <div class="proof-head__stat">
+          <span class="proof-head__stat-num tnum">9</span>
+          <span class="proof-head__stat-lbl">quant projects</span>
+        </div>
+        <div class="proof-head__stat">
+          <span class="proof-head__stat-num tnum">6</span>
+          <span class="proof-head__stat-lbl">AI projects</span>
+        </div>
+        <div class="proof-head__stat">
+          <span class="proof-head__stat-num tnum">10</span>
+          <span class="proof-head__stat-lbl">case studies</span>
+        </div>
+      </div>
+
+      <p class="proof-head__ver mono">v6.0.7d · 2026-07-10</p>
     </div>
   </header>
 
   <TrustStrip variant="tape" />
 
   <div class="container container-narrow">
-    <ReadMeta minutes={9} updatedIso="2026-07-09" href={path('/proof')} />
+    <ReadMeta minutes={11} updatedIso="2026-07-10" href={path('/proof')} />
   </div>
 
-  <section class="section">
+  <SectionTOC
+    label="On this proof page"
+    items={[
+      { id: 'credentials', label: 'Flagship credentials' },
+      { id: 'code', label: 'Shipped code' },
+      { id: 'research', label: 'Research artifacts' },
+      { id: 'track', label: 'Track record' },
+      { id: 'public-track', label: 'Public track record' },
+      { id: 'disclosure', label: 'NDA disclosure' },
+    ]}
+  />
+
+  {/* =========================================================
+      P.2 — Flagship credentials (Tier-1 certs with featuredImg)
+      ========================================================= */}
+  <section
+    class="section"
+    id="credentials"
+    data-toc-id="credentials"
+    data-toc-label="Flagship credentials"
+    data-reveal
+  >
     <div class="container">
       <header class="section__head">
-        <p class="section__eyebrow">Recorded presentations</p>
-        <h2 class="section__title">Two public talks, full provenance on-disk.</h2>
+        <p class="section__eyebrow">P.2 · Flagship credentials</p>
+        <h2 class="section__title">Tier-1 certs. Co-signed by name.</h2>
         <p class="section__sub">
-          The same Manobo / ICC / IPs lecture for <strong>USeP EGE 313</strong>, delivered in
-          September 2024 — first as a ChatGPT-assisted draft (the AI-engineering workflow), then as
-          a live Presenter-view delivery. Both recordings are public; the PowerPoint file metadata
-          in the Edit-mode frame proves provenance.
+          Three flagship credentials already curated on
+          <a href={path('/certifications')}>/certifications</a> plus one standalone Tier-1 from
+          Bitget. Each card carries the issuer, date, and the photo.
         </p>
       </header>
 
-  <TrustStrip variant="tape" />
+      <div class="proof-grid proof-grid--flagship">
+        {flagshipCerts.map((f) => (
+          <FlagshipCard
+            title={f.title}
+            group={f.group}
+            blurb={f.blurb}
+            src={f.src}
+            alt={f.alt}
+            caption={f.caption}
+            href={f.href}
+            aspect="3/2"
+          />
+        ))}
+        {/* Bitget B4Y-2026-000701 — Tier-1 cert that's currently orphaned on disk */}
+        <FlagshipCard
+          title="Blockchain4Youth · B4Y-2026-000701"
+          group="AI · Data · Technology"
+          blurb="Bitget Blockchain4Youth · Tier-1 distinction · 2026."
+          src={path('/proof/bitget-b4y-2026.jpg')}
+          alt="Blockchain4Youth B4Y-2026-000701 award certificate from Bitget, 2026."
+          caption="Blockchain4Youth (B4Y-2026-000701) · Tier-1 · Bitget · 2026."
+          href="https://www.bitget.com/"
+          aspect="3/2"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* =========================================================
+      P.3 — Shipped code (4 CodeProofCards · 3 v3.5 + 1 eval)
+      ========================================================= */}
+  <section
+    class="section section--alt"
+    id="code"
+    data-toc-id="code"
+    data-toc-label="Shipped code"
+    data-reveal
+  >
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">P.3 · Shipped code</p>
+        <h2 class="section__title">Things I can <code class="mono">import</code>.</h2>
+        <p class="section__sub">
+          Four repositories. Each is <strong>MIT-licensed</strong>,
+          <strong>offline-runnable</strong>, and <strong>dependency-light</strong>. Each one
+          is a small, auditable artifact that demonstrates the eval-first methodology in code
+          rather than prose.
+        </p>
+      </header>
+
+      <div class="proof-grid proof-grid--code">
+        {codeArtifacts.map((c) => (
+          <CodeProofCard
+            title={c.title}
+            kind={c.kind}
+            tagline={c.tagline}
+            metric={c.metric}
+            preview={c.preview}
+            outputLines={c.outputLines}
+            path={c.repoPath}
+            href={c.href}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* =========================================================
+      P.4 — Research artifacts (9 quant · 6 AI · 10 solutions)
+      Filter bar: Topic × Type. Client-side, URL query sync.
+      ========================================================= */}
+  <section
+    class="section"
+    id="research"
+    data-toc-id="research"
+    data-toc-label="Research artifacts"
+    data-reveal
+    data-filter-host
+    data-active-topic="all"
+    data-active-type="all"
+  >
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">P.4 · Research artifacts</p>
+        <h2 class="section__title">
+          9 quant · 6 AI · 10 solutions. <span class="mono">All public-data reproducible.</span>
+        </h2>
+        <p class="section__sub">
+          Compact list rendering (AQR-Insights style). Each row links to the project or solution
+          detail page; metrics come from the project frontmatter, not invented. Filter chips narrow
+          the gallery by topic and asset type.
+        </p>
+      </header>
+
+      {/* === Filter bar: Topic × Type === */}
+      <div class="filter-bar" role="group" aria-label="Filter proof artifacts by topic and type">
+        <div class="filter-bar__row">
+          <span class="filter-bar__label mono">Topic</span>
+          <div class="filter-bar__chips" data-filter-axis="topic">
+            <button type="button" class="filter-chip mono is-active" data-filter-value="all" aria-pressed="true">All</button>
+            <button type="button" class="filter-chip mono" data-filter-value="quant" aria-pressed="false">Quant</button>
+            <button type="button" class="filter-chip mono" data-filter-value="ai" aria-pressed="false">AI</button>
+            <button type="button" class="filter-chip mono" data-filter-value="oss" aria-pressed="false">OSS</button>
+          </div>
+        </div>
+        <div class="filter-bar__row">
+          <span class="filter-bar__label mono">Type</span>
+          <div class="filter-bar__chips" data-filter-axis="type">
+            <button type="button" class="filter-chip mono is-active" data-filter-value="all" aria-pressed="true">All</button>
+            <button type="button" class="filter-chip mono" data-filter-value="code" aria-pressed="false">Code</button>
+            <button type="button" class="filter-chip mono" data-filter-value="writeup" aria-pressed="false">Writeup</button>
+            <button type="button" class="filter-chip mono" data-filter-value="talk" aria-pressed="false">Talk</button>
+            <button type="button" class="filter-chip mono" data-filter-value="live-demo" aria-pressed="false">Live demo</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Quant projects */}
+      <h3 class="proof-list__heading">Quant projects — 9</h3>
+      <ol
+        class="proof-list proof-list--paged"
+        aria-label="Quant research projects"
+        data-paged-list
+        data-page-size={PAGE_SIZE}
+      >
+        {
+          paginate(quantProjects).map(({ item: p, page }) => {
+            const m = formatProjectMetric(p);
+            const date = p.data.date
+              ? new Date(p.data.date).toLocaleDateString('en-US', {
+                  month: 'short',
+                  year: 'numeric',
+                })
+              : '';
+            const dateIso = p.data.date
+              ? new Date(p.data.date).toISOString().slice(0, 10)
+              : '';
+            const topic = projectTopic(p);
+            const assetType = projectType(p);
+            const isOss = p.data.status === 'open-source';
+            const si = statusInfo(p.data.status);
+            return (
+              <li
+                class="proof-list__row"
+                data-page-index={page}
+                data-topic={topic ?? 'oss'}
+                data-oss={isOss ? 'true' : 'false'}
+                data-assettype={assetType ?? 'writeup'}
+              >
+                <div class="proof-list__pills" aria-label="Project metadata">
+                  {si && <span class:list={['pill', `pill--${si.tone}`]}>{si.label}</span>}
+                  {dateIso && <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>}
+                  {dateIso && <span class="pill pill--mute mono">{dateIso}</span>}
+                  {p.data.readMinutes && (
+                    <>
+                      <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>
+                      <span class="pill pill--ink mono">{p.data.readMinutes} min read</span>
+                    </>
+                  )}
+                </div>
+                <a class="proof-list__title" href={path(`/projects/${p.id}`)}>
+                  <span class="proof-list__kind mono">QUANT</span>
+                  <span class="proof-list__name">{p.data.title}</span>
+                  {m && (
+                    <span class="proof-list__metric mono">
+                      <span class="proof-list__metric-val">{m.value}</span>
+                      <span class="proof-list__metric-lbl">{m.label}</span>
+                    </span>
+                  )}
+                  <span class="proof-list__date mono">{date}</span>
+                  <span class="proof-list__arrow mono" aria-hidden="true">→</span>
+                </a>
+                {p.data.summary && (
+                  <p class="proof-list__summary">{p.data.summary}</p>
+                )}
+              </li>
+            );
+          })
+        }
+      </ol>
+      <nav class="proof-pager" aria-label="Quant projects pagination" data-pager hidden></nav>
+
+      {/* AI projects */}
+      <h3 class="proof-list__heading">AI projects — 6</h3>
+      <ol
+        class="proof-list proof-list--paged"
+        aria-label="AI engineering projects"
+        data-paged-list
+        data-page-size={PAGE_SIZE}
+      >
+        {
+          paginate(aiProjects).map(({ item: p, page }) => {
+            const m = formatProjectMetric(p);
+            const date = p.data.date
+              ? new Date(p.data.date).toLocaleDateString('en-US', {
+                  month: 'short',
+                  year: 'numeric',
+                })
+              : '';
+            const dateIso = p.data.date
+              ? new Date(p.data.date).toISOString().slice(0, 10)
+              : '';
+            const topic = projectTopic(p);
+            const assetType = projectType(p);
+            const isOss = p.data.status === 'open-source';
+            const si = statusInfo(p.data.status);
+            return (
+              <li
+                class="proof-list__row"
+                data-page-index={page}
+                data-topic={topic ?? 'oss'}
+                data-oss={isOss ? 'true' : 'false'}
+                data-assettype={assetType ?? 'writeup'}
+              >
+                <div class="proof-list__pills" aria-label="Project metadata">
+                  {si && <span class:list={['pill', `pill--${si.tone}`]}>{si.label}</span>}
+                  {dateIso && <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>}
+                  {dateIso && <span class="pill pill--mute mono">{dateIso}</span>}
+                  {p.data.readMinutes && (
+                    <>
+                      <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>
+                      <span class="pill pill--ink mono">{p.data.readMinutes} min read</span>
+                    </>
+                  )}
+                </div>
+                <a class="proof-list__title" href={path(`/projects/${p.id}`)}>
+                  <span class="proof-list__kind proof-list__kind--ai mono">AI</span>
+                  <span class="proof-list__name">{p.data.title}</span>
+                  {m && (
+                    <span class="proof-list__metric mono">
+                      <span class="proof-list__metric-val">{m.value}</span>
+                      <span class="proof-list__metric-lbl">{m.label}</span>
+                    </span>
+                  )}
+                  <span class="proof-list__date mono">{date}</span>
+                  <span class="proof-list__arrow mono" aria-hidden="true">→</span>
+                </a>
+                {p.data.summary && (
+                  <p class="proof-list__summary">{p.data.summary}</p>
+                )}
+              </li>
+            );
+          })
+        }
+      </ol>
+      <nav class="proof-pager" aria-label="AI projects pagination" data-pager hidden></nav>
+
+      {/* Solutions */}
+      <h3 class="proof-list__heading">Solutions — 10 case studies</h3>
+      <ol
+        class="proof-list proof-list--paged"
+        aria-label="Solution case studies"
+        data-paged-list
+        data-page-size={PAGE_SIZE}
+      >
+        {
+          paginate(solutions).map(({ item: s, page }) => {
+            const dateIso = '';
+            const topic = solutionTopic(s);
+            const assetType = solutionType(s);
+            const isOss = true; // solutions are public writeups
+            return (
+              <li
+                class="proof-list__row"
+                data-page-index={page}
+                data-topic={topic}
+                data-oss={isOss ? 'true' : 'false'}
+                data-assettype={assetType}
+              >
+                <div class="proof-list__pills" aria-label="Solution metadata">
+                  <span class="pill pill--purple">Case Study</span>
+                  {dateIso && <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>}
+                  {dateIso && <span class="pill pill--mute mono">{dateIso}</span>}
+                </div>
+                <a class="proof-list__title" href={path(`/solutions#${s.data.slug}`)}>
+                  <span class="proof-list__kind proof-list__kind--sol mono">{s.data.lane.toUpperCase()}</span>
+                  <span class="proof-list__name">{s.data.title}</span>
+                  <span class="proof-list__metric mono">
+                    <span class="proof-list__metric-val mono">{formatSolutionMetric(s).replace(/\*\*/g, '')}</span>
+                  </span>
+                  <span class="proof-list__arrow mono" aria-hidden="true">→</span>
+                </a>
+                <p class="proof-list__summary">{s.data.problem}</p>
+              </li>
+            );
+          })
+        }
+      </ol>
+      <nav class="proof-pager" aria-label="Solutions pagination" data-pager hidden></nav>
+    </div>
+  </section>
+
+  {/* =========================================================
+      P.5 — Public track record + lectures
+      ========================================================= */}
+  <section
+    class="section section--alt"
+    id="track"
+    data-toc-id="track"
+    data-toc-label="Track record"
+    data-reveal
+  >
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">P.5 · Public track record</p>
+        <h2 class="section__title">Lectures, charts, and feeds.</h2>
+        <p class="section__sub">
+          Two public lectures for <strong>USeP EGE 313</strong>, one public TradingView chart,
+          and three Atom feeds (portfolio updates · project updates · solution updates).
+        </p>
+      </header>
+
       <div class="proof-grid proof-grid--video">
         <VideoEmbed
           src={path('/proof/usep-lecture.mp4')}
@@ -81,99 +641,8 @@ import { path } from '@utils/url';
           mode="gallery"
         />
       </div>
-    </div>
-  </section>
 
-  <section class="section section--alt">
-    <div class="container">
-      <header class="section__head">
-        <p class="section__eyebrow">Code artifacts · 3 new</p>
-        <h2 class="section__title">Things I can <code class="mono">import</code>.</h2>
-        <p class="section__sub">
-          Three new repositories shipped with the v3.5 site. Each is <strong>MIT-licensed</strong>,
-          <strong>offline-runnable</strong>, and <strong>dependency-light</strong>. Each one is a
-          small, auditable artifact that demonstrates the eval-first methodology in code rather than
-          prose.
-        </p>
-      </header>
-
-  <TrustStrip variant="tape" />
-
-      <div class="proof-grid proof-grid--code">
-        <CodeProofCard
-          title="mcp-backtest-server"
-          kind="MCP server"
-          tagline="IP-clean backtest tools over the Model Context Protocol. Three tools, four textbook strategies, zero market data."
-          metric="100% offline · 4 strategies · 0 lines of proprietary data"
-          preview={`$ uv run server.py
-# FastMCP server listening on stdio
-{"tools":["get_ohlcv","run_backtest","compute_metrics"]}`}
-          outputLines={[
-            'smoke · 262 bars returned',
-            'sma_cross sharpe=0.471 cagr=0.079 max_dd=-0.21',
-            'buy_and_hold sharpe=-0.490',
-            'PASS · deterministic from symbol seed',
-          ]}
-          path="~/portfolio_v2/mcp-backtest-server/"
-          href="https://github.com/christianmacion26/portfolio_v2/tree/master/mcp-backtest-server"
-        />
-
-        <CodeProofCard
-          title="qfin-rag-harness"
-          kind="Python package"
-          tagline="Citation-grounded retrieval harness over a curated corpus of 16 canonical q-fin papers. Pure-Python TF-IDF cosine, no LLM call."
-          metric="16 papers · 0 API keys · 0 LLM dependency"
-          preview={`$ python -m qfin_rag "How do I correct factor significance for data mining?"
-
-# Citations for: How do I correct ...
-## Harvey (2016) — And the Cross-Section ...
-*Review of Financial Studies, 2016* (relevance: 0.173)`}
-          outputLines={[
-            'query → 16-paper curated corpus',
-            'top-3 by TF-IDF cosine',
-            'citation-grounded prompt template',
-            'NO network calls',
-          ]}
-          path="~/portfolio_v2/qfin-rag-harness/"
-          href="https://github.com/christianmacion26/portfolio_v2/tree/master/qfin-rag-harness"
-        />
-
-        <CodeProofCard
-          title="numerical-faithfulness-eval"
-          kind="Eval harness"
-          tagline="Verify LLM numerical claims against deterministic fixtures. Catches the most common LLM failure mode — wrong numbers — in <1 second."
-          metric="10 demo claims · 5 pass · 5 fail by design"
-          preview={`$ python -m eval_harness
-[FAIL] btc_2024_sma_cross_20_50 / sharpe: claimed=5.0,
-       truth=0.4707, diff=4.5293 > tol 0.05
-=== summary ===
-  5/10 passed (50.0%)`}
-          outputLines={[
-            'fixtures computed deterministically from seeded backtest',
-            'tolerances per metric (Sharpe atol=0.05, CAGR=0.02)',
-            'per-claim reason + diff vs tolerance',
-            'exit code = number of failed claims',
-          ]}
-          path="~/portfolio_v2/numerical-faithfulness-eval/"
-          href="https://github.com/christianmacion26/portfolio_v2/tree/master/numerical-faithfulness-eval"
-        />
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <header class="section__head">
-        <p class="section__eyebrow">Operator-discretion chart</p>
-        <h2 class="section__title">Same operator. Different book.</h2>
-        <p class="section__sub">
-          The systematic book on <a href={path('/positions')}>/positions</a> runs vol-target time-series
-          momentum on BTC/USDT. This is the discretionary side of the same operator: Elliott Wave on tokenized
-          gold, under a public TradingView handle.
-        </p>
-      </header>
-
-  <TrustStrip variant="tape" />
+      <h3 class="proof-list__heading">Operator-discretion chart</h3>
       <ProofCard
         src={path('/proof/cryptoneeds-christ-chart.jpg')}
         alt="TradingView chart of XAUT/USDT (tokenized gold) on the 1-hour timeframe with Elliott Wave counts. Public chart by @CryptoneedsChrist."
@@ -181,41 +650,111 @@ import { path } from '@utils/url';
         credit="@CryptoneedsChrist · public TradingView · Jan 3 2026"
         aspect="16/9"
       />
+
+      <h3 class="proof-list__heading">Atom feeds — 3 streams</h3>
+      <ul class="proof-feeds mono">
+        <li><a href={path('/feed.xml')}>{path('/feed.xml')}</a> · portfolio updates</li>
+        <li><a href={path('/feed-projects.xml')}>{path('/feed-projects.xml')}</a> · project updates</li>
+        <li><a href={path('/feed-solutions.xml')}>{path('/feed-solutions.xml')}</a> · solution updates</li>
+      </ul>
     </div>
   </section>
 
-  <section class="section">
+  {/* =========================================================
+      P.5b — Public track record (externally verifiable accounts)
+      ========================================================= */}
+  <section
+    class="section"
+    id="public-track"
+    data-toc-id="public-track"
+    data-toc-label="Public track record"
+    data-reveal
+  >
     <div class="container">
       <header class="section__head">
-        <p class="section__eyebrow">Flagship certificates</p>
-        <h2 class="section__title">Co-signed by name.</h2>
+        <p class="section__eyebrow">P.5b · External accounts</p>
+        <h2 class="section__title">What I have shipped that is externally verifiable.</h2>
         <p class="section__sub">
-          The strongest single signature: a workshop co-signed by an Ateneo de Davao University
-          Director and a US Embassy American Spaces Specialist. Same credential is featured on
-          <a href={path('/certifications')}>/certifications</a>.
+          Six external accounts and surfaces, each with a handle and a public, dated metric.
+          Hairline-rule rows, no thumbnails. If a row is empty, it means that channel isn't
+          public yet.
         </p>
       </header>
 
-  <TrustStrip variant="tape" />
-      <ProofCard
-        src={path('/proof/ateneo-american-corner-2025-11.jpg')}
-        alt="Co-signed certificate from Ateneo de Davao University and US Embassy American Spaces Philippines for the AI for the Modern Workforce workshop, Nov 8 2025."
-        caption="AI for the Modern Workforce: From Blockchain to the MOVE Language — Ateneo de Davao University + US Embassy American Spaces Philippines, Nov 8 2025. Signed by Lorgina Samson (Director, University Libraries & American Corner) and Kevin Punzalan (American Spaces Philippines Specialist, US Embassy in the Philippines)."
-        credit="Ateneo de Davao + US Embassy · Nov 8 2025"
-        href={path('/certifications')}
-        aspect="3/2"
-      />
+      <div class="ptr">
+        <div class="ptr__row" role="row">
+          <div class="ptr__cell ptr__cell--platform" role="cell">Numerai</div>
+          <div class="ptr__cell ptr__cell--handle mono ptr__cell--empty" role="cell">not public yet</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">correlation / MMC / TC</div>
+          <div class="ptr__cell ptr__cell--link" role="cell">
+            <a href={path('/positions')} class="ptr__link mono">see /positions</a>
+          </div>
+        </div>
+        <div class="ptr__row" role="row">
+          <div class="ptr__cell ptr__cell--platform" role="cell">HuggingFace</div>
+          <div class="ptr__cell ptr__cell--handle mono" role="cell">@christianmacion</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">MCP server artifact</div>
+          <div class="ptr__cell ptr__cell--link" role="cell">
+            <a href={path('/proof/eval-mcp-server')} class="ptr__link mono">/proof/eval-mcp-server</a>
+          </div>
+        </div>
+        <div class="ptr__row" role="row">
+          <div class="ptr__cell ptr__cell--platform" role="cell">GitHub</div>
+          <div class="ptr__cell ptr__cell--handle mono" role="cell">christianmacion26</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">102 certs · 76.5k LOC · 15 OSS projects</div>
+          <div class="ptr__cell ptr__cell--link" role="cell">
+            <a href={profile.contact.github} class="ptr__link mono" rel="noopener noreferrer">github.com/christianmacion26</a>
+          </div>
+        </div>
+        <div class="ptr__row" role="row">
+          <div class="ptr__cell ptr__cell--platform" role="cell">TradingView</div>
+          <div class="ptr__cell ptr__cell--handle mono" role="cell">@CryptoneedsChrist</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">public chart · Elliott Wave</div>
+          <div class="ptr__cell ptr__cell--link" role="cell">
+            <a href="https://www.tradingview.com/u/CryptoneedsChrist/" class="ptr__link mono" rel="noopener noreferrer">tradingview.com/u/CryptoneedsChrist</a>
+          </div>
+        </div>
+        <div class="ptr__row" role="row">
+          <div class="ptr__cell ptr__cell--platform" role="cell">Atom feeds</div>
+          <div class="ptr__cell ptr__cell--handle mono" role="cell">3 streams</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">feed.xml · feed-projects.xml · feed-solutions.xml</div>
+          <div class="ptr__cell ptr__cell--link" role="cell">
+            <a href={path('/feed.xml')} class="ptr__link mono">/feed.xml</a>
+          </div>
+        </div>
+        <div class="ptr__row" role="row">
+          <div class="ptr__cell ptr__cell--platform" role="cell">Medium</div>
+          <div class="ptr__cell ptr__cell--handle mono" role="cell">@christianmacion26</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">public essays</div>
+          <div class="ptr__cell ptr__cell--link" role="cell">
+            <a href="https://medium.com/@christianmacion" class="ptr__link mono" rel="noopener noreferrer">medium.com/@christianmacion</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="section section--tight">
+  {/* =========================================================
+      P.6 — Disclosure + contact
+      ========================================================= */}
+  <section
+    class="section section--tight"
+    id="disclosure"
+    data-toc-id="disclosure"
+    data-toc-label="NDA disclosure"
+    data-reveal
+  >
     <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">P.6 · What's not here</p>
+        <h2 class="section__title">NDA-positive disclosure.</h2>
+      </header>
       <p class="proof-neg">
-        <strong>What's not here:</strong> photos of the 19V Capital office. Screenshots of proprietary
-        strategy outputs. Calendar entries with client names. The 19V Capital role is a <strong
-          >closed past contract</strong
-        > (03/2026 – 06/2026), and everything on this page is public-data or self-owned. If the proof
-        you need isn't on this page, email me — if it's public, I'll send it within 24 hours.
+        <strong>What's not here:</strong> photos of NDA-protected offices. Screenshots of
+        proprietary strategy outputs. Calendar entries with client names. The systematic-strategy desk role
+        is a <strong>closed past contract</strong> (03/2026 – 06/2026), and everything on this
+        page is public-data or self-owned. If the proof you need isn't on this page, email me
+        — if it's public, I'll send it within 24 hours.
       </p>
     </div>
   </section>
@@ -243,6 +782,29 @@ import { path } from '@utils/url';
     line-height: 1.05;
     margin-block: var(--sp-4) var(--sp-5);
   }
+  .proof-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .proof-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .proof-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
   .proof-head__motif {
     display: flex;
     justify-content: flex-start;
@@ -254,6 +816,41 @@ import { path } from '@utils/url';
     line-height: var(--lh-loose);
     max-width: 64ch;
   }
+  .proof-head__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-4);
+    margin-block: var(--sp-5) var(--sp-4);
+    padding-block: var(--sp-4);
+    border-top: 1px solid var(--c-rule);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .proof-head__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .proof-head__stat-num {
+    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--c-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .proof-head__stat-lbl {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-ink-3);
+    line-height: 1.3;
+  }
+  @media (max-width: 640px) {
+    .proof-head__stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
+    }
+  }
   .proof-head__sub a {
     color: var(--c-primary);
     text-decoration: underline;
@@ -264,20 +861,161 @@ import { path } from '@utils/url';
     text-decoration-color: var(--c-primary-2-deep);
     color: var(--c-primary-2-deep);
   }
+  .proof-head__ver {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
 
+  /* === Grids === */
   .proof-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: var(--sp-5);
   }
   .proof-grid--video {
-    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
   .proof-grid--code {
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     align-items: stretch;
   }
+  .proof-grid--flagship {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
 
+  /* === P.4 compact list (AQR-Insights / man.com/insights pattern) === */
+  .proof-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--sp-6) 0;
+    border-top: 1px solid var(--c-rule);
+  }
+  .proof-list__heading {
+    font-size: var(--fs-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
+    margin-block: var(--sp-6) var(--sp-3);
+    font-weight: 700;
+  }
+  .proof-list__row {
+    border-bottom: 1px solid var(--c-rule-soft);
+    transition: background var(--transition);
+  }
+  .proof-list__row:hover {
+    background: var(--c-paper);
+  }
+  .proof-list__title {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1.6fr) minmax(0, 1fr) 70px 16px;
+    align-items: baseline;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-2);
+    color: var(--c-ink);
+    text-decoration: none;
+  }
+  .proof-list__title:hover {
+    color: var(--c-primary);
+  }
+  .proof-list__kind {
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2-deep);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .proof-list__kind--ai {
+    color: var(--c-primary-3);
+  }
+  .proof-list__kind--sol {
+    color: var(--c-ink-2);
+  }
+  .proof-list__name {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .proof-list__metric {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .proof-list__metric-val {
+    font-weight: 700;
+    color: var(--c-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .proof-list__metric-lbl {
+    color: var(--c-ink-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .proof-list__date {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-align: right;
+  }
+  .proof-list__arrow {
+    color: var(--c-primary-2-deep);
+    text-align: right;
+    font-weight: 700;
+  }
+  .proof-list__title:hover .proof-list__arrow {
+    color: var(--c-primary);
+  }
+  .proof-list__summary {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0 0 var(--sp-3) calc(64px + var(--sp-3));
+    padding-right: var(--sp-3);
+  }
+
+  @media (max-width: 720px) {
+    .proof-list__title {
+      grid-template-columns: 56px minmax(0, 1fr) 16px;
+      gap: var(--sp-2);
+    }
+    .proof-list__metric,
+    .proof-list__date {
+      display: none;
+    }
+    .proof-list__summary {
+      margin-left: calc(56px + var(--sp-2));
+    }
+    .proof-grid--video {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* === P.5 feeds === */
+  .proof-feeds {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+  }
+  .proof-feeds li {
+    padding: var(--sp-2) 0;
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  .proof-feeds a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-underline-offset: 3px;
+  }
+
+  /* === P.6 disclosure === */
   .proof-neg {
     font-size: var(--fs-sm);
     color: var(--c-ink-2);
@@ -292,9 +1030,414 @@ import { path } from '@utils/url';
     font-weight: 600;
   }
 
+  /* ===========================================================
+   * v5.3 — filter bar (Topic × Type), status pills,
+   * public-track-record table, and per-list pagination.
+   * =========================================================== */
+
+  /* === Filter bar === */
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-block: var(--sp-5) var(--sp-6);
+    padding: var(--sp-4);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule-soft);
+    border-radius: var(--radius);
+  }
+  .filter-bar__row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .filter-bar__label {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    min-width: 48px;
+  }
+  .filter-bar__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.28rem 0.7rem;
+    font-size: var(--fs-xs);
+    font-family: var(--ff-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-2);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      color var(--transition),
+      border-color var(--transition),
+      background var(--transition);
+  }
+  .filter-chip:hover {
+    color: var(--c-primary);
+    border-color: var(--c-ink-3);
+  }
+  .filter-chip.is-active {
+    color: var(--c-primary-2-deep);
+    border-color: var(--c-primary-2-deep);
+    background: var(--c-warn-soft);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .filter-chip.is-active {
+      color: var(--c-amber);
+      border-color: var(--c-amber);
+      background: rgba(212, 160, 23, 0.12);
+    }
+  }
+  :root[data-theme='dark'] .filter-chip.is-active {
+    color: var(--c-amber);
+    border-color: var(--c-amber);
+    background: rgba(212, 160, 23, 0.12);
+  }
+
+  /* === Filter visibility (CSS attribute selectors) ===
+   * The host <section> carries data-active-topic / data-active-type.
+   * Rows that don't match the active filter are hidden. */
+  [data-filter-host][data-active-topic='quant'] .proof-list__row:not([data-topic='quant']) {
+    display: none;
+  }
+  [data-filter-host][data-active-topic='ai'] .proof-list__row:not([data-topic='ai']) {
+    display: none;
+  }
+  [data-filter-host][data-active-topic='oss'] .proof-list__row[data-oss='false'] {
+    display: none;
+  }
+  [data-filter-host][data-active-type='code'] .proof-list__row:not([data-assettype='code']) {
+    display: none;
+  }
+  [data-filter-host][data-active-type='writeup'] .proof-list__row:not([data-assettype='writeup']) {
+    display: none;
+  }
+  [data-filter-host][data-active-type='talk'] .proof-list__row:not([data-assettype='talk']) {
+    display: none;
+  }
+  [data-filter-host][data-active-type='live-demo'] .proof-list__row:not([data-assettype='live-demo']) {
+    display: none;
+  }
+
+  /* === Proof-list row pill strip === */
+  .proof-list__pills {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    padding: var(--sp-2) var(--sp-2) 0;
+    flex-wrap: wrap;
+  }
+  .proof-list__pills-sep {
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+    line-height: 1;
+  }
+
+  /* === Per-list pagination === */
+  .proof-pager {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.35rem;
+    padding-block: var(--sp-3);
+    margin-bottom: var(--sp-5);
+  }
+  .proof-pager[hidden] {
+    display: none;
+  }
+  .proof-pager__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.55rem;
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      color var(--transition),
+      border-color var(--transition),
+      background var(--transition);
+  }
+  .proof-pager__chip:hover {
+    color: var(--c-primary);
+    border-color: var(--c-ink-3);
+  }
+  .proof-pager__chip.is-active {
+    color: var(--c-primary-2-deep);
+    border-color: var(--c-primary-2-deep);
+    background: var(--c-warn-soft);
+    font-weight: 700;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .proof-pager__chip.is-active {
+      color: var(--c-amber);
+      border-color: var(--c-amber);
+      background: rgba(212, 160, 23, 0.12);
+    }
+  }
+  :root[data-theme='dark'] .proof-pager__chip.is-active {
+    color: var(--c-amber);
+    border-color: var(--c-amber);
+    background: rgba(212, 160, 23, 0.12);
+  }
+  .proof-pager__chip[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* === Public Track Record table === */
+  .ptr {
+    border-top: 1px solid var(--c-rule);
+  }
+  .ptr__row {
+    display: grid;
+    grid-template-columns: 140px 1.4fr 1.6fr 1.4fr;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-2);
+    border-bottom: 1px solid var(--c-rule-soft);
+    align-items: baseline;
+    transition: background var(--transition);
+  }
+  .ptr__row:hover {
+    background: var(--c-bg-2);
+  }
+  .ptr__cell--platform {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-primary);
+  }
+  .ptr__cell--handle {
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2-deep);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ptr__cell--empty {
+    color: var(--c-ink-3);
+    font-style: italic;
+    font-size: var(--fs-xs);
+  }
+  .ptr__cell--metric {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ptr__cell--link {
+    font-size: var(--fs-xs);
+    text-align: right;
+  }
+  .ptr__link {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--c-rule-strong);
+    text-underline-offset: 3px;
+  }
+  .ptr__link:hover {
+    color: var(--c-primary-2-deep);
+    text-decoration-color: var(--c-primary-2-deep);
+  }
+
+  /* === Responsive overrides === */
   @media (max-width: 720px) {
-    .proof-grid--video {
+    .filter-bar__row {
+      gap: var(--sp-2);
+    }
+    .filter-bar__label {
+      min-width: 100%;
+    }
+    .ptr__row {
       grid-template-columns: 1fr;
+      gap: var(--sp-1);
+      padding: var(--sp-3) 0;
+    }
+    .ptr__cell--platform {
+      font-size: var(--fs-base);
+    }
+    .ptr__cell--link {
+      text-align: left;
     }
   }
 </style>
+
+<script>
+  /**
+   * /proof client-side: Topic × Type filter chips and per-list pagination.
+   * No URL routing on the page; the filter persists via ?topic= and ?type=.
+   */
+  (() => {
+    const host = document.querySelector<HTMLElement>('[data-filter-host]');
+    if (!host) return;
+
+    // === Filter chips ===
+    const params = new URLSearchParams(window.location.search);
+    const validTopic = new Set(['all', 'quant', 'ai', 'oss']);
+    const validType = new Set(['all', 'code', 'writeup', 'talk', 'live-demo']);
+    const initialTopic = validTopic.has(params.get('topic') ?? '')
+      ? (params.get('topic') as string)
+      : 'all';
+    const initialType = validType.has(params.get('type') ?? '')
+      ? (params.get('type') as string)
+      : 'all';
+
+    const applyFilter = (axis: 'topic' | 'type', value: string) => {
+      host.dataset[axis === 'topic' ? 'activeTopic' : 'activeType'] = value;
+      // Update chip state.
+      const axisHost = host.querySelector<HTMLElement>(
+        `[data-filter-axis="${axis}"]`,
+      );
+      axisHost?.querySelectorAll<HTMLButtonElement>('.filter-chip').forEach((c) => {
+        const active = c.dataset.filterValue === value;
+        c.classList.toggle('is-active', active);
+        c.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      // Update URL.
+      const next = new URLSearchParams(window.location.search);
+      if (value === 'all') next.delete(axis);
+      else next.set(axis, value);
+      const qs = next.toString();
+      const url = window.location.pathname + (qs ? `?${qs}` : '') + window.location.hash;
+      window.history.replaceState(null, '', url);
+    };
+
+    host.querySelectorAll<HTMLElement>('.filter-bar__chips').forEach((group) => {
+      const axis = group.dataset.filterAxis as 'topic' | 'type' | undefined;
+      if (!axis) return;
+      group.querySelectorAll<HTMLButtonElement>('.filter-chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const v = chip.dataset.filterValue ?? 'all';
+          applyFilter(axis, v);
+          // After filter, re-paginate so the chips reflect the visible count.
+          rehydratePagers();
+        });
+      });
+    });
+
+    // Apply initial filter (from URL query).
+    applyFilter('topic', initialTopic);
+    applyFilter('type', initialType);
+
+    // === Per-list pagination ===
+    type Pager = { list: HTMLElement; pager: HTMLElement; pageSize: number; current: number };
+    const pagers: Pager[] = [];
+    document.querySelectorAll<HTMLElement>('[data-paged-list]').forEach((list) => {
+      const pager = list.parentElement?.querySelector<HTMLElement>('[data-pager]');
+      if (!pager) return;
+      const pageSize = Number(list.dataset.pageSize ?? 6);
+      const rows = Array.from(list.querySelectorAll<HTMLElement>('.proof-list__row'));
+      const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+      // If only one page, keep pager hidden.
+      if (totalPages <= 1) {
+        pager.hidden = true;
+        return;
+      }
+      const pg: Pager = { list, pager, pageSize, current: 1 };
+      pagers.push(pg);
+      renderPager(pg, totalPages);
+    });
+
+    function renderPager(pg: Pager, totalPages: number) {
+      pg.pager.innerHTML = '';
+      const make = (label: string, page: number | null, opts: { active?: boolean; disabled?: boolean } = {}) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'proof-pager__chip mono' + (opts.active ? ' is-active' : '');
+        b.textContent = label;
+        if (opts.disabled || page === null) {
+          b.setAttribute('disabled', 'true');
+          b.setAttribute('aria-disabled', 'true');
+        } else {
+          b.addEventListener('click', () => {
+            pg.current = page;
+            showPage(pg);
+            renderPager(pg, totalPages);
+          });
+        }
+        if (opts.active) b.setAttribute('aria-current', 'page');
+        return b;
+      };
+      for (let i = 1; i <= totalPages; i++) {
+        pg.pager.appendChild(make(String(i), i, { active: i === pg.current }));
+      }
+      const next = pg.current < totalPages ? pg.current + 1 : null;
+      pg.pager.appendChild(make('›', next, { disabled: next === null }));
+      pg.pager.hidden = false;
+    }
+
+    function showPage(pg: Pager) {
+      const rows = pg.list.querySelectorAll<HTMLElement>('.proof-list__row');
+      rows.forEach((row) => {
+        const idx = Number(row.dataset.pageIndex ?? 1);
+        row.style.display = idx === pg.current ? '' : 'none';
+      });
+    }
+
+    function rehydratePagers() {
+      // After a filter change, the rows hidden by CSS are still in the DOM.
+      // Re-compute which rows are visible (in DOM order) and assign fresh
+      // page indices to those, then re-render the pagers.
+      pagers.forEach((pg) => {
+        const allRows = Array.from(pg.list.querySelectorAll<HTMLElement>('.proof-list__row'));
+        const visible = allRows.filter((r) => {
+          // CSS rule may hide; we re-evaluate by reading computed display.
+          return window.getComputedStyle(r).display !== 'none';
+        });
+        const totalPages = Math.max(1, Math.ceil(visible.length / pg.pageSize));
+        if (totalPages <= 1) {
+          pg.pager.hidden = true;
+          // Show all visible rows on the only page.
+          allRows.forEach((r) => {
+            r.style.display = window.getComputedStyle(r).display === 'none' && r.dataset._filterHidden
+              ? 'none'
+              : '';
+          });
+          return;
+        }
+        pg.pager.hidden = false;
+        // Assign temporary data-page-index to visible rows for the showPage step.
+        visible.forEach((r, i) => {
+          let page: number;
+          if (i < pg.pageSize) page = 1;
+          else page = 2 + Math.floor((i - pg.pageSize) / pg.pageSize);
+          r.dataset.pageIndex = String(page);
+        });
+        // Reset to page 1 on filter change.
+        pg.current = 1;
+        showPage(pg);
+        renderPager(pg, totalPages);
+      });
+    }
+
+    // Initial show: respect pre-baked data-page-index.
+    pagers.forEach((pg) => {
+      // Mark rows that the CSS filter has hidden, so rehydrate knows not to
+      // un-hide them.
+      const all = pg.list.querySelectorAll<HTMLElement>('.proof-list__row');
+      all.forEach((r) => {
+        if (window.getComputedStyle(r).display === 'none') {
+          r.dataset._filterHidden = '1';
+        }
+      });
+      showPage(pg);
+    });
+  })();
+</script>

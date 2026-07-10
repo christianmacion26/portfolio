@@ -1,0 +1,249 @@
+---
+/**
+ * glossary.astro — v6.0 · canonical term list (quant + AI).
+ *
+ * Alphabetical, 2-column on desktop, 1-column on mobile.
+ * Each term has a stable anchor id so other pages can deep-link.
+ * Definitions are short and written for the HR/recruiter reader
+ * who doesn't yet know the field. Full long-form definitions live
+ * on /glossary/[id] via src/pages/glossary/[slug].astro.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { path } from '@utils/url';
+import { terms } from '../data/glossary-terms';
+
+const grouped = {
+  Quant: terms.filter((t) => t.category === 'Quant'),
+  AI: terms.filter((t) => t.category === 'AI'),
+};
+
+// Group by category for layout
+const quantTerms = terms.filter((t) => t.category === 'Quant').sort((a, b) => a.term.localeCompare(b.term));
+const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.localeCompare(b.term));
+---
+
+<BaseLayout
+  title="Glossary · Quant & AI terms"
+  description="A short, alphabetised glossary of the quant and AI terms used across this site. Written for hiring managers and recruiters who don't yet know the field."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Glossary", href: "/glossary" }]}
+>
+  <section class="hero">
+    <div class="container container--narrow">
+      <p class="eyebrow mono">
+        <span>GLOSSARY</span>
+        <span aria-hidden="true">·</span>
+        <span>QUANT & AI</span>
+        <span aria-hidden="true">·</span>
+        <span>FOR NON-SPECIALISTS</span>
+      </p>
+      <h1 class="hero__title">A short dictionary of the terms on this site.</h1>
+      <p class="hero__voice voice-line">
+        Twenty-five terms, each short enough to read in thirty seconds, each deep-linkable from /methodology.
+      </p>
+      <p class="hero__sub">
+        Twenty-five canonical definitions. Each one is short enough to read in thirty seconds and
+        stable enough to deep-link to from the methodology, proof, or solutions pages.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <h2 class="section__title" id="quant">Quant terms · {quantTerms.length}</h2>
+        <p class="section__sub">
+          Statistical-evaluation vocabulary. Where possible, terms link to the methodology page
+          where they are applied in practice.
+        </p>
+      </header>
+
+      <dl class="glossary">
+        {
+          quantTerms.map((t) => (
+            <div class="glossary__item" id={t.id}>
+              <dt class="glossary__term">
+                <a href={path(`/glossary/${t.id}`)} class="glossary__anchor" aria-label={`Read the full definition of ${t.term}`}>
+                  →
+                </a>
+                <a href={path(`/glossary/${t.id}`)} class="glossary__term-link">{t.term}</a>
+              </dt>
+              <dd class="glossary__def">{t.short}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <h2 class="section__title" id="ai">AI terms · {aiTerms.length}</h2>
+        <p class="section__sub">
+          Multi-agent, retrieval, and evaluation vocabulary used across the AI lane of this site.
+        </p>
+      </header>
+
+      <dl class="glossary">
+        {
+          aiTerms.map((t) => (
+            <div class="glossary__item" id={t.id}>
+              <dt class="glossary__term">
+                <a href={path(`/glossary/${t.id}`)} class="glossary__anchor" aria-label={`Read the full definition of ${t.term}`}>
+                  →
+                </a>
+                <a href={path(`/glossary/${t.id}`)} class="glossary__term-link">{t.term}</a>
+              </dt>
+              <dd class="glossary__def">{t.short}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CTABanner
+    title="See these terms in action."
+    sub="Each definition above links to a method or artifact on this site where it is applied. The methodology page maps every gate (G1–G31) to the term it implements."
+    primaryLabel="Read methodology"
+    secondaryLabel="Browse solutions"
+    secondaryHref={path('/solutions')}
+  />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+  }
+  .hero__title {
+    font-size: clamp(1.75rem, 4.5vw, var(--fs-3xl));
+    line-height: 1.15;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .hero__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+  .hero__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .hero__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .hero__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
+
+  .section {
+    padding-block: var(--sp-9);
+  }
+  .section--alt {
+    background: var(--c-bg-2);
+  }
+  .section__head {
+    margin-bottom: var(--sp-6);
+  }
+  .section__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .section__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+
+  .glossary {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5) var(--sp-7);
+    counter-reset: term;
+  }
+  @media (max-width: 720px) {
+    .glossary {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+  }
+  .glossary__item {
+    padding-top: var(--sp-3);
+    border-top: var(--border);
+  }
+  .glossary__term {
+    font-weight: 700;
+    color: var(--c-ink);
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-base);
+    letter-spacing: -0.005em;
+    scroll-margin-top: var(--nav-h);
+  }
+  .glossary__term-link {
+    color: var(--c-ink);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--c-rule);
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .glossary__term-link:hover {
+    color: var(--c-primary-2-deep);
+    border-bottom-color: var(--c-amber);
+  }
+  .glossary__anchor {
+    color: var(--c-ink-3);
+    text-decoration: none;
+    margin-right: var(--sp-2);
+    font-family: var(--ff-mono);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .glossary__item:hover .glossary__anchor,
+  .glossary__anchor:focus-visible {
+    opacity: 1;
+  }
+  .glossary__def {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+</style>

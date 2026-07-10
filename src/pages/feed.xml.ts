@@ -17,7 +17,11 @@ import { buildItems, renderFeed } from './_feed-shared';
 export const prerender = true;
 
 export const GET: APIRoute = async ({ site }) => {
-  const baseUrl = site?.toString().replace(/\/$/, '') ?? 'https://christianmacion26.github.io';
+  // Combine Astro `site` (origin) with `import.meta.env.BASE_URL` (configured base, "/portfolio")
+  // so feed entry URLs match the canonical sitemap URLs which include the base path.
+  const siteStr = site?.toString().replace(/\/$/, '') ?? 'https://christianmacion26.github.io';
+  const basePath = (import.meta.env.BASE_URL || '').replace(/\/$/, '');
+  const baseUrl = `${siteStr}${basePath}`;
   const now = new Date().toISOString();
   const items = await buildItems(baseUrl, now);
 

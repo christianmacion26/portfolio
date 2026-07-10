@@ -18,12 +18,23 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const { title, summary_long, stack, metrics, sourceLink, tags, status, role } = project.data;
+const {
+  title,
+  summary,
+  summary_long,
+  stack,
+  metrics,
+  sourceLink,
+  tags,
+  status,
+  role,
+  hero,
+} = project.data;
 const laneLabel = role === 'ai' ? 'AI Engineer' : 'Quantitative Researcher';
 const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
 ---
 
-<BaseLayout title={title} description={summary_long ?? project.data.summary} type="article">
+<BaseLayout title={title} description={summary_long ?? summary} type="article">
   <article class="proj">
     <header class="proj__head">
       <div class="container container-narrow">
@@ -32,8 +43,23 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
           <span class="proj__crumb-sep">·</span>
           <span class:list={['pill', laneClass]}>{laneLabel}</span>
         </p>
+
+        {
+          hero && (
+            <figure class="proj__hero-figure">
+              <img
+                src={path(hero.src)}
+                alt={hero.alt}
+                class={`proj__hero-img proj__hero-img--${hero.fit}`}
+                loading="eager"
+                decoding="async"
+              />
+            </figure>
+          )
+        }
+
         <h1 class="proj__title">{title}</h1>
-        {summary_long && <p class="proj__sub">{summary_long}</p>}
+        {summary_long && <p class="proj__voice voice-line">{summary_long}</p>}
 
         {
           metrics.length > 0 && (
@@ -131,10 +157,54 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
   .proj__crumb-sep {
     color: var(--c-ink-3);
   }
+  .proj__hero-figure {
+    margin: 0 auto var(--sp-5);
+    max-width: 880px;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--c-bg-2);
+    box-shadow: 0 6px 24px -10px rgba(15, 23, 42, 0.35);
+  }
+  .proj__hero-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .proj__hero-img--cover {
+    object-fit: cover;
+  }
+  .proj__hero-img--contain {
+    object-fit: contain;
+  }
   .proj__title {
     font-size: clamp(2rem, 4vw, 3rem);
     letter-spacing: -0.02em;
     margin-bottom: var(--sp-3);
+  }
+  .proj__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .proj__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .proj__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
   .proj__sub {
     font-size: var(--fs-lg);

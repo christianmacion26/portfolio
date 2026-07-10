@@ -1,0 +1,157 @@
+---
+/**
+ * SectionTOC.astro — v6.0 · sticky in-page section navigation.
+ *
+ * Renders a horizontal pill bar of anchors to all <section data-toc-id="...">
+ * blocks on the same page. Sticky below the nav (top: var(--nav-h)).
+ * Collapses to <details> on small viewports.
+ *
+ * Usage:
+ *   <SectionTOC />                          // auto-discover all [data-toc-id]
+ *   <SectionTOC items={[{id, label}]} />    // explicit items
+ *
+ * Active state is driven by the active-nav.ts IntersectionObserver
+ * via CSS class .toc__link--active on a[data-toc-href="#id"] when the
+ * corresponding section is in the leading 25% viewport slice.
+ */
+interface TocItem {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  items?: TocItem[];
+  label?: string;
+}
+
+const { items: explicitItems, label = 'On this page' } = Astro.props;
+
+// Auto-discover if not provided: query the DOM at build time.
+// Astro is server-side, so we use a small JS hook on the client
+// to populate <SectionTOC items /> from [data-toc-id] sections.
+const items = explicitItems ?? [];
+---
+
+<aside class="toc" aria-label={label}>
+  <div class="container">
+    <nav class="toc__inner">
+      <span class="toc__label mono">{label}</span>
+      <ul class="toc__list">
+        {
+          items.length > 0 ? (
+            items.map((it) => (
+              <li>
+                <a class="toc__link" href={`#${it.id}`} data-toc-href={`#${it.id}`}>
+                  {it.label}
+                </a>
+              </li>
+            ))
+          ) : (
+            <li class="toc__auto" data-toc-auto>
+              {/* JS will populate this from [data-toc-id] on the page */}
+              <span class="toc__skeleton mono">Loading sections…</span>
+            </li>
+          )
+        }
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+<script>
+  // Auto-populate from [data-toc-id] sections if no items were passed.
+  document.querySelectorAll<HTMLElement>('[data-toc-auto]').forEach((host) => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-toc-id]'));
+    if (!sections.length) return;
+    const ul = host.closest('.toc__list') as HTMLElement | null;
+    if (!ul) return;
+    ul.innerHTML = sections
+      .map((s) => {
+        const id = s.dataset.tocId!;
+        const label = s.dataset.tocLabel ?? s.querySelector('h2,h3')?.textContent ?? id;
+        return `<li><a class="toc__link" href="#${id}" data-toc-href="#${id}">${label}</a></li>`;
+      })
+      .join('');
+  });
+</script>
+
+<style>
+  .toc {
+    position: sticky;
+    top: var(--nav-h);
+    z-index: 30;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: var(--border);
+  }
+  :root[data-theme='dark'] .toc {
+    background: rgba(13, 17, 23, 0.94);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .toc {
+      background: rgba(13, 17, 23, 0.94);
+    }
+  }
+  .toc__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    min-height: var(--section-toc-h);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .toc__inner::-webkit-scrollbar {
+    display: none;
+  }
+  .toc__label {
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    flex-shrink: 0;
+  }
+  .toc__list {
+    display: flex;
+    gap: var(--sp-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: nowrap;
+  }
+  .toc__link {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      color var(--transition),
+      background var(--transition);
+  }
+  .toc__link:hover {
+    color: var(--c-primary);
+    background: var(--c-bg-2);
+  }
+  .toc__link--active {
+    color: var(--c-primary-2-deep);
+    background: var(--c-warn-soft);
+    font-weight: 600;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .toc__link--active {
+      color: var(--c-amber);
+      background: var(--c-warn-soft);
+    }
+  }
+  :root[data-theme='dark'] .toc__link--active {
+    color: var(--c-amber);
+    background: var(--c-warn-soft);
+  }
+  .toc__skeleton {
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+  }
+</style>

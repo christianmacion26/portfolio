@@ -94,6 +94,7 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
 
     <span class="trust-pill trust-pill--static" title={`All claims re-verified on ${lastVerified}`}>
       <svg class="trust-pill__icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9"/><path d="m11.5 1.5 1 2.5-2.5.5M4.5 14.5l-1-2.5 2.5-.5"/></svg>
+      <span class="trust-pill__dot" aria-hidden="true"></span>
       <span class="trust-pill__label">verified</span>
       <span class="trust-pill__detail mono">{lastVerified}</span>
     </span>
@@ -169,6 +170,27 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
   }
   .trust-pill__detail {
     color: var(--c-ink-2);
+  }
+
+  /* === Phase D-9 · verified-dot pulse ===
+     Subtle 2.4s breathing on the green dot before "verified" — the lone
+     "live" affordance in the TrustStrip. Disables under reduced-motion. */
+  .trust-pill__dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-pass);
+    box-shadow: 0 0 0 0 var(--c-pass-soft);
+    animation: trust-pulse 2.4s var(--ease-snappy) infinite;
+    flex-shrink: 0;
+  }
+  @keyframes trust-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--c-pass-soft); }
+    50%      { opacity: 0.85; box-shadow: 0 0 0 3px var(--c-pass-soft); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .trust-pill__dot { animation: none; }
   }
 
   @media (max-width: 720px) {

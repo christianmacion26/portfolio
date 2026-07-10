@@ -11,14 +11,15 @@ import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 
-// Last-updated stamp: 2026-07-09 (the page is updated ~monthly)
-const updated = '2026-07-09';
-const updatedHuman = '9 July 2026';
+// Last-updated stamp: 2026-07-10 (the page is updated ~monthly)
+const updated = '2026-07-10';
+const updatedHuman = '10 July 2026';
 ---
 
 <BaseLayout
   title="Now"
   description={`What Christian is shipping this month (${updatedHuman}). Open-to / not-open-to / where / how to reach me.`}
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Now", href: "/now" }]}
 >
   <header class="now-head">
     <div class="container container-narrow">
@@ -26,6 +27,9 @@ const updatedHuman = '9 July 2026';
       <h1 class="now-head__title">
         What I'm doing <span class="hl">right now</span>.
       </h1>
+      <p class="now-head__voice voice-line">
+        Dated. Honest. Updated only when something changes that matters.
+      </p>
       <p class="now-head__sub">
         A dated one-pager. Updated ~monthly, or on regime-event override (job change, paper-trade
         regime flip, new gate added to the stack). Inspired by <a
@@ -103,16 +107,11 @@ const updatedHuman = '9 July 2026';
 
       <h2 class="now-h2">Not open to</h2>
       <ul class="now-list now-list--not">
-        <li>Unpaid "trial tasks" or take-home assignments longer than 4 hours.</li>
-        <li>Roles that require me to relocate from {profile.location.city}.</li>
-        <li>Roles that require access to proprietary data I cannot disclose post-engagement.</li>
+        <li>Unpaid trial tasks or take-homes longer than 4 hours.</li>
         <li>
-          Pure-research roles without a ship-to-prod path — the discipline compounds when the loop
-          closes.
-        </li>
-        <li>
-          Recruiter mass-mail without a JD attached (see <a href={path('/contact')}>/contact</a> for the
-          reply-with-JD protocol).
+          Relocation outside {profile.location.display}, or roles requiring proprietary data I cannot
+          disclose post-engagement. See <a href={path('/for-recruiters')}>/for-recruiters</a> for the
+          full 60-second skim; the reply-with-JD protocol is on <a href={path('/contact')}>/contact</a>.
         </li>
       </ul>
 
@@ -125,6 +124,10 @@ const updatedHuman = '9 July 2026';
         <li>
           <em>The Deflated Sharpe Ratio</em> — Bailey &amp; López de Prado (2014). The paper that gates
           G16 of the eval stack.
+        </li>
+        <li>
+          <em>Evaluating LLM-based Code Generation: A Cross-Family Benchmark</em> — Parashar et al. (2024).
+          Closest peer work to my <a href={path('/glossary/eval-harness')}>eval-harness</a> + MCP server.
         </li>
         <li><em>Hamlet</em> — Shakespeare. Sometimes you have to step away from the screen.</li>
       </ul>
@@ -180,6 +183,29 @@ const updatedHuman = '9 July 2026';
     line-height: 1.05;
     margin-block: var(--sp-4) var(--sp-5);
     max-width: 22ch;
+  }
+  .now-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .now-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .now-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
   .now-head__sub {
     font-size: var(--fs-lg);

@@ -7,7 +7,7 @@
  * Image URLs combine SITE_URL with `path()` from `url.ts` so they pick up
  * the configured `base` (`/portfolio` on GH Pages).
  */
-import { path as basePath, BASE } from './url';
+import { BASE } from './url';
 
 export interface SEO {
   title: string;
@@ -18,11 +18,30 @@ export interface SEO {
 }
 
 const SITE_NAME = 'Christian T. Macion';
-export const SITE_URL = 'https://christianmacion26.github.io';
+// `SITE_URL` is the deployment root (no base path). Default is the canonical
+// GH Pages site; override at build time with PUBLIC_SITE_URL when building the
+// Cloudflare Pages mirror. Astro strips this from client bundles when prefixed
+// with `import.meta.env.`, so we read it via `import.meta.env.PUBLIC_SITE_URL`
+// at build time and fall back to the default.
+export const SITE_URL =
+  (import.meta.env.PUBLIC_SITE_URL as string | undefined) ?? 'https://christianmacion26.github.io';
 
-/** Absolute URL with the configured base path appended. */
+/**
+ * Absolute URL with the configured base path appended.
+ *
+ * v6.0 fix (was BROKEN pre-v6): The previous implementation used
+ * `new URL(path, SITE_URL+'/')` which strips the leading slash from `path`
+ * and resolves relative to the host root, losing the configured `/portfolio`
+ * base. Correct: SITE_URL already includes the base path when BASE is set
+ * (e.g. `/portfolio`), so just concatenate.
+ *
+ * On the Cloudflare Pages mirror (--base=/), BASE is empty and this returns
+ * `https://christianmacion-portfolio.pages.dev/og-image.jpg`.
+ * On GH Pages (default base), BASE='/portfolio' and this returns
+ * `https://christianmacion26.github.io/portfolio/og-image.jpg`.
+ */
 function absUrl(p: string): string {
-  return new URL(basePath(p), `${SITE_URL}${BASE ? BASE : ''}/`).toString();
+  return `${SITE_URL}${BASE}${p}`;
 }
 
 export function buildMeta({ title, description, image, type = 'website', pathname = '/' }: SEO) {
@@ -106,10 +125,36 @@ export function websiteJsonLd() {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${SITE_URL}/projects/?q={search_term_string}`,
+        urlTemplate: `${SITE_URL}${BASE}/search/?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
+  };
+}
+
+/**
+ * BreadcrumbList JSON-LD for a hierarchical navigation chain. Helps Google
+ * render breadcrumb SERPs (improves CTR) and gives AI agents a strict tree
+ * of where each URL sits in the IA.
+ *
+ * Pass an array of {name, href} from root to leaf; hrefs are stored as the
+ * `path()`-aware absolute URL so the audit sees them live at the same place
+ * other JSON-LD fields do.
+ */
+export interface Crumb {
+  name: string;
+  href: string;
+}
+export function breadcrumbJsonLd(crumbs: Crumb[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: `${SITE_URL}${c.href.startsWith('/') ? c.href : `/${c.href}`}`,
+    })),
   };
 }
 

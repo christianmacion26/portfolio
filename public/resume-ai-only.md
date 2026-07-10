@@ -1,0 +1,169 @@
+# CHRISTIAN MACION
+
+**AI / Agent Engineer — LLM Application Engineer**
+
+christianmacion26@gmail.com · +63-991-616-2630 · Digos City, Davao del Sur, Philippines (UTC+8) · LinkedIn
+
+## SUMMARY
+
+I build production multi-agent LLM systems that turn multi-day expert work into reliable, cost-aware automation — and keep them trustworthy with evaluation harnesses, model-routing cost discipline, and honest validation. I designed one reusable architecture from the ground up (no framework) and shipped it across four systems (quant research, venture incubation, content, knowledge base); I authored the curriculum that teaches others to optimize their own.
+
+In the most intensive engagement, I operated an 11-agent orchestrator-worker research platform with contracted hand-offs, separation-of-duties between generation and validation agents, a 31-gate statistical evaluation harness implemented scipy-free in numpy, a tiered model-routing layer (Opus / Sonnet / Haiku / Fable) with per-dispatch token budgeting, structured-output contracts gated by a mechanical validator, persistent agent memory with provenance governance, and ~76,500 LOC of light-dependency Python supporting it — plus a telemetry dashboard reading LLM session logs and an offline notebook server.
+
+Specialist in the scarce 2026 skills: eval design, agent reliability, and LLM cost modeling. Strong command of multi-agent orchestration (orchestrator-worker / supervisor-worker), tool use / function calling, MCP, Claude Agent SDK / Claude Code, RAG with measured retrieval quality, context engineering, prompt caching, observability, and structured-output validation. Comfortable across Python (numpy, pandas, pyarrow), SQL, AWS S3, Docker, and PDF/PPTX/DOCX generation. I build with large language models; I do not train them.
+
+Before the AI work, a self-directed quant-trading practice (crypto and futures) that gave me the adversarial-validation discipline underpinning every eval gate I write. Available 30 hrs/wk for an AI / agent engineer role.
+
+## Core Skills
+
+- Multi-Agent Orchestration (orchestrator-worker / supervisor-worker)
+
+- LLM Evaluation Harness Design (statistical-gate validation)
+
+- Model Routing & Token-Cost Optimization
+
+- Context Engineering
+
+- Structured-Output Contracts & Validation (must exit 0)
+
+- Tool Use / Function Calling
+
+- Hand-off Contracts & Context Isolation
+
+- Model Context Protocol (MCP)
+
+- Claude Agent SDK / Claude Code
+
+- LLM-as-Judge Pipelines
+
+- Adversarial Verification & Refutation
+
+- Regression / Holdout Discipline
+
+- Persistent Agent Memory & Provenance Governance
+
+- Prompt Caching
+
+- RAG / Chunking / Source-Grounded Generation
+
+- Retrieval Scorecards (recall@K, MRR@K)
+
+- Observability & Telemetry Dashboards
+
+- Python (numpy, pandas, pyarrow, boto3)
+
+- SQL
+
+- AWS S3 Data Lakes
+
+- Docker (working)
+
+- JavaScript
+
+- PDF / PPTX / DOCX Generation
+
+- Headless-Chrome Rendering
+
+- AI-Assisted Research & Paper Summarization
+
+- Statistical & Mathematical Modeling (foundational)
+
+- AI Tools (ChatGPT, Gemini, Claude)
+
+- Research Documentation & Communication
+
+## EDUCATION
+
+## Technical Tools
+
+- Python (numpy / pandas / pyarrow / boto3)
+
+- JavaScript
+
+- SQL
+
+- AWS S3
+
+- Docker (working)
+
+- Google Colab / Jupyter
+
+- Git & GitHub
+
+- Notion
+
+- ChatGPT / Claude / Gemini APIs
+
+- Claude Agent SDK / MCP
+
+- Headless-Chrome Rendering
+
+- Microsoft Excel / Google Sheets
+
+## RELEVANT EXPERIENCE
+
+## ACADEMIC & PERSONAL PROJECTS
+
+- **Multi-Agent AI Architecture (Field Guide)** — Curriculum authored from first principles (no framework) covering orchestrator-worker topologies, eval-harness design, model-routing policy, structured-output contracts, persistent agent memory, and cost discipline. Adopted as the teaching reference for a research-desk engagement.
+
+- **AI-Slop Evaluation Gate** — 13-metric literature-grounded evaluator for AI-generated content; deployable Streamlit app, stdlib scoring core. Drove a real draft from HEAVY (index 81) to CLEAN (index 3).
+
+- **RAG Retrieval Scorecard (rag-recall)** — Measured RAG with a retrieval scorecard: recall@3 = 0.886, MRR@3 = 0.805. Supports recall@K / MRR@K evaluation across chunking strategies and vector-store choices.
+
+- **Tool-Calling Agent with Fault Injection** — ReAct tool-calling agent with OTel traces: 100% tool/arg correctness; recovered 6/6 injected faults.
+
+- **LLM-as-Judge Validated vs Humans** — Judge harness validated vs human raters: Cohen's κ = 0.58, 95% bootstrap CI, position-bias measured.
+
+## CERTIFICATIONS
+
+- Introduction to AI Agents — DataCamp
+
+- AI Fundamentals — DataCamp
+
+- Artificial Intelligence Fundamentals — IBM
+
+- AI Fundamentals with IBM SkillsBuild — Cisco
+
+- Introduction to AI — Google
+
+- AI for the Modern Workforce — Ateneo de Davao University
+
+- AI for Business Professionals — HP LIFE
+
+- Software Development and Design Thinking — DICT Philippines
+
+- Introduction to IT Project Management — University of the Philippines
+
+- Data Literacy — DataCamp
+
+- Certified Technical Analyst Program — Society of Technical Analysts of the Philippines (Tier-1)
+
+- Financial Trading in Python — DataCamp
+
+- Math for Finance Professionals — DataCamp
+
+- Excel for Financial Planning and Analysis (FP&A) — LinkedIn
+
+- Foundations of Growth Equity — Goldman Sachs
+
+- JPMorgan Chase Investment Banking Job Simulation — Forage
+
+- Getting Started with Python for Finance — LinkedIn
+
+- Python Essentials 1 — Cisco Networking Academy
+
+- SQL for Finance Professionals — LinkedIn
+
+- Understanding Data Science — DataCamp
+
+- Galactic Problem Solver — NASA Space Apps Challenge (Zurich, CH) — Oct 2025
+
+- BIDA META AICCELERATE 2025 (5-day intensive) — Meta & Bayan Academy — Dec 2025
+
+- UP Data Science Society — Alternative Classroom Learning Experience 2026 — Feb 2026
+
+- LimitlessBiz: AIM ASEAN Training Programme — Limitless Lab — Mar 2026
+
+- Guest Speaker — USeP CBA Annual Business Expo 2026 — Feb 2026
+
+- Sui Builders Program Davao — Sui Foundation — Apr 2026

@@ -2,7 +2,9 @@
 /**
  * certifications.astro — v2: curated certs + math/quant aesthetic.
  *
- * Hero equation: cert density over time → 102 certs / 11 months.
+ * Hero equation: cert density over time → {{claimedTotal}} certs / {{ageMonths}} months.
+ * Both inputs read from `profile.certCount` and `profile.ageMonths` so the
+ * rendered equation tracks profile updates without manual sync.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
@@ -10,6 +12,12 @@ import Stat from '@components/Stat.astro';
 import ProofCard from '@components/ProofCard.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
+import { profile } from '@utils/profile';
+
+// Read the authoritative "claimed total" from profile (single source of truth).
+// The on-disk curated set is a subset; this is the headline number used across
+// the site (humans.md, home description, JSON-LD awards).
+const claimedTotal = Number(profile.stats.certCount);
 
 const groups = (await getCollection('certGroup')).sort((a, b) => a.data.order - b.data.order);
 
@@ -26,16 +34,20 @@ const tier1Count = groups.reduce(
 
 <BaseLayout
   title="Certifications"
-  description={`Curated ${totalCount}+ of 102 professional certifications, grouped by domain and Tier-1 issuer.`}
+  description={`Curated ${totalCount}+ of ${claimedTotal} professional certifications, grouped by domain and Tier-1 issuer.`}
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Certifications", href: "/certifications" }]}
 >
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow"><span class="mono">certs/</span> · 102 total, curated below</p>
+      <p class="section__eyebrow"><span class="mono">certs/</span> · {claimedTotal} total, curated below</p>
       <h1 class="page-head__title">
-        <span class="mono">{totalCount}+ of 102</span> certifications, four domains.
+        <span class="mono">{totalCount}+ of {claimedTotal}</span> certifications, four domains.
       </h1>
+      <p class="page-head__voice voice-line">
+        Every cert links to its issuer's public registry — or it doesn't ship on this page.
+      </p>
       <p class="page-head__sub">
-        102 professional certifications across AI, finance, math/statistics, and event flagships —
+        {claimedTotal} professional certifications across AI, finance, math/statistics, and event flagships —
         collected in 11 months (Nov 2022 → May 2026). Curated below by domain; Tier-1 issuers
         flagged.
       </p>
@@ -43,21 +55,20 @@ const tier1Count = groups.reduce(
       <div class="head-eq">
         <Equation
           block
-          latex={`\\text{cert\\_density} = \\frac{c(t)}{t} = \\frac{102 \\text{ certs}}{11 \\text{ months}} \\approx 9.3 \\text{ certs/month}`}
+          latex={`\\text{cert\\_density} = \\frac{c(t)}{t} = \\frac{${claimedTotal} \\text{ certs}}{${profile.stats.ageMonths} \\text{ months}} \\approx ${(claimedTotal / Number(profile.stats.ageMonths)).toFixed(1)} \\text{ certs/month}`}
           size="md"
         />
       </div>
 
       <div class="head-stats">
-        <Stat value={String(totalCount)} label="curated" sub="below" formula="c_{shown}" />
-        <Stat value="102" label="total" sub="all-time" formula="c(t)" trend="up" />
+        <Stat value={String(totalCount)} label="curated" sub="below" />
+        <Stat value={String(claimedTotal)} label="total" sub="all-time" trend="up" />
         <Stat
           value={String(flagshipCount)}
           label="flagships"
           sub="NASA · Meta · IBM · IMC"
-          formula="\sum f"
         />
-        <Stat value={String(tier1Count)} label="tier-1" sub="STA · SEC · BSP" formula="\sum t_1" />
+        <Stat value={String(tier1Count)} label="tier-1" sub="STA · SEC · BSP" />
       </div>
     </div>
   </header>
@@ -107,7 +118,7 @@ const tier1Count = groups.reduce(
     <div class="container container-narrow">
       <p class="footnote">
         <strong>Full list:</strong> the curated {totalCount} above is the highlight reel. The complete
-        list of 102 (issuer + date + verifiable credential ID where applicable) lives in the
+        list of {claimedTotal} (issuer + date + verifiable credential ID where applicable) lives in the
         <a href={path('/resume')}> tailored resume package</a>. Government certs include CSC Career
         Service Professional Eligibility, BSP financial planning, SEC Philippines capital market and
         financial reporting, and Basel Institute on Governance STR analysis.
@@ -128,6 +139,29 @@ const tier1Count = groups.reduce(
     font-size: clamp(2rem, 4vw, 3rem);
     letter-spacing: -0.02em;
     margin-bottom: var(--sp-3);
+  }
+  .page-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .page-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .page-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
   .page-head__sub {
     font-size: var(--fs-lg);

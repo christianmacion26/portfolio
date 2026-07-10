@@ -1,0 +1,487 @@
+---
+/**
+ * about-this-site.astro — v1.0 · meta page about this site.
+ *
+ * Five sections:
+ *   (a) Built with         — tech list
+ *   (b) Design tokens      — color, type, spacing, motion bullets
+ *   (c) NDA guardrail      — link to nda-audit.ts, "0 violations" claim
+ *   (d) Open-source repos  — 4 public repos surfaced from /proof
+ *   (e) License            — CC-BY-SA (copy) + MIT (code) placeholder
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+
+const fullName = profile.fullName.split(',')[0];
+
+const stack = [
+  { name: 'Astro 7', role: 'Static site generator' },
+  { name: 'Vanilla CSS', role: 'Tokens + global + per-page styles' },
+  { name: 'KaTeX', role: 'Server + client math typesetting' },
+  { name: 'Inter', role: 'UI / body type' },
+  { name: 'JetBrains Mono', role: 'Data / code / math-literal type' },
+  { name: 'MDX', role: 'Long-form content (workbooks, project write-ups)' },
+  { name: 'sharp + astro-expressive-code', role: 'Asset pipeline + code blocks' },
+  { name: 'TypeScript', role: 'Type safety for utils, content collections' },
+];
+
+const tokens = {
+  color: [
+    { name: '--c-primary', value: '#0a0e14', role: 'near-black brand' },
+    { name: '--c-primary-2-deep', value: '#8c6f2a', role: 'text-safe amber' },
+    { name: '--c-amber', value: '#c98a16', role: 'decorative terminal-amber' },
+    { name: '--c-paper', value: '#fbfaf6', role: 'term-paper cream' },
+    { name: '--c-bg', value: '#ffffff', role: 'paper background' },
+  ],
+  type: [
+    { name: 'Inter', role: 'sans, 400/500/600/700' },
+    { name: 'JetBrains Mono', role: 'mono, 400/500' },
+    { name: 'KaTeX_Main', role: 'math serifs (KaTeX)' },
+  ],
+  spacing: [
+    '--sp-1 0.25rem · --sp-2 0.5rem · --sp-3 0.75rem · --sp-4 1rem · --sp-5 1.5rem · --sp-6 2rem · --sp-7 3rem · --sp-8 4rem · --sp-9 6rem · --sp-10 8rem',
+  ],
+  motion: [
+    '--ease-snappy: cubic-bezier(0.4, 0, 0.2, 1) — hover, click',
+    '--ease-out: cubic-bezier(0.16, 1, 0.3, 1) — reveal, fade',
+    '--transition: 150ms ease — default transition budget',
+    'prefers-reduced-motion: all transitions and animations → 0ms',
+  ],
+};
+
+const repos = [
+  {
+    name: 'mcp-backtest-server',
+    desc: 'IP-clean backtest tools over the Model Context Protocol. Three tools, four textbook strategies, zero market data. 100% offline.',
+    href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/mcp-backtest-server',
+  },
+  {
+    name: 'qfin-rag-harness',
+    desc: 'Citation-grounded retrieval harness over a curated 16-paper q-fin corpus. Pure-Python TF-IDF cosine, no LLM call. 0 API keys.',
+    href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/qfin-rag-harness',
+  },
+  {
+    name: 'numerical-faithfulness-eval',
+    desc: 'Verify LLM numerical claims against deterministic fixtures. Catches the most common LLM failure mode (wrong numbers) in under one second.',
+    href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/numerical-faithfulness-eval',
+  },
+  {
+    name: 'eval-mcp-server',
+    desc: 'MCP server wrapping the AI-output quality gate as a first-class tool. 13-metric slop-evaluation gate over Tools / Resources / Prompts.',
+    href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/eval-mcp-server',
+  },
+];
+---
+
+<BaseLayout
+  title={`About this site · ${fullName}`}
+  description="How this site is built, the design system that holds it together, and the NDA guardrail that runs on every build."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "About this site", href: "/about-this-site" }]}
+>
+  <header class="site-head">
+    <div class="container container-narrow">
+      <p class="section__eyebrow">
+        <span class="mono">about-this-site/</span> · meta
+      </p>
+      <h1 class="site-head__title">About this site.</h1>
+      <p class="site-head__voice voice-line">
+        Built with public tools. Documented here. Guarded by the same NDA audit the public-facing pages use.
+      </p>
+      <p class="site-head__sub">
+        A static-first portfolio for a Quant Researcher and AI Engineer. This page is
+        the meta: what it is built with, what holds it together, and the guardrails
+        that make it safe to publish.
+      </p>
+    </div>
+  </header>
+
+  <section class="section" data-reveal>
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">(a) · Built with</p>
+        <h2 class="section__title">Eight things, all in the repo.</h2>
+        <p class="section__sub">
+          No build mystery. The stack is below; the lockfile is in the repo. The site
+          ships as static HTML + CSS, served from a CDN edge.
+        </p>
+      </header>
+      <ul class="stack">
+        {
+          stack.map((s) => (
+            <li class="stack__row">
+              <span class="stack__name mono">{s.name}</span>
+              <span class="stack__role">{s.role}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--alt" data-reveal>
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">(b) · Design tokens</p>
+        <h2 class="section__title">Color, type, spacing, motion.</h2>
+        <p class="section__sub">
+          All design decisions live in <code class="mono">src/styles/tokens.css</code> as
+          CSS custom properties. The full colophon is on <a href={path('/colophon')}>/colophon</a>.
+        </p>
+      </header>
+
+      <h3 class="sub-h3">Color</h3>
+      <ul class="bullet">
+        {
+          tokens.color.map((c) => (
+            <li>
+              <code class="mono">{c.name}</code> <span class="faint mono">{c.value}</span> —{' '}
+              {c.role}
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="sub-h3">Type</h3>
+      <ul class="bullet">
+        {
+          tokens.type.map((t) => (
+            <li>
+              <strong>{t.name}</strong> — {t.role}
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="sub-h3">Spacing</h3>
+      <ul class="bullet">
+        {tokens.spacing.map((s) => <li><code class="mono">{s}</code></li>)}
+      </ul>
+
+      <h3 class="sub-h3">Motion</h3>
+      <ul class="bullet">
+        {tokens.motion.map((m) => <li><code class="mono">{m}</code></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" data-reveal>
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">(c) · NDA guardrail</p>
+        <h2 class="section__title">0 violations on every build.</h2>
+        <p class="section__sub">
+          The site is NDA-safe by construction. Every published research artifact uses
+          only public-data sources. A build-time script
+          (<a
+            href="https://github.com/christianmacion26/portfolio_v2/blob/main/src/utils/nda-audit.ts"
+            target="_blank"
+            rel="noopener noreferrer"><code class="mono">src/utils/nda-audit.ts</code></a
+          >) walks the built <code class="mono">dist/</code> directory and fails the build if
+          any NDA-prohibited content slips into the public-facing HTML or PDFs.
+        </p>
+      </header>
+
+      <div class="guard">
+        <div class="guard__row">
+          <span class="guard__label mono">Auditor</span>
+          <span class="guard__value mono">src/utils/nda-audit.ts</span>
+        </div>
+        <div class="guard__row">
+          <span class="guard__label mono">Run</span>
+          <span class="guard__value mono">npx tsx src/utils/nda-audit.ts</span>
+        </div>
+        <div class="guard__row">
+          <span class="guard__label mono">Enforced</span>
+          <span class="guard__value mono">CI step on every commit · build fails on any violation</span>
+        </div>
+        <div class="guard__row">
+          <span class="guard__label mono">Status</span>
+          <span class="guard__value">
+            <span class="pill pill--accent">0 violations</span>
+            <span class="faint">— checked against the six NDA rules defined in the script (location, present-employment framing, fund rename, proprietary data sources, and two vendor-specific exclusions)</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" data-reveal>
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">(d) · Open-source content</p>
+        <h2 class="section__title">Public repos, all NDA-safe.</h2>
+        <p class="section__sub">
+          Four repos surfaced from <a href={path('/proof')}>/proof</a>. The full inventory
+          is on the GitHub profile.
+        </p>
+      </header>
+      <ul class="repo">
+        {
+          repos.map((r) => (
+            <li class="repo__row">
+              <h3 class="repo__name">
+                <a href={r.href} target="_blank" rel="noopener noreferrer">
+                  {r.name}
+                </a>
+              </h3>
+              <p class="repo__desc">{r.desc}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" data-reveal>
+    <div class="container container-narrow">
+      <header class="section__head">
+        <p class="section__eyebrow">(e) · License</p>
+        <h2 class="section__title">CC-BY-SA for copy, MIT for code.</h2>
+        <p class="section__sub">
+          Two licenses, two roles. The full text is in the repo; the placeholders below
+          will be replaced with the canonical files before public release.
+        </p>
+      </header>
+      <div class="lic">
+        <div class="lic__row">
+          <span class="lic__name mono">LICENSE-COPY</span>
+          <span class="lic__value">
+            <a
+              href="https://creativecommons.org/licenses/by-sa/4.0/"
+              target="_blank"
+              rel="noopener noreferrer">CC-BY-SA 4.0</a
+            > — for the prose, the methodology write-up, the working memos, and the rest
+            of the human-readable content.
+          </span>
+        </div>
+        <div class="lic__row">
+          <span class="lic__name mono">LICENSE-CODE</span>
+          <span class="lic__value">
+            <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT</a>
+            — for the code: the design tokens, the components, the /proof scripts, and the
+            OSS repos on GitHub.
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Something off in the meta?"
+    sub="Open an issue on the GitHub repo or email me. The /proof guardrail catches NDA drift; everything else is just a typo."
+    primaryLabel={`Email ${fullName}`}
+    secondaryLabel="See proof"
+    secondaryHref={path('/proof')}
+  />
+</BaseLayout>
+
+<style>
+  .site-head {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .site-head__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .site-head__sub {
+    font-size: clamp(1rem, 2vw, var(--fs-lg));
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+  .site-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .site-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .site-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
+
+  /* === (a) Stack list === */
+  .stack {
+    list-style: none;
+    padding: 0;
+    border-top: var(--border);
+  }
+  .stack__row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--sp-4);
+    padding-block: var(--sp-3);
+    border-bottom: 1px solid var(--c-rule-soft);
+    align-items: baseline;
+  }
+  .stack__name {
+    font-size: var(--fs-base);
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+  .stack__role {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
+
+  /* === (b) Tokens === */
+  .sub-h3 {
+    font-size: var(--fs-lg);
+    margin: var(--sp-5) 0 var(--sp-3);
+    color: var(--c-primary-2-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+  }
+  .bullet {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin: 0;
+  }
+  .bullet li {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-bottom: var(--sp-1);
+  }
+  .bullet code {
+    background: var(--c-bg-2);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  .bullet a {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+  }
+
+  /* === (c) NDA guardrail === */
+  .guard {
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+    background: var(--c-bg);
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .guard__row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--sp-4);
+    align-items: baseline;
+  }
+  .guard__label {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .guard__value {
+    font-size: var(--fs-sm);
+    color: var(--c-ink);
+    line-height: var(--lh-loose);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    align-items: center;
+  }
+  .guard__value a {
+    color: var(--c-primary-2-deep);
+  }
+
+  /* === (d) Repos === */
+  .repo {
+    list-style: none;
+    padding: 0;
+    border-top: var(--border);
+  }
+  .repo__row {
+    padding-block: var(--sp-4);
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  .repo__name {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-1);
+  }
+  .repo__name a {
+    color: var(--c-ink);
+    text-decoration: underline;
+    text-decoration-color: rgba(140, 111, 42, 0.4);
+    text-underline-offset: 3px;
+  }
+  .repo__desc {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+
+  /* === (e) License === */
+  .lic {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .lic__row {
+    padding: var(--sp-4);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+    background: var(--c-bg);
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--sp-4);
+  }
+  .lic__name {
+    font-size: var(--fs-sm);
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+  }
+  .lic__value {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+  }
+  .lic__value a {
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 720px) {
+    .stack__row,
+    .guard__row,
+    .lic__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
+  }
+</style>

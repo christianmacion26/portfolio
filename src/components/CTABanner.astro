@@ -40,9 +40,10 @@ const secondary = secondaryHref ?? path('/contact');
 <style>
   .cta {
     margin-block: var(--sp-7);
-    background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-deep) 100%);
+    background: linear-gradient(135deg, var(--c-tape) 0%, var(--c-tape-2) 100%);
     color: #fff;
     border-radius: var(--radius-lg);
+    border: 1px solid var(--c-amber);
   }
   .cta__inner {
     padding: var(--sp-7) var(--sp-5);
@@ -68,12 +69,13 @@ const secondary = secondaryHref ?? path('/contact');
     flex-wrap: wrap;
   }
   .cta .btn--primary {
-    background: #fff;
-    color: var(--c-primary);
+    background: var(--c-amber-deep);
+    color: #fff;
+    border: 1px solid var(--c-amber);
   }
   .cta .btn--primary:hover {
-    background: var(--c-bg-2);
-    color: var(--c-primary-deep);
+    background: var(--c-amber);
+    color: #0a0d12;
   }
   .cta .btn--ghost {
     border-color: rgba(255, 255, 255, 0.4);

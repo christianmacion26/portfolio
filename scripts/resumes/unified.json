@@ -7,7 +7,7 @@
     "layout": "D (HIRED FlowCV pattern: 2-col Skills|Education+Tools, single-col Experience, 2-col Certificates)",
     "skill_pattern": "S5 (28 skills, bullet-dense)",
     "cert_structure": "4-group (Finance + Math/Stats/Programming + AI + Events)",
-    "nda_protections_applied": "role-level only — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics, no fund rename; 19V Capital framed as past contract 03/2026 – 06/2026",
+    "nda_protections_applied": "role-level only — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics, no fund rename; systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)",
     "jd_keyword_mirror_target": ">= 70% of typical OJP AI+Quant JD vocabulary"
   },
   "header": {
@@ -19,7 +19,7 @@
     {
       "heading": "SUMMARY",
       "layout_cols": 1,
-      "content": "AI Engineer and Quantitative Researcher with hands-on experience operating at the intersection of multi-agent LLM systems and systematic trading research. I previously served as an AI Systems Engineer / Quantitative Researcher on the 19V Capital desk (PM Evan Ferioli), where the AI platform did the quant work — eleven agents in an orchestrator-worker topology, a 31-gate statistical evaluation harness, tiered model routing, and ~76,500 LOC of light-dependency Python — and the eval harness served both the LLM outputs and the systematic strategies running through it.\n\nIn that engagement I evaluated 40+ strategy families across 5 asset classes (equity-index, crypto, energy, metals, agriculture) on a 31-gate statistical-filter platform, built 10+ point-in-time data pipelines from scratch on free public sources, and implemented modern selection-bias statistics (Deflated Sharpe Ratio, PBO via CSCV, Minimum Backtest Length) in pure numpy. I shipped the same multi-agent architecture to a venture-incubation system and a content pipeline with a literature-grounded quality gate, and authored the curriculum that teaches others how to build and audit their own.\n\nSkilled in Python for finance and AI engineering (numpy, pandas, matplotlib, boto3), statistical modeling and AI evaluation harnesses, multi-agent orchestration (Claude Agent SDK / MCP), structured-output contracts, RAG with measured retrieval quality, model routing, and cost-aware LLM deployment. Strong understanding of pre-registration, walk-forward testing, block-bootstrap CIs, Monte-Carlo, Sharpe ratios, drawdowns, risk management, eval-gate design, and adversarial verification across equities, forex, commodities, and cryptocurrency markets.\n\nRecognized for combining analytical thinking, eval-first engineering, structured research methodologies, AI-assisted workflows, and clear technical writing to support data-driven decision-making, research accuracy, and team velocity. Available 30 hrs/wk for an AI Engineer / Quantitative Researcher role that lets me apply the same ship-it / kill-it-honestly / bank-the-lesson workflow to a new domain."
+      "content": "AI Engineer and Quantitative Researcher with hands-on experience operating at the intersection of multi-agent LLM systems and systematic trading research. I previously served as an AI Systems Engineer / Quantitative Researcher on the systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026) (PM with publicly attributable initials, NDA-protected desk), where the AI platform did the quant work — eleven agents in an orchestrator-worker topology, a 31-gate statistical evaluation harness, tiered model routing, and ~76,500 LOC of light-dependency Python — and the eval harness served both the LLM outputs and the systematic strategies running through it.\n\nIn that engagement I evaluated 40+ strategy families across 5 asset classes (equity-index, crypto, energy, metals, agriculture) on a 31-gate statistical-filter platform, built 10+ point-in-time data pipelines from scratch on free public sources, and implemented modern selection-bias statistics (Deflated Sharpe Ratio, PBO via CSCV, Minimum Backtest Length) in pure numpy. I shipped the same multi-agent architecture to a venture-incubation system and a content pipeline with a literature-grounded quality gate, and authored the curriculum that teaches others how to build and audit their own.\n\nSkilled in Python for finance and AI engineering (numpy, pandas, matplotlib, boto3), statistical modeling and AI evaluation harnesses, multi-agent orchestration (Claude Agent SDK / MCP), structured-output contracts, RAG with measured retrieval quality, model routing, and cost-aware LLM deployment. Strong understanding of pre-registration, walk-forward testing, block-bootstrap CIs, Monte-Carlo, Sharpe ratios, drawdowns, risk management, eval-gate design, and adversarial verification across equities, forex, commodities, and cryptocurrency markets.\n\nRecognized for combining analytical thinking, eval-first engineering, structured research methodologies, AI-assisted workflows, and clear technical writing to support data-driven decision-making, research accuracy, and team velocity. Available 30 hrs/wk for an AI Engineer / Quantitative Researcher role that lets me apply the same ship-it / kill-it-honestly / bank-the-lesson workflow to a new domain."
     },
     {
       "heading": "Core Skills",
@@ -109,7 +109,7 @@
       "items": [
         {
           "role": "AI Systems Engineer / Quantitative Researcher (contract)",
-          "company": "19V Capital",
+          "company": "systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)",
           "location": "Remote",
           "dates": "03/2026 – 06/2026",
           "bullets": [
@@ -123,7 +123,7 @@
         },
         {
           "role": "Trading Platform Testing & Execution Research Analyst (contract)",
-          "company": "Arclion AI",
+          "company": "AI-engineering consultancy (closed past contract)",
           "location": "Remote",
           "dates": "04/2026 – 06/2026",
           "bullets": [
@@ -270,9 +270,9 @@
   "notes": [
     "Master pack — AI Engineer + Quantitative Researcher (unified lane). Use this as the default starting point for any OJP application where the JD accepts both AI and quant signals.",
     "Mirrors the HIRED Financial Trading Research Assistant PDF style: header on one line, 4-para flowing SUMMARY, 2-col Skills|Education+Tools, single-col Experience, 2-col Certificates.",
-    "19V Capital leads the resume as a PAST engagement (03/2026 – 06/2026, contract) — to avoid conflict with potential current employers. Framed as 'previously served' and 'have hands-on experience' rather than 'currently employed'.",
-    "All 19V bullets are NDA-safe at the role level: methodology, tools, scale, architecture, false-positive-integrity narrative — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics (Polymarket/Kalshi/NOAA/USDA), no fund rename.",
-    "PM Evan Ferioli is mentioned (public association OK).",
+    "systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026) leads the resume as a PAST engagement — to avoid conflict with potential current employers. Framed as 'previously served' and 'have hands-on experience' rather than 'currently employed'.",
+    "All desk bullets are NDA-safe at the role level: methodology, tools, scale, architecture, false-positive-integrity narrative — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics (Polymarket/Kalshi/NOAA/USDA), no fund rename.",
+    "PM with publicly attributable initials (NDA-protected desk) — generic phrasing used to preserve HR verification cue while removing exact PM name.",
     "Skill list combines the 28-skill HIRED list with 4 AI additions (Multi-Agent Orchestration, LLM Evaluation Harness Design, Model Routing & Token-Cost Optimization, Context Engineering) to lift the AI angle to the top of the list.",
     "Certs lead with Finance + AI groups (10 + 9), Math/Stats + Events as support (7 + 10) — dual-positioning ordering.",
     "Education arc per baseline-truths: PSHS-SMC (2022) → USeP engineering units (2022-2024, not completed) → UM Financial Management (current 1st Sem AY 2026-27) + STA Tier-1 CTA (Dec 2025)."

@@ -1,13 +1,13 @@
 ---
 title: 'AI Systems Engineer / Quantitative Researcher (contract)'
-company: '19V Capital'
+company: 'systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)'
 role: 'experience'
 order: 1
 location: 'Remote'
 startDate: '2026-03'
 endDate: '2026-06'
 isCurrent: false
-summary: 'Architected the 11-agent AI research platform and the 31-gate statistical eval harness used by the desk under PM Evan Ferioli. (Past contract; closed 06/2026.)'
+summary: 'Architected the 11-agent AI research platform and the 31-gate statistical eval harness used by the desk under a PM with publicly attributable initials. (Past contract; closed 06/2026.)'
 tags: [multi-agent, eval-harness, quant-research, MCP, model-routing]
 contributions:
   - label: '11-agent orchestrator + 31-gate eval harness'
@@ -23,7 +23,7 @@ contributions:
     evidence: 'byte-range subsetting, gap guards, idempotent incremental pulls'
     proof: 'Pipeline code in public quant portfolio'
 proofs:
-  - 'Contract disclosed under NDA — role: AI Systems Engineer / Quantitative Researcher. PM of record (publicly attributable): Evan Ferioli.'
+  - 'Contract disclosed under NDA — role: AI Systems Engineer / Quantitative Researcher. PM with publicly attributable initials (NDA-protected desk).'
   - 'Eval harness methodology (G1–G31, deflated Sharpe, block-bootstrap CIs) carried forward into the public methodology page'
   - 'All deliverables NDA-safe; no proprietary data sources referenced'
 ---

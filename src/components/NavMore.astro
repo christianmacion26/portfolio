@@ -1,0 +1,199 @@
+---
+/**
+ * NavMore.astro — disclosure-style "Resources" dropdown for the nav.
+ *
+ * Renders a <details>/<summary> pair that contains a list of secondary
+ * nav links. Used by Nav.astro on desktop to keep the visible row
+ * sparse; on mobile the parent nav renders everything flat inside
+ * the burger menu (we just unwrap into a normal ul there).
+ *
+ * The `mode` prop lets the parent decide: 'dropdown' uses the
+ * <details> widget on desktop; 'inline' (mobile) renders the list
+ * flat with no disclosure chrome.
+ */
+interface NavItem {
+  href: string;
+  label: string;
+}
+interface Props {
+  items: NavItem[];
+  mode?: 'dropdown' | 'inline';
+  class?: string;
+}
+const { items, mode = 'dropdown', class: className = '' } = Astro.props;
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => {
+  const suffix = href === '/' ? '/' : href;
+  return pathname === suffix || pathname.startsWith(suffix + '/');
+};
+---
+
+{
+  mode === 'dropdown' ? (
+    <details class:list={['nav-more', className]}>
+      <summary class="nav-more__summary" aria-label="More navigation links">
+        <span>Resources</span>
+        <svg
+          class="nav-more__chev"
+          width="10"
+          height="10"
+          viewBox="0 0 10 10"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M2 3.5l3 3 3-3" />
+        </svg>
+      </summary>
+      <ul class="nav-more__menu" role="menu">
+        {items.map(({ href, label }) => (
+          <li role="none">
+            <a
+              href={href}
+              role="menuitem"
+              class:list={['nav-more__link', { 'nav-more__link--active': isActive(href) }]}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  ) : (
+    <ul class:list={['nav-more__flat', className]} role="list">
+      {items.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['nav-more__link', { 'nav-more__link--active': isActive(href) }]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  /* === DESKTOP DROPDOWN === */
+  .nav-more {
+    position: relative;
+    display: inline-flex;
+  }
+  .nav-more__summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--c-ink-2);
+    padding: 0.5rem 0.6rem;
+    border-radius: var(--radius-sm);
+    transition:
+      color var(--transition),
+      background var(--transition);
+    user-select: none;
+  }
+  .nav-more__summary::-webkit-details-marker {
+    display: none;
+  }
+  .nav-more__summary::marker {
+    display: none;
+    content: '';
+  }
+  .nav-more__summary:hover,
+  .nav-more[open] .nav-more__summary {
+    color: var(--c-primary);
+    background: var(--c-bg-2);
+  }
+  .nav-more__chev {
+    transition: transform var(--transition);
+  }
+  .nav-more[open] .nav-more__chev {
+    transform: rotate(180deg);
+  }
+
+  .nav-more__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 200px;
+    margin: 0;
+    padding: 0.4rem;
+    list-style: none;
+    background: var(--c-bg);
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .nav-more__menu li {
+    margin: 0;
+  }
+  .nav-more__link {
+    display: block;
+    padding: 0.5rem 0.7rem;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition:
+      color var(--transition),
+      background var(--transition);
+    white-space: nowrap;
+  }
+  .nav-more__link:hover {
+    color: var(--c-primary);
+    background: var(--c-bg-2);
+  }
+  .nav-more__link--active {
+    color: var(--c-primary);
+    background: var(--c-paper);
+    font-weight: 600;
+  }
+
+  /* === MOBILE: flatten into the burger stack === */
+  .nav-more__flat {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .nav-more__flat li {
+    margin: 0;
+  }
+  .nav-more__flat .nav-more__link {
+    padding: 0.625rem 0;
+    border-bottom: 1px solid var(--c-rule-soft);
+    border-radius: 0;
+  }
+  .nav-more__flat .nav-more__link--active {
+    border-bottom-color: var(--c-primary);
+  }
+
+  /* Hide dropdown chrome on mobile entirely */
+  @media (max-width: 980px) {
+    .nav-more {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-more__chev {
+      transition: none;
+    }
+  }
+</style>
+</content>
+</invoke>

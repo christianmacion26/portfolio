@@ -1,0 +1,374 @@
+---
+/**
+ * for-recruiters.astro — v6.0 · one-pager for HR / hiring managers.
+ *
+ * 60-second skim page for recruiters who don't yet know the body of
+ * the site. Answers the six institutional questions directly:
+ * 1) Who, 2) Status, 3) Seniority + target seats, 4) Location +
+ * authorization, 5) Resume PDF + plain-text, 6) Fastest contact.
+ * Plus an FAQPage JSON-LD so recruiters' search boxes surface the
+ * canonical answers.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+
+const fullName = profile.fullName;
+const loc = profile.location;
+const email = profile.contact.email;
+const phoneDisplay = profile.contact.phoneDisplay;
+const linkedin = profile.contact.linkedin;
+
+const faqs = [
+  {
+    q: 'Who is this candidate?',
+    a: `${fullName} — a quantitative researcher and AI engineer based in ${loc.display}. Eleven-agent research platform, 31-gate statistical eval harness, 76.5k LOC Python, 102 professional certifications across AI, finance, math, and events.`,
+  },
+  {
+    q: 'What is their current availability?',
+    a: 'Open to remote Quant Researcher, QR-rotational, Quantitative Research Engineer, or Research Engineer seats with US-premarket or APAC overlap. Approximately 30 hrs/wk capacity, immediate start.',
+  },
+  {
+    q: 'What seniority level are they targeting?',
+    a: 'Senior / staff Quant Researcher or Research Engineer. Primary seat: Quant Researcher (with QR-rotational considered). Secondary: AI Engineer inside a quant team that ships LLM tooling.',
+  },
+  {
+    q: 'Where are they based, and what is their work authorization?',
+    a: `Based in ${loc.display}. Filipino citizen, Philippine passport. Fully remote, all hours delivered over internet. Familiar with US pre-market (UTC-5 to UTC-8) and APAC overlap windows; primary working hours anchored at UTC+8.`,
+  },
+  {
+    q: 'Do they have a one-page resume PDF?',
+    a: 'Yes. Three tailored one-page resumes are linked at /resume — Quant (one-page), AI-only, and Unified. Each lists the same identity block and 31-gate methodology but weights different evidence.',
+  },
+  {
+    q: 'Is the work NDA-clean by construction?',
+    a: 'Yes. Every published research artifact uses only public-data sources (Yahoo Finance, CoinGecko, FRED, EDGAR, SEC filings, public CME/CBOE chains). No proprietary datasets, no non-public signals. The nda-audit script in /proof enforces this guarantee automatically on every build.',
+  },
+  {
+    q: 'How fast can they respond?',
+    a: 'Replies to recruiter emails within four business hours during UTC+8 day. Cold DMs slower. Direct phone for qualified screening calls only.',
+  },
+  {
+    q: 'Do they require sponsorship?',
+    a: 'No sponsorship is required for remote engagements; the candidate works as an independent contractor from the Philippines. For full-time W-2 roles, visa sponsorship is the employer-side question — the candidate holds a Philippine passport and is open to globally remote (EOR) arrangements.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout
+  title={`For recruiters · ${fullName}`}
+  description="The 60-second candidate one-pager: availability, location, target seats, resume PDFs, and direct contact for hiring managers."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "For recruiters", href: "/for-recruiters" }]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="hero">
+    <div class="container container--narrow">
+      <p class="eyebrow mono">
+        <span>FOR HIRING MANAGERS</span>
+        <span aria-hidden="true">·</span>
+        <span>60-SECOND SKIM</span>
+        <span aria-hidden="true">·</span>
+        <span>NDA-CLEAN</span>
+      </p>
+      <h1 class="hero__title">{fullName}</h1>
+      <p class="hero__voice voice-line">
+        60-second skim. NDA-clean. Built so a hiring manager can decide in one read.
+      </p>
+      <p class="hero__sub">
+        Quantitative researcher and AI engineer. {loc.display}.<br />
+        Open to remote QR, QR-rotational, or research-engineer seats with
+        US-premarket or APAC overlap.
+      </p>
+
+      <table class="kv">
+        <tbody>
+          <tr>
+            <th scope="row">Status</th>
+            <td>Open · immediate start · {profile.availability.hours}</td>
+          </tr>
+          <tr>
+            <th scope="row">Target seats</th>
+            <td>Quant Researcher (primary) · QR-Rotational · Quant Research Engineer · Research Engineer</td>
+          </tr>
+          <tr>
+            <th scope="row">Location</th>
+            <td>{loc.display} · working UTC+8 · remote-first</td>
+          </tr>
+          <tr>
+            <th scope="row">Work authorization</th>
+            <td>Filipino citizen · independent contractor · globally remote (EOR) · no sponsorship required</td>
+          </tr>
+          <tr>
+            <th scope="row">Stack</th>
+            <td>Python (76.5k LOC) · 11 agents · 31-gate eval harness · MCP · multi-agent LLM · RAG · frozen-spec evals</td>
+          </tr>
+          <tr>
+            <th scope="row">Resume PDF</th>
+            <td>
+              <a href={path('/resume')}>Tailored resumes →</a> ·
+              <a href={path('/resume-tailored.pdf')} download>Quant (1-pg) ↓</a> ·
+              <a href={path('/resume-ai-only.pdf')} download>AI-only ↓</a> ·
+              <a href={path('/resume-quant-onepage.pdf')} download>Unified ↓</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Contact</th>
+            <td>
+              <a href={`mailto:${email}?subject=Inquiry%20%E2%80%94%20Christian%20Macion`}>{email}</a>
+              · {phoneDisplay} · <a href={linkedin} rel="noopener noreferrer" target="_blank">LinkedIn</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href={`mailto:${email}?subject=Inquiry%20%E2%80%94%20Christian%20Macion`}>Email {fullName.split(',')[0]} →</a>
+        <a class="btn btn--ghost" href={path('/resume')}>View resumes →</a>
+        <a class="btn btn--ghost" href={path('/proof')}>See proof →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <h2 class="section__title">FAQ — what hiring managers usually ask</h2>
+        <p class="section__sub">
+          Eight canonical questions. Each answer is short, factual, and verifiable from the rest
+          of the site.
+        </p>
+      </header>
+
+      <ol class="faq">
+        {
+          faqs.map((f, i) => (
+            <li class="faq__item">
+              <details>
+                <summary>
+                  <span class="faq__num mono">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="faq__q">{f.q}</span>
+                </summary>
+                <p class="faq__a">{f.a}</p>
+              </details>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Skim the proof, not just the resume."
+    sub="Every claim on this page is backed by a public-data reproducible artifact. See /proof for the full inventory of certifications, lectures, charts, OSS repos, and solutions."
+    primaryLabel="Go to /proof"
+    secondaryLabel="Browse /solutions"
+    secondaryHref={path('/solutions')}
+  />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--sp-9) var(--sp-7);
+    background:
+      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
+      var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+  }
+  .hero__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .hero__sub {
+    font-size: clamp(1rem, 2vw, var(--fs-lg));
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-bottom: var(--sp-7);
+    max-width: 60ch;
+  }
+  .hero__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .hero__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .hero__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
+
+  .kv {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--sp-7);
+    border-top: var(--border);
+    border-bottom: var(--border);
+  }
+  .kv th,
+  .kv td {
+    text-align: left;
+    padding: var(--sp-3) var(--sp-4);
+    border-bottom: 1px solid var(--c-rule-soft);
+    vertical-align: top;
+  }
+  .kv tr:last-child th,
+  .kv tr:last-child td {
+    border-bottom: none;
+  }
+  .kv th {
+    width: 30%;
+    color: var(--c-ink-3);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    font-family: var(--ff-mono);
+  }
+  .kv td {
+    color: var(--c-ink);
+  }
+  .kv a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-underline-offset: 3px;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: center;
+  }
+
+  .section {
+    padding-block: var(--sp-9);
+  }
+  .section__head {
+    margin-bottom: var(--sp-6);
+  }
+  .section__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .section__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+
+  .faq {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--border);
+  }
+  .faq__item {
+    border-bottom: var(--border);
+  }
+  .faq__item details {
+    padding: var(--sp-4) 0;
+  }
+  .faq__item summary {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--c-ink);
+    font-size: var(--fs-lg);
+    list-style: none;
+    padding-right: var(--sp-7);
+    position: relative;
+  }
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__item summary::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--c-primary-2-deep);
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 400;
+    transition: transform var(--transition);
+  }
+  .faq__item details[open] summary::after {
+    content: '−';
+    transform: translateY(-2px);
+  }
+  .faq__num {
+    color: var(--c-primary-2-deep);
+    font-size: var(--fs-sm);
+    flex-shrink: 0;
+    width: 2.5ch;
+    letter-spacing: 0.05em;
+  }
+  .faq__q {
+    flex: 1;
+  }
+  .faq__a {
+    margin: var(--sp-4) 0 0 calc(2.5ch + var(--sp-4));
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    font-size: var(--fs-base);
+  }
+
+  @media (max-width: 600px) {
+    .kv th {
+      width: 38%;
+    }
+    .kv td {
+      overflow-wrap: anywhere;
+      max-width: 60vw;
+      font-size: var(--fs-sm);
+      line-height: 1.4;
+    }
+  }
+</style>

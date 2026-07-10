@@ -7,7 +7,7 @@
     "layout": "D (HIRED FlowCV pattern: 2-col Skills|Education+Tools, single-col Experience, 2-col Certificates)",
     "skill_pattern": "S5 (28 skills, bullet-dense, AI-heavy)",
     "cert_structure": "4-group (AI/Data first, then Finance, Math/Stats, Events)",
-    "nda_protections_applied": "role-level only — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics, no fund rename; 19V Capital framed as past contract 03/2026 – 06/2026; 'formerly Alpha Apex Quant' parenthetical removed",
+    "nda_protections_applied": "role-level only — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics, no fund rename; systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026); 'formerly Alpha Apex Quant' parenthetical removed",
     "jd_keyword_mirror_target": ">= 70% of typical OJP AI Engineer JD vocabulary"
   },
   "header": {
@@ -107,7 +107,7 @@
       "items": [
         {
           "role": "AI Systems Engineer · LLM Research Platform (contract)",
-          "company": "19V Capital",
+          "company": "systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)",
           "location": "Remote",
           "dates": "03/2026 – 06/2026",
           "bullets": [
@@ -140,7 +140,7 @@
         },
         {
           "role": "Trading Platform Testing & AI-Workflow Research Analyst (contract)",
-          "company": "Arclion AI",
+          "company": "AI-engineering consultancy (closed past contract)",
           "location": "Remote",
           "dates": "04/2026 – 06/2026",
           "bullets": [
@@ -260,9 +260,9 @@
   "notes": [
     "Master pack — AI Engineer / LLM Application Engineer (lean AI-only variant). Use for AI-only roles where Quant framing would dilute the application-layer positioning.",
     "Mirrors the HIRED Financial Trading Research Assistant PDF style: header on one line, 4-para flowing SUMMARY, 2-col Skills|Education+Tools, single-col Experience, 2-col Certificates.",
-    "19V Capital reframed as past contract (03/2026 – 06/2026), role title 'AI Systems Engineer · LLM Research Platform (contract)' (dropped 'Junior Quant Analyst' subhead for AI-only positioning).",
-    "All 19V bullets are NDA-safe at the role level: methodology, tools, scale, architecture, false-positive-integrity narrative — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics (Polymarket/Kalshi/NOAA/USDA), no fund rename.",
-    "PM Evan Ferioli is mentioned (public association OK).",
+    "systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026), role title 'AI Systems Engineer · LLM Research Platform (contract)' (dropped 'Junior Quant Analyst' subhead for AI-only positioning).",
+    "All desk bullets are NDA-safe at the role level: methodology, tools, scale, architecture, false-positive-integrity narrative — no per-strategy names, no per-strategy t-stats/Sharpe/bps numbers, no proprietary data-source specifics (Polymarket/Kalshi/NOAA/USDA), no fund rename.",
+    "PM with publicly attributable initials (NDA-protected desk) — generic phrasing used to preserve HR verification cue while removing exact PM name.",
     "SUMMARY's Quant framing is compressed to a single short paragraph (P4) — preserves credibility without leading with it.",
     "Skill list is 28 items, AI-heavy — Multi-Agent Orchestration, LLM Evaluation Harness Design, Model Routing, Context Engineering all in top 4. Quant skills reduced to ~3 foundational mentions.",
     "Cert groups reorder for AI emphasis: AI/Data first (10), Finance compressed (6), Math/Stats compressed (4), Events pruned to most-relevant (6).",

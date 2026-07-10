@@ -1,0 +1,473 @@
+---
+/**
+ * PipelineDiagram.astro — inline SVG flowchart for the AI lane.
+ *
+ * v3.5: replaces ProcessStrip's flat bar visualization with a real
+ * control-systems-style diagram: 5 boxes, forward arrows between them,
+ * and a curved feedback loop from Deliverable back to Intent.
+ *
+ * Renders two SVG variants stacked inside the same wrapper:
+ *   - .pipeline--h: horizontal layout, default (desktop/tablet)
+ *   - .pipeline--v: vertical layout, visible only on narrow viewports
+ * Both consume the same `steps` prop.
+ */
+interface Props {
+  steps: { num: string; title: string; desc: string }[];
+  tone?: 'paper' | 'tape';
+}
+const { steps, tone = 'paper' } = Astro.props;
+
+// --- HORIZONTAL LAYOUT CONSTANTS ---
+const H_W = 1000; // viewBox width
+const H_H = 320; // viewBox height
+const BOX_W = 160;
+const BOX_H = 80;
+const BOX_GAP = 30;
+const H_PAD_X = (H_W - (steps.length * BOX_W + (steps.length - 1) * BOX_GAP)) / 2;
+const BOX_Y = 80;
+const ARROW_Y = BOX_Y + BOX_H / 2; // 120
+
+// Compute box positions
+const hBoxes = steps.map((_, i) => ({
+  x: H_PAD_X + i * (BOX_W + BOX_GAP),
+  y: BOX_Y,
+  w: BOX_W,
+  h: BOX_H,
+  cx: H_PAD_X + i * (BOX_W + BOX_GAP) + BOX_W / 2,
+}));
+
+// First and last box centers for feedback arrow
+const firstCx = hBoxes[0].cx;
+const lastCx = hBoxes[hBoxes.length - 1].cx;
+const feedbackTop = BOX_Y + BOX_H + 8; // start just below the box
+const feedbackBottom = 250; // dip down to y=250
+
+// --- VERTICAL LAYOUT CONSTANTS ---
+const V_W = 400;
+const V_BOX_X = (V_W - BOX_W) / 2;
+const V_BOX_START_Y = 40;
+const V_BOX_GAP = 60;
+const V_ARROW_X = V_W / 2;
+const vTotalH =
+  V_BOX_START_Y * 2 +
+  steps.length * BOX_H +
+  (steps.length - 1) * V_BOX_GAP +
+  60; // trailing room for "loops" caption
+const V_H = vTotalH;
+
+const vBoxes = steps.map((_, i) => ({
+  x: V_BOX_X,
+  y: V_BOX_START_Y + i * (BOX_H + V_BOX_GAP),
+  w: BOX_W,
+  h: BOX_H,
+  cx: V_W / 2,
+}));
+
+// Sub-label truncator: keep first ~28 chars so the text fits the
+// 148px-wide sub area at 10px sans-serif.
+const clip = (s: string, n: number) =>
+  s.length <= n ? s : s.slice(0, n - 1).trimEnd() + '…';
+---
+
+<div class:list={['pipeline', `pipeline--${tone}`]}>
+  {/* === HORIZONTAL LAYOUT (default, desktop) === */}
+  <svg
+    class="pipeline__svg pipeline__svg--h"
+    viewBox={`0 0 ${H_W} ${H_H}`}
+    preserveAspectRatio="xMidYMid meet"
+    role="img"
+    aria-label={`Process pipeline: ${steps.map((s) => s.title).join(' → ')}, loops back to ${steps[0].title}`}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      {/* arrowhead marker */}
+      <marker
+        id="pd-arrow-h"
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto-start-reverse"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head" />
+      </marker>
+      {/* feedback arrowhead */}
+      <marker
+        id="pd-arrow-feedback"
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto-start-reverse"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head pd-arrow-head--loop" />
+      </marker>
+    </defs>
+
+    {/* grid background */}
+    <g class="pd-grid" aria-hidden="true">
+      {
+        Array.from({ length: Math.floor(H_W / 40) + 1 }).map((_, i) => (
+          <line
+            x1={i * 40}
+            y1="0"
+            x2={i * 40}
+            y2={H_H}
+            class="pd-grid-line pd-grid-line--v"
+          />
+        ))
+      }
+      {
+        Array.from({ length: Math.floor(H_H / 40) + 1 }).map((_, i) => (
+          <line
+            x1="0"
+            y1={i * 40}
+            x2={H_W}
+            y2={i * 40}
+            class="pd-grid-line pd-grid-line--h"
+          />
+        ))
+      }
+    </g>
+
+    {/* forward arrows BETWEEN boxes (drawn first so boxes overlay them) */}
+    {
+      hBoxes.slice(0, -1).map((b, i) => {
+        const next = hBoxes[i + 1];
+        return (
+          <line
+            x1={b.x + b.w + 2}
+            y1={ARROW_Y}
+            x2={next.x - 4}
+            y2={ARROW_Y}
+            class="pd-arrow"
+            marker-end="url(#pd-arrow-h)"
+          />
+        );
+      })
+    }
+
+    {/* boxes */}
+    {
+      steps.map((s, i) => {
+        const b = hBoxes[i];
+        return (
+          <g class="pd-box" transform={`translate(${b.x} ${b.y})`}>
+            <rect
+              class="pd-box-rect"
+              x="0"
+              y="0"
+              width={b.w}
+              height={b.h}
+              rx="6"
+              ry="6"
+            />
+            <text class="pd-box-num" x="12" y="22">
+              {s.num}
+            </text>
+            <text class="pd-box-title" x={b.w / 2} y="48" text-anchor="middle">
+              {s.title}
+            </text>
+            <foreignObject x="6" y="54" width={b.w - 12} height="22">
+              <div class="pd-box-sub">
+                {clip(s.desc, 28)}
+              </div>
+            </foreignObject>
+          </g>
+        );
+      })
+    }
+
+    {/* feedback loop arrow: from below last box, curve down + left, up to first box */}
+    <path
+      class="pd-arrow pd-arrow--loop"
+      d={`M ${lastCx} ${feedbackTop}
+          L ${lastCx} ${feedbackBottom}
+          Q ${lastCx} ${feedbackBottom + 14} ${lastCx - 14} ${feedbackBottom}
+          L ${firstCx + 14} ${feedbackBottom}
+          Q ${firstCx} ${feedbackBottom} ${firstCx} ${feedbackBottom - 14}
+          L ${firstCx} ${feedbackTop}`}
+      fill="none"
+      marker-end="url(#pd-arrow-feedback)"
+    />
+    {/* loop label */}
+    <text
+      class="pd-loop-label"
+      x={(firstCx + lastCx) / 2}
+      y={feedbackBottom + 10}
+      text-anchor="middle"
+    >
+      ↻ this loops — feedback from deliverable revises intent
+    </text>
+  </svg>
+
+  {/* === VERTICAL LAYOUT (mobile) === */}
+  <svg
+    class="pipeline__svg pipeline__svg--v"
+    viewBox={`0 0 ${V_W} ${V_H}`}
+    preserveAspectRatio="xMidYMid meet"
+    role="img"
+    aria-label={`Process pipeline, stacked vertically: ${steps.map((s) => s.title).join(' → ')}`}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <marker
+        id="pd-arrow-v"
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="9"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head" />
+      </marker>
+    </defs>
+
+    {/* grid background */}
+    <g class="pd-grid" aria-hidden="true">
+      {
+        Array.from({ length: Math.floor(V_W / 40) + 1 }).map((_, i) => (
+          <line
+            x1={i * 40}
+            y1="0"
+            x2={i * 40}
+            y2={V_H}
+            class="pd-grid-line pd-grid-line--v"
+          />
+        ))
+      }
+      {
+        Array.from({ length: Math.floor(V_H / 40) + 1 }).map((_, i) => (
+          <line
+            x1="0"
+            y1={i * 40}
+            x2={V_W}
+            y2={i * 40}
+            class="pd-grid-line pd-grid-line--h"
+          />
+        ))
+      }
+    </g>
+
+    {/* vertical forward arrows between boxes */}
+    {
+      vBoxes.slice(0, -1).map((b, i) => {
+        const next = vBoxes[i + 1];
+        const y1 = b.y + b.h + 4;
+        const y2 = next.y - 6;
+        return (
+          <line
+            x1={V_ARROW_X}
+            y1={y1}
+            x2={V_ARROW_X}
+            y2={y2}
+            class="pd-arrow"
+            marker-end="url(#pd-arrow-v)"
+          />
+        );
+      })
+    }
+
+    {/* boxes (vertical) */}
+    {
+      steps.map((s, i) => {
+        const b = vBoxes[i];
+        return (
+          <g class="pd-box" transform={`translate(${b.x} ${b.y})`}>
+            <rect
+              class="pd-box-rect"
+              x="0"
+              y="0"
+              width={b.w}
+              height={b.h}
+              rx="6"
+              ry="6"
+            />
+            <text class="pd-box-num" x="12" y="22">
+              {s.num}
+            </text>
+            <text class="pd-box-title" x={b.w / 2} y="48" text-anchor="middle">
+              {s.title}
+            </text>
+            <foreignObject x="6" y="54" width={b.w - 12} height="22">
+              <div class="pd-box-sub">
+                {clip(s.desc, 28)}
+              </div>
+            </foreignObject>
+          </g>
+        );
+      })
+    }
+
+    {/* loop caption at bottom (no curve on vertical — just annotation) */}
+    <text
+      class="pd-loop-label"
+      x={V_W / 2}
+      y={V_H - 18}
+      text-anchor="middle"
+    >
+      ↻ feedback loop: deliverable revises intent
+    </text>
+  </svg>
+</div>
+
+<style>
+  .pipeline {
+    width: 100%;
+    margin-block: var(--sp-5);
+  }
+
+  .pipeline__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  /* Horizontal default; vertical hidden on desktop */
+  .pipeline__svg--v {
+    display: none;
+  }
+  @media (max-width: 760px) {
+    .pipeline__svg--h {
+      display: none;
+    }
+    .pipeline__svg--v {
+      display: block;
+    }
+  }
+
+  /* === THEMING via CSS variables (dark-mode aware) === */
+  .pd-grid-line {
+    stroke: var(--c-rule-soft);
+    stroke-width: 1;
+    opacity: 0.55;
+  }
+  .pipeline--tape .pd-grid-line {
+    stroke: var(--c-rule);
+    opacity: 0.35;
+  }
+
+  .pd-box-rect {
+    fill: var(--c-paper);
+    stroke: var(--c-ink);
+    stroke-width: 1.5;
+  }
+  .pipeline--tape .pd-box-rect {
+    fill: var(--c-tape-2);
+    stroke: var(--ink-on-tape);
+  }
+
+  .pd-box-num {
+    fill: var(--c-primary-2-deep);
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .pipeline--tape .pd-box-num {
+    fill: #d4a017;
+  }
+
+  .pd-box-title {
+    fill: var(--c-primary);
+    font-family: var(--ff-sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .pipeline--tape .pd-box-title {
+    fill: #fff;
+  }
+
+  .pd-box-sub {
+    font-family: var(--ff-sans);
+    font-size: 10px;
+    line-height: 1.15;
+    color: var(--c-ink-2);
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pipeline--tape .pd-box-sub {
+    color: var(--ink-on-tape-2);
+  }
+
+  .pd-arrow {
+    stroke: var(--c-ink);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .pipeline--tape .pd-arrow {
+    stroke: var(--ink-on-tape);
+  }
+
+  .pd-arrow--loop {
+    stroke: var(--c-primary-2-deep);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 4;
+  }
+  .pipeline--tape .pd-arrow--loop {
+    stroke: #d4a017;
+  }
+
+  .pd-arrow-head {
+    fill: var(--c-ink);
+  }
+  .pd-arrow-head--loop {
+    fill: var(--c-primary-2-deep);
+  }
+  .pipeline--tape .pd-arrow-head {
+    fill: var(--ink-on-tape);
+  }
+  .pipeline--tape .pd-arrow-head--loop {
+    fill: #d4a017;
+  }
+
+  .pd-loop-label {
+    fill: var(--c-primary-2-deep);
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .pipeline--tape .pd-loop-label {
+    fill: #d4a017;
+  }
+
+  /* === PRINT: hide decorations, show only boxes === */
+  @media print {
+    .pd-grid,
+    .pd-arrow,
+    .pd-arrow--loop,
+    .pd-arrow-head,
+    .pd-loop-label {
+      display: none !important;
+    }
+    .pd-box-rect {
+      fill: #fff !important;
+      stroke: #000 !important;
+      stroke-width: 1px !important;
+    }
+    .pd-box-num,
+    .pd-box-title,
+    .pd-box-sub {
+      fill: #000 !important;
+      color: #000 !important;
+    }
+    .pipeline__svg--h {
+      display: block !important;
+    }
+    .pipeline__svg--v {
+      display: none !important;
+    }
+  }
+</style>

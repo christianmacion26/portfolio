@@ -1,0 +1,86 @@
+# Christian T. Macion — Portfolio (llms.txt)
+
+> This file follows the [llmstxt.org](https://llmstxt.org) convention. It is a plain-Markdown
+> index of the portfolio site for AI agents and crawlers. For the full concatenated
+> content, see [/llms-full.txt](/llms-full.txt).
+
+## Person
+
+- **Name**: Christian T. Macion, CTA®
+- **Role**: Quant Researcher · AI Engineer
+- **Location**: Digos City, Davao del Sur, Philippines (UTC+8)
+- **Status**: Open to remote QR / research-engineer seats with US-premarket or APAC overlap
+- **Contact**: see [/contact](/contact)
+
+## Canonical pages
+
+- [Home](/) — Identity-first hero, stat row, featured projects, methodology tile grid.
+- [For-recruiters](/for-recruiters) — 60-second skim one-pager. Start here if you have 60 seconds.
+- [Proof](/proof) — Six-section narrative of artifacts (identity → credentials → shipped code → research → track record → disclosure).
+- [Methodology](/methodology) — Don't ship what hasn't passed a measurable gate. The eval-first stack.
+- [Now](/now) — Dated one-pager. What I'm doing this month.
+- [Projects](/projects) — 9 quant + 6 AI projects, each with metrics, repo, and detail page.
+- [Solutions](/solutions) — 10 problem → approach → evidence → outcome → proof entries.
+- [Experience](/experience) — 8 engagements with contribution density and proof pointers.
+- [Skills](/skills) — 3 grouped skill sets (Quant, AI, Production Engineering).
+- [Certifications](/certifications) — 4 grouped cert families with flagship cards.
+- [Publications](/publications) — Long-form archive.
+- [Papers](/papers) — Working memos and bookshelf selections.
+- [Talks](/talks) — Public lectures and meetup appearances.
+- [Positions](/positions) — Live book of conversations and target roles.
+- [Uses](/uses) — Hardware, editor, language toolchain, data vendors, hosting.
+- [Glossary](/glossary) — 25 quant + AI terms, alphabetical.
+- [About this site](/about-this-site) — Built with, design tokens, NDA guardrail, license.
+- [Colophon](/colophon) — Type, color, spacing, motion, accessibility.
+- [Contact](/contact) — Email, LinkedIn, GitHub, Medium.
+- [Search](/search) — Pagefind client-side index (80 documents; count is computed from the pagefind manifest at build time).
+- [404](/404) — Off the path. Try one of the canonical routes.
+
+## Top-level artifacts
+
+- **DSR Calculator** — on [/methodology#dsr](/methodology#dsr). Plug in trial count, IS Sharpe, skewness, kurtosis → DSR.
+- **Process strip** — on every page footer (Build → Ownership → Validate → Question → Deploy → Compound).
+- **Atom feeds** — [/feed.xml](/feed.xml), [/feed-projects.xml](/feed-projects.xml), [/feed-solutions.xml](/feed-solutions.xml).
+- **Sitemap** — [/sitemap-index.xml](/sitemap-index.xml).
+- **Build metadata** — [/humans.md](/humans.md).
+
+## Resume artifacts (3 variants × 3 formats)
+
+- **Unified (AI Engineer + Quant Researcher)** — [/resume-tailored.pdf](/resume-tailored.pdf), [/resume-tailored.md](/resume-tailored.md), [/resume-tailored.txt](/resume-tailored.txt).
+- **AI Engineer lane** — [/resume-ai-only.pdf](/resume-ai-only.pdf), [/resume-ai-only.md](/resume-ai-only.md), [/resume-ai-only.txt](/resume-ai-only.txt).
+- **Quant Researcher lane (one-pager)** — [/resume-quant-onepage.pdf](/resume-quant-onepage.pdf), [/resume-quant-onepage.md](/resume-quant-onepage.md), [/resume-quant-onepage.txt](/resume-quant-onepage.txt).
+
+PDF = visual · brand-faithful · for human reviewers.
+Markdown = LLM-agent friendly · ingestion into your eval / matching pipeline.
+Plain text = ATS-friendly · Workday classic · Greenhouse · Taleo · Lever.
+
+## Open-source repos (signature)
+
+- [eval-mcp-server](https://github.com/christianmacion26/eval-mcp-server) — MCP server over the slop gate. 20/20 conformance, 100% round-trip parity.
+- [rag-recall](https://github.com/christianmacion26/rag-recall) — RAG with retrieval scorecard. recall@3 = 0.886, MRR@3 = 0.805.
+- [multiple-testing-deflated-sharpe](https://github.com/christianmacion26/multiple-testing-deflated-sharpe) — DSR applied to a 160-rule BTC sweep. IS Sharpe 1.14 → DSR 0.70 (fail).
+- [toolcall-agent](https://github.com/christianmacion26/toolcall-agent) — ReAct agent with OTel + fault injection. 100% tool/arg correctness.
+- [judge-harness](https://github.com/christianmacion26/judge-harness) — LLM-as-judge with Cohen's κ + bootstrap CI + position-bias flip.
+- [reflect-revise](https://github.com/christianmacion26/reflect-revise) — Reflection-loop agent with honest no-progress halt.
+- [slop-scanner](https://github.com/christianmacion26/slop-scanner) — 13-metric stdlib quality gate.
+- [cross-sectional-momentum](https://github.com/christianmacion26/cross-sectional-momentum) — 18-coin rank-1 / rank-10. IS 0.91 → OOS -0.03.
+- [timeseries-momentum-voltarget](https://github.com/christianmacion26/timeseries-momentum-voltarget) — Vol-targeting lifts Sharpe 0.27 → 0.39, halves max DD.
+- [variance-risk-premium](https://github.com/christianmacion26/variance-risk-premium) — VIX vs realized. Implied > realized 85% of 36 yrs; NW t = +6.5.
+- [pairs-cointegration](https://github.com/christianmacion26/pairs-cointegration) — BTC/ETH ADF -2.11; half-life 208d.
+- [funding-carry](https://github.com/christianmacion26/funding-carry) — Perp-funding carry. IS 1.11 → OOS -0.05.
+- [macro-regime-overlay](https://github.com/christianmacion26/macro-regime-overlay) — Sharpe 0.64 → 0.67; max DD -58% → -42%.
+- [backtest-engine-costs](https://github.com/christianmacion26/backtest-engine-costs) — Wins gross (0.20), loses net.
+- [lookahead-bias-audit](https://github.com/christianmacion26/bias-audit) — 88% phantom-Sharpe detected.
+
+## NDA scope (do not ask, do not infer)
+
+- **systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)** — PM with publicly attributable initials (NDA-protected desk).
+- **AI-engineering consultancy (closed past contract)** — 04/2026 – 06/2026.
+- **Ledger51** — research-analyst contract (10/2025 – 04/2026).
+- No proprietary data sources, strategy internals, or desk PnL are referenced anywhere on this site.
+
+## Optional
+
+- [humans.md](/humans.md) — same identity doc, machine-parsable Markdown.
+- [robots.txt](/robots.txt) — AI-bot user-agents explicit.
+- [404](/404) — graceful not-found page.

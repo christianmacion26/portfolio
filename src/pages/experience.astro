@@ -38,6 +38,7 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
 <BaseLayout
   title="Experience"
   description="Operator and researcher experience across multi-agent AI platforms, venture incubation, content automation, and systematic trading research."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Experience", href: "/experience" }]}
 >
   <header class="page-head">
     <div class="container">
@@ -45,9 +46,12 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
       <h1 class="page-head__title">
         Where the work happened — and how to <span class="hl">verify</span> it.
       </h1>
+      <p class="page-head__voice voice-line">
+        Each engagement ships with proof. If the proof isn't public, the entry isn't here.
+      </p>
       <p class="page-head__sub">
         {entries.length} engagements. Each entry lists the contributions made and points to public artifacts
-        that prove them. The 19V Capital role is a <strong>closed past contract</strong>
+        that prove them. The systematic-strategy desk role is a <strong>closed past contract</strong>
         (03/2026 – 06/2026); all references are NDA-safe and free of proprietary data sources.
       </p>
 
@@ -56,9 +60,9 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
         <div>
           <strong>NDA-safe by construction.</strong> Every entry on this page was written from publicly-attributable
           signals (public repos, public talks, public-data backtests) plus the contributions I have explicit
-          permission to disclose. <strong>19V Capital (03/2026 – 06/2026)</strong>
-          is a <strong>closed past contract</strong>; PM of record (publicly attributable):
-          <span class="mono">Evan Ferioli</span>. No proprietary data sources, strategy internals,
+          permission to disclose. <strong>systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)</strong>
+          is a <strong>closed past contract</strong>; PM of record with publicly attributable initials
+          <span class="mono">(NDA-protected desk)</span>. No proprietary data sources, strategy internals,
           or desk PnL are referenced anywhere on this site. If the proof you need is missing, email
           me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.
         </div>
@@ -141,6 +145,29 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     font-size: clamp(1.5rem, 4vw, 3rem);
     letter-spacing: -0.02em;
     margin-bottom: var(--sp-3);
+  }
+  .page-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .page-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .page-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
   .page-head__sub {
     font-size: var(--fs-lg);

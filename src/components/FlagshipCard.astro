@@ -1,0 +1,144 @@
+---
+/**
+ * FlagshipCard.astro — Tier-1 credential card.
+ *
+ * One-prop component for flagship certificates on /proof and /certifications.
+ * Pulls featured fields from certGroup content collection (already in schema):
+ *   - featuredImg / featuredAlt / featuredCaption / featuredHref
+ *
+ * Has a built-in shine sweep on hover and a 1.5% image scale per the Phase D
+ * vocabulary; respects prefers-reduced-motion via :global rules in tokens.css.
+ */
+import ProofCard from '@components/ProofCard.astro';
+
+interface Props {
+  title: string;       // e.g. "Finance, Trading & Economics"
+  group: string;       // e.g. "Finance · Trading · Economics"
+  blurb: string;       // 1-line blurb
+  src: string;         // path to flagship image
+  alt: string;         // alt text for the image
+  caption: string;     // shown below the image
+  href: string;        // e.g. /proof/
+  aspect?: '3/2' | '4/3' | '16/9' | 'auto';
+  flagship?: boolean;  // default true; visual badge for "Tier-1"
+}
+
+const { title, group, blurb, src, alt, caption, href, aspect = '3/2', flagship = true } = Astro.props;
+---
+
+<article class="flagship">
+  <div class="flagship__head">
+    <span class="flagship__kind mono">FLAGSHIP CERT</span>
+    {flagship && <span class="flagship__badge mono">Tier-1</span>}
+  </div>
+  <h3 class="flagship__title">{title}</h3>
+  <p class="flagship__group mono">{group}</p>
+  <p class="flagship__blurb">{blurb}</p>
+
+  <div class="flagship__media">
+    <ProofCard src={src} alt={alt} caption={caption} aspect={aspect} eager={true} />
+  </div>
+
+  <a
+    class="flagship__link mono"
+    href={href}
+    target={href.startsWith('http') ? '_blank' : undefined}
+    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>{href.startsWith('http') ? 'Verify with issuer ↗' : 'Open credential →'}</a>
+</article>
+
+<style>
+  .flagship {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-4);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary-2-deep);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .flagship::after {
+    /* shine sweep — Phase D-4 */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(212, 160, 23, 0.06) 45%,
+      transparent 100%
+    );
+    transform: translateX(-110%);
+    transition: transform 600ms ease;
+    pointer-events: none;
+  }
+  .flagship:hover {
+    border-color: var(--c-primary);
+    box-shadow: var(--shadow-sm);
+  }
+  .flagship:hover::after {
+    transform: translateX(110%);
+  }
+
+  .flagship__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-2);
+  }
+  .flagship__kind {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-primary-2-deep);
+    font-weight: 700;
+  }
+  .flagship__badge {
+    font-size: var(--fs-xs);
+    color: var(--c-pass);
+    background: var(--c-pass-soft);
+    padding: 0.125rem var(--sp-2);
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .flagship__title {
+    font-size: var(--fs-base);
+    margin: 0;
+    color: var(--c-primary);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .flagship__group {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .flagship__blurb {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0 0 var(--sp-2) 0;
+  }
+  .flagship__media {
+    margin: var(--sp-2) 0;
+  }
+  .flagship__link {
+    font-size: var(--fs-xs);
+    color: var(--c-primary-2-deep);
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-underline-offset: 3px;
+    margin-top: auto;
+  }
+  .flagship__link:hover {
+    color: var(--c-primary);
+  }
+</style>

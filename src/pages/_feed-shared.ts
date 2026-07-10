@@ -24,8 +24,17 @@ export interface FeedItem {
 }
 
 // tag: URI per RFC 4151 — stable, persistent, unique.
-// Format: tag:<authority>,<date>:<specific>
-export const PORTFOLIO_TAG_AUTHORITY = `christianmacion26.github.io,${new Date().getFullYear()}`;
+// Format: tag:<authority>,<date>:<specific>.
+// Use the deployment host (PUBLIC_SITE_URL on mirror builds, GH Pages default
+// otherwise) so feed `<id>` stays consistent with `<link rel="self">`.
+const _host = (() => {
+  try {
+    return new URL(import.meta.env.PUBLIC_SITE_URL ?? 'https://christianmacion26.github.io').host;
+  } catch {
+    return 'christianmacion26.github.io';
+  }
+})();
+export const PORTFOLIO_TAG_AUTHORITY = `${_host},${new Date().getFullYear()}`;
 
 function toIsoDate(d: Date | string | undefined, fallback: string): string {
   if (!d) return fallback;

@@ -31,6 +31,7 @@ const proofStrip = (await getCollection('solution'))
 <BaseLayout
   title="About"
   description="Operator + researcher building eval-first multi-agent AI systems and systematic trading research."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "About", href: "/about" }]}
 >
   <header class="page-head">
     <div class="container container-narrow">
@@ -40,8 +41,11 @@ const proofStrip = (await getCollection('solution'))
       />
       <p class="section__eyebrow"><span class="mono">about/</span> · operator + researcher</p>
       <h1 class="page-head__title">
-        One method. <span class="hl">Two hats.</span>
+        One method. <span class="hl">Two hats</span>.
       </h1>
+      <p class="page-head__voice voice-line">
+        I build the eval harness first. Then I build the work that has to pass it.
+      </p>
 
       <div class="head-eq">
         <Equation
@@ -52,15 +56,14 @@ const proofStrip = (await getCollection('solution'))
       </div>
 
       <div class="head-stats">
-        <Stat value={profile.stats.certCount} label="certs" sub="11-month arc" formula="c(t)" />
-        <Stat value={profile.stats.evalGates} label="gates" sub="G1–G31" formula="g" />
+        <Stat value={profile.stats.certCount} label="certs" sub="11-month arc" />
+        <Stat value={profile.stats.evalGates} label="gates" sub="G1–G31" />
         <Stat
           value={profile.stats.aiAgentCount}
           label="agents"
           sub="orch + workers"
-          formula="|\mathcal{A}|"
         />
-        <Stat value={profile.stats.locPython} label="LOC" sub="light-dep" formula="|\mathcal{L}|" />
+        <Stat value={profile.stats.locPython} label="LOC" sub="light-dep" />
       </div>
     </div>
   </header>
@@ -209,8 +212,9 @@ const proofStrip = (await getCollection('solution'))
 
         <p>
           I was previously the AI Systems Engineer / Quantitative Researcher on the
-          <strong>19V Capital</strong> desk under PM Evan Ferioli (closed past contract,
-          03/2026 – 06/2026), where the same eval harness served both LLM outputs and
+          <strong>systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)</strong>
+          under a PM with publicly attributable initials (closed past contract),
+          where the same eval harness served both LLM outputs and
           systematic trading strategies. Before that I shipped a 7-agent venture-incubation
           pipeline under Macion Ventures, an 8-agent content-production pipeline for
           editorial automation, and a portfolio of runnable AI projects (RAG scorecard, ReAct
@@ -274,8 +278,8 @@ const proofStrip = (await getCollection('solution'))
       </header>
 
       <p class="long-form-prose">
-        All work shown here is NDA-safe. The 19V Capital role is a closed past contract
-        (03/2026 – 06/2026) under PM Evan Ferioli. I do not reference per-strategy t-stats,
+        All work shown here is NDA-safe. The systematic-strategy desk role is a closed past contract
+        (03/2026 – 06/2026) under a PM with publicly attributable initials. I do not reference per-strategy t-stats,
         bps figures, live Sharpe numbers, proprietary data sources, fund-renames, or any
         desk-internal terms. Headline metrics cite public-data work or open-source runnable
         projects. If a proof you need is missing, email me the JD and I'll send back a
@@ -307,6 +311,29 @@ const proofStrip = (await getCollection('solution'))
     font-size: clamp(1.625rem, 4vw, 3rem);
     letter-spacing: -0.02em;
     margin-bottom: var(--sp-5);
+  }
+  .page-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .page-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .page-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
   }
   @media (max-width: 480px) {
     .avatar-img, .avatar {

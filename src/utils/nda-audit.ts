@@ -16,6 +16,15 @@
  *   4. No proprietary data sources (Polymarket, Kalshi, NOAA, USDA)
  *   5. No Quantivo / CallRank AI specifics
  *   6. No raw per-strategy t-stats/Sharpe/bps in user-facing copy
+ *   7. No "19V Capital" or "19V" employer-name leak in resume PDFs (defensive)
+ *   8. No PM-by-name disclosure ("Evan Ferioli" etc.) in resume PDFs or humans.md (defensive)
+ *   9. No past-employer name leak ("Arclion AI") in resume PDFs or humans.md (defensive)
+ *
+ * Rules 7–9 are narrowly scoped to the file types whose source content has
+ * already been redacted (PDF resumes + humans.md). They catch future
+ * re-introduction in those specific artifacts; broader coverage of
+ * `src/content/experience/*.md` and similar is a separate task and is
+ * deliberately NOT enforced by this audit (see memory: portfolio-positioning-level).
  *
  * Exits 0 if clean, 1 with a violation report otherwise.
  */
@@ -23,9 +32,8 @@
 import { spawnSync } from 'node:child_process';
 
 import { readFile, readdir } from 'node:fs/promises';
-import { join, extname } from 'node:path';
+import { basename, dirname, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -38,6 +46,10 @@ interface Rule {
   pattern: RegExp;
   exceptionPattern?: RegExp;
   scope: 'content' | 'meta'; // 'content' = all text, 'meta' = allow in <meta> tags only
+  // Restrict a rule to specific file types within dist/. Default 'all' = scan every
+  // walked file. Use 'pdf' for resume-only rules, 'pdf-and-humans' for rules that
+  // cover both the resume PDFs and the humans.md agent-index file.
+  fileScope?: 'all' | 'pdf' | 'pdf-and-humans';
 }
 
 const RULES: Rule[] = [
@@ -79,6 +91,27 @@ const RULES: Rule[] = [
     pattern: /\bCallRank\b/gi,
     scope: 'content',
   },
+  {
+    id: '19v-past-pdf-mention',
+    label: 'No "19V Capital" or "19V" employer-name leak anywhere in dist/',
+    pattern: /\b19V(?:\s+Capital)?\b/g,
+    scope: 'content',
+    fileScope: 'all',
+  },
+  {
+    id: 'pm-name-disclosure',
+    label: 'No PM-by-name disclosure ("Evan Ferioli" etc.) anywhere in dist/',
+    pattern: /\bEvan\s+Ferioli\b/gi,
+    scope: 'content',
+    fileScope: 'all',
+  },
+  {
+    id: 'past-employer-name-leak',
+    label: 'No past-employer name leak ("Arclion AI") anywhere in dist/',
+    pattern: /\bArclion(?:\s+AI)?\b/gi,
+    scope: 'content',
+    fileScope: 'all',
+  },
 ];
 
 interface Violation {
@@ -110,6 +143,24 @@ async function walk(dir: string): Promise<string[]> {
 function stripMetaTags(html: string): string {
   // Allow meta descriptions to mention Digos City for SEO without false-positive
   return html.replace(/<meta[^>]*>/gi, '').replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '');
+}
+
+/**
+ * Decide whether a given file should be checked against a rule with a
+ * particular fileScope. A rule with `fileScope: 'pdf'` only applies to
+ * resume PDFs in dist/. A rule with `fileScope: 'pdf-and-humans'` applies
+ * to resume PDFs and to the humans.md agent-index file. `fileScope: 'all'`
+ * (the default) applies to every walked file.
+ */
+function fileMatchesScope(file: string, scope: Rule['fileScope']): boolean {
+  if (!scope || scope === 'all') return true;
+  const ext = extname(file);
+  const name = basename(file);
+  if (scope === 'pdf') return ext === '.pdf';
+  if (scope === 'pdf-and-humans') {
+    return ext === '.pdf' || name === 'humans.md';
+  }
+  return true;
 }
 
 function extractPdfText(pdfPath: string): string {
@@ -146,6 +197,7 @@ async function audit(): Promise<number> {
     const auditable = ext === '.html' ? stripMetaTags(content) : content;
 
     for (const rule of RULES) {
+      if (!fileMatchesScope(file, rule.fileScope)) continue;
       const re = new RegExp(rule.pattern.source, rule.pattern.flags);
       let m: RegExpExecArray | null;
       while ((m = re.exec(auditable)) !== null) {

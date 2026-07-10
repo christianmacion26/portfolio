@@ -9,6 +9,9 @@ import CTABanner from '@components/CTABanner.astro';
 import DSRCalculator from '@components/DSRCalculator.astro';
 import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
+import SectionTOC from '@components/SectionTOC.astro';
+import PipelineDiagram from '@components/PipelineDiagram.astro';
+import StatementCarousel from '@components/StatementCarousel.astro';
 import { path } from '@utils/url';
 
 const gates = [
@@ -20,27 +23,27 @@ const gates = [
   {
     range: 'G6–G10',
     name: 'Statistical nulls',
-    desc: 'Block-bootstrap CIs, random-timing nulls, regime-shuffle, parameter-prior sensitivity, Monte-Carlo coverage.',
+    desc: '<a href={path("/glossary/block-bootstrap")}>block-bootstrap</a> CIs, random-timing nulls, <a href={path("/glossary/regime")}>regime</a>-shuffle, parameter-prior sensitivity, Monte-Carlo coverage.',
   },
   {
     range: 'G11–G15',
     name: 'Walk-forward & OOS',
-    desc: 'Locked OOS windows, 5-era stability, expanding/rolling windows, frozen-spec evaluation, embargoed test set.',
+    desc: 'Locked <a href={path("/glossary/oos")}>OOS</a> windows, 5-era stability, expanding/rolling <a href={path("/glossary/walk-forward")}>walk-forward</a> windows, frozen-spec evaluation, <a href={path("/glossary/embargo")}>embargoed</a> test set.',
   },
   {
     range: 'G16–G20',
     name: 'Multiple testing',
-    desc: 'Deflated Sharpe Ratio (DSR), CSCV-based Probability of Backtest Overfit (PBO), Minimum Backtest Length (MinBTL), Bonferroni–Holm, BH-FDR.',
+    desc: '<a href={path("/glossary/deflated-sharpe")}>Deflated Sharpe Ratio</a> (DSR), <a href={path("/glossary/cscv-pbo")}>CSCV-based Probability of Backtest Overfit</a> (PBO), <a href={path("/glossary/minbtl")}>Minimum Backtest Length</a> (MinBTL), <a href={path("/glossary/bonferroni-holm")}>Bonferroni–Holm</a>, BH-FDR.',
   },
   {
     range: 'G21–G25',
     name: 'Look-ahead discipline',
-    desc: 'Point-in-time dataset verification, survivorship-bias check, rebalance-vs-signal timing, frozen-spec, no-leakage to scoring.',
+    desc: 'Point-in-time dataset verification, <a href={path("/glossary/survivorship-bias")}>survivorship-bias</a> check, rebalance-vs-signal timing, frozen-spec, no-leakage to scoring.',
   },
   {
     range: 'G26–G31',
     name: 'Economic & cost realism',
-    desc: 'Spread/slippage/latency per asset class, capacity-constraint report, funding-carry, borrow cost, vol-targeted sizing, regime overlay.',
+    desc: 'Spread/<a href={path("/glossary/slippage")}>slippage</a>/latency per asset class, capacity-constraint report, funding-carry, borrow cost, vol-targeted sizing, <a href={path("/glossary/regime")}>regime</a> overlay.',
   },
 ];
 
@@ -72,13 +75,33 @@ const charter = [
 <BaseLayout
   title="Methodology"
   description="The eval-first discipline. G1–G31 statistical gate stack. Model-routing policy. Agent charter pattern."
+  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Methodology", href: "/methodology" }]}
 >
   <header class="method-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">methodology/</span> · eval-first discipline</p>
       <h1 class="method-head__title">
-        Don't ship what hasn't passed a <span class="hl">measurable gate</span>.
+        Don’t ship what hasn’t passed a <span class="hl">measurable gate</span>.
       </h1>
+      <p class="method-head__voice voice-line">
+        If it isn't measured, it isn't built.
+      </p>
+
+      <div class="method-head__carousel">
+        <StatementCarousel
+          statements={[
+            'Gate before ship. Always.',
+            'PBO-tested. CSCV-based. Walk-forward.',
+            'Block-bootstrap CIs. Random-timing nulls.',
+            'Deflated Sharpe. Multiple-testing aware.',
+            'Frozen-spec eval. No live tuning.',
+            'Five-era stability. One regime is anecdote.',
+          ]}
+          label="Methodology discipline — six rules, rotating"
+          intervalMs={5500}
+        />
+      </div>
+
       <p class="method-head__sub">
         One engineering principle. Applied to LLM outputs and to systematic trading strategies with
         the same gate stack. The method is what scales; the tools change.
@@ -91,6 +114,26 @@ const charter = [
           latex={`\\Pr(\\text{ship}) \\;=\\; \\Pr(\\text{ship} \\mid \\text{passes G1--G31}) \\cdot \\prod_{i=1}^{31} \\Pr(G_i \\mid \\text{evidence}_i)`}
         />
       </div>
+
+      {/* === Headline stats — gate lattice at a glance === */}
+      <div class="method-head__stats">
+        <div class="method-head__stat">
+          <span class="method-head__stat-num tnum">31</span>
+          <span class="method-head__stat-lbl">statistical gates</span>
+        </div>
+        <div class="method-head__stat">
+          <span class="method-head__stat-num tnum">6</span>
+          <span class="method-head__stat-lbl">gate families</span>
+        </div>
+        <div class="method-head__stat">
+          <span class="method-head__stat-num tnum">11</span>
+          <span class="method-head__stat-lbl">agents on the same method</span>
+        </div>
+        <div class="method-head__stat">
+          <span class="method-head__stat-num tnum">0</span>
+          <span class="method-head__stat-lbl">rollbacks on shipped work</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -100,11 +143,23 @@ const charter = [
     <ReadMeta minutes={11} updatedIso="2026-07-09" href={path('/proof')} />
   </div>
 
-  <section class="section">
+  <SectionTOC
+    label="On this methodology page"
+    items={[
+      { id: 'gates', label: 'G1–G31 gate stack' },
+      { id: 'routing', label: 'Model routing' },
+      { id: 'dsr', label: 'DSR calculator' },
+      { id: 'charter', label: 'Agent charter' },
+      { id: 'neg', label: 'Negative space' },
+      { id: 'hire', label: 'If you hired me' },
+    ]}
+  />
+
+  <section class="section" data-toc-id="gates" data-toc-label="G1–G31 gate stack">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">The gate stack</p>
-        <h2 class="section__title">G1–G31. Six families. One contract.</h2>
+        <h2 class="section__title" id="gates">G1–G31. Six families. One contract.</h2>
         <p class="section__sub">
           Every candidate — LLM output, systematic strategy, content artifact — passes through the
           same gate stack. Gates are mechanical (exit-0 contract), not opinionated. A pass means the
@@ -128,11 +183,11 @@ const charter = [
     </div>
   </section>
 
-  <section class="section section--alt">
+  <section class="section section--alt" data-toc-id="routing" data-toc-label="Model routing">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Model routing</p>
-        <h2 class="section__title">Tiered dispatch, not single-agent.</h2>
+        <h2 class="section__title" id="routing">Tiered dispatch, not single-agent.</h2>
         <p class="section__sub">
           A multi-agent system runs at ~15× the token cost of a single agent. The cost is real — the
           answer is to route by what the step actually needs to compute, not by default. Every
@@ -157,17 +212,31 @@ const charter = [
           latex={`\\text{cost} = \\sum_{i} \\text{tokens}(i) \\cdot \\text{price}(\\text{tier}(i)) \\quad \\text{where} \\quad \\text{tier} : \\mathcal{A} \\to \\{\\text{Opus, Sonnet, Haiku, Fable}\\}`}
         />
       </div>
+
+      <div class="routing-pipeline" aria-label="End-to-end pipeline from intent to deliverable with feedback loop">
+        <p class="routing-pipeline__cap mono">end-to-end pipeline · every project</p>
+        <PipelineDiagram
+          tone="paper"
+          steps={[
+            { num: '01', title: 'Intent', desc: 'problem statement + success metric + NDA audit' },
+            { num: '02', title: 'Frame', desc: 'frozen spec · eval harness drafted before code' },
+            { num: '03', title: 'Build', desc: 'tier-routed agents · cost-capped per step' },
+            { num: '04', title: 'Verify', desc: 'gate stack G1–G31 · exit-0 contract' },
+            { num: '05', title: 'Deliver', desc: 'public repo or live paper-trade · published only if all pass' },
+          ]}
+        />
+      </div>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" data-toc-id="dsr" data-toc-label="DSR calculator">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Interactive · G16</p>
-        <h2 class="section__title">Try the deflated Sharpe calculator.</h2>
+        <h2 class="section__title" id="dsr">Try the <a href={path("/glossary/deflated-sharpe")}>deflated Sharpe</a> calculator.</h2>
         <p class="section__sub">
-          See how the same in-sample Sharpe can pass or fail G16 depending on how many strategies
-          you actually tried. This is the gate that turns "1.14 looks great" into "DSR 0.70 — fail."
+          See how the same in-sample <a href={path("/glossary/sharpe")}>Sharpe</a> can pass or fail G16 depending on how many strategies
+          you actually tried. This is the gate that turns "1.14 looks great" into <a href={path("/glossary/deflated-sharpe")}>"DSR 0.70 — fail."</a>
         </p>
       </header>
 
@@ -175,11 +244,11 @@ const charter = [
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" data-toc-id="charter" data-toc-label="Agent charter">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Agent charter</p>
-        <h2 class="section__title">Six required fields per agent.</h2>
+        <h2 class="section__title" id="charter">Six required fields per agent.</h2>
         <p class="section__sub">
           A charter is a contract, not a prompt. Every agent has the same six fields, with the same
           semantics. No exceptions.
@@ -199,15 +268,15 @@ const charter = [
     </div>
   </section>
 
-  <section class="section section--alt">
+  <section class="section section--alt" data-toc-id="neg" data-toc-label="Negative space">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">What I will not do</p>
-        <h2 class="section__title">Negative-space as design.</h2>
+        <h2 class="section__title" id="neg">Negative-space as design.</h2>
       </header>
       <ul class="neg">
         <li>
-          I will not claim current employment at any NDA-protected firm. The 19V Capital engagement
+          I will not claim current employment at any NDA-protected firm. The systematic-strategy desk engagement
           is a <strong>closed past contract</strong> (03/2026 – 06/2026).
         </li>
         <li>
@@ -215,19 +284,19 @@ const charter = [
           any NDA-protected desk.
         </li>
         <li>
-          I will not share a "Sharpe = X.X" number without showing the gate stack that produced it.
+          I will not share a <a href={path("/glossary/sharpe")}>"Sharpe = X.X"</a> number without showing the gate stack that produced it.
         </li>
         <li>I will not ship an agent without an exit-0 mechanical-validator contract.</li>
-        <li>I will not present a backtest without capacity, slippage, and a locked OOS window.</li>
+        <li>I will not present a backtest without capacity, <a href={path("/glossary/slippage")}>slippage</a>, and a locked <a href={path("/glossary/oos")}>OOS</a> window.</li>
       </ul>
     </div>
   </section>
 
-  <section class="section section--alt">
+  <section class="section section--alt" data-toc-id="hire" data-toc-label="If you hired me">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">What I'd build first</p>
-        <h2 class="section__title">If you hired me onto a quant desk.</h2>
+        <h2 class="section__title" id="hire">If you hired me onto a quant desk.</h2>
         <p class="section__sub">
           These are the first 90 days, ordered by leverage. A new QR on a 2–5 person pod doesn't
           start with alpha — they start by making the existing book defensible to a risk manager and
@@ -252,7 +321,7 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Cost-model calibration + break-even turnaround</h3>
             <p class="plan__body-p">
-              Per-strategy slippage / impact / spread estimate. For every strategy, ship the
+              Per-strategy <a href={path("/glossary/slippage")}>slippage</a> / impact / spread estimate. For every strategy, ship the
               break-even turnaround cost (project 08). Strategies that win gross and lose net come
               off the book.
             </p>
@@ -264,7 +333,7 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Multiple-testing correction across the book</h3>
             <p class="plan__body-p">
-              Re-rank every strategy by DSR (project 01), not raw Sharpe. Re-rank by CSCV-based PBO
+              Re-rank every strategy by <a href={path("/glossary/deflated-sharpe")}>DSR</a> (project 01), not raw <a href={path("/glossary/sharpe")}>Sharpe</a>. Re-rank by <a href={path("/glossary/cscv-pbo")}>CSCV-based PBO</a>
               (prob. of backtest overfit). The book's "best strategy" is rarely the strategy with
               the highest raw Sharpe.
             </p>
@@ -276,8 +345,8 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Walk-forward OOS window standardization</h3>
             <p class="plan__body-p">
-              Locked, embargoed OOS windows (project 06 pattern) across the book. Frozen-spec
-              evaluation. Embargoed test sets. The book becomes reproducible from cold start.
+              Locked, <a href={path("/glossary/embargo")}>embargoed</a> <a href={path("/glossary/oos")}>OOS</a> windows (project 06 pattern) across the book. Frozen-spec
+              evaluation. <a href={path("/glossary/walk-forward")}>Walk-forward</a> standardization. The book becomes reproducible from cold start.
             </p>
             <div class="plan__gates mono">G11–G15 · walk-forward & OOS</div>
           </div>
@@ -314,6 +383,29 @@ const charter = [
     margin-block: var(--sp-4) var(--sp-5);
     max-width: 22ch;
   }
+  .method-head__voice {
+    margin: 0 0 var(--sp-5);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--c-primary-2);
+    font-style: italic;
+    font-family: var(--serif-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .method-head__voice::before {
+    content: '\201C';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .method-head__voice::after {
+    content: '\201D';
+    color: var(--c-primary-2);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
   .method-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
@@ -327,6 +419,41 @@ const charter = [
     border: 1px solid var(--c-rule);
     border-radius: var(--radius);
     overflow-x: auto;
+  }
+  .method-head__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-4);
+    margin-block: var(--sp-6) var(--sp-4);
+    padding-block: var(--sp-4);
+    border-top: 1px solid var(--c-rule);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .method-head__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .method-head__stat-num {
+    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--c-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .method-head__stat-lbl {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-ink-3);
+    line-height: 1.3;
+  }
+  @media (max-width: 640px) {
+    .method-head__stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
+    }
   }
 
   .gates {
@@ -541,5 +668,17 @@ const charter = [
       grid-template-columns: 1fr;
       gap: var(--sp-2);
     }
+  }
+
+  /* === Pipeline diagram embed (v6.0.2) === */
+  .routing-pipeline {
+    margin-top: var(--sp-6);
+  }
+  .routing-pipeline__cap {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-ink-3);
+    margin: 0 0 var(--sp-3) 0;
   }
 </style>

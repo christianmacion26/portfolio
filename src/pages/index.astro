@@ -1,28 +1,15 @@
 ---
 /**
- * index.astro — Home page. v2 (math/quant aesthetic).
+ * index.astro — Home page. v6.1.0 (t-digital rebuild)
  *
- * Hero:   dual-hat headline + equation motif + 4 stat tiles with sparklines
- * Lane 1: 3 featured AI projects (with Quant Researcher secondary positioning)
- * Lane 2: 3 featured quant projects
- * Method: 3 highlight gates from G1–G31 (the eval-first signal)
- * Math:   3 "type signatures" of the method (DSR, multi-agent, walk-forward)
- * Resume: 3 tailored PDFs
- * CTA:    contact + download
+ * Editorial single-column. No math on home. No jargon dump.
+ * Structure: identity strip · what I do · selected work · the numbers · credentials · contact.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProjectCard from '@components/ProjectCard.astro';
 import CTABanner from '@components/CTABanner.astro';
-import ProcessStrip from '@components/ProcessStrip.astro';
-import TrustStrip from '@components/TrustStrip.astro';
-import ProofCard from '@components/ProofCard.astro';
-import BrandMotif from '@components/BrandMotif.astro';
-
-const nowDate = new Date();
-const nowLabel = `NOW · ${nowDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).replace(' ', '-')}`;
-import Equation from '@components/Equation.astro';
-import Stat from '@components/Stat.astro';
 import Ticker from '@components/Ticker.astro';
+import StatementCarousel from '@components/StatementCarousel.astro';
 import { getCollection } from 'astro:content';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
@@ -30,781 +17,679 @@ import { path } from '@utils/url';
 const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
 const aiFeatured = projects.filter((p) => p.data.role === 'ai').slice(0, 3);
 const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3);
-
-// Synthetic but realistic-looking sparkline data points (just shapes — honest framing in caption)
-const sparkCap = [3, 4, 6, 8, 11, 13, 16, 18, 22, 26, 31]; // gates added month by month
 ---
 
 <BaseLayout title={profile.titles.primary} description={profile.titles.secondary}>
-  <Ticker />
-
+  {/* ============================================================
+       HERO — dark editorial, single-column, identity-first.
+       T-Digital pattern: full-bleed dark canvas, single H1 sentence,
+       one italic voice line, restrained spacing, no math, no jargon.
+       ============================================================ */}
   <section class="hero">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="hero__grid" aria-hidden="true"></div>
     <div class="container hero__inner">
-      <div class="hero__eyebrow">
-        <span class="pill pill--brand">Quant Researcher · AI Engineer</span>
-        <span class="pill">Eval-first · NDA-clean · Public-data reproducible</span>
-      </div>
-
-      <h1 class="hero__title">
-        Quant Researcher.<br />
-        <span class="hl">Two hats.</span>
-        <span class="hero__accent">One method.</span>
-      </h1>
-
-      <div class="hero__motif">
-        <BrandMotif width={360} caption="G1–G31 · ship(x) = 1 ⇔ ∀ gates pass" />
-      </div>
-
-      <p class="hero__sub">
-        Systematic strategies that survive <strong>multiple-testing correction</strong>. Multi-agent
-        LLM systems that ship with a <strong>runnable eval harness</strong>. Same gate stack for
-        both — declared before any number is published.
+      <p class="hero__eyebrow">
+        Open to remote roles · UTC+8
       </p>
 
-      <div class="hero__eq-row">
-        <div class="hero__eq-cell">
-          <div class="hero__eq-label mono">deflated Sharpe</div>
-          <Equation
-            latex={`\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}}} \\cdot \\left[1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}\\right]`}
-          />
-        </div>
-        <div class="hero__eq-cell hero__eq-cell--right">
-          <div class="hero__eq-label mono">multi-agent cost</div>
-          <Equation
-            tone="tape"
-            latex={`\\mathrm{cost} = \\sum_{a \\in \\mathcal{A}} t(a) \\cdot p(\\mathrm{tier}(a))`}
-          />
-        </div>
-      </div>
+      <h1 class="hero__title">
+        Quant research <span class="hero__amp">&amp;</span> AI engineering,
+        <br />shipped with the eval harness<span class="hero__period">.</span>
+      </h1>
 
-      {/* === R — Result: single big numerical proof + T — Tooltip === */}
-      <div class="hero__result" tabindex="0" aria-describedby="hero-result-tooltip">
-        <div class="hero__result-num mono">
-          <span class="hero__result-eyebrow">statistical eval gates, declared up front</span>
-          <span class="hero__result-figure">31</span>
-          <span class="hero__result-cap">
-            covering mechanical validity, statistical nulls, walk-forward OOS, multiple testing,
-            look-ahead discipline, and economic realism
-          </span>
-        </div>
-        <div class="hero__tooltip" id="hero-result-tooltip" role="tooltip">
-          <div class="hero__tooltip-title mono">G1–G31 · six families</div>
-          <ul class="hero__tooltip-list mono">
-            <li><b>G1–G5</b> mechanical validity (schema, exit-0, JSON strict, byte budget)</li>
-            <li>
-              <b>G6–G10</b> statistical nulls (block-bootstrap CIs, random-timing, regime shuffle)
-            </li>
-            <li>
-              <b>G11–G15</b> walk-forward / OOS (locked windows, 5-era stability, embargoed test)
-            </li>
-            <li>
-              <b>G16–G20</b> multiple testing (deflated Sharpe, CSCV-PBO, MinBTL, Bonferroni–Holm)
-            </li>
-            <li><b>G21–G25</b> look-ahead discipline (point-in-time, survivorship, frozen-spec)</li>
-            <li>
-              <b>G26–G31</b> economic realism (spread/slippage, capacity, funding-carry, regime overlay)
-            </li>
-          </ul>
-          <a class="hero__tooltip-link" href={path('/methodology')}>Read full methodology →</a>
-        </div>
-      </div>
+      <p class="hero__voice">
+        I build research systems, and I ship the evals that prove they work.
+      </p>
+
+      <p class="hero__sub">
+        Christian T. Macion, CTA<sup>®</sup> · based in Digos City, Philippines
+        <span class="hero__sep" aria-hidden="true">·</span>
+        remote-first, available 30 hrs/wk
+      </p>
 
       <div class="hero__actions">
-        <a href={path('/solutions')} class="btn btn--primary">Read solutions</a>
-        <a href={path('/methodology')} class="btn btn--ghost">Methodology (G1–G31)</a>
-        <a href={path('/resume')} class="btn btn--ghost">Download resume ↓</a>
-      </div>
-
-      <div class="hero__proof-row">
-        <span class="dot dot--pass"></span>
-        <span class="mono hero__proof-text"
-          >all 31 gates declared before any number is published · no proprietary data sources · see
-          /experience for past engagements · all 9 quant projects reproducible end-to-end from
-          public data</span
-        >
-      </div>
-    </div>
-
-    <aside class="hero__signature" aria-label="Featured proof — CTA cert portrait">
-      <ProofCard
-        src={path('/proof/cta-cert-portrait-2026-01.jpg')}
-        alt="Christian T. Macion holding the Society of Technical Analysts Certified Technical Analyst® (CTA) certificate, certificate number 260197, awarded January 2026. Photographic proof of the Tier-1 CTA designation."
-        caption="Sitting with the Tier-1 Certified Technical Analyst® certificate (Jan 2026) — certification number 260197. Visual proof, on the record."
-        credit="STA · certificate #260197 · Jan 2026"
-        aspect="auto"
-        href={path('/certifications')}
-      />
-    </aside>
-  </section>
-
-  <TrustStrip
-    buildSha={import.meta.env.PUBLIC_BUILD_SHA}
-    lastVerifiedIso={import.meta.env.PUBLIC_LAST_VERIFIED ?? new Date().toISOString()}
-  />
-
-  <section class="stat-row">
-    <div class="container">
-      <div class="stat-row__inner">
-        <Stat
-          value="9"
-          label="quant projects"
-          sub="public-data reproducible"
-          formula="|P_q|"
-          size="lg"
-          trend="up"
-        />
-        <Stat
-          value={profile.stats.evalGates}
-          label="eval gates"
-          sub="G1–G31 statistical"
-          spark={sparkCap}
-          formula="g"
-          size="lg"
-          trend="up"
-        />
-        <Stat
-          value="5"
-          label="asset classes"
-          sub="equity · crypto · vol"
-          formula="\mathcal{U}"
-          size="lg"
-        />
-        <Stat value="100%" label="NDA-clean" sub="public-data only" formula="\neg p" size="lg" />
+        <a href={path('/contact')} class="btn btn--primary">Get in touch →</a>
+        <a href={path('/projects')} class="hero__link">Selected work</a>
+        <a href={path('/resume')} class="hero__link">Resume</a>
       </div>
     </div>
   </section>
 
-  <ProcessStrip
-    title="How the AI lane ships."
-    subtitle="Same five-step loop for every multi-agent build. The eval harness at the end is what keeps the other four honest."
-    steps={[
-      {
-        num: '1',
-        title: 'Intent',
-        desc: 'Write the agent charter and acceptance criteria before any model is called. Output contract: JSON Schema strict.',
-      },
-      {
-        num: '2',
-        title: 'Architecture',
-        desc: 'Orchestrator-worker topology. Eleven agents. Each with explicit inputs, outputs, and failure modes.',
-      },
-      {
-        num: '3',
-        title: 'Tools',
-        desc: 'MCP for structured calls (backtests, file I/O, retriever). No tool calls without a logged schema.',
-      },
-      {
-        num: '4',
-        title: 'Eval gates',
-        desc: 'G1–G31 mechanical validity + statistical nulls + LLM-as-judge on samples. Frozen spec, no mid-run edits.',
-      },
-      {
-        num: '5',
-        title: 'Deliverable',
-        desc: 'Runnable repo + readme + memo + eval-harness output. Scorecard attached, not promised.',
-      },
-    ]}
-  />
+  {/* ============================================================
+       TICKER — institutional marquee of methodology signals.
+       Sits between the hero and the value props, acting as a
+       status bar (the institutional "we are rigorous" indicator).
+       ============================================================ */}
+  <Ticker />
 
-  <section class="now-strip">
+  {/* ============================================================
+       WHAT I DO — four numbered value props, t-digital style.
+       Each tile is a single sentence: what I do, in plain language.
+       ============================================================ */}
+  <section class="section what">
     <div class="container">
-      <div class="now-strip__inner">
-        <div class="now-strip__cell">
-          <div class="now-strip__label mono">
-            {nowLabel} · <a href={path('/now')} class="now-strip__link">/now →</a>
-          </div>
-          <div class="now-strip__val">
-            <strong>Open to:</strong> Quant Researcher (QR / QR-rotational), Quantitative Research Engineer,
-            or Research Engineer seat · remote · UTC+8
-          </div>
-          <div class="now-strip__meta">
-            <span class="mono">30 hrs/wk</span> · contract or part-time · immediate start
-          </div>
-        </div>
-        <div class="now-strip__cell now-strip__cell--narrow">
-          <div class="now-strip__label mono">LATEST</div>
-          <div class="now-strip__val">DSR calculator shipped (signature interactive)</div>
-        </div>
-        <div class="now-strip__cell now-strip__cell--narrow">
-          <div class="now-strip__label mono">NEXT</div>
-          <div class="now-strip__val">
-            <a href={path('/positions')} class="now-strip__link"
-              >Live paper-trade log · project 03</a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--alt">
-    <div class="container">
-      <header class="section__head">
-        <p class="section__eyebrow">
-          Lane 1 · Quant Researcher <span class="mono">⟵ primary</span>
-        </p>
-        <h2 class="section__title">Systematic strategies, multiple-testing-aware.</h2>
+      <header class="section__head what__head">
+        <p class="section__eyebrow">What I do</p>
+        <h2 class="section__title">Four things, one discipline.</h2>
         <p class="section__sub">
-          Nine reproducible public-data research projects. Each candidate survives deflated Sharpe,
-          CSCV-based PBO, walk-forward, and frozen-spec evaluation before the number is published.
+          A senior quant and an AI engineer can share a desk only if both
+          write the eval harness. That's the only output that survives the next
+          data drift, the next regime shift, the next model swap.
         </p>
       </header>
-      <div class="grid grid-3">
+
+      <ol class="what__list">
+        <li class="what__row">
+          <div class="what__num mono">01</div>
+          <div class="what__body">
+            <h3 class="what__title">Systematic strategies, multiple-testing-aware</h3>
+            <p class="what__copy">
+              I design, backtest, and validate systematic strategies on
+              public data. Every published number survives deflated Sharpe,
+              walk-forward, and frozen-spec evaluation before it goes on
+              the page.
+            </p>
+          </div>
+        </li>
+        <li class="what__row">
+          <div class="what__num mono">02</div>
+          <div class="what__body">
+            <h3 class="what__title">Multi-agent LLM systems, eval-first</h3>
+            <p class="what__copy">
+              I build agent systems with explicit charters, MCP tool
+              contracts, and a runnable eval harness. The same gate stack
+              used for systematic strategies gates LLM outputs.
+            </p>
+          </div>
+        </li>
+        <li class="what__row">
+          <div class="what__num mono">03</div>
+          <div class="what__body">
+            <h3 class="what__title">Public-data reproducibility, end to end</h3>
+            <p class="what__copy">
+              Every project on this site is reproducible from public data.
+              No proprietary feeds, no NDA-protected inputs. The codebase,
+              the eval harness, and the scorecard ship together.
+            </p>
+          </div>
+        </li>
+        <li class="what__row">
+          <div class="what__num mono">04</div>
+          <div class="what__body">
+            <h3 class="what__title">NDA-clean by construction</h3>
+            <p class="what__copy">
+              Past contract work (closed engagements, 2025–2026) is
+              disclosed. Nothing on this site references a current or
+              active employer's systems, code, or data.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  {/* ============================================================
+       SELECTED WORK — small grid, t-digital restraint.
+       3 quant + 3 AI. Compact. No big stat bars, no equations.
+       Each card is title + 1-line summary + 1 chip.
+       ============================================================ */}
+  <section class="section section--alt work">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Selected work</p>
+        <h2 class="section__title">Fifteen projects, two lanes, public data.</h2>
+        <p class="section__sub">
+          Nine systematic-strategy projects and six multi-agent LLM projects.
+          Each one ships with a reproducible pipeline, an eval harness, and a
+          scorecard.
+        </p>
+      </header>
+
+      <div class="work__grid">
         {
           quantFeatured.map((p) => (
-            <ProjectCard
-              href={path(`/projects/${p.id}`)}
-              title={p.data.title}
-              summary={p.data.summary}
-              metrics={p.data.metrics}
-              lane="quant"
-              order={p.data.order}
-              status="public-data reproducible"
-            />
+            <a href={path(`/projects/${p.id}`)} class="work-card">
+              <div class="work-card__tag mono">QUANT</div>
+              <h3 class="work-card__title">{p.data.title}</h3>
+              <p class="work-card__copy">{p.data.summary}</p>
+              <span class="work-card__link">Read case study →</span>
+            </a>
           ))
         }
-      </div>
-      <div class="section__foot">
-        <a href={path('/projects')} class="btn btn--ghost">All quant projects →</a>
-        <a href={path('/publications')} class="btn btn--ghost">Publications log →</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <header class="section__head">
-        <p class="section__eyebrow">Lane 2 · AI Engineer <span class="mono">⟵ secondary</span></p>
-        <h2 class="section__title">Multi-agent LLM systems, eval-first.</h2>
-        <p class="section__sub">
-          Six OSS projects. Agent charters, MCP servers, eval harnesses, and LLM-as-judge gates —
-          everything that says "shipped" also has a scorecard attached.
-        </p>
-      </header>
-      <div class="grid grid-3">
         {
           aiFeatured.map((p) => (
-            <ProjectCard
-              href={path(`/projects/${p.id}`)}
-              title={p.data.title}
-              summary={p.data.summary}
-              metrics={p.data.metrics}
-              lane="ai"
-              order={p.data.order}
-              status="open source"
-            />
+            <a href={path(`/projects/${p.id}`)} class="work-card work-card--ai">
+              <div class="work-card__tag mono">AI</div>
+              <h3 class="work-card__title">{p.data.title}</h3>
+              <p class="work-card__copy">{p.data.summary}</p>
+              <span class="work-card__link">Read case study →</span>
+            </a>
           ))
         }
       </div>
-      <div class="section__foot">
-        <a href={path('/projects')} class="btn btn--ghost">All AI projects →</a>
-        <a href={path('/solutions')} class="btn btn--ghost">Solutions library →</a>
-      </div>
 
-      <aside class="ai-secondary">
-        <div class="ai-secondary__title mono">AI · SECONDARY — what this lane is and isn't</div>
-        <p class="ai-secondary__note">
-          The AI lane ships work, not previews. It is the same eval-first discipline applied
-          to LLM outputs: agent charters, MCP servers, scorecards, and frozen-spec evaluation. The primary
-          seat target is Quant Researcher; the AI lane is what makes me useful inside a quant team that
-          ships with LLM tooling. See <a href={path('/solutions')}>the solutions library</a> for the problem
-          → approach → evidence → outcome → proof pattern, and
-          <a href={path('/mistakes')}>postmortems</a> for the failure modes the eval stack is built to
-          catch.
-        </p>
-      </aside>
+      <div class="section__foot">
+        <a href={path('/projects')} class="hero__link">All 15 projects →</a>
+      </div>
     </div>
   </section>
 
-  <section class="section section--alt">
+  {/* ============================================================
+       THE NUMBERS — single row, t-digital restraint.
+       One line of stat tiles, no sparklines, no equations.
+       ============================================================ */}
+  <section class="section numbers">
     <div class="container">
       <header class="section__head">
-        <p class="section__eyebrow">The method · G1–G31</p>
-        <h2 class="section__title">One gate stack. Two lanes.</h2>
+        <p class="section__eyebrow">The numbers</p>
+        <h2 class="section__title">What eleven months of build looks like.</h2>
+      </header>
+
+      <div class="numbers__row">
+        <div class="number">
+          <div class="number__fig mono tnum">{profile.stats.evalGates}</div>
+          <div class="number__lbl">eval gates, G1–G31</div>
+        </div>
+        <div class="number">
+          <div class="number__fig mono tnum">{profile.stats.aiAgentCount}</div>
+          <div class="number__lbl">AI agents, orchestrator + workers</div>
+        </div>
+        <div class="number">
+          <div class="number__fig mono tnum">{profile.stats.locPython}<span class="number__unit">k</span></div>
+          <div class="number__lbl">lines of Python, on the desk</div>
+        </div>
+        <div class="number">
+          <div class="number__fig mono tnum">{profile.stats.certCount}</div>
+          <div class="number__lbl">certifications, 2024 → 2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================
+       STATEMENT CAROUSEL — editorial rotating sentences.
+       Auto-advances every 5s, pauses on hover. The Anthropic /
+       Schonfeld institutional signature: one rotating thought
+       that re-anchors the page between the proof band and the
+       credentials list.
+       ============================================================ */}
+  <StatementCarousel />
+
+  {/* ============================================================
+       CREDENTIALS — 4 flagship certs, plain text list.
+       t-digital style: small list, no images here, just the names
+       and the dates. Save the visuals for /certifications.
+       ============================================================ */}
+  <section class="section section--alt creds">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Credentials</p>
+        <h2 class="section__title">A short list, in plain language.</h2>
         <p class="section__sub">
-          The same gate stack gates LLM outputs and systematic strategies. Six families, 31 gates,
-          one contract. See the full gate taxonomy on the <a href={path('/methodology')}
-            >methodology page</a
-          >.
+          The full credential library (102 certificates, four groups) is on
+          the <a href={path('/certifications')}>certifications page</a>. The
+          four below are the headlines.
         </p>
       </header>
 
-      <div class="gates-preview">
-        <div class="gate-tile">
-          <div class="gate-tile__range mono">G1–G5</div>
-          <div class="gate-tile__name">Mechanical validity</div>
-          <ul class="gate-tile__list mono">
-            <li>schema conformance</li>
-            <li>exit-0 contract</li>
-            <li>JSON Schema strict</li>
-            <li>byte-length budget</li>
-          </ul>
-        </div>
-        <div class="gate-tile">
-          <div class="gate-tile__range mono">G6–G10</div>
-          <div class="gate-tile__name">Statistical nulls</div>
-          <ul class="gate-tile__list mono">
-            <li>block-bootstrap CIs</li>
-            <li>random-timing nulls</li>
-            <li>regime shuffle</li>
-            <li>parameter-prior sensitivity</li>
-          </ul>
-        </div>
-        <div class="gate-tile">
-          <div class="gate-tile__range mono">G11–G15</div>
-          <div class="gate-tile__name">Walk-forward & OOS</div>
-          <ul class="gate-tile__list mono">
-            <li>locked OOS windows</li>
-            <li>5-era stability</li>
-            <li>expanding/rolling</li>
-            <li>embargoed test set</li>
-          </ul>
-        </div>
-        <div class="gate-tile">
-          <div class="gate-tile__range mono">G16–G20</div>
-          <div class="gate-tile__name">Multiple testing</div>
-          <ul class="gate-tile__list mono">
-            <li>deflated Sharpe</li>
-            <li>CSCV-based PBO</li>
-            <li>MinBTL</li>
-            <li>Bonferroni–Holm</li>
-          </ul>
-        </div>
-        <div class="gate-tile">
-          <div class="gate-tile__range mono">G21–G25</div>
-          <div class="gate-tile__name">Look-ahead discipline</div>
-          <ul class="gate-tile__list mono">
-            <li>point-in-time data</li>
-            <li>survivorship check</li>
-            <li>timing consistency</li>
-            <li>frozen-spec</li>
-          </ul>
-        </div>
-        <div class="gate-tile">
-          <div class="gate-tile__range mono">G26–G31</div>
-          <div class="gate-tile__name">Economic realism</div>
-          <ul class="gate-tile__list mono">
-            <li>spread/slippage/latency</li>
-            <li>capacity constraint</li>
-            <li>funding-carry</li>
-            <li>regime overlay</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="section__foot">
-        <a href={path('/methodology')} class="btn btn--primary">Read full methodology →</a>
-      </div>
+      <ul class="creds__list">
+        <li class="creds__row">
+          <div class="creds__name">Certified Technical Analyst<sup>®</sup></div>
+          <div class="creds__org">Society of Technical Analysts</div>
+          <div class="creds__date mono">Jan 2026</div>
+        </li>
+        <li class="creds__row">
+          <div class="creds__name">AI for the Modern Workforce</div>
+          <div class="creds__org">Ateneo de Davao · US Embassy</div>
+          <div class="creds__date mono">Nov 2025</div>
+        </li>
+        <li class="creds__row">
+          <div class="creds__name">AIccelerate 2025</div>
+          <div class="creds__org">BIDA · Bayan Academy · Meta</div>
+          <div class="creds__date mono">Dec 2025</div>
+        </li>
+        <li class="creds__row">
+          <div class="creds__name">Blockchain4Youth B4Y</div>
+          <div class="creds__org">Bitget</div>
+          <div class="creds__date mono">2026</div>
+        </li>
+      </ul>
     </div>
   </section>
 
   <CTABanner
     title="Hiring a Quant Researcher or AI Engineer?"
-    sub="Public-data reproducible projects. Runnable eval harnesses. A 31-gate statistical validation stack. NDA-clean by construction."
-    primaryLabel="Read solutions"
-    secondaryLabel="Get in touch"
-    secondaryHref={path('/contact')}
+    sub="Public-data reproducible work. Runnable eval harnesses. NDA-clean by construction. Remote-first, available 30 hrs/wk."
+    primaryLabel="Get in touch"
+    primaryHref={path('/contact')}
+    secondaryLabel="Read methodology"
+    secondaryHref={path('/methodology')}
   />
 </BaseLayout>
 
 <style>
+  /* ============================================================
+     HERO — t-digital pattern. Dark canvas, single sentence, sparse.
+     ============================================================ */
   .hero {
-    padding-block: var(--sp-9);
-    background:
-      radial-gradient(1200px 600px at 80% -100px, rgba(212, 160, 23, 0.14), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.1), transparent 60%), var(--c-paper);
-    border-bottom: var(--border);
-  }
-  .hero__inner {
-    max-width: 980px;
-  }
-  .hero__eyebrow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-2);
-    margin-bottom: var(--sp-5);
-  }
-  .hero__title {
-    font-size: clamp(1.875rem, 5.6vw, 4.5rem);
-    line-height: 1;
-    letter-spacing: -0.035em;
-    margin-bottom: var(--sp-5);
-  }
-  .hero__accent {
-    color: var(--c-primary);
-  }
-  .hero__motif {
-    display: flex;
-    justify-content: flex-start;
-    margin: 0 0 var(--sp-5);
-  }
-  .hero__sub {
-    font-size: var(--fs-lg);
-    color: var(--c-ink-2);
-    line-height: var(--lh-loose);
-    max-width: 72ch;
-    margin-bottom: var(--sp-7);
-  }
-  .hero__sub strong {
-    color: var(--c-ink);
-    font-weight: 600;
-  }
-
-  .hero__eq-row {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: var(--sp-5);
-    margin-bottom: var(--sp-7);
-  }
-  .hero__eq-cell {
-    padding: var(--sp-4) var(--sp-5);
-    background: var(--c-bg);
-    border: 1px solid var(--c-rule);
-    border-radius: var(--radius);
-    overflow-x: auto;
-  }
-  .hero__eq-cell--right {
+    position: relative;
+    padding-block: clamp(var(--sp-7), 14vh, 11rem) clamp(var(--sp-7), 12vh, 9rem);
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-color: var(--c-tape-2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    min-width: 0;
   }
-  .hero__eq-cell--right .hero__eq-label {
-    color: #d29922;
+  /* v6.1.0 — Atmospheric dark hero. Soft amber glow + cool counter-glow +
+     subtle grid. The two decorative divs are positioned absolutely so
+     they never break the layout. */
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(900px 600px at 88% 8%, rgba(232, 178, 32, 0.18), transparent 65%),
+      radial-gradient(700px 500px at 8% 95%, rgba(11, 61, 92, 0.25), transparent 65%);
+    pointer-events: none;
+    z-index: 0;
   }
-  .hero__eq-label {
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--c-primary-2-deep);
-    margin-bottom: var(--sp-2);
-    font-weight: 600;
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .hero__stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--sp-3);
-    margin-bottom: var(--sp-7);
-  }
-
-  /* === Hero R — Result + T — Tooltip (Delta 3 HRT) === */
-  .hero__result {
+  .hero__inner {
     position: relative;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    gap: var(--sp-6);
-    align-items: center;
-    padding: var(--sp-5) var(--sp-6);
-    margin-bottom: var(--sp-7);
-    background: var(--c-bg);
-    border: 1px solid var(--c-rule);
-    border-left: 3px solid var(--c-primary-2-deep);
-    border-radius: var(--radius);
-    transition:
-      border-color var(--transition),
-      box-shadow var(--transition);
+    z-index: 1;
+    max-width: 900px;
+    min-width: 0;
   }
-  .hero__result:hover,
-  .hero__result:focus-within {
-    border-color: var(--c-primary);
-    border-left-color: var(--c-primary-2-deep);
-    box-shadow: var(--shadow-sm);
-  }
-  .hero__result-num {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-  .hero__result-eyebrow {
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--c-primary-2-deep);
-    font-weight: 600;
-  }
-  .hero__result-figure {
-    font-size: clamp(5rem, 14vw, 9rem);
-    font-weight: 800;
-    line-height: 0.9;
-    color: var(--c-primary);
-    letter-spacing: -0.04em;
-    font-variant-numeric: tabular-nums;
-  }
-  .hero__result-cap {
-    font-size: var(--fs-sm);
-    color: var(--c-ink-2);
-    line-height: var(--lh-normal);
-    max-width: 38ch;
-  }
-  .hero__tooltip {
-    padding: var(--sp-4) var(--sp-5);
-    background: var(--c-bg-2);
-    border: 1px solid var(--c-rule);
-    border-radius: var(--radius-sm);
-    font-size: var(--fs-sm);
-  }
-  .hero__tooltip-title {
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--c-primary-2-deep);
-    margin-bottom: var(--sp-3);
-    font-weight: 700;
-  }
-  .hero__tooltip-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--sp-3) 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-  }
-  .hero__tooltip-list li {
-    color: var(--c-ink-2);
-    line-height: var(--lh-snug);
-  }
-  .hero__tooltip-list li b {
-    color: var(--c-primary);
-    font-weight: 700;
-    margin-right: var(--sp-2);
-  }
-  .hero__tooltip-link {
+  .hero__eyebrow {
+    display: inline-block;
     font-family: var(--ff-mono);
     font-size: var(--fs-xs);
-    color: var(--c-primary-2-deep);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
   }
 
-  /* === Stat row (Delta 4) === */
-  .stat-row {
-    padding-block: var(--sp-7);
-    background: var(--c-bg-2);
-    border-bottom: var(--border);
+  .hero__title {
+    font-size: clamp(2rem, 5.5vw, 4.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.028em;
+    color: #fafafa;
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+    text-wrap: balance;
   }
-  .stat-row__inner {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--sp-5);
+  .hero__amp {
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--c-primary-2);
+    padding: 0 0.05em;
+  }
+  .hero__period {
+    color: var(--c-primary-2);
   }
 
-  @media (max-width: 880px) {
-    .hero__result {
-      grid-template-columns: 1fr;
-    }
-    .hero__result-figure {
-      font-size: clamp(4rem, 18vw, 6rem);
-    }
-    .stat-row__inner {
-      grid-template-columns: 1fr 1fr;
-    }
+  .hero__voice {
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 100%;
+    margin-bottom: var(--sp-6);
+    letter-spacing: -0.005em;
+    min-width: 0;
   }
-  @media (max-width: 540px) {
-    .stat-row__inner {
-      grid-template-columns: 1fr;
-    }
+
+  .hero__sub {
+    font-size: var(--fs-sm);
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.6;
+    margin-bottom: var(--sp-7);
+    max-width: 100%;
+    min-width: 0;
+  }
+  .hero__sub sup {
+    color: var(--c-primary-2);
+    font-size: 0.7em;
+  }
+  .hero__sep {
+    margin: 0 0.5em;
+    color: rgba(255, 255, 255, 0.3);
   }
 
   .hero__actions {
     display: flex;
-    gap: var(--sp-3);
     flex-wrap: wrap;
-    margin-bottom: var(--sp-7);
+    align-items: center;
+    gap: var(--sp-4) var(--sp-5);
+    min-width: 0;
   }
-
-  .hero__proof-row {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: var(--sp-3);
-    padding: var(--sp-3) var(--sp-4);
-    background: rgba(22, 163, 74, 0.06);
-    border-left: 3px solid var(--c-pass);
-    border-radius: var(--radius-sm);
-  }
-  .hero__proof-text {
-    font-size: var(--fs-xs);
-    color: var(--c-ink-2);
-    line-height: var(--lh-loose);
-  }
-  .hero__signature {
-    margin-top: var(--sp-7);
-    max-width: 920px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* === Gate preview tiles === */
-  .gates-preview {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: var(--sp-3);
-  }
-  .gate-tile {
-    padding: var(--sp-4);
-    background: var(--c-bg);
-    border: 1px solid var(--c-rule);
-    border-left: 3px solid var(--c-primary);
-    border-radius: var(--radius);
-    transition: border-color var(--transition);
-  }
-  .gate-tile:hover {
-    border-color: var(--c-primary);
-    border-left-color: var(--c-primary-2-deep);
-  }
-  .gate-tile__range {
-    font-size: var(--fs-sm);
-    color: var(--c-primary);
-    font-weight: 700;
-    margin-bottom: var(--sp-1);
-  }
-  .gate-tile__name {
-    font-size: var(--fs-base);
-    color: var(--c-ink);
-    margin-bottom: var(--sp-2);
+  .hero__actions .btn--primary {
+    background: var(--c-primary-2);
+    color: #0a0a0a;
+    border-color: var(--c-primary-2);
+    padding: 0.7rem 1.3rem;
     font-weight: 600;
   }
-  .gate-tile__list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
+  .hero__actions .btn--primary:hover {
+    background: #f5b94a;
+    border-color: #f5b94a;
   }
-  .gate-tile__list li {
-    font-size: var(--fs-xs);
-    color: var(--c-ink-2);
-    line-height: 1.5;
-  }
-
-  .section__foot {
-    margin-top: var(--sp-6);
-    display: flex;
-    justify-content: center;
-    gap: var(--sp-3);
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 880px) {
-    .hero__eq-row {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* === Now strip === */
-  .now-strip {
-    background: var(--c-tape);
-    color: var(--ink-on-tape);
-    border-bottom: 1px solid var(--c-tape-2);
-  }
-  .now-strip__inner {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr;
-    gap: var(--sp-5);
-    padding-block: var(--sp-4);
-  }
-  .now-strip__cell {
-    line-height: 1.5;
-  }
-  .now-strip__cell--narrow {
-    font-size: var(--fs-sm);
-    color: rgba(230, 237, 243, 0.85);
-  }
-  .now-strip__label {
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #d4a017;
-    margin-bottom: 0.25rem;
-    font-weight: 600;
-  }
-  .now-strip__val {
-    font-size: var(--fs-base);
-    color: var(--ink-on-tape);
-  }
-  .now-strip__val strong {
-    color: var(--c-primary-2-deep);
-    font-weight: 600;
-  }
-  .now-strip__link {
-    color: inherit;
+  .hero__link {
+    color: var(--c-primary-2);
     text-decoration: underline;
     text-decoration-color: rgba(212, 160, 23, 0.4);
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
+    font-weight: 500;
+    font-size: var(--fs-base);
+    transition:
+      color var(--transition),
+      text-decoration-color var(--transition);
   }
-  .now-strip__link:hover {
-    color: var(--c-primary-2-deep);
-    text-decoration-color: var(--c-primary-2-deep);
-  }
-  .now-strip__meta {
-    margin-top: var(--sp-2);
-    font-size: var(--fs-xs);
-    color: rgba(230, 237, 243, 0.65);
-    letter-spacing: 0.03em;
-  }
-  .now-strip__meta .mono {
-    color: var(--c-primary-2-deep);
-    font-weight: 700;
-    padding: 0 4px;
-    border: 1px solid rgba(212, 160, 23, 0.35);
-    border-radius: 3px;
-  }
-  .now-strip__cell--narrow .now-strip__val {
-    font-size: var(--fs-sm);
-    color: rgba(230, 237, 243, 0.85);
+  .hero__link:hover {
+    color: #f5b94a;
+    text-decoration-color: #f5b94a;
   }
 
-  @media (max-width: 880px) {
-    .now-strip__inner {
-      grid-template-columns: 1fr;
-      gap: var(--sp-3);
-    }
-  }
+  /* ============================================================
+     WHAT I DO — 4-row editorial list, t-digital quant-factory style.
+     ============================================================ */
+  .what__head { margin-bottom: var(--sp-7); }
 
-  /* === AI secondary panel === */
-  .ai-secondary {
-    margin-top: var(--sp-6);
-    padding: var(--sp-5);
-    background: var(--c-bg-2);
-    border: 1px solid var(--c-rule);
-    border-left: 3px solid var(--c-primary-2);
-    border-radius: var(--radius);
+  .what__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--c-rule);
   }
-  .ai-secondary__title {
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--c-primary-2-deep);
-    font-weight: 600;
-    margin-bottom: var(--sp-3);
-  }
-  .ai-secondary__grid {
+  .what__row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 80px 1fr;
     gap: var(--sp-5);
-    margin-bottom: var(--sp-3);
+    padding: var(--sp-6) 0;
+    border-bottom: 1px solid var(--c-rule);
+    align-items: start;
   }
-  .ai-secondary__num {
-    font-size: var(--fs-3xl);
+  .what__num {
+    font-size: var(--fs-sm);
     color: var(--c-primary);
     font-weight: 700;
-    line-height: 1;
+    letter-spacing: 0.05em;
+    padding-top: 0.25rem;
   }
-  .ai-secondary__lbl {
-    font-size: var(--fs-xs);
-    color: var(--c-ink-2);
-    margin-top: 0.25rem;
+  .what__title {
+    font-size: var(--fs-xl);
+    font-weight: 600;
+    color: var(--c-ink);
+    margin-bottom: var(--sp-2);
+    letter-spacing: -0.015em;
+    line-height: 1.25;
   }
-  .ai-secondary__note {
-    font-size: var(--fs-xs);
+  .what__copy {
+    font-size: var(--fs-base);
     color: var(--c-ink-2);
-    line-height: var(--lh-loose);
-    font-style: italic;
+    line-height: 1.6;
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
   }
 
   @media (max-width: 720px) {
-    .ai-secondary__grid {
-      grid-template-columns: 1fr;
+    .what__row {
+      grid-template-columns: 56px 1fr;
+      gap: var(--sp-3);
     }
+    .what__title { font-size: var(--fs-lg); }
+  }
+
+  /* ============================================================
+     SELECTED WORK — 6 cards, 3-col grid on desktop.
+     ============================================================ */
+  .work__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-6);
+  }
+  .work-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    color: var(--c-ink);
+    text-decoration: none;
+    transition:
+      border-color var(--transition),
+      transform var(--transition);
+  }
+  .work-card:hover {
+    border-color: var(--c-primary);
+    transform: translateY(-2px);
+  }
+  .work-card__tag {
+    font-size: var(--fs-xs);
+    color: var(--c-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+  .work-card--ai .work-card__tag { color: var(--c-primary-3); }
+  .work-card__title {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    color: var(--c-ink);
+    line-height: 1.25;
+    letter-spacing: -0.012em;
+  }
+  .work-card__copy {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .work-card__link {
+    font-size: var(--fs-xs);
+    font-family: var(--ff-mono);
+    color: var(--c-primary-2);
+    letter-spacing: 0.04em;
+    transition: color var(--transition);
+  }
+  .work-card__link:hover {
+    color: var(--c-primary-2-light);
+  }
+
+  @media (max-width: 880px) {
+    .work__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .work__grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     THE NUMBERS — single row of 4 stat tiles, restrained.
+     ============================================================ */
+  .numbers__row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-5);
+    border-top: 1px solid var(--c-rule);
+    padding-top: var(--sp-6);
+  }
+  .number {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .number__fig {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+    color: var(--c-ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .number__unit {
+    font-size: 0.6em;
+    color: var(--c-ink-2);
+    margin-left: 0.05em;
+  }
+  .number__lbl {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 880px) {
+    .numbers__row { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .numbers__row { grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+    .number__fig { font-size: 1.85rem; }
+  }
+
+  /* ============================================================
+     CREDENTIALS — list of 4, plain table-like.
+     ============================================================ */
+  .creds__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--c-rule);
+  }
+  .creds__row {
+    display: grid;
+    grid-template-columns: 1.4fr 1.5fr auto;
+    gap: var(--sp-5);
+    padding: var(--sp-4) 0;
+    border-bottom: 1px solid var(--c-rule);
+    align-items: baseline;
+  }
+  .creds__name {
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+  .creds__name sup {
+    color: var(--c-primary-2-deep);
+    font-size: 0.7em;
+  }
+  .creds__org {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+  .creds__date {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 720px) {
+    .creds__row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+      padding: var(--sp-4) 0;
+    }
+    .creds__date { margin-top: var(--sp-1); }
+  }
+
+  /* ============================================================
+     Section head tweaks
+     ============================================================ */
+  .section__eyebrow {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    margin-bottom: var(--sp-3);
+    font-weight: 600;
+  }
+  .section__title {
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-3);
+  }
+  .section__sub {
+    font-size: var(--fs-base);
+    color: var(--c-ink-2);
+    line-height: 1.6;
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  .section__foot {
+    display: flex;
+    justify-content: center;
+    gap: var(--sp-4);
+    margin-top: var(--sp-4);
+  }
+
+  /* ============================================================
+     v6.1.0 — DARK ALT-SECTION OVERRIDES
+     .section--alt is now institutional-tape. Override child element
+     colors so titles, eyebrows, and cards render correctly on dark.
+     ============================================================ */
+  .section--alt .section__title { color: #fafafa; }
+  .section--alt .section__sub { color: rgba(230, 237, 243, 0.7); }
+  .section--alt .section__sub a { color: var(--c-primary-2-light); }
+  .section--alt .section__eyebrow { color: var(--c-primary-2); }
+  .section--alt .number__fig { color: #fafafa; }
+  .section--alt .number__lbl { color: rgba(230, 237, 243, 0.6); }
+  .section--alt .work-card {
+    background: var(--c-tape-2);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #fafafa;
+  }
+  .section--alt .work-card:hover {
+    border-color: var(--c-primary-2);
+  }
+  .section--alt .work-card__title { color: #fafafa; }
+  .section--alt .work-card__copy { color: rgba(230, 237, 243, 0.7); }
+  .section--alt .work-card__link { color: var(--c-primary-2-light); }
+  .section--alt .what__row,
+  .section--alt .creds__row,
+  .section--alt .numbers__row { border-color: rgba(255, 255, 255, 0.08); }
+  .section--alt .what__title,
+  .section--alt .creds__name { color: #fafafa; }
+  .section--alt .what__copy,
+  .section--alt .creds__org { color: rgba(230, 237, 243, 0.7); }
+  .section--alt .creds__date { color: rgba(230, 237, 243, 0.5); }
+  .section--alt .section__foot .hero__link { color: var(--c-primary-2-light); }
+
+  /* ============================================================
+     MOBILE SAFETY NET — prevent any hero/section content from
+     forcing horizontal scroll on narrow viewports.
+     ============================================================ */
+  @media (max-width: 600px) {
+    .hero__title { font-size: clamp(1.85rem, 9vw, 2.4rem); }
+    .hero__voice { font-size: 1.05rem; }
+    .hero__sub { font-size: var(--fs-xs); }
+    .hero__sep { display: block; margin: 0.4em 0 0; }
+    .hero__actions { gap: var(--sp-3) var(--sp-4); }
+    .section__title { font-size: 1.5rem; }
+    .what__title { font-size: 1.1rem; }
   }
 </style>

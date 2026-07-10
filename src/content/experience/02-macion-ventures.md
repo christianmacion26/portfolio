@@ -15,13 +15,13 @@ contributions:
     proof: 'See /solutions/7-agent-venture-pipeline'
   - label: 'Anti-self-approval governance pattern'
     evidence: 'The proposing agent never approves its own output — separation of duties at the agent level'
-    proof: 'Pattern documented in solution card; reuse in 19V engagement'
+    proof: 'Pattern documented in solution card; reuse in systematic-strategy desk engagement'
   - label: 'PH jurisdiction-aware prompting'
     evidence: 'DTI/SEC/BIR/LGU rules, ₱3M VAT threshold, 8%-flat vs graduated election baked into prompts'
     proof: 'Encoded in skill prompts (not bolted on at the end)'
 proofs:
   - '31 artifacts on disk (charters, briefs, ledgers)'
-  - 'Reuse pattern documented in 19V engagement methodology'
+  - 'Reuse pattern documented in systematic-strategy desk engagement methodology'
 ---
 
 Built a **7-agent venture-incubation pipeline** (5 judgment-tier + 2 mechanical) with 10 lifecycle skills; produced 31 decision-grade artifacts and engineered an **anti-self-approval governance pattern** (the agent that proposes never approves).
