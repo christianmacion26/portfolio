@@ -16,6 +16,17 @@
  * emitted on the page). Wiring it through the BaseLayout bundle — like
  * reveal-on-scroll, odometer, active-nav, copy-button, scroll-progress —
  * guarantees the driver ships on every page that includes the carousel.
+ *
+ * v6.0.13 hardening:
+ *   - Generation token (`gen`) invalidates any tick callback that was
+ *     already queued when `stop()` was called. Solves the "stale
+ *     `setInterval` callback fires after manual nav" race.
+ *   - `Number(raw)` is guarded: if `data-stmt-dot` is missing or
+ *     non-integer, the click is a no-op (instead of `show(NaN)` which
+ *     silently kills the carousel — every slide gets `aria-hidden` and
+ *     opacity 0).
+ *   - `show(i)` skips when `next === active` (no flicker on duplicate
+ *     clicks).
  */
 
 function initCarousel(root: HTMLElement): void {
@@ -30,9 +41,15 @@ function initCarousel(root: HTMLElement): void {
 
   let active = 0;
   let timer: ReturnType<typeof setInterval> | null = null;
+  // Generation token. Each `start()` increments and captures a fresh `myGen`;
+  // callbacks whose `myGen !== gen` are leaked from a previous start() and
+  // must drop without firing.
+  let gen = 0;
 
   function show(i: number): void {
-    active = ((i % slides.length) + slides.length) % slides.length;
+    const next = ((i % slides.length) + slides.length) % slides.length;
+    if (next === active) return;
+    active = next;
     slides.forEach((s, idx) => {
       const on = idx === active;
       s.classList.toggle('is-active', on);
@@ -48,16 +65,28 @@ function initCarousel(root: HTMLElement): void {
   function start(): void {
     if (reduced) return;
     stop();
-    timer = setInterval(() => show(active + 1), intervalMs);
+    const myGen = ++gen;
+    timer = setInterval(() => {
+      if (myGen !== gen) return; // stale callback from a cancelled interval
+      show(active + 1);
+    }, intervalMs);
   }
   function stop(): void {
-    if (timer) clearInterval(timer);
-    timer = null;
+    gen++; // invalidate any in-flight interval callback
+    if (timer !== null) {
+      clearInterval(timer);
+      timer = null;
+    }
   }
 
   dots.forEach((d) => {
     d.addEventListener('click', () => {
-      const idx = Number(d.dataset.stmtDot);
+      const raw = d.dataset.stmtDot;
+      const idx = raw == null ? active : Number(raw);
+      // v6.0.13 — `Number(undefined) === NaN`. Without this guard, a dot
+      // click with a missing attribute silently kills the entire carousel
+      // (every slide gets aria-hidden=true and opacity 0).
+      if (!Number.isInteger(idx)) return;
       show(idx);
       start(); // restart timer after manual nav
     });

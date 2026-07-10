@@ -9,7 +9,22 @@
  *
  * Auto-advances every 5s. Pauses on hover or keyboard focus. Dots
  * indicator below for manual navigation. Respects prefers-reduced-motion
- * (no auto-advance).
+ * (no auto-advance, no fade).
+ *
+ * v6.0.13 — Cross-fade bug fix:
+ *   The previous CSS+JS had two slides at non-zero opacity for the full
+ *   320 ms transition window (outgoing at 1→0, incoming at 0→1) because
+ *   both `is-active` toggles ran synchronously in `show()` and both had
+ *   the same CSS transition. The result was stacked glyphs bisecting each
+ *   other, clipped to the viewport's overflow.
+ *
+ *   Fix: only the INCOMING slide animates. Outgoing snaps via 0 ms
+ *   transition (`transition: opacity 0ms` outside `.is-active`).
+ *   This eliminates the 320 ms visual overlap.
+ *
+ *   v6.0.13 also: track width set to 100% so the 0-wide-content bug
+ *   (parent flex item with absolute-only children) is fixed; dots shrunk
+ *   slightly; dot row centered via flex justify-content.
  *
  * Usage:
  *   <StatementCarousel />
@@ -53,13 +68,10 @@ const {
           aria-hidden={i === 0 ? 'false' : 'true'}
           data-stmt-index={i}
         >
-          {/* Inner span is required so the text wraps inside the flex
-              slide. With `display: flex` on the <li> and a bare text node,
-              the text becomes an anonymous flex item with min-width: auto,
-              so the line refuses to wrap — it overflows the viewport (which
-              has `overflow: hidden`) and only the centered character
-              renders. Wrapping in a span gives us a real block child that
-              honors `text-wrap: balance` and `max-width: 100%`. */}
+          {/* Inner span gives us a real block child so `text-wrap: balance`
+              and `padding-inline` work — bare text inside a flex item
+              becomes an anonymous flex item with `min-width: auto` and
+              refuses to wrap properly. */}
           <span class="stmt-carousel__text">{s}</span>
         </li>
       ))}
@@ -104,11 +116,13 @@ const {
     width: 100%;
     max-width: 760px;
     overflow: hidden;
-    text-align: center;
-    min-height: 4em; /* reserve space for 2-line wrap so layout doesn't jump */
+    /* Reserve ~2 lines of vertical space so a 2-line wrap doesn't shift
+       the dots down on each slide. */
+    min-height: 3.4em;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
 
   .stmt-carousel__track {
@@ -116,7 +130,13 @@ const {
     padding: 0;
     margin: 0;
     position: relative;
-    height: 4em; /* matches viewport — keeps cross-fade stacked cleanly */
+    /* v6.0.13 — width:100% is critical. Without it, the track (a flex
+       item whose only children are `position: absolute`) collapses to
+       its content size, which is 0, and the slides render as a 0-wide
+       column overflowing the viewport's overflow-hidden — clipped to
+       a narrow center slice that looks like "...ugeni." / "O...". */
+    width: 100%;
+    height: 3.4em;
   }
 
   .stmt-carousel__slide {
@@ -131,25 +151,26 @@ const {
     line-height: 1.4;
     color: var(--c-ink);
     letter-spacing: -0.005em;
-    opacity: 0;
-    transform: translateY(6px);
-    transition:
-      opacity 320ms var(--ease-out),
-      transform 320ms var(--ease-out);
-    pointer-events: none;
     padding: 0;
+    opacity: 0;
+    /* v6.0.13 — outgoing slide gets a 0 ms transition (instant hide)
+       so the active slide's 280 ms fade-in never overlaps a fading-out
+       slide. The single `is-active` class flip then produces a clean
+       cross-fade without stacked glyphs. */
+    transition: opacity 0ms;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .stmt-carousel__slide.is-active {
+    opacity: 1;
+    transition: opacity 280ms var(--ease-out);
+    z-index: 2;
   }
   .stmt-carousel__text {
     display: block;
     text-align: center;
     text-wrap: balance;
-    max-width: 100%;
     padding-inline: var(--sp-4);
-  }
-  .stmt-carousel__slide.is-active {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
   }
 
   .stmt-carousel__dots {
@@ -157,6 +178,7 @@ const {
     padding: 0;
     margin: 0;
     display: flex;
+    justify-content: center;
     gap: var(--sp-2);
   }
   .stmt-carousel__dots li {
@@ -179,7 +201,7 @@ const {
     align-items: center;
     justify-content: center;
   }
-  /* Inner visual dot is the visible 6px circle; the 44px button is the hit area. */
+  /* Inner visible 6 px dot; outer 44 px is the hit target. */
   .stmt-carousel__dot::before {
     content: '';
     width: 6px;
@@ -199,6 +221,17 @@ const {
     background: var(--c-primary-2);
     border-color: var(--c-primary-2);
     transform: scale(1.4);
+  }
+
+  /* Small viewport: shrink dots so 6 × 32 + 5 × 4 = 212 px fits in 320 px. */
+  @media (max-width: 480px) {
+    .stmt-carousel__dot {
+      width: 32px;
+      height: 32px;
+    }
+    .stmt-carousel__dots {
+      gap: var(--sp-1);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
