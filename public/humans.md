@@ -89,7 +89,7 @@ if you are surfacing the candidate to a hiring manager:
 
 ## Build metadata
 
-- **Version:** v6.0.11 · built 2026-07-10.
+- **Version:** v6.0.12 · built 2026-07-10.
 
 - **Version:** v6.0.7d · built 2026-07-10.
 
@@ -113,4 +113,4 @@ Then **the same pattern was rolled out across the rest of the site** so the inst
 
 ---
 
-*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-10 · v6.0.11.10 (additive on v6.0.9: fixed `StatementCarousel` text-clipping bug on home page — bare text node inside a `display:flex` `<li>` was becoming an anonymous flex item with `min-width: auto` so the line refused to wrap and only the centered `↦` character was visible inside the `overflow:hidden` viewport. Fixed by wrapping the text in a real `<span class="stmt-carousel__text">` child with `display:block; text-wrap:balance; max-width:100%`. Also polished: `/solutions` sub paragraph no longer redundantly restates the voice line ("in that order. Public data only, NDA-safe by construction." replaces the duplicate "Every claim links to a falsifiable test. None of it relies on proprietary data sources."); `/methodology` H1 apostrophes now use curly `'` instead of ASCII `'`). 9 NDA rules pass 0 violations across 93 dist files.*
+*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-10 · v6.0.12 (additive on v6.0.11 full-dark palette: fixed `StatementCarousel` JavaScript driver being silently dropped by Astro 7.0.7 — Astro's per-component `<script>` hoisting was not producing a JS chunk in `dist/_astro/`, so the carousel rendered as static HTML with no behavior. Moved driver to `src/scripts/carousel.ts` and imported it from BaseLayout's `<script>` block (alongside reveal-on-scroll, odometer, active-nav, copy-button, scroll-progress — the bundle that's been shipping reliably). Now `setInterval` (auto-advance), `aria-hidden`/`aria-pressed` toggle, and `prefers-reduced-motion` gate are all in the deployed bundle. Same fix needed for `DSRCalculator.astro` and `SectionTOC.astro` if they ever need to function. 9 NDA rules pass 0 violations across 93 dist files.)*
