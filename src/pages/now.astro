@@ -10,11 +10,11 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 // Last-updated stamp: 2026-07-10 (the page is updated ~monthly)
 const updated = '2026-07-10';
-const updatedHuman = '10 July 2026';
----
+const updatedHuman = '10 July 2026';---
 
 <BaseLayout
   title="Now"
@@ -27,9 +27,9 @@ const updatedHuman = '10 July 2026';
       <h1 class="now-head__title">
         What I'm doing <span class="hl">right now</span>.
       </h1>
-      <p class="now-head__voice voice-line">
+      <VoiceLine class="now-head__voice">
         Dated. Honest. Updated only when something changes that matters.
-      </p>
+      </VoiceLine>
       <p class="now-head__sub">
         A dated one-pager. Updated ~monthly, or on regime-event override (job change, paper-trade
         regime flip, new gate added to the stack). Inspired by <a
@@ -186,27 +186,8 @@ const updatedHuman = '10 July 2026';
   }
   .now-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .now-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .now-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .now-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

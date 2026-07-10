@@ -20,11 +20,22 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
+  /* v6.0.12 — smooth scroll + scroll-padding-top are gated on
+     `prefers-reduced-motion: no-preference`. With the sticky nav at
+     56px and (sometimes) a section TOC at 36px above, hash anchors
+     otherwise land ~92px under the nav. The fallback is `auto` (instant
+     jump) when the user prefers reduced motion or the system honors it. */
+  scroll-behavior: auto;
+  scroll-padding-top: 96px;
   /* v6.0.11 — guard against horizontal overflow on narrow viewports.
      `clip` is preferred over `hidden` because it doesn't establish a
      scroll container (preserves `position: sticky` semantics). */
   overflow-x: clip;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {

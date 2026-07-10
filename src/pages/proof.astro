@@ -23,6 +23,7 @@ import CTABanner from '@components/CTABanner.astro';
 import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
 import SectionTOC from '@components/SectionTOC.astro';
+import VoiceLine from '@components/VoiceLine.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
@@ -216,9 +217,9 @@ const paginate = (items: any[]) => {
       <h1 class="proof-head__title">
         Proof. <span class="hl">Public or self-owned only</span>.
       </h1>
-      <p class="proof-head__voice voice-line">
+      <VoiceLine class="proof-head__voice">
         If it isn't reproducible from public data, it isn't here.
-      </p>
+      </VoiceLine>
 
       {/* === Proof discipline carousel — six core rules, rotating === */}
       <div class="proof-head__carousel">
@@ -248,27 +249,30 @@ const paginate = (items: any[]) => {
         Updated when something new ships; never deleted when something expires.
       </p>
 
-      {/* === Headline stats — oversized, above the fold === */}
-      <div class="proof-head__stats">
-        <div class="proof-head__stat">
-          <span class="proof-head__stat-num tnum">22</span>
-          <span class="proof-head__stat-lbl">artifacts on this page</span>
-        </div>
-        <div class="proof-head__stat">
-          <span class="proof-head__stat-num tnum">9</span>
-          <span class="proof-head__stat-lbl">quant projects</span>
-        </div>
-        <div class="proof-head__stat">
-          <span class="proof-head__stat-num tnum">6</span>
-          <span class="proof-head__stat-lbl">AI projects</span>
-        </div>
-        <div class="proof-head__stat">
-          <span class="proof-head__stat-num tnum">10</span>
-          <span class="proof-head__stat-lbl">case studies</span>
-        </div>
-      </div>
+      {/* === Headline stats — demoted from oversized to inline strip.
+         v6.0.12 — Phase P polish: numbers arrive AFTER the identity
+         narrative, not before. Each gets a data-counter so the odometer
+         fires when scrolled into view. */}
+      <ul class="proof-head__stats" aria-label="Proof-page at-a-glance counts">
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="22">22</span>
+          <span class="proof-head__stat-lbl mono">artifacts on this page</span>
+        </li>
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="9">9</span>
+          <span class="proof-head__stat-lbl mono">quant projects</span>
+        </li>
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="6">6</span>
+          <span class="proof-head__stat-lbl mono">AI projects</span>
+        </li>
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="10">10</span>
+          <span class="proof-head__stat-lbl mono">case studies</span>
+        </li>
+      </ul>
 
-      <p class="proof-head__ver mono">v6.0.7d · 2026-07-10</p>
+      <p class="proof-head__ver mono">v6.0.12 · 2026-07-10</p>
     </div>
   </header>
 
@@ -673,7 +677,6 @@ const paginate = (items: any[]) => {
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">P.5b · External accounts</p>
-        <h2 class="section__title">What I have shipped that is externally verifiable.</h2>
         <p class="section__sub">
           Six external accounts and surfaces, each with a handle and a public, dated metric.
           Hairline-rule rows, no thumbnails. If a row is empty, it means that channel isn't
@@ -782,29 +785,7 @@ const paginate = (items: any[]) => {
     line-height: 1.05;
     margin-block: var(--sp-4) var(--sp-5);
   }
-  .proof-head__voice {
-    margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
-    max-width: 60ch;
-  }
-  .proof-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .proof-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+  /* v6.0.12 — `.proof-head__voice` styling moved to <VoiceLine /> component. */
   .proof-head__motif {
     display: flex;
     justify-content: flex-start;
@@ -821,34 +802,48 @@ const paginate = (items: any[]) => {
     grid-template-columns: repeat(4, 1fr);
     gap: var(--sp-4);
     margin-block: var(--sp-5) var(--sp-4);
-    padding-block: var(--sp-4);
-    border-top: 1px solid var(--c-rule);
-    border-bottom: 1px solid var(--c-rule);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule-soft);
+    border-radius: var(--radius);
+    list-style: none;
   }
   .proof-head__stat {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    align-items: flex-start;
+    gap: 0.15rem;
+    padding-block: var(--sp-1);
+    border-left: 1px solid var(--c-rule-soft);
+    padding-left: var(--sp-3);
+  }
+  .proof-head__stat:first-child {
+    border-left: 0;
+    padding-left: 0;
   }
   .proof-head__stat-num {
-    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
-    font-weight: 700;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
     color: var(--c-primary);
     font-variant-numeric: tabular-nums;
   }
   .proof-head__stat-lbl {
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     color: var(--c-ink-3);
     line-height: 1.3;
   }
-  @media (max-width: 640px) {
+  @media (max-width: 720px) {
     .proof-head__stats {
       grid-template-columns: repeat(2, 1fr);
       gap: var(--sp-3);
+    }
+    .proof-head__stat:nth-child(3) {
+      border-left: 0;
+      padding-left: 0;
     }
   }
   .proof-head__sub a {

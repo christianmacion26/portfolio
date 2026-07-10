@@ -15,18 +15,16 @@
 
 Source: `/index/`
 
-Open to remote roles · UTC+8
+[Skip to content](#main)
 
-# Quant research & AI engineering,
-shipped with the eval harness.
+Christian T. Macion, CTA®·Open to remote roles · UTC+8
+
+# Quantitative researcher. AI engineer. One eval harness.
 
 I build research systems, and I ship the evals that prove they work.
 
-Christian T. Macion, CTA
-
-®
- · based in Digos City, Philippines·remote-first, available 30 hrs/wk
-[Get in touch →](/portfolio/contact)[Selected work](/portfolio/projects)[Resume](/portfolio/resume)DSRBailey & López de Prado (2014)·OOSlocked windows✓PBOCSCV-based·SHARPEdeflated — not raw·GATESG1–G31 mechanical✓NDAclean — public data only✓PROJ9 quant projects✓CTATier-1 STA✓PITpoint-in-time enforced✓UTC+8 PHT·DSRBailey & López de Prado (2014)·OOSlocked windows✓PBOCSCV-based·SHARPEdeflated — not raw·GATESG1–G31 mechanical✓NDAclean — public data only✓PROJ9 quant projects✓CTATier-1 STA✓PITpoint-in-time enforced✓UTC+8 PHT·
+Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk/wk·remote-first, async-friendly
+[Get in touch →](/portfolio/contact)[Selected work](/portfolio/projects)[Methodology (G1–G31)](/portfolio/methodology)[Resume ↓](/portfolio/resume) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026DSRBailey & López de Prado (2014)·OOSlocked windows✓PBOCSCV-based·SHARPEdeflated — not raw·GATESG1–G31 mechanical✓NDAclean — public data only✓PROJ9 quant projects✓CTATier-1 STA✓PITpoint-in-time enforced✓UTC+8 PHT·DSRBailey & López de Prado (2014)·OOSlocked windows✓PBOCSCV-based·SHARPEdeflated — not raw·GATESG1–G31 mechanical✓NDAclean — public data only✓PROJ9 quant projects✓CTATier-1 STA✓PITpoint-in-time enforced✓UTC+8 PHT·
 
 What I do
 
@@ -112,28 +110,6 @@ PBO-tested. ↦ OOS-validated.
 
 102 certs. ↦ One discipline.
 
-Credentials
-
-## A short list, in plain language.
-
-The full credential library (102 certificates, four groups) is on the [certifications page](/portfolio/certifications). The four below are the headlines.
-
-Certified Technical Analyst
-
-®
-Society of Technical AnalystsJan 2026
-
-AI for the Modern WorkforceAteneo de Davao · US EmbassyNov 2025
-
-AIccelerate 2025BIDA · Bayan Academy · MetaDec 2025
-
-Blockchain4Youth B4YBitget2026
-
-## Hiring a Quant Researcher or AI Engineer?
-
-Public-data reproducible work. Runnable eval harnesses. NDA-clean by construction. Remote-first, available 30 hrs/wk.
-[Get in touch](/portfolio/contact)[Read methodology](/portfolio/methodology)
-
 ---
 
 # For recruiters · Christian T. Macion, CTA® · Christian T. Macion
@@ -218,29 +194,6 @@ Every metric is real. Headline numbers come from disk.
 Every testimonial is an attestable paper trail, not a quote.
 
 Every NDA-protected engagement is closed past contract.
-
-Validation gate lattice — G1–G31 across 6 familiesThirty-three cells representing the G1–G31 statistical eval stack. Cells 16 and 27 are reserved indicator positions (ship, block). Each remaining cell links to its gate family on /methodology.[G1–G5 · Mechanical validity](/methodology#family-1)[G1–G5 · Mechanical validity](/methodology#family-1)[G1–G5 · Mechanical validity](/methodology#family-1)[G1–G5 · Mechanical validity](/methodology#family-1)[G1–G5 · Mechanical validity](/methodology#family-1)[G6–G10 · Statistical nulls](/methodology#family-2)[G6–G10 · Statistical nulls](/methodology#family-2)[G6–G10 · Statistical nulls](/methodology#family-2)[G6–G10 · Statistical nulls](/methodology#family-2)[G6–G10 · Statistical nulls](/methodology#family-2)[G11–G15 · Walk-forward & OOS](/methodology#family-3)[G11–G15 · Walk-forward & OOS](/methodology#family-3)[G11–G15 · Walk-forward & OOS](/methodology#family-3)[G11–G15 · Walk-forward & OOS](/methodology#family-3)[G11–G15 · Walk-forward & OOS](/methodology#family-3)[G16–G20 · Multiple testing](/methodology#family-4)[G16–G20 · Multiple testing](/methodology#family-4)[G16–G20 · Multiple testing](/methodology#family-4)[G16–G20 · Multiple testing](/methodology#family-4)[G16–G20 · Multiple testing](/methodology#family-4)[G21–G25 · Look-ahead discipline](/methodology#family-5)[G21–G25 · Look-ahead discipline](/methodology#family-5)[G21–G25 · Look-ahead discipline](/methodology#family-5)[G21–G25 · Look-ahead discipline](/methodology#family-5)[G21–G25 · Look-ahead discipline](/methodology#family-5)[G26–G31 · Economic & cost realism](/methodology#family-6)[G26–G31 · Economic & cost realism](/methodology#family-6)[G26–G31 · Economic & cost realism](/methodology#family-6)[G26–G31 · Economic & cost realism](/methodology#family-6)[G26–G31 · Economic & cost realism](/methodology#family-6)[G26–G31 · Economic & cost realism](/methodology#family-6)proof/ · G1–G31 gates emit the artefacts below
-
-A gallery of public, NDA-clean artifacts — records, charts, co-signed certificates — that back up the claims on[/experience](/portfolio/experience),[/certifications](/portfolio/certifications), and [/now](/portfolio/now). Thirty-one artifacts on disk, twenty-two surfaced below. Updated when something new ships; never deleted when something expires.
-22artifacts on this page9quant projects6AI projects10case studies
-
-v6.0.7d · 2026-07-10
-trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-10
-
-11 min read · last updated2026-07-10 · [how verified ↗](/portfolio/proof)
-On this proof page
-
-[Flagship credentials](#credentials)
-
-[Shipped code](#code)
-
-[Research artifacts](#research)
-
-[Track record](#track)
-
-[Public track record](#public-track)
-
-[NDA disclosure](#disclosure)
 
 P.2 · Flagship credentials
 
@@ -549,8 +502,6 @@ Live Presenter-view delivery, Sep 13 2024. Webcam lower-right; deck filename 'MA
 
 P.5b · External accounts
 
-## What I have shipped that is externally verifiable.
-
 Six external accounts and surfaces, each with a handle and a public, dated metric. Hairline-rule rows, no thumbnails. If a row is empty, it means that channel isn't public yet.
 Numerainot public yetcorrelation / MMC / TC[see /positions](/portfolio/positions)HuggingFace@christianmacionMCP server artifact[/proof/eval-mcp-server](/portfolio/proof/eval-mcp-server)GitHubchristianmacion26102 certs · 76.5k LOC · 15 OSS projects[github.com/christianmacion26](https://github.com/christianmacion26)TradingView@CryptoneedsChristpublic chart · Elliott Wave[tradingview.com/u/CryptoneedsChrist](https://www.tradingview.com/u/CryptoneedsChrist/)Atom feeds3 streamsfeed.xml · feed-projects.xml · feed-solutions.xml[/feed.xml](/portfolio/feed.xml)Medium@christianmacion26public essays[medium.com/@christianmacion](https://medium.com/@christianmacion)
 
@@ -594,24 +545,6 @@ Deflated Sharpe. Multiple-testing aware.
 Frozen-spec eval. No live tuning.
 
 Five-era stability. One regime is anecdote.
-
-One engineering principle. Applied to LLM outputs and to systematic trading strategies with the same gate stack. The method is what scales; the tools change.
-Pr(ship)=Pr(ship∣passes G1–G31)⋅i=1∏31​Pr(Gi​∣evidencei​)31statistical gates6gate families11agents on the same method0rollbacks on shipped worktrust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-10
-
-11 min read · last updated2026-07-09 · [how verified ↗](/portfolio/proof)
-On this methodology page
-
-[G1–G31 gate stack](#gates)
-
-[Model routing](#routing)
-
-[DSR calculator](#dsr)
-
-[Agent charter](#charter)
-
-[Negative space](#neg)
-
-[If you hired me](#hire)
 
 The gate stack
 
@@ -879,7 +812,7 @@ I read every email. If the role matches, you'll get a reply within 24h with: pro
 
 Source: `/positions/`
 
-Status: open to conversations · last refreshed 2026-07-10
+Status: open to conversations · last refreshed 2026-07-11
 
 positions/ · live paper-trading
 
@@ -911,10 +844,20 @@ POSITION 01 · ACTIVE
 project 03 · running since 2026-04-21 · 50 trading days · vol target 30% annualized
 live · in regime
 
-Equity curve · normalized to 100 · BTC/USDT vol-target momentum
+Equity curve · drawdown · vol-regime
 
-Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been low-vol regime.
-illustrative series98.00102.00106.00110.00114.00[Operator-discretion · XAUT/USDT
+Live paper-trade series, normalized to 100. Top panel: equity. Bottom panel: running drawdown (red fill). Background tint: rolling 5-day vol quantiles — calm / normal / stress. Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been a calm regime.
+live series99.0102.5106.0109.5113.0-1.5%-1.0%-0.5%0.0%EQDDt=0t=25dt=49d
+
+calm (low vol)
+
+normal
+
+stress (high vol)
+
+regime from rolling 5d vol of the series itself
+
+[Operator-discretion · XAUT/USDT
 
 Public TradingView chart by 
 
@@ -1087,7 +1030,7 @@ systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/202
 is a 
 
 closed past contract
-; PM of record with publicly attributable initials(NDA-protected desk). No proprietary data sources, strategy internals, or desk PnL are referenced anywhere on this site. If the proof you need is missing, email me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.contribution_density=months(ΔE)∑e∈E​proofs(e)​engagements∣E∣8multi-hatcontributions∑ce​32↑declaredproof pointers∑pe​22↑public artifactsmonthsΔt252024-12 → 2026-05trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-10
+; PM of record with publicly attributable initials(NDA-protected desk). No proprietary data sources, strategy internals, or desk PnL are referenced anywhere on this site. If the proof you need is missing, email me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.contribution_density=months(ΔE)∑e∈E​proofs(e)​engagements∣E∣8multi-hatcontributions∑ce​32↑declaredproof pointers∑pe​22↑public artifactsmonthsΔt252024-12 → 2026-05trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-11
 
 8 min read · last updated2026-07-09 · [how verified ↗](/portfolio/proof)
 
@@ -1883,7 +1826,7 @@ publications/ · 27 artifacts
 Dated. Linkable. If a row says I did something, the proof is in the same row.
 
 Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No proprietary data sources. No NDA-protected content.
-all 27papers9oss 6workbooks3press 9trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-10
+all 27papers9oss 6workbooks3press 9trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-11
 
 7 min read · last updated2026-07-09 · [how verified ↗](/portfolio/proof)
 
@@ -2137,7 +2080,7 @@ Streamlit app that scores a draft on 13 literature-grounded quality metrics (voc
 ### CTA program graduate — Society of Technical Analysts of the Philippines
 Venue: STA Philippines
 
-Completed the STA Tier-1 Certified Technical Analyst program (Jan 19 2026, cert #260197). Photographic proof on the record — same image used in the hero signature strip.
+Cert #260197 issued Jan 19 2026 (program completed Dec 2025; cert-grant ceremony Jan 19 2026). Photographic proof on the record — same image used in the hero signature strip.
 
 2025
 
@@ -2358,18 +2301,6 @@ No live capital. Paper-trade first.
 No proprietary data sources. Ever.
 
 PBO-tested. Walk-forward validated.
-
-Each entry below is a real engagement or self-directed project: the problem, the approach, the evidence, the outcome, and the proof — in that order. Public data only, NDA-safe by construction.
-decision=argmaxa∈A​E[U(a)∣evidence]PROMISEEvery solution ships with at least one falsifiable claim and a proof pointer.solutions shipped10professional certs10211-month arcLOC light-dep Python76.5knumpy/pandas/boto3eval gates31G1–G31 statisticaltrust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-10
-
-9 min read · last updated2026-07-09 · [how verified ↗](/portfolio/proof)
-On this solutions page
-
-[AI engineering](#ai)
-
-[Quantitative research](#quant)
-
-[Education](#edu)
 
 Lane · AI Engineering
 
@@ -3122,7 +3053,7 @@ The re-reads matter more than the first reads.
 
 A dated, opinionated list of what I'm reading and re-reading. Public-data only — no proprietary data sources, no NDA-protected materials. Inspired by [Derek Sivers](https://sivers.org/book)'s/book shelf and the institutional library conventions at AQR / Jane Street.
 
-currently · 2026-07-10
+currently · 2026-07-11
 
 ## On the desk right now.
 
@@ -3241,7 +3172,7 @@ No proprietary material.
  I do not list strategy-specific books from NDA-protected desks. If you saw it referenced there, that's the only category I'd ask you not to ask about.
 
 Updated quarterly.
- This page refreshes with the queue when a book finishes its turn on the desk. Last refresh: 2026-07-10.
+ This page refreshes with the queue when a book finishes its turn on the desk. Last refresh: 2026-07-11.
 
 ---
 
@@ -3327,7 +3258,7 @@ DSR(σ^)=V[μ^​]+V[σ^2]/2​E[μ^​]−rf​​⋅γ1​
 G1–G12
  · single-strategy guardrails
 
-G13–G22
+G16–G20
  · multiple-testing layer
 
 G23–G31
@@ -3489,7 +3420,7 @@ The site is NDA-safe by construction. Every published research artifact uses onl
 
 dist/
  directory and fails the build if any NDA-prohibited content slips into the public-facing HTML or PDFs.
-Auditorsrc/utils/nda-audit.tsRunnpx tsx src/utils/nda-audit.tsEnforcedCI step on every commit · build fails on any violationStatus0 violations— checked against the six NDA rules defined in the script (location, present-employment framing, fund rename, proprietary data sources, and two vendor-specific exclusions)
+Auditorsrc/utils/nda-audit.tsRunnpx tsx src/utils/nda-audit.tsEnforcedCI step on every commit · build fails on any violationStatus0 violations— checked against the nine NDA rules defined in the script (location, present-employment framing, fund rename, proprietary data sources, two vendor-specific exclusions, and three past-employer / PM-name redactions for resume PDFs and humans.md)
 
 (d) · Open-source content
 

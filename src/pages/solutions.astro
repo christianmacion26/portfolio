@@ -13,14 +13,14 @@ import SectionTOC from '@components/SectionTOC.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
 const aiSolutions = solutions.filter((s) => s.data.lane === 'ai');
 const quantSolutions = solutions.filter((s) => s.data.lane === 'quant');
 const eduSolutions = solutions.filter(
   (s) => s.data.lane === 'education' || s.data.lane === 'systems',
-);
----
+);---
 
 <BaseLayout
   title="Solutions"
@@ -33,9 +33,9 @@ const eduSolutions = solutions.filter(
       <h1 class="solutions-head__title">
         I do <span class="hl">solutions</span>.
       </h1>
-      <p class="solutions-head__voice voice-line">
+      <VoiceLine class="solutions-head__voice">
         Every claim links to a falsifiable test. None of it relies on proprietary data.
-      </p>
+      </VoiceLine>
 
       <div class="solutions-head__carousel">
         <StatementCarousel
@@ -296,27 +296,8 @@ const eduSolutions = solutions.filter(
   }
   .solutions-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .solutions-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .solutions-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .solutions-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

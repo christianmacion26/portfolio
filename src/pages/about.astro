@@ -18,6 +18,7 @@ import Avatar from '@components/Avatar.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 import { getCollection } from 'astro:content';
+import VoiceLine from '@components/VoiceLine.astro';
 
 // Top 3 AI-lane solutions for the proof strip. Filter by data.lane
 // and sort by data.order rather than relying on collection entry ids
@@ -25,8 +26,7 @@ import { getCollection } from 'astro:content';
 const proofStrip = (await getCollection('solution'))
   .filter((s) => s.data.lane === 'ai')
   .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);
----
+  .slice(0, 3);---
 
 <BaseLayout
   title="About"
@@ -43,9 +43,9 @@ const proofStrip = (await getCollection('solution'))
       <h1 class="page-head__title">
         One method. <span class="hl">Two hats</span>.
       </h1>
-      <p class="page-head__voice voice-line">
+      <VoiceLine class="page-head__voice">
         I build the eval harness first. Then I build the work that has to pass it.
-      </p>
+      </VoiceLine>
 
       <div class="head-eq">
         <Equation
@@ -145,7 +145,7 @@ const proofStrip = (await getCollection('solution'))
         </div>
         <ul class="method-ribbon__list mono">
           <li><strong>G1–G12</strong> · single-strategy guardrails</li>
-          <li><strong>G13–G22</strong> · multiple-testing layer</li>
+          <li><strong>G16–G20</strong> · multiple-testing layer</li>
           <li><strong>G23–G31</strong> · LLM-output validation</li>
         </ul>
       </div>
@@ -314,27 +314,8 @@ const proofStrip = (await getCollection('solution'))
   }
   .page-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .page-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .page-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   @media (max-width: 480px) {
     .avatar-img, .avatar {
       width: 140px !important;

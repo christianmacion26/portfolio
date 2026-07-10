@@ -18,6 +18,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const fullName = profile.fullName.split(',')[0];
 
@@ -115,8 +116,7 @@ const shelf: Book[] = [
       'Institutional history of Jim Simons and Medallion. The methodological lesson — that research integrity compounds the way alpha does — is the one that survived the book.',
     href: 'https://www.penguinrandomhouse.com/books/566837/the-man-who-solved-the-market-by-gregory-zuckerman/',
   },
-];
----
+];---
 
 <BaseLayout
   title={`Papers · ${fullName}`}
@@ -131,9 +131,9 @@ const shelf: Book[] = [
       <h1 class="papers-head__title">
         Papers, memos, and long-form notes.
       </h1>
-      <p class="papers-head__voice voice-line">
+      <VoiceLine class="papers-head__voice">
         The five references /methodology is downstream of — and the working memos in flight.
-      </p>
+      </VoiceLine>
       <p class="papers-head__sub">
         Section A is the working-memo queue — drafts in flight, no public PDF
         links yet. Section B is the bookshelf: the five references that
@@ -260,27 +260,8 @@ const shelf: Book[] = [
   }
   .papers-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .papers-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .papers-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .papers-head__sub a {
     color: var(--c-primary-2-deep);
     text-decoration: underline;

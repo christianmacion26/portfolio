@@ -39,7 +39,7 @@
         "5-Era Stability & Sub-Period Robustness",
         "Cointegration & Pairs Trading",
         "Variance Risk Premium & Options Carry",
-        "Regime Detection (HMM, change-point)",
+        "Regime Conditioning (vol-targeting, vol-regime filter)",
         "Transaction-Cost Realism & Slippage Modeling",
         "Backtesting Engine (numpy, pandas, SQLite)",
         "Python (numpy / pandas / pyarrow / boto3 / matplotlib)",

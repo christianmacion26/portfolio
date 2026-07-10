@@ -19,6 +19,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const resumes = [
   {
@@ -58,8 +59,7 @@ const resumes = [
       { kind: 'txt', file: path('/resume-quant-onepage.txt'), label: 'TXT', note: 'Workday · Greenhouse · Taleo' },
     ],
   },
-];
----
+];---
 
 <BaseLayout
   title="Resume"
@@ -70,9 +70,9 @@ const resumes = [
     <div class="container">
       <p class="section__eyebrow"><span class="mono">resume/</span> · 3 versions × 3 formats = 9 download targets</p>
       <h1 class="page-head__title">Three tailored resumes.</h1>
-      <p class="page-head__voice voice-line">
+      <VoiceLine class="page-head__voice">
         Same person, three shapes. Pick the resume that fits the seat — then pick the format the system expects.
-      </p>
+      </VoiceLine>
       <p class="page-head__sub">
         Pick the version that matches the role you're hiring for. Each version ships in three formats —
         PDF for human reviewers, Markdown for LLM-based recruiter agents, plain text for Workday-classic /
@@ -162,27 +162,8 @@ const resumes = [
   }
   .page-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .page-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .page-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .head-eq {
     padding: var(--sp-4) var(--sp-5);
     background: var(--c-bg);

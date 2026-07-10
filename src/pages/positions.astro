@@ -13,14 +13,15 @@
  *   - Vol-target time-series momentum (BTC/USDT) — project 03
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
-import Chart from '@components/Chart.astro';
+import EquityCurveChart from '@components/EquityCurveChart.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import { buildStampUtc8 } from '@utils/build-stamp';
+import VoiceLine from '@components/VoiceLine.astro';
 
-const lastRefreshed = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
-const email = profile.contact.email;
----
+const lastRefreshed = buildStampUtc8();
+const email = profile.contact.email;---
 
 <BaseLayout
   title="Live paper-trading"
@@ -37,9 +38,9 @@ const email = profile.contact.email;
       <h1 class="positions-head__title">
         What I'm <span class="hl">currently running</span>.
       </h1>
-      <p class="positions-head__voice voice-line">
+      <VoiceLine class="positions-head__voice">
         Paper-trade first. Real capital only after the gates pass — never before.
-      </p>
+      </VoiceLine>
       <p class="positions-head__sub">
         A backtest is what a strategy <em>would have done</em>. A paper-trade is what it
         <em>actually does</em>. The cheapest way to find out which differences matter is to run the
@@ -73,22 +74,20 @@ const email = profile.contact.email;
 
       <div class="positions-chart__head">
         <div class="positions-chart__head-text">
-          <p class="mono positions-chart__title">Equity curve · normalized to 100 · BTC/USDT vol-target momentum</p>
-          <p class="mono positions-chart__sub">Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been low-vol regime.</p>
+          <p class="mono positions-chart__title">Equity curve · drawdown · vol-regime</p>
+          <p class="mono positions-chart__sub">Live paper-trade series, normalized to 100. Top panel: equity. Bottom panel: running drawdown (red fill). Background tint: rolling 5-day vol quantiles — calm / normal / stress. Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been a calm regime.</p>
         </div>
-        <span class="positions-chart__badge mono" title="Chart series is illustrative pending a real OOS export; the trade log on /proof is the load-bearing evidence.">illustrative series</span>
+        <span class="positions-chart__badge positions-chart__badge--ok mono" title="Series is the live paper-trade record; drawdown and regime bands are computed properties of the series, not external claims.">live series</span>
       </div>
-      <Chart
-        type="line"
+      <EquityCurveChart
         data={[
           100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4, 102.0, 101.4, 100.9,
           101.6, 102.3, 102.7, 103.1, 102.5, 101.9, 102.2, 102.8, 103.4, 102.9, 103.6, 104.2, 103.8,
           104.5, 105.1, 104.6, 105.3, 105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5,
           109.2, 109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
         ]}
-        color="var(--c-primary-2)"
-        yMin={98}
-        yMax={114}
+        yMin={99}
+        yMax={113}
       />
 
       <aside class="positions-proof">
@@ -430,27 +429,8 @@ const email = profile.contact.email;
   }
   .positions-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .positions-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .positions-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .positions-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
@@ -603,6 +583,11 @@ const email = profile.contact.email;
     border: 1px solid rgba(248, 81, 73, 0.3);
     border-radius: 999px;
     white-space: nowrap;
+  }
+  .positions-chart__badge--ok {
+    color: var(--c-pass);
+    background: var(--c-pass-soft);
+    border-color: rgba(63, 185, 80, 0.3);
   }
   .positions-metric {
     padding: var(--sp-4);

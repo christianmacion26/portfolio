@@ -176,6 +176,25 @@
     transition: none !important;
     animation: none !important;
   }
+  /* v6.0.12 — gate hover-driven `transform` rules that survive the
+     universal `transition: none` because the *final state* still applies
+     the moment the cursor enters. These are the eight motion sources the
+     a11y audit flagged; disabling them gives users who opted out of
+     motion a fully still page even on hover. */
+  .work-card:hover,
+  .proof-card__link:hover,
+  .proof-card__img:hover,
+  .flagship:hover::after,
+  .flagship-card:hover,
+  .stat:hover,
+  .trust-pill:hover,
+  .dsr-calc__slider::-webkit-slider-thumb:hover,
+  .dsr-calc__slider::-moz-range-thumb:hover,
+  a.trust-pill:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
 }
 
 /* === KaTeX size adjustments === */

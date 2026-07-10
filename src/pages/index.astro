@@ -10,6 +10,8 @@ import ProjectCard from '@components/ProjectCard.astro';
 import CTABanner from '@components/CTABanner.astro';
 import Ticker from '@components/Ticker.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
+import VoiceLine from '@components/VoiceLine.astro';
+import ProofCard from '@components/ProofCard.astro';
 import { getCollection } from 'astro:content';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
@@ -21,37 +23,58 @@ const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3
 
 <BaseLayout title={profile.titles.primary} description={profile.titles.secondary}>
   {/* ============================================================
-       HERO — dark editorial, single-column, identity-first.
-       T-Digital pattern: full-bleed dark canvas, single H1 sentence,
-       one italic voice line, restrained spacing, no math, no jargon.
+       HERO — identity-first, single-column, dark editorial.
+       R.1 (v6.1.x) — the H1 IS the name + role, not what they do.
+       A senior QR/AI-engineer reader should answer "who" within 5s.
+       Ticker has been demoted from first-pixel to below-hero.
        ============================================================ */}
   <section class="hero">
     <div class="hero__glow" aria-hidden="true"></div>
     <div class="hero__grid" aria-hidden="true"></div>
     <div class="container hero__inner">
       <p class="hero__eyebrow">
-        Open to remote roles · UTC+8
+        <span class="hero__eyebrow-name">{profile.fullName}</span>
+        <span class="hero__eyebrow-sep" aria-hidden="true">·</span>
+        <span>Open to remote roles · {profile.location.timezone}</span>
       </p>
 
-      <h1 class="hero__title">
-        Quant research <span class="hero__amp">&amp;</span> AI engineering,
-        <br />shipped with the eval harness<span class="hero__period">.</span>
-      </h1>
+      <div class="hero__top">
+        <div class="hero__top-text">
+          <h1 class="hero__title">
+            Quantitative researcher. AI engineer. One eval harness.
+          </h1>
 
-      <p class="hero__voice">
-        I build research systems, and I ship the evals that prove they work.
-      </p>
+          <VoiceLine class="hero__voice" ruled={false} size="md">
+            I build research systems, and I ship the evals that prove they work.
+          </VoiceLine>
 
-      <p class="hero__sub">
-        Christian T. Macion, CTA<sup>®</sup> · based in Digos City, Philippines
-        <span class="hero__sep" aria-hidden="true">·</span>
-        remote-first, available 30 hrs/wk
-      </p>
+          <p class="hero__sub">
+            Based in {profile.location.display} · {profile.availability.hours}/wk
+            <span class="hero__sep" aria-hidden="true">·</span>
+            remote-first, async-friendly
+          </p>
 
-      <div class="hero__actions">
-        <a href={path('/contact')} class="btn btn--primary">Get in touch →</a>
-        <a href={path('/projects')} class="hero__link">Selected work</a>
-        <a href={path('/resume')} class="hero__link">Resume</a>
+          <div class="hero__actions">
+            <a href={path('/contact')} class="btn btn--primary">Get in touch →</a>
+            <a href={path('/projects')} class="hero__link">Selected work</a>
+            <a href={path('/methodology')} class="hero__link">Methodology (G1–G31)</a>
+            <a href={path('/resume')} class="hero__link">Resume ↓</a>
+          </div>
+        </div>
+
+        <aside class="hero__id" aria-label="Identity proof">
+          <figure class="hero__portrait">
+            <ProofCard
+              src={path('/proof/cta-cert-portrait-2026-01.jpg')}
+              alt={`${profile.fullName}, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.`}
+              caption="CTA cert #260197"
+              credit="Society of Technical Analysts · Jan 2026"
+              aspect="3/2"
+              fit="contain"
+              eager={true}
+            />
+          </figure>
+        </aside>
       </div>
     </div>
   </section>
@@ -307,8 +330,30 @@ const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3
   .hero__inner {
     position: relative;
     z-index: 1;
-    max-width: 900px;
+    max-width: 1080px;
     min-width: 0;
+  }
+  .hero__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 28%, 320px);
+    gap: var(--sp-7);
+    align-items: start;
+    min-width: 0;
+  }
+  .hero__top-text {
+    min-width: 0;
+  }
+  .hero__id {
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .hero__portrait {
+    margin: 0;
+    padding: var(--sp-2);
+    background: var(--c-tape-2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius);
   }
   .hero__eyebrow {
     display: inline-block;
@@ -320,43 +365,43 @@ const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3
     font-weight: 600;
     margin-bottom: var(--sp-5);
   }
+  .hero__eyebrow-name {
+    color: #fafafa;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .hero__eyebrow-sep {
+    color: rgba(255, 255, 255, 0.3);
+    padding: 0 0.6em;
+  }
 
   .hero__title {
-    font-size: clamp(2rem, 5.5vw, 4.2rem);
-    line-height: 1.04;
+    font-size: clamp(1.85rem, 4.4vw, 3.4rem);
+    line-height: 1.08;
     letter-spacing: -0.028em;
     color: #fafafa;
     font-weight: 600;
-    margin-bottom: var(--sp-5);
+    margin-bottom: var(--sp-4);
     max-width: 100%;
     min-width: 0;
     overflow-wrap: break-word;
     text-wrap: balance;
   }
-  .hero__amp {
-    font-family: var(--serif-display);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--c-primary-2);
-    padding: 0 0.05em;
-  }
-  .hero__period {
-    color: var(--c-primary-2);
-  }
 
   .hero__voice {
-    font-family: var(--serif-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(1.1rem, 2.4vw, 1.6rem);
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.78);
-    max-width: 100%;
-    margin-bottom: var(--sp-6);
-    letter-spacing: -0.005em;
-    min-width: 0;
-  }
 
+    font-weight: 400;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    max-width: 100%;
+
+    margin-bottom: var(--sp-5);
+
+    letter-spacing: -0.005em;
+
+    min-width: 0;
+}
   .hero__sub {
     font-size: var(--fs-sm);
     color: rgba(255, 255, 255, 0.62);
@@ -683,11 +728,23 @@ const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3
      MOBILE SAFETY NET — prevent any hero/section content from
      forcing horizontal scroll on narrow viewports.
      ============================================================ */
+  @media (max-width: 880px) {
+    .hero__top {
+      grid-template-columns: 1fr;
+      gap: var(--sp-5);
+    }
+    .hero__id {
+      max-width: 320px;
+      margin: 0 auto;
+    }
+  }
   @media (max-width: 600px) {
-    .hero__title { font-size: clamp(1.85rem, 9vw, 2.4rem); }
-    .hero__voice { font-size: 1.05rem; }
+    .hero__title { font-size: clamp(1.65rem, 8.5vw, 2.1rem); }
+    .hero__voice {
+      font-size: 1.05rem; 
+}
     .hero__sub { font-size: var(--fs-xs); }
-    .hero__sep { display: block; margin: 0.4em 0 0; }
+    .hero__sep { display: inline; margin: 0 0.3em; }
     .hero__actions { gap: var(--sp-3) var(--sp-4); }
     .section__title { font-size: 1.5rem; }
     .what__title { font-size: 1.1rem; }

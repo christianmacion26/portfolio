@@ -20,19 +20,25 @@
  *
  * Icons: inline SVG, currentColor, 12px. No Unicode glyphs, no emoji — those
  * render as tofu or in unrelated platform colors on recruiter machines.
- * See [[Anti-AI-generate editorial guardrails]].
  */
+import { buildStampUtc8 as _bs } from '@utils/build-stamp';
+
 interface Props {
   variant?: 'paper' | 'tape';
   buildSha?: string;
+  /** @deprecated Pass-through no longer used; stamp is read from BUILD_DATE env var. */
   lastVerifiedIso?: string;
 }
 const {
   variant = 'paper',
   buildSha = import.meta.env.PUBLIC_BUILD_SHA as string | undefined,
-  lastVerifiedIso = new Date().toISOString(),
+  lastVerifiedIso: _ignored = undefined,
 } = Astro.props;
-const lastVerified = new Date(lastVerifiedIso).toISOString().slice(0, 10);
+// Deterministic per build (Standing Order §9: no `new Date()` in
+// deterministic outputs). The prop can still be passed from an external
+// caller (e.g., a future CI step that overrides the stamp), but the
+// default is the build-time UTC+8 stamp.
+const lastVerified = _bs();
 const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(0, 7) : null;
 ---
 

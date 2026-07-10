@@ -13,6 +13,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const fullName = profile.fullName.split(',')[0];
 
@@ -72,8 +73,7 @@ const repos = [
     desc: 'MCP server wrapping the AI-output quality gate as a first-class tool. 13-metric slop-evaluation gate over Tools / Resources / Prompts.',
     href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/eval-mcp-server',
   },
-];
----
+];---
 
 <BaseLayout
   title={`About this site · ${fullName}`}
@@ -86,9 +86,9 @@ const repos = [
         <span class="mono">about-this-site/</span> · meta
       </p>
       <h1 class="site-head__title">About this site.</h1>
-      <p class="site-head__voice voice-line">
+      <VoiceLine class="site-head__voice">
         Built with public tools. Documented here. Guarded by the same NDA audit the public-facing pages use.
-      </p>
+      </VoiceLine>
       <p class="site-head__sub">
         A static-first portfolio for a Quant Researcher and AI Engineer. This page is
         the meta: what it is built with, what holds it together, and the guardrails
@@ -200,7 +200,7 @@ const repos = [
           <span class="guard__label mono">Status</span>
           <span class="guard__value">
             <span class="pill pill--accent">0 violations</span>
-            <span class="faint">— checked against the six NDA rules defined in the script (location, present-employment framing, fund rename, proprietary data sources, and two vendor-specific exclusions)</span>
+            <span class="faint">— checked against the nine NDA rules defined in the script (location, present-employment framing, fund rename, proprietary data sources, two vendor-specific exclusions, and three past-employer / PM-name redactions for resume PDFs and humans.md)</span>
           </span>
         </div>
       </div>
@@ -302,28 +302,8 @@ const repos = [
   }
   .site-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .site-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .site-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
-
+}
   /* === (a) Stack list === */
   .stack {
     list-style: none;

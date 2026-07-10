@@ -33,6 +33,11 @@ const {
 } = Astro.props;
 const trendGlyph = trend === 'up' ? '↑' : trend === 'down' ? '↓' : trend === 'flat' ? '→' : '';
 const trendClass = trend ? `stat--trend-${trend}` : '';
+// Wire the odometer only when the value is parseable as a number (e.g.,
+// "31", "76.5k", "0.886"). The driver reads `data-counter` and animates
+// 0 → parseFloat(value) over 1.2s, then snaps to the exact final string
+// so suffixes like "k" or "%" are preserved.
+const counterTarget = Number.isFinite(Number.parseFloat(value)) ? value : null;
 let formulaHtml = '';
 if (formula) {
   try {
@@ -55,7 +60,13 @@ if (formula) {
     {formula && <span class="stat__formula" set:html={formulaHtml} />}
   </div>
   <div class="stat__value-row">
-    <span class="stat__value mono">{value}</span>
+    {
+      counterTarget !== null ? (
+        <span class="stat__value mono" data-counter={counterTarget}>{value}</span>
+      ) : (
+        <span class="stat__value mono">{value}</span>
+      )
+    }
     {
       trendGlyph && (
         <span class="stat__trend" aria-hidden="true">

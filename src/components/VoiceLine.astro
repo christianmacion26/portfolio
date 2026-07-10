@@ -1,0 +1,113 @@
+---
+/**
+ * VoiceLine.astro — italic serif editorial voice line.
+ *
+ * Single source of truth for the institutional "voice line" pattern
+ * (Anthropic / Stratechery / Schonfeld signature): a one- or two-sentence
+ * editorial sentence in italic serif, with an optional amber left-rail
+ * rule and curly typographic quotes around the content.
+ *
+ * Was duplicated 19× across the codebase (proof, methodology, solutions,
+ * certifications, experience, positions, now, contact, for-recruiters,
+ * about, uses, resume, colophon, about-this-site, reading, papers,
+ * talks, projects/[...slug], glossary, mistakes). Hoisted into this
+ * component to eliminate drift.
+ *
+ * Usage:
+ *   <VoiceLine>If you can't measure it, you haven't built it.</VoiceLine>
+ *   <VoiceLine ruled={false}>A second-person editorial sentence.</VoiceLine>
+ *   <VoiceLine quote="curly">…with curly quotes…</VoiceLine>
+ */
+interface Props {
+  /** Editorial sentence. The component does NOT add trailing punctuation. */
+  // (Astro doesn't accept JSX children typing here; this is slot content.)
+  ruled?: boolean;
+  /** Quote-mark style. 'curly' (default) inserts " and " via ::before/::after. */
+  quote?: 'curly' | 'none';
+  /** Visual size variant. 'md' (default) = clamp(1.15rem, 2.4vw, 1.65rem). */
+  size?: 'sm' | 'md' | 'lg';
+  /** Override the rail color (defaults to var(--c-primary-2)). */
+  railColor?: string;
+  /** Extra class on the outer element (e.g., for layout positioning). */
+  class?: string;
+}
+const {
+  ruled = true,
+  quote = 'curly',
+  size = 'md',
+  railColor,
+  class: className,
+} = Astro.props;
+---
+
+<p
+  class:list={[
+    'voice-line',
+    `voice-line--${size}`,
+    { 'voice-line--ruled': ruled, 'voice-line--unruled': !ruled },
+    `voice-line--quote-${quote}`,
+    className,
+  ]}
+  style={railColor ? `--voice-line-rail: ${railColor}` : undefined}
+>
+  <slot />
+</p>
+
+<style>
+  .voice-line {
+    /* The rail color is overridable per-instance via inline `style="--voice-line-rail: …"`. */
+    --voice-line-rail: var(--c-primary-2);
+    margin: 0 0 var(--sp-5);
+    font-style: italic;
+    font-family: var(--serif-display);
+    line-height: 1.4;
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+
+  /* Sizes — clamp ranges match the canonical proof-head treatment. */
+  .voice-line--sm {
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  }
+  .voice-line--md {
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+  }
+  .voice-line--lg {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+  }
+
+  /* Ruled variant — left rail + 1ch padding. */
+  .voice-line--ruled {
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--voice-line-rail);
+  }
+
+  /* Curly typographic quotes via pseudo-elements. The color matches the
+     rail so the visual reads as a single typographic mark, not three
+     separate decorations. */
+  .voice-line--quote-curly::before {
+    content: '\201C';
+    color: var(--voice-line-rail);
+    font-style: normal;
+    margin-right: 0.1em;
+  }
+  .voice-line--quote-curly::after {
+    content: '\201D';
+    color: var(--voice-line-rail);
+    font-style: normal;
+    margin-left: 0.1em;
+  }
+
+  /* When the slot content already includes typographic quotes (e.g.
+     the writer embedded them in the markdown), `quote="none"` drops
+     the auto-quote to avoid doubling. */
+  .voice-line--quote-none::before,
+  .voice-line--quote-none::after {
+    content: none;
+  }
+
+  /* v6.0.12 — single reduced-motion gate. The voice-line carries no
+     motion of its own; the universal `* { animation: none }` already
+     covers any accidental fade-ins. This block is here as a docstring
+     so future authors don't add a transition to this component. */
+</style>

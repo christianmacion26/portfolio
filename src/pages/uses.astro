@@ -17,6 +17,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const lastUpdated = '2026-07-09';
 
@@ -245,8 +246,7 @@ const sections: UseSection[] = [
       },
     ],
   },
-];
----
+];---
 
 <BaseLayout
   title="Uses"
@@ -261,9 +261,9 @@ const sections: UseSection[] = [
       <h1 class="uses-head__title">
         What I use to <span class="hl">do the work</span>.
       </h1>
-      <p class="uses-head__voice voice-line">
+      <VoiceLine class="uses-head__voice">
         A working researcher's stack — not a 2018-era ML engineer's. Updated quarterly.
-      </p>
+      </VoiceLine>
       <p class="uses-head__sub">
         The /uses pattern — named, dated, no marketing. Recruiter signal: this is a working
         researcher's stack, not a 2018-era ML engineer's. Update cadence is quarterly or on
@@ -351,28 +351,8 @@ const sections: UseSection[] = [
   }
   .uses-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .uses-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .uses-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
-
+}
   /* === Section TOC === */
   .uses-toc {
     display: flex;

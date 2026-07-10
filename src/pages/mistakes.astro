@@ -16,6 +16,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const mistakes = [
   {
@@ -94,8 +95,7 @@ const mistakes = [
     formula:
       '\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}} \\sqrt{1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}}}',
   },
-];
----
+];---
 
 <BaseLayout
   title="What I got wrong"
@@ -108,9 +108,9 @@ const mistakes = [
       <h1 class="mistakes-head__title">
         What I <span class="hl">got wrong</span>.
       </h1>
-      <p class="mistakes-head__voice voice-line">
+      <VoiceLine class="mistakes-head__voice">
         A book of nine winners with no postmortems is a book primed for selection bias.
-      </p>
+      </VoiceLine>
       <p class="mistakes-head__sub">
         A research book that ships nine winners and hides the failure modes is a book primed for
         selection bias. Below are five real failures from the quant pipeline — what was wrong, which
@@ -244,27 +244,8 @@ const mistakes = [
   }
   .mistakes-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .mistakes-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .mistakes-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .mistakes-head__eq-block {
     padding: var(--sp-5);
     background: var(--c-paper);

@@ -12,6 +12,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
 import { terms } from '../data/glossary-terms';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const grouped = {
   Quant: terms.filter((t) => t.category === 'Quant'),
@@ -20,8 +21,7 @@ const grouped = {
 
 // Group by category for layout
 const quantTerms = terms.filter((t) => t.category === 'Quant').sort((a, b) => a.term.localeCompare(b.term));
-const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.localeCompare(b.term));
----
+const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.localeCompare(b.term));---
 
 <BaseLayout
   title="Glossary · Quant & AI terms"
@@ -38,9 +38,9 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
         <span>FOR NON-SPECIALISTS</span>
       </p>
       <h1 class="hero__title">A short dictionary of the terms on this site.</h1>
-      <p class="hero__voice voice-line">
+      <VoiceLine class="hero__voice">
         Twenty-five terms, each short enough to read in thirty seconds, each deep-linkable from /methodology.
-      </p>
+      </VoiceLine>
       <p class="hero__sub">
         Twenty-five canonical definitions. Each one is short enough to read in thirty seconds and
         stable enough to deep-link to from the methodology, proof, or solutions pages.
@@ -148,28 +148,8 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
   }
   .hero__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .hero__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .hero__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
-
+}
   .section {
     padding-block: var(--sp-9);
   }

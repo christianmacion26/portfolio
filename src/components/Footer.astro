@@ -4,10 +4,12 @@
  */
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import { buildYear, buildStampUtc8 } from '@utils/build-stamp';
 import BrandMotif from '@components/BrandMotif.astro';
 import Avatar from '@components/Avatar.astro';
 
-const year = new Date().getFullYear();
+const year = buildYear();
+const deployedStamp = buildStampUtc8();
 ---
 
 <footer class="footer">
@@ -99,7 +101,7 @@ const year = new Date().getFullYear();
           <a href={path('/humans.md')}>humans.md</a> · AI-agent identity document
         </small>
         <small class="mono">
-          portfolio.os · v6.0.12 · last deployed {new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10)} · built
+          portfolio.os · v6.0.12 · last deployed {deployedStamp} · built
           with Astro
         </small>
       </div>

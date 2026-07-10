@@ -113,18 +113,8 @@ const secondary = [
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     color: var(--ink-on-tape);
   }
-  /* v6.1.0 — light/dark mode removed. The :root[data-theme="dark"] and
-     prefers-color-scheme overrides below are dead code; preserved as
-     comments so the change is greppable. */
-  /* :root[data-theme='dark'] .nav { background: rgba(13, 17, 23, 0.92); } */
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .nav {
-      background: rgba(13, 17, 23, 0.92);
-    }
-  }
-      background: rgba(13, 17, 23, 0.92);
-    }
-  }
+  /* v6.1.0 — light/dark mode removed. Background is always tape (set above
+     on `.nav`); prefers-color-scheme and [data-theme] overrides are dead. */
   .nav__inner {
     height: var(--nav-h);
     display: flex;

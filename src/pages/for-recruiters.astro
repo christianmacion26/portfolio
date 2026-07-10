@@ -13,6 +13,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const fullName = profile.fullName;
 const loc = profile.location;
@@ -63,8 +64,7 @@ const jsonLd = {
     name: f.q,
     acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
-};
----
+};---
 
 <BaseLayout
   title={`For recruiters · ${fullName}`}
@@ -83,9 +83,9 @@ const jsonLd = {
         <span>NDA-CLEAN</span>
       </p>
       <h1 class="hero__title">{fullName}</h1>
-      <p class="hero__voice voice-line">
+      <VoiceLine class="hero__voice">
         60-second skim. NDA-clean. Built so a hiring manager can decide in one read.
-      </p>
+      </VoiceLine>
       <p class="hero__sub">
         Quantitative researcher and AI engineer. {loc.display}.<br />
         Open to remote QR, QR-rotational, or research-engineer seats with
@@ -215,28 +215,8 @@ const jsonLd = {
   }
   .hero__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .hero__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .hero__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
-
+}
   .kv {
     width: 100%;
     border-collapse: collapse;

@@ -13,6 +13,7 @@ import SectionTOC from '@components/SectionTOC.astro';
 import PipelineDiagram from '@components/PipelineDiagram.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const gates = [
   {
@@ -69,8 +70,7 @@ const charter = [
   { tag: 'handoffs', value: 'What this agent must NOT do (anti-charter)' },
   { tag: 'gates', value: 'Which of G1–G31 apply, with exit codes' },
   { tag: 'evidence', value: 'What the agent must attach as proof' },
-];
----
+];---
 
 <BaseLayout
   title="Methodology"
@@ -83,9 +83,9 @@ const charter = [
       <h1 class="method-head__title">
         Don’t ship what hasn’t passed a <span class="hl">measurable gate</span>.
       </h1>
-      <p class="method-head__voice voice-line">
+      <VoiceLine class="method-head__voice">
         If it isn't measured, it isn't built.
-      </p>
+      </VoiceLine>
 
       <div class="method-head__carousel">
         <StatementCarousel
@@ -385,27 +385,8 @@ const charter = [
   }
   .method-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .method-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .method-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .method-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

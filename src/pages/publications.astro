@@ -14,6 +14,7 @@ import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
 const aiPubs = projects.filter((p) => p.data.role === 'ai');
@@ -145,7 +146,7 @@ const pressUnsorted = [
     title: 'CTA program graduate — Society of Technical Analysts of the Philippines',
     venue: 'STA Philippines',
     detail:
-      'Completed the STA Tier-1 Certified Technical Analyst program (Jan 19 2026, cert #260197). Photographic proof on the record — same image used in the hero signature strip.',
+      'Cert #260197 issued Jan 19 2026 (program completed Dec 2025; cert-grant ceremony Jan 19 2026). Photographic proof on the record — same image used in the hero signature strip.',
     url: '/proof/cta-cert-portrait-2026-01.jpg',
     kind: 'certification',
   },
@@ -159,8 +160,7 @@ const press = [...pressUnsorted].sort((a, b) => {
   return (b.year ?? 0) - (a.year ?? 0);
 });
 
-const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.length;
----
+const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.length;---
 
 <BaseLayout
   title="Publications"
@@ -212,9 +212,9 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
       <h1 class="pub-head__title">
         Things I have <span class="hl">written, built, and said</span> in public.
       </h1>
-      <p class="pub-head__voice voice-line">
+      <VoiceLine class="pub-head__voice">
         Dated. Linkable. If a row says I did something, the proof is in the same row.
-      </p>
+      </VoiceLine>
       <p class="pub-head__sub">
         Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No
         proprietary data sources. No NDA-protected content.
@@ -581,28 +581,8 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   }
   .pub-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .pub-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .pub-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
-
+}
   .pub-list {
     display: flex;
     flex-direction: column;

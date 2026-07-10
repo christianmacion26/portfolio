@@ -15,6 +15,7 @@ import VideoEmbed from '@components/VideoEmbed.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const fullName = profile.fullName.split(',')[0];
 
@@ -105,8 +106,7 @@ const appearances: Appearance[] = [
       'Tier-1 Certified Technical Analyst program, completed Jan 19 2026 (cert #260197). Final capstone: regime-classification case study on ASEAN equities.',
     link: { label: 'Cert image', href: path('/proof/cta-cert-portrait-2026-01.jpg') },
   },
-];
----
+];---
 
 <BaseLayout
   title={`Talks · ${fullName}`}
@@ -121,9 +121,9 @@ const appearances: Appearance[] = [
       <h1 class="talks-head__title">
         Talks, lectures, and recorded walkthroughs.
       </h1>
-      <p class="talks-head__voice voice-line">
+      <VoiceLine class="talks-head__voice">
         Every entry is on disk, named to the event, and linkable to the organizer.
-      </p>
+      </VoiceLine>
       <p class="talks-head__sub">
         Every entry below is a public artifact — a video on disk, a named event with an
         institutional record, or a co-signed certificate. The two video lectures are
@@ -253,27 +253,8 @@ const appearances: Appearance[] = [
   }
   .talks-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .talks-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .talks-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .talks-head__sub a {
     color: var(--c-primary-2-deep);
     text-decoration: underline;

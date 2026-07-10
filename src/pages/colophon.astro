@@ -13,6 +13,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const fullName = profile.fullName.split(',')[0];
 
@@ -58,8 +59,7 @@ const contrastPairs = [
   { fg: '--c-primary-2-deep', bg: '--c-bg', ratio: '5.0:1', level: 'AA' },
   { fg: '--c-amber', bg: '--c-bg', ratio: '3.4:1', level: 'AA Large (≥18px only)' },
   { fg: '--c-primary', bg: '--c-bg', ratio: '19.2:1', level: 'AAA' },
-];
----
+];---
 
 <BaseLayout
   title={`Colophon · ${fullName}`}
@@ -72,9 +72,9 @@ const contrastPairs = [
         <span class="mono">colophon/</span> · the design system
       </p>
       <h1 class="col-head__title">Colophon.</h1>
-      <p class="col-head__voice voice-line">
+      <VoiceLine class="col-head__voice">
         Every design decision on this site, in one page. Tokens are the source of truth.
-      </p>
+      </VoiceLine>
       <p class="col-head__sub">
         Type, color, spacing, motion, and accessibility — every design decision on this
         site, in one page. The full source is in
@@ -332,27 +332,8 @@ const contrastPairs = [
   }
   .col-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .col-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .col-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .col-head__sub code {
     background: var(--c-bg);
     padding: 1px 6px;

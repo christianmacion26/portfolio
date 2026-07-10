@@ -13,6 +13,7 @@ import ProofCard from '@components/ProofCard.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 import { profile } from '@utils/profile';
+import VoiceLine from '@components/VoiceLine.astro';
 
 // Read the authoritative "claimed total" from profile (single source of truth).
 // The on-disk curated set is a subset; this is the headline number used across
@@ -29,8 +30,7 @@ const flagshipCount = groups.reduce(
 const tier1Count = groups.reduce(
   (sum, g) => sum + g.data.items.filter((c) => c.tier === 1).length,
   0,
-);
----
+);---
 
 <BaseLayout
   title="Certifications"
@@ -43,9 +43,9 @@ const tier1Count = groups.reduce(
       <h1 class="page-head__title">
         <span class="mono">{totalCount}+ of {claimedTotal}</span> certifications, four domains.
       </h1>
-      <p class="page-head__voice voice-line">
+      <VoiceLine class="page-head__voice">
         Every cert links to its issuer's public registry — or it doesn't ship on this page.
-      </p>
+      </VoiceLine>
       <p class="page-head__sub">
         {claimedTotal} professional certifications across AI, finance, math/statistics, and event flagships —
         collected in 11 months (Nov 2022 → May 2026). Curated below by domain; Tier-1 issuers
@@ -142,27 +142,8 @@ const tier1Count = groups.reduce(
   }
   .page-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .page-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .page-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

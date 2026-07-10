@@ -7,6 +7,7 @@ import MetricPill from '@components/MetricPill.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { getCollection, render } from 'astro:content';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('project');
@@ -31,8 +32,7 @@ const {
   hero,
 } = project.data;
 const laneLabel = role === 'ai' ? 'AI Engineer' : 'Quantitative Researcher';
-const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
----
+const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
 
 <BaseLayout title={title} description={summary_long ?? summary} type="article">
   <article class="proj">
@@ -59,7 +59,9 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
         }
 
         <h1 class="proj__title">{title}</h1>
-        {summary_long && <p class="proj__voice voice-line">{summary_long}</p>}
+        {summary_long && <VoiceLine class="proj__voice">
+        {summary_long}
+      </VoiceLine>}
 
         {
           metrics.length > 0 && (
@@ -186,27 +188,8 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
   }
   .proj__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.05rem, 2.2vw, 1.4rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .proj__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .proj__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .proj__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

@@ -6,6 +6,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Avatar from '@components/Avatar.astro';
 import { profile } from '@utils/profile';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const channels = [
   {
@@ -62,8 +63,7 @@ const platforms = [
     href: profile.contact.upwork,
     use: 'Contract engagements · hourly or fixed-price.',
   },
-];
----
+];---
 
 <BaseLayout
   title="Contact"
@@ -76,9 +76,9 @@ const platforms = [
         <div class="contact-head__copy">
           <p class="section__eyebrow"><span class="mono">contact/</span> · 24h reply · NDA-safe</p>
           <h1 class="contact-head__title">Five channels. Pick the one that fits.</h1>
-          <p class="contact-head__voice voice-line">
-            Email-with-JD gets the richest reply. LinkedIn DM is fine for casual. Phone after email — never first.
-          </p>
+          <VoiceLine class="contact-head__voice">
+        Email-with-JD gets the richest reply. LinkedIn DM is fine for casual. Phone after email — never first.
+      </VoiceLine>
           <p class="contact-head__sub">
             Each tile names the job it does, not the platform. For open roles, the email-with-JD
             path gets the richest reply (problem → approach → evidence → outcome → proof).
@@ -301,27 +301,8 @@ const platforms = [
   }
   .contact-head__voice {
     margin: 0 0 var(--sp-4);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .contact-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .contact-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .contact-head__eq {
     padding: var(--sp-4) var(--sp-5);
     background: var(--c-bg);

@@ -38,7 +38,7 @@ I design with reproducibility and adversarial verification as the first-class co
 
 - Variance Risk Premium & Options Carry
 
-- Regime Detection (HMM, change-point)
+- Regime Conditioning (vol-targeting, vol-regime filter)
 
 - Transaction-Cost Realism & Slippage Modeling
 

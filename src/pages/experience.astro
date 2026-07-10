@@ -14,6 +14,7 @@ import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
 import { getCollection, render } from 'astro:content';
 import { path } from '@utils/url';
+import VoiceLine from '@components/VoiceLine.astro';
 
 const entries = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
 
@@ -46,9 +47,9 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
       <h1 class="page-head__title">
         Where the work happened — and how to <span class="hl">verify</span> it.
       </h1>
-      <p class="page-head__voice voice-line">
+      <VoiceLine class="page-head__voice">
         Each engagement ships with proof. If the proof isn't public, the entry isn't here.
-      </p>
+      </VoiceLine>
       <p class="page-head__sub">
         {entries.length} engagements. Each entry lists the contributions made and points to public artifacts
         that prove them. The systematic-strategy desk role is a <strong>closed past contract</strong>
@@ -148,27 +149,8 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
   }
   .page-head__voice {
     margin: 0 0 var(--sp-5);
-    padding-left: var(--sp-3);
-    border-left: 2px solid var(--c-primary-2);
-    font-style: italic;
-    font-family: var(--serif-display);
-    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-    line-height: 1.4;
-    color: var(--c-ink-2);
     max-width: 60ch;
-  }
-  .page-head__voice::before {
-    content: '\201C';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-right: 0.1em;
-  }
-  .page-head__voice::after {
-    content: '\201D';
-    color: var(--c-primary-2);
-    font-style: normal;
-    margin-left: 0.1em;
-  }
+}
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

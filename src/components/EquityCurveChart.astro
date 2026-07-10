@@ -1,0 +1,421 @@
+---
+/**
+ * EquityCurveChart.astro — server-rendered SVG with three panels:
+ *
+ *   1. Equity curve (top, 60% of inner height) — strategy PnL normalized to 100
+ *   2. Drawdown subplot (bottom, 30% of inner height) — running max-to-current DD
+ *   3. Regime bands (background tint across both panels) — calm / normal / stress
+ *
+ * No JS. All series are server-rendered as SVG paths. Regime is computed from
+ * rolling 5-day vol of the equity series itself (no external data required).
+ *
+ * Why this exists: positions.astro needs a real chart, not the "illustrative
+ * series" badge. Computing the drawdown + regime from the live series is
+ * honest — they're properties of the series, not external claims.
+ *
+ * Props:
+ *   data            — equity series, normalized to 100 (number[])
+ *   width / height  — viewBox dimensions (default 720×320)
+ *   volWindow       — rolling vol window in days (default 5)
+ *   regimeQuantiles — [qLow, qHigh] in [0,1] for calm/stress thresholds (default [0.33, 0.66])
+ *   yMin / yMax     — equity axis bounds (else auto)
+ *   title           — chart title
+ *   caption         — caption below chart
+ */
+interface Props {
+  data: number[];
+  width?: number;
+  height?: number;
+  volWindow?: number;
+  regimeQuantiles?: [number, number];
+  yMin?: number;
+  yMax?: number;
+  title?: string;
+  caption?: string;
+}
+const {
+  data,
+  width = 720,
+  height = 320,
+  volWindow = 5,
+  regimeQuantiles = [0.33, 0.66],
+  yMin,
+  yMax,
+  title,
+  caption,
+} = Astro.props;
+
+// === 1. Drawdown (running max-to-current, signed negative) ===
+const drawdown: number[] = (() => {
+  const out: number[] = [];
+  let peak = -Infinity;
+  for (const v of data) {
+    if (v > peak) peak = v;
+    out.push(((v - peak) / peak) * 100); // negative or zero
+  }
+  return out;
+})();
+
+// === 2. Rolling vol + regime labels ===
+// Daily log-returns, then rolling stdev over volWindow, then classify each
+// day by quantile of the resulting vol series.
+const volSeries: number[] = (() => {
+  const logRets: number[] = [];
+  for (let i = 1; i < data.length; i++) {
+    logRets.push(Math.log(data[i] / data[i - 1]));
+  }
+  const out: number[] = [];
+  for (let i = 0; i < logRets.length; i++) {
+    const start = Math.max(0, i - volWindow + 1);
+    const window = logRets.slice(start, i + 1);
+    const mean = window.reduce((a, b) => a + b, 0) / window.length;
+    const variance =
+      window.reduce((acc, r) => acc + (r - mean) ** 2, 0) / Math.max(1, window.length - 1);
+    out.push(Math.sqrt(variance) * Math.sqrt(365)); // annualized
+  }
+  return out;
+})();
+
+interface RegimeBand {
+  startIdx: number;
+  endIdx: number;
+  label: 'calm' | 'normal' | 'stress';
+}
+const regimeBands: RegimeBand[] = (() => {
+  if (volSeries.length === 0) return [];
+  const sorted = [...volSeries].sort((a, b) => a - b);
+  const q = (p: number) => {
+    const idx = Math.min(sorted.length - 1, Math.max(0, Math.floor(p * sorted.length)));
+    return sorted[idx];
+  };
+  const qLow = q(regimeQuantiles[0]);
+  const qHigh = q(regimeQuantiles[1]);
+  const labelFor = (v: number): 'calm' | 'normal' | 'stress' =>
+    v <= qLow ? 'calm' : v <= qHigh ? 'normal' : 'stress';
+
+  const bands: RegimeBand[] = [];
+  let i = 0;
+  while (i < volSeries.length) {
+    const label = labelFor(volSeries[i]);
+    let j = i;
+    while (j < volSeries.length && labelFor(volSeries[j]) === label) j++;
+    // Map vol-series index back to data index (data[i] ↔ volSeries[i-1]).
+    bands.push({ startIdx: i === 0 ? 0 : i, endIdx: j === 0 ? 0 : j, label });
+    i = j;
+  }
+  return bands;
+})();
+
+// === Layout ===
+const padL = 44,
+  padR = 16,
+  padT = 18,
+  padB = 22;
+const splitY = 0.62; // equity panel occupies 62% of inner height
+const innerW = width - padL - padR;
+const innerH = height - padT - padB;
+const eqH = innerH * splitY;
+const ddH = innerH - eqH;
+const gap = 6;
+const eqTop = padT;
+const ddTop = padT + eqH + gap;
+const ddBottom = ddTop + ddH;
+
+const dataMin = yMin ?? Math.min(...data);
+const dataMax = yMax ?? Math.max(...data);
+const dataRange = dataMax - dataMin || 1;
+
+const ddMin = Math.min(...drawdown, 0);
+const ddMax = 0;
+
+const xForIdx = (i: number, n: number) =>
+  padL + (i / Math.max(1, n - 1)) * innerW;
+const yEqFor = (v: number) =>
+  eqTop + eqH - ((v - dataMin) / dataRange) * eqH;
+const yDdFor = (v: number) =>
+  ddBottom - ((v - ddMin) / (ddMax - ddMin || 1)) * ddH;
+
+// === Paths ===
+function buildLinePath(values: number[]): string {
+  return values
+    .map((v, i) => {
+      const x = xForIdx(i, values.length).toFixed(2);
+      const y = yEqFor(v).toFixed(2);
+      return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+    })
+    .join(' ');
+}
+function buildAreaPath(linePath: string): string {
+  return `${linePath} L ${(padL + innerW).toFixed(2)} ${(eqTop + eqH).toFixed(2)} L ${padL} ${(eqTop + eqH).toFixed(2)} Z`;
+}
+function buildDdArea(values: number[]): string {
+  const start = `M ${padL} ${ddBottom}`;
+  const ups = values
+    .map((v, i) => `L ${xForIdx(i, values.length).toFixed(2)} ${yDdFor(v).toFixed(2)}`)
+    .join(' ');
+  return `${start} ${ups} L ${(padL + innerW).toFixed(2)} ${ddBottom} Z`;
+}
+
+const equityPath = buildLinePath(data);
+const equityArea = buildAreaPath(equityPath);
+const ddArea = buildDdArea(drawdown);
+
+// === Y-ticks ===
+const yTickCount = 4;
+const yTicks = Array.from(
+  { length: yTickCount + 1 },
+  (_, i) => dataMin + (i / yTickCount) * dataRange,
+);
+const ddTicks = Array.from({ length: 4 }, (_, i) => ddMin * (1 - i / 3));
+
+// === X-axis labels (start, mid, end in trading days) ===
+const xLabels: { i: number; text: string }[] = (() => {
+  const last = data.length - 1;
+  const labels: { i: number; text: string }[] = [];
+  if (last < 1) return labels;
+  labels.push({ i: 0, text: 't=0' });
+  if (last >= 2) labels.push({ i: Math.round(last / 2), text: `t=${Math.round(last / 2)}d` });
+  labels.push({ i: last, text: `t=${last}d` });
+  return labels;
+})();
+
+// === Deterministic gradient ID (avoid <defs> collision with other charts) ===
+function hashSeed(s: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36).slice(0, 7);
+}
+const gradId = `eq-grad-${hashSeed(`${data.length}|${data[0]}|${data[data.length - 1]}`)}`;
+
+// Regime colors — kept neutral so the institutional palette isn't bent.
+const regimeFill: Record<'calm' | 'normal' | 'stress', string> = {
+  calm: 'rgba(63, 185, 80, 0.06)',
+  normal: 'rgba(212, 160, 23, 0.05)',
+  stress: 'rgba(248, 81, 73, 0.07)',
+};
+---
+
+<figure class="eq-chart">
+  {title && <figcaption class="eq-chart__title">{title}</figcaption>}
+  <svg
+    class="eq-chart__svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label={title ?? 'Equity curve with drawdown and regime bands'}
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <defs>
+      <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--c-primary-2)" stop-opacity="0.25"></stop>
+        <stop offset="100%" stop-color="var(--c-primary-2)" stop-opacity="0"></stop>
+      </linearGradient>
+    </defs>
+
+    {/* Regime background bands (drawn first, lowest layer) */}
+    {
+      regimeBands.map((b) => {
+        const x = xForIdx(b.startIdx, data.length);
+        const w = xForIdx(b.endIdx, data.length) - x;
+        return (
+          <rect
+            x={x.toFixed(2)}
+            y={padT}
+            width={w.toFixed(2)}
+            height={(ddBottom - padT).toFixed(2)}
+            fill={regimeFill[b.label]}
+          />
+        );
+      })
+    }
+
+    {/* Y-grid on equity panel */}
+    {
+      yTicks.map((t) => {
+        const y = yEqFor(t);
+        return (
+          <g>
+            <line x1={padL} y1={y} x2={padL + innerW} y2={y} class="eq-chart__grid" />
+            <text x={padL - 6} y={y + 3} class="eq-chart__tick mono" text-anchor="end">
+              {t.toFixed(1)}
+            </text>
+          </g>
+        );
+      })
+    }
+
+    {/* Y-grid on drawdown panel */}
+    {
+      ddTicks.map((t) => {
+        const y = yDdFor(t);
+        return (
+          <g>
+            <line x1={padL} y1={y} x2={padL + innerW} y2={y} class="eq-chart__grid eq-chart__grid--dd" />
+            <text x={padL - 6} y={y + 3} class="eq-chart__tick eq-chart__tick--dd mono" text-anchor="end">
+              {t.toFixed(1)}%
+            </text>
+          </g>
+        );
+      })
+    }
+
+    {/* Panel divider */}
+    <line
+      x1={padL}
+      y1={ddTop - gap / 2}
+      x2={padL + innerW}
+      y2={ddTop - gap / 2}
+      class="eq-chart__divider"
+    ></line>
+
+    {/* Panel labels (left margin) */}
+    <text x={padL - 32} y={eqTop + 10} class="eq-chart__panel mono">EQ</text>
+    <text x={padL - 32} y={ddTop + 10} class="eq-chart__panel mono">DD</text>
+
+    {/* Equity area + line */}
+    <path d={equityArea} fill={`url(#${gradId})`}></path>
+    <path
+      d={equityPath}
+      fill="none"
+      stroke="var(--c-primary-2)"
+      stroke-width="1.75"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    ></path>
+
+    {/* Drawdown area (filled red) */}
+    <path d={ddArea} fill="var(--c-fail)" fill-opacity="0.35"></path>
+
+    {/* Drawdown zero line (subtle) */}
+    <line x1={padL} y1={ddBottom} x2={padL + innerW} y2={ddBottom} class="eq-chart__axis"></line>
+
+    {/* X-axis labels */}
+    {
+      xLabels.map((l) => (
+        <text
+          x={xForIdx(l.i, data.length)}
+          y={height - 6}
+          class="eq-chart__xlabel mono"
+          text-anchor="middle"
+        >
+          {l.text}
+        </text>
+      ))
+    }
+  </svg>
+
+  {/* Regime legend (inline below the SVG) */}
+  <ul class="eq-chart__legend mono" aria-label="Volatility regime legend">
+    <li><span class="eq-chart__swatch eq-chart__swatch--calm"></span>calm (low vol)</li>
+    <li><span class="eq-chart__swatch eq-chart__swatch--normal"></span>normal</li>
+    <li><span class="eq-chart__swatch eq-chart__swatch--stress"></span>stress (high vol)</li>
+    <li class="eq-chart__legend-note">regime from rolling {volWindow}d vol of the series itself</li>
+  </ul>
+
+  {caption && <figcaption class="eq-chart__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .eq-chart {
+    margin: var(--sp-5) 0;
+  }
+  .eq-chart__title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-ink);
+    margin-bottom: var(--sp-2);
+  }
+  .eq-chart__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+  }
+  .eq-chart__grid {
+    stroke: var(--c-rule-soft);
+    stroke-width: 1;
+  }
+  .eq-chart__grid--dd {
+    stroke-dasharray: 2, 2;
+  }
+  .eq-chart__axis {
+    stroke: var(--c-rule);
+    stroke-width: 1;
+  }
+  .eq-chart__divider {
+    stroke: var(--c-rule);
+    stroke-width: 1;
+    stroke-dasharray: 3, 3;
+    opacity: 0.6;
+  }
+  .eq-chart__tick {
+    font-size: 9px;
+    fill: var(--c-ink-2);
+  }
+  .eq-chart__tick--dd {
+    fill: var(--c-ink-3);
+  }
+  .eq-chart__panel {
+    font-size: 9px;
+    fill: var(--c-ink-3);
+    letter-spacing: 0.06em;
+  }
+  .eq-chart__xlabel {
+    font-size: 9px;
+    fill: var(--c-ink-3);
+  }
+  .eq-chart__legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3);
+    margin: var(--sp-3) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+  }
+  .eq-chart__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+  }
+  .eq-chart__legend-note {
+    color: var(--c-ink-3);
+    font-style: italic;
+    margin-left: auto;
+  }
+  .eq-chart__swatch {
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid var(--c-rule-soft);
+  }
+  .eq-chart__swatch--calm {
+    background: rgba(63, 185, 80, 0.18);
+  }
+  .eq-chart__swatch--normal {
+    background: rgba(212, 160, 23, 0.16);
+  }
+  .eq-chart__swatch--stress {
+    background: rgba(248, 81, 73, 0.22);
+  }
+  .eq-chart__caption {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    margin-top: var(--sp-2);
+    line-height: var(--lh-loose);
+  }
+
+  @media (max-width: 720px) {
+    .eq-chart__legend-note {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+  }
+</style>
