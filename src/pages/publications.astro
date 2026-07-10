@@ -517,27 +517,30 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     background: rgba(255, 255, 255, 0.1);
   }
 
-  /* Hide sections by default; show based on filter */
+  /* Hide sections by default; show based on filter.
+     Radio inputs and <section data-topic> are direct children of <main>
+     (siblings), so the selector is `~ [data-topic]` — `~ main` would
+     require <main> to be a later sibling of the input, which it isn't. */
   [data-topic='papers'],
   [data-topic='oss'],
   [data-topic='workbooks'],
   [data-topic='press'] {
     display: none;
   }
-  .topic-input--all:checked ~ main [data-topic='papers'],
-  .topic-input--all:checked ~ main [data-topic='oss'],
-  .topic-input--all:checked ~ main [data-topic='workbooks'],
-  .topic-input--all:checked ~ main [data-topic='press'],
-  .topic-input--papers:checked ~ main [data-topic='papers'],
-  .topic-input--oss:checked ~ main [data-topic='oss'],
-  .topic-input--workbooks:checked ~ main [data-topic='workbooks'],
-  .topic-input--press:checked ~ main [data-topic='press'] {
+  .topic-input--all:checked ~ [data-topic='papers'],
+  .topic-input--all:checked ~ [data-topic='oss'],
+  .topic-input--all:checked ~ [data-topic='workbooks'],
+  .topic-input--all:checked ~ [data-topic='press'],
+  .topic-input--papers:checked ~ [data-topic='papers'],
+  .topic-input--oss:checked ~ [data-topic='oss'],
+  .topic-input--workbooks:checked ~ [data-topic='workbooks'],
+  .topic-input--press:checked ~ [data-topic='press'] {
     display: block;
   }
-  .topic-input--all:checked ~ main [data-topic='papers'] .pub-list,
-  .topic-input--all:checked ~ main [data-topic='oss'] .pub-list,
-  .topic-input--all:checked ~ main [data-topic='workbooks'] .workbooks,
-  .topic-input--all:checked ~ main [data-topic='press'] .press {
+  .topic-input--all:checked ~ [data-topic='papers'] .pub-list,
+  .topic-input--all:checked ~ [data-topic='oss'] .pub-list,
+  .topic-input--all:checked ~ [data-topic='workbooks'] .workbooks,
+  .topic-input--all:checked ~ [data-topic='press'] .press {
     display: flex;
   }
 
