@@ -376,7 +376,7 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
   .mathtape__tile {
     position: relative;
     width: 280px;
-    height: 140px;
+    height: 156px;
     background: var(--c-tape);
     border: 1px solid var(--c-rule-soft); /* single-pixel hairline */
     border-radius: var(--radius-sm);
@@ -476,7 +476,7 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
   }
 
   .mathtape__tile-formula :global(.eq) {
-    font-size: 1.4em;
+    font-size: 1.05em;
     text-align: center;
   }
 
@@ -508,44 +508,44 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
 
   .mathtape__corr-grid {
     display: grid;
-    grid-template-columns: auto repeat(3, 16px);
-    grid-auto-rows: 16px;
-    gap: 2px;
+    grid-template-columns: 36px repeat(3, 36px);
+    grid-auto-rows: 36px;
+    gap: 4px;
     align-items: center;
     margin-bottom: var(--sp-2);
   }
 
   .mathtape__corr-corner {
-    width: 16px;
-    height: 16px;
+    width: 36px;
+    height: 36px;
   }
 
   .mathtape__corr-col,
   .mathtape__corr-row {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--c-ink-3);
-    line-height: 16px;
+    line-height: 36px;
     white-space: nowrap;
   }
 
   .mathtape__corr-col {
     text-align: center;
-    width: 16px;
-    height: 16px;
+    width: 36px;
+    height: 36px;
   }
 
   .mathtape__corr-row {
     text-align: right;
-    padding-right: 6px;
-    height: 16px;
+    padding-right: 8px;
+    height: 36px;
   }
 
   .mathtape__corr-cell {
-    width: 16px;
-    height: 16px;
-    border-radius: 1px;
+    width: 36px;
+    height: 36px;
+    border-radius: 2px;
     /* background set inline by template (sign × intensity) */
     border: 1px solid var(--c-rule-soft);
     position: relative;
