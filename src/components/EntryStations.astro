@@ -113,11 +113,11 @@ function miniSpark(sIdx: string): number[] {
   return Array.from({ length: 60 }, () => r());
 }
 
-// === 5-tick event tape colors (4-color category palette) ==========
-const TAPE_COLORS = ['amber', 'pass', 'cyan', 'fail'] as const;
+// === 5-tick event tape colors (institutional: ink + amber, ~12% amber density) ==========
+const TAPE_COLORS = ['neutral', 'amber'] as const;
 function tapeColors(sIdx: string): number[] {
   const r = tapeRngFn(sIdx);
-  return Array.from({ length: 5 }, () => Math.floor(r() * TAPE_COLORS.length));
+  return Array.from({ length: 5 }, () => Math.floor(r() * 8) === 0 ? 1 : 0);
 }
 
 // === 14px monoline icons (currentColor; ≤3 lines each) ===========
@@ -527,15 +527,6 @@ const stations = [
   .entry-station__tape rect.entry-station__tape-tick--amber {
     fill: var(--c-amber-light);
   }
-  .entry-station__tape rect.entry-station__tape-tick--pass {
-    fill: var(--c-pass);
-  }
-  .entry-station__tape rect.entry-station__tape-tick--cyan {
-    fill: var(--c-accent-cyan);
-  }
-  .entry-station__tape rect.entry-station__tape-tick--fail {
-    fill: var(--c-fail);
-  }
 
   /* === Flow arrow (NEW v6.6) — [ INPUT ] →→→ [ OUTPUT ] ===
      Replaces the v6.5 3-pill status row at the bottom of the
@@ -554,8 +545,8 @@ const stations = [
     font-weight: 500;
   }
   .entry-station__flow-node--in {
-    color: var(--c-accent-cyan);
-    border-color: var(--c-accent-cyan);
+    color: var(--c-ink-2);
+    border-color: var(--c-rule);
   }
   .entry-station__flow-node--out {
     color: var(--c-amber);

@@ -92,9 +92,6 @@ const ICONS: Record<ChipIcon, string> = {
             <a class="epip-tile" href={c.href} aria-label={`${c.label} — ${c.count} ${c.countLabel}`}>
               <span class="epip-tile__orb" set:html={ICONS[c.icon]} aria-hidden="true" />
               <span class="epip-tile__label">{c.label}</span>
-              <div class="epip-tile__bar" aria-hidden="true">
-                <span class="epip-tile__bar-fill" />
-              </div>
               <span class="epip-tile__count mono">{c.count} {c.countLabel}</span>
             </a>
           </li>
@@ -187,34 +184,11 @@ const ICONS: Record<ChipIcon, string> = {
     color: var(--c-ink-3);
   }
 
-  /* Bottom 24px-tall progress bar at full-width.
-     1px stroke + 4px amber fill at center.
-     Fill width = a tasteful, palette-faithful 38% so the bar reads as
-     "loaded, not full" without needing per-chip data. */
-  .epip-tile__bar {
-    height: 24px;
-    width: 100%;
-    border: 1px solid var(--c-rule);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--c-tape);
-    align-self: end;
-  }
-  .epip-tile__bar-fill {
-    display: block;
-    width: 38%;
-    height: 4px;
-    background: var(--c-primary-2);
-    border-radius: 2px;
-  }
-
   /* Bottom-right 10px mono count chip. */
   .epip-tile__count {
     position: absolute;
     right: var(--sp-2);
-    bottom: 30px;        /* sits above the progress bar */
+    bottom: var(--sp-2);
     font-size: 10px;
     color: var(--c-ink-3);
     letter-spacing: 0.04em;

@@ -1548,25 +1548,23 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     height: 5px;
     border-radius: 50%;
     background: var(--c-amber-light);
-    box-shadow: 0 0 0 2px rgba(232, 178, 32, 0.18);
     flex-shrink: 0;
   }
 
   /* Giant sans-serif letter — 96px amber with ink-bleed at 0.5 opacity.
-     The ink-bleed is a darker amber offset shadow at 0.5 opacity
-     beneath the bright amber letter, plus a soft glow for the lift. */
+     Ink-bleed is a darker amber offset shadow at 0.5 opacity
+     beneath the bright amber letter — no glow (institutional). */
   .what-cell__letter {
     position: relative;
     margin-top: var(--sp-3);
     font-family: var(--ff-sans);
     font-size: 96px;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 0.85;
     letter-spacing: -0.045em;
     color: var(--c-amber-light);
     text-shadow:
-      4px 4px 0 rgba(10, 14, 20, 0.5),
-      0 0 28px rgba(232, 178, 32, 0.32);
+      4px 4px 0 rgba(10, 14, 20, 0.5);
     z-index: 1;
   }
 

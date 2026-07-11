@@ -533,9 +533,9 @@ li {
   border: 1px solid var(--c-primary-2);   /* outline amber to convey warning */
 }
 .pill--purple {
-  background: rgba(107, 74, 143, 0.1);
-  color: var(--c-primary-3);
-  border-color: rgba(107, 74, 143, 0.3);
+  background: transparent;
+  color: var(--c-ink-2);
+  border: 1px solid var(--c-rule);
 }
 .pill--mute {
   background: var(--c-bg-3);

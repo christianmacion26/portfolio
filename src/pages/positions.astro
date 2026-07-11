@@ -31,7 +31,7 @@ const email = profile.contact.email;---
   <header class="positions-head">
     <div class="container">
       <p class="positions-status mono">
-        <span class="dot dot--pass" aria-hidden="true"></span>
+        <span class="dot dot--amber" aria-hidden="true"></span>
         Status: open to conversations · last refreshed {lastRefreshed}
       </p>
       <p class="section__eyebrow"><span class="mono">positions/</span> · live paper-trading</p>
@@ -455,7 +455,7 @@ const email = profile.contact.email;---
     color: var(--c-ink-2);
   }
   .positions-head__disclosures strong {
-    color: var(--c-fail);
+    color: var(--c-primary-2);
     font-weight: 600;
   }
 
@@ -578,16 +578,16 @@ const email = profile.contact.email;---
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--c-fail);
-    background: rgba(248, 81, 73, 0.08);
-    border: 1px solid rgba(248, 81, 73, 0.3);
+    color: var(--c-primary-2);
+    background: rgba(232, 178, 32, 0.10);
+    border: 1px solid rgba(232, 178, 32, 0.35);
     border-radius: 999px;
     white-space: nowrap;
   }
   .positions-chart__badge--ok {
-    color: var(--c-pass);
-    background: var(--c-pass-soft);
-    border-color: rgba(63, 185, 80, 0.3);
+    color: var(--c-primary-2);
+    background: rgba(232, 178, 32, 0.10);
+    border-color: rgba(232, 178, 32, 0.35);
   }
   .positions-metric {
     padding: var(--sp-4);
@@ -731,9 +731,9 @@ const email = profile.contact.email;---
     gap: var(--sp-2);
     padding: 6px 14px;
     margin-bottom: var(--sp-4);
-    background: var(--c-pass-soft);
-    color: var(--c-pass);
-    border: 1px solid var(--c-pass);
+    background: rgba(232, 178, 32, 0.10);
+    color: var(--c-primary-2);
+    border: 1px solid rgba(232, 178, 32, 0.45);
     border-radius: 999px;
     font-size: var(--fs-xs);
     font-weight: 600;
