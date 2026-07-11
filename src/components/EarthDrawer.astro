@@ -526,7 +526,7 @@ function signalPillColor(sig: string): string {
     case 'steepen':
       return 'amber';
     case 'carry':
-      return 'purple';
+      return 'amber';
     default:
       return 'neutral';
   }
@@ -758,7 +758,7 @@ function signalPillColor(sig: string): string {
      Earth map legend dots (in the globe) still use color for category ID,
      but these pills in the drawer are chrome — they should not look like
      a status dashboard. All variants collapse to ink-3 hairline-bordered
-     (pass/cyan/purple) or amber ink (amber). Fail pill renders as ink-3
+     (pass/cyan/amber) or amber ink (amber). Fail pill renders as ink-3
      with a thin amber border to indicate severity. */
   .pill--fail    { background: transparent; color: var(--c-ink-2); border: 1px solid var(--c-primary-2); }
   .pill--pass    { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }

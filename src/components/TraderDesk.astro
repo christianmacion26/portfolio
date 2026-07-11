@@ -608,7 +608,7 @@ const fmtPct = (n: number) => formatPct(n);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--c-amber);
-    font-weight: 700;
+    font-weight: 600;
     margin: 0;
   }
   .desk__title {
@@ -629,27 +629,17 @@ const fmtPct = (n: number) => formatPct(n);
     border: 1px solid var(--c-amber);
     border-radius: 3px;
     vertical-align: middle;
-    font-weight: 700;
+    font-weight: 600;
   }
   .desk__pulse {
     display: inline-block;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--c-pass);
-    box-shadow: 0 0 0 0 var(--c-pass);
-    animation: desk-pulse 1.8s ease-in-out infinite;
-    opacity: 0.55;
-  }
-  @keyframes desk-pulse {
-    0%   { box-shadow: 0 0 0 0 var(--c-pass); opacity: 0.55; }
-    70%  { box-shadow: 0 0 0 8px transparent; opacity: 0.85; }
-    100% { box-shadow: 0 0 0 0 transparent; opacity: 0.55; }
+    background: var(--c-amber);
+    opacity: 0.85;
   }
   .desk__latency { color: var(--c-amber-light); }
-  @media (prefers-reduced-motion: reduce) {
-    .desk__pulse { animation: none; opacity: 0.85; }
-  }
 
   /* ===== Panel ===== */
   .desk__panel {
@@ -701,7 +691,7 @@ const fmtPct = (n: number) => formatPct(n);
     font-size: 0.66rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0;
   }
   .desk__viz-cap--mute { color: var(--c-ink-2); font-weight: 500; }
@@ -861,7 +851,7 @@ const fmtPct = (n: number) => formatPct(n);
   /* Signal matrix */
   .desk__matrix { width: 100%; height: 90px; display: block; }
   .desk__matrix-axis { font-size: 7px; fill: var(--c-ink-2); letter-spacing: 0.06em; text-transform: uppercase; }
-  .desk__matrix-axis--sig { fill: var(--c-amber); font-weight: 700; }
+  .desk__matrix-axis--sig { fill: var(--c-amber); font-weight: 600; }
   .desk__matrix-grid { stroke: var(--c-grid-line); stroke-width: 0.5; }
   .desk__matrix-bar { shape-rendering: crispEdges; }
   .desk__matrix-bar--mute { fill: var(--c-ink-2); opacity: 0.45; }
@@ -892,7 +882,7 @@ const fmtPct = (n: number) => formatPct(n);
     font-size: 0.62rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0;
   }
   .desk__kpi-num {
@@ -926,7 +916,7 @@ const fmtPct = (n: number) => formatPct(n);
     padding: 0.1em 0.5em;
     border-radius: 3px;
     border: 1px solid currentColor;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.08em;
     margin-left: 0.4rem;
   }

@@ -405,7 +405,7 @@ const LEGEND_COUNTS = {
      cell; the matrix sets its own grid-template-columns for column
      headers / row headers / 4 data columns. */
   .cta__matrix {
-    --cell: 28px;
+    --cell: 36px;
     display: grid;
     /* 1 row-head column + 4 data columns. Gap is 4px so adjacent
        cells aren't visually overlapping the 1px stroke. */
@@ -434,9 +434,10 @@ const LEGEND_COUNTS = {
     align-items: center;
     justify-content: center;
     height: 24px;
+    min-width: 36px;
     font-size: 10px;
     color: var(--c-ink-2);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     font-weight: 500;
   }
@@ -483,8 +484,8 @@ const LEGEND_COUNTS = {
     opacity: 0.4;
   }
   .cta__cell--open .cta__cell-fill {
-    background: var(--c-pass);
-    opacity: 1;
+    background: var(--c-amber-light);
+    opacity: 0.7;
   }
   .cta__cell--confirmed .cta__cell-fill {
     background: var(--c-amber);
@@ -521,7 +522,8 @@ const LEGEND_COUNTS = {
     border: 1px solid var(--c-rule);
   }
   .cta__legend-item--open .cta__legend-swatch {
-    background: var(--c-pass);
+    background: var(--c-amber-light);
+    opacity: 0.7;
   }
   .cta__legend-item--confirmed .cta__legend-swatch {
     background: var(--c-amber);

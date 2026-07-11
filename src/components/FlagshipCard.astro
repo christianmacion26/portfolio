@@ -62,27 +62,9 @@ const { title, group, blurb, src, alt, caption, href, aspect = '3/2', flagship =
     position: relative;
     overflow: hidden;
   }
-  .flagship::after {
-    /* shine sweep — Phase D-4 */
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      120deg,
-      transparent 0%,
-      rgba(212, 160, 23, 0.06) 45%,
-      transparent 100%
-    );
-    transform: translateX(-110%);
-    transition: transform 600ms ease;
-    pointer-events: none;
-  }
   .flagship:hover {
     border-color: var(--c-primary);
     box-shadow: var(--shadow-sm);
-  }
-  .flagship:hover::after {
-    transform: translateX(110%);
   }
 
   .flagship__head {
@@ -106,7 +88,7 @@ const { title, group, blurb, src, alt, caption, href, aspect = '3/2', flagship =
     background: rgba(232, 178, 32, 0.12);
     border: 1px solid rgba(232, 178, 32, 0.40);
     padding: 0.125rem var(--sp-2);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-weight: 700;
     letter-spacing: 0.04em;
   }

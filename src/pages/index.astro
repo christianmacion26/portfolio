@@ -584,7 +584,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
               public/ambient/workspace-loop.mp4 is ever added.
          2. <WorldFeed />   — 4-lane news-caster ticker:
               MARKETS (amber) · POLICY (green) · QUANT (cyan) ·
-              AI (purple). 20 fixtures per lane, 40-second cycle,
+              AI (monochrome). 20 fixtures per lane, 40-second cycle,
               CSS-only infinite pan, prefers-reduced-motion aware.
        The wrapper is full-bleed tape-dark and bleeds into the hero
        border without a hard seam. No client-side JS for either
@@ -1250,7 +1250,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     inset: 0;
     background:
       radial-gradient(900px 600px at 88% 8%, rgba(232, 178, 32, 0.18), transparent 65%),
-      radial-gradient(700px 500px at 8% 95%, rgba(11, 61, 92, 0.25), transparent 65%);
+      radial-gradient(700px 500px at 8% 95%, rgba(212, 160, 23, 0.10), transparent 65%);
     pointer-events: none;
     z-index: 0;
   }
@@ -1354,7 +1354,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .hero__title {
     font-size: clamp(1.85rem, 4.4vw, 3.4rem);
     line-height: 1.08;
-    letter-spacing: -0.028em;
+    letter-spacing: -0.02em;
     color: var(--c-primary);
     font-weight: 600;
     margin-bottom: var(--sp-4);
@@ -1535,7 +1535,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: var(--ink-on-tape);
     background: rgba(232, 178, 32, 0.08);
     border: 1px solid rgba(232, 178, 32, 0.30);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     padding: 0.32rem 0.55rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -2033,8 +2033,49 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
 
   /* ============================================================
-     CREDENTIALS — list of 4, plain table-like.
+     CREDENTIALS — chip ribbon (12 names)
+     F14 institutional: monochrome ink-2 + 1 amber accent only
      ============================================================ */
+  .creds__ribbon {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: center;
+  }
+  .creds__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--c-rule);
+    background: transparent;
+    font-size: var(--fs-xs);
+    line-height: 1.3;
+    transition: border-color var(--transition);
+  }
+  .creds__chip:hover {
+    border-color: var(--c-primary-2);
+  }
+  .creds__chip-mono {
+    font-family: var(--ff-mono);
+    font-weight: 700;
+    color: var(--c-primary-2-deep);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.05em;
+  }
+  .creds__chip-label {
+    color: var(--c-ink-2);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
+  }
+  .creds__chip-rule {
+    display: none;
+  }
+
+  /* Legacy list (older markup, retained for safety) */
   .creds__list {
     list-style: none;
     padding: 0;
@@ -2179,6 +2220,11 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .section--alt .creds__row,
   .section--alt .numbers__row { border-color: rgba(255, 255, 255, 0.08); }
   .section--alt .creds__name { color: var(--c-primary); }
+  .section--alt .creds__chip {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .section--alt .creds__chip-label { color: rgba(230, 237, 243, 0.78); }
+  .section--alt .creds__chip-mono { color: var(--c-amber-light); }
   .section--alt .creds__org { color: rgba(230, 237, 243, 0.7); }
   .section--alt .creds__date { color: rgba(230, 237, 243, 0.5); }
   .section--alt .section__foot .hero__link { color: var(--c-primary-2-light); }

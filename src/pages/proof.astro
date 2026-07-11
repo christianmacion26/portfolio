@@ -28,6 +28,9 @@ import StatementCarousel from '@components/StatementCarousel.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
 import { profile } from '@utils/profile';
+import { buildStampUtc8 } from '@utils/build-stamp';
+import pkg from '../../package.json';
+const proofVersion = `v${pkg.version}`;
 
 // === Data: 4 flagship credentials (3 from certGroup.featured* + 1 standalone Bitget) ===
 const certGroups = (await getCollection('certGroup')).sort((a, b) => a.data.order - b.data.order);
@@ -137,13 +140,13 @@ const formatSolutionMetric = (s: typeof solutions[number]) =>
 
 // === Status → tone + label mapping (for status pills) ===
 // production → Live (green), open-source → Open Source (amber),
-// internal → Internal (purple), archived → Archived (gray).
-type StatusTone = 'pass' | 'warn' | 'purple' | 'mute';
+// internal → Internal (monochrome · F14 institutional), archived → Archived (gray).
+type StatusTone = 'pass' | 'warn' | 'mute';
 type StatusInfo = { label: string; tone: StatusTone };
 const STATUS_MAP: Record<string, StatusInfo> = {
   production: { label: 'Live', tone: 'pass' },
   'open-source': { label: 'Open Source', tone: 'warn' },
-  internal: { label: 'Internal', tone: 'purple' },
+  internal: { label: 'Internal', tone: 'mute' },
   archived: { label: 'Archived', tone: 'mute' },
 };
 const statusInfo = (s?: string): StatusInfo | null => (s && STATUS_MAP[s]) || null;
@@ -275,7 +278,7 @@ const paginate = (items: any[]) => {
         Updated when something new ships; never deleted when something expires.
       </p>
 
-      <p class="proof-head__ver mono">v6.1.0 · 2026-07-11</p>
+      <p class="proof-head__ver mono">{proofVersion} · {buildStampUtc8()}</p>
     </div>
   </header>
 
@@ -780,7 +783,7 @@ const paginate = (items: any[]) => {
     padding-block: var(--sp-9) var(--sp-7);
     background:
       radial-gradient(1200px 600px at 80% -100px, rgba(212, 160, 23, 0.14), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(11, 61, 92, 0.1), transparent 60%), var(--c-paper);
+      radial-gradient(900px 500px at 0% 0%, rgba(212, 160, 23, 0.08), transparent 60%), var(--c-paper);
     border-bottom: var(--border);
   }
   .proof-head__title {
@@ -1080,7 +1083,7 @@ const paginate = (items: any[]) => {
     color: var(--c-ink-2);
     background: var(--c-bg);
     border: 1px solid var(--c-rule);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     /* v6.3 polish — audit flagged 9 chips at 41-101×30 px on mobile
        (PI/QUANT/AI buttons at 30 px tall, AI narrower than 44 px).

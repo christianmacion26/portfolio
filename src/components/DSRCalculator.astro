@@ -375,7 +375,7 @@
     color: var(--ink-on-tape);
   }
   .dsr-calc__verdict .dot {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    /* no halo — verdict dot reads on tape background alone */
   }
   .dsr-calc__num {
     display: flex;
@@ -388,12 +388,12 @@
   .dsr-calc__dsr {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #d4a017;
+    color: var(--c-warn);
     line-height: 1;
   }
   .dsr-calc__dsr-label {
     font-size: var(--fs-xs);
-    color: #d29922;
+    color: var(--c-warn);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }

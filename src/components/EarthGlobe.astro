@@ -720,18 +720,18 @@ const headerLabel =
           <stop offset="100%" stop-color="#1c3358" />
         </linearGradient>
 
-        {/* Atmospheric rim — cyan→transparent */}
+        {/* Atmospheric rim — amber→transparent (F14 institutional: monochrome + 1 amber) */}
         <linearGradient id="eg-atmosphere" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#76d6ff" stop-opacity="0.65" />
-          <stop offset="55%"  stop-color="#76d6ff" stop-opacity="0.18" />
-          <stop offset="100%" stop-color="#76d6ff" stop-opacity="0" />
+          <stop offset="0%"   stop-color="#e8b220" stop-opacity="0.55" />
+          <stop offset="55%"  stop-color="#e8b220" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#e8b220" stop-opacity="0" />
         </linearGradient>
 
         {/* v6.5 — secondary atmosphere ring gradient (more diffuse) */}
         <linearGradient id="eg-atmosphere-2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#76d6ff" stop-opacity="0.20" />
-          <stop offset="60%"  stop-color="#76d6ff" stop-opacity="0.06" />
-          <stop offset="100%" stop-color="#76d6ff" stop-opacity="0" />
+          <stop offset="0%"   stop-color="#e8b220" stop-opacity="0.18" />
+          <stop offset="60%"  stop-color="#e8b220" stop-opacity="0.05" />
+          <stop offset="100%" stop-color="#e8b220" stop-opacity="0" />
         </linearGradient>
 
         {/* Sun glow */}
@@ -1018,7 +1018,7 @@ const headerLabel =
           class="eg__atmosphere-halo"
           cx={cx} cy={cy} r={R * 1.04}
           fill="none"
-          stroke="#76d6ff"
+          stroke="#e8b220"
           stroke-width="1.2"
           opacity="0.18"
         />

@@ -12,7 +12,7 @@
  *   - earnings      -> var(--c-pass)          green
  *   - geopolitical  -> var(--c-fail)          red
  *   - data-release  -> var(--c-accent-cyan)   cyan
- *   - fx            -> var(--c-primary-3)     purple
+ *   - fx            -> var(--c-primary-2)     amber (F14 institutional)
  *
  * Severity drives radius and ring count:
  *   - 1 (mild)    r = 3
@@ -83,13 +83,13 @@ const sevClass = `evp-sev--${severity}`;
   .evp-cat--earnings .evp__dot { fill: var(--c-pass); }
   .evp-cat--geopolitical .evp__dot { fill: var(--c-fail); }
   .evp-cat--data-release .evp__dot { fill: var(--c-accent-cyan); }
-  .evp-cat--fx .evp__dot { fill: var(--c-primary-3); }
+  .evp-cat--fx .evp__dot { fill: var(--c-primary-2); }
 
   .evp-cat--central-bank .evp__ring { stroke: var(--c-amber-light); }
   .evp-cat--earnings .evp__ring { stroke: var(--c-pass); }
   .evp-cat--geopolitical .evp__ring { stroke: var(--c-fail); }
   .evp-cat--data-release .evp__ring { stroke: var(--c-accent-cyan); }
-  .evp-cat--fx .evp__ring { stroke: var(--c-primary-3); }
+  .evp-cat--fx .evp__ring { stroke: var(--c-primary-2); }
 
   @keyframes evp-fade-in {
     from { opacity: 0; transform: scale(0.8); }
