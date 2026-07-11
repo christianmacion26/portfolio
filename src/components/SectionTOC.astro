@@ -95,14 +95,8 @@ const items = explicitItems ?? [];
     background: var(--c-tape);
     border-bottom: var(--border);
   }
-  :root[data-theme='dark'] .toc {
-    background: rgba(13, 17, 23, 0.94);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .toc {
-      background: rgba(13, 17, 23, 0.94);
-    }
-  }
+  /* v6.10.6 — light/dark theme overrides removed; base background is solid
+     institutional tape; the rgba + backdrop-filter glass is gone. */
   .toc__inner {
     display: flex;
     align-items: center;

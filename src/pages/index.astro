@@ -1300,18 +1300,11 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     overflow: hidden;
     position: relative;
   }
-  .hero__portrait::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 60%, rgba(10, 14, 20, 0.85) 100%);
-    pointer-events: none;
-    z-index: 1;
-  }
+  /* v6.10.6 — removed decorative ::before fade-to-dark overlay.
+     The caption lives below the figure and doesn't need a gradient scrim. */
   .hero__portrait figcaption,
   .hero__portrait .proof-card figcaption {
     position: relative;
-    z-index: 2;
   }
   .hero__id-eyebrow {
     display: block;

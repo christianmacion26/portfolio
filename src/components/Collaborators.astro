@@ -224,7 +224,7 @@ function meterFor(i: number): boolean[] {
     align-items: center;
   }
 
-  /* Letter-avatar with a subtle radial-gradient rim for graphic lift. */
+  /* Letter-avatar — flat, no decorative rim. */
   .collaborator__avatar {
     width: 80px;
     height: 80px;
@@ -238,20 +238,8 @@ function meterFor(i: number): boolean[] {
     letter-spacing: -0.02em;
     position: relative;
   }
-  .collaborator__avatar::after {
-    /* Hairline rim using an inset radial-gradient. Keeps the rim on any
-       backdrop, no border-color hardcoding. */
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle at 30% 30%,
-      rgba(232, 178, 32, 0.35),
-      rgba(13, 17, 23, 0) 70%
-    );
-    pointer-events: none;
-  }
+  /* v6.10.6 — removed decorative ::after radial-gradient rim.
+     Pure flat circle; institutional chrome reads cleaner. */
   .collaborator__avatar--amber-deep {
     background: var(--c-primary-2);
     color: var(--c-tape);

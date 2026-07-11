@@ -374,9 +374,8 @@
     font-size: var(--fs-sm);
     color: var(--ink-on-tape);
   }
-  .dsr-calc__verdict .dot {
-    /* no halo — verdict dot reads on tape background alone */
-  }
+  /* v6.10.6 — removed empty .dsr-calc__verdict .dot rule;
+     verdict dot is now flat via tokens.css .dot base. */
   .dsr-calc__num {
     display: flex;
     align-items: baseline;

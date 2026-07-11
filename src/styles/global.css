@@ -530,7 +530,7 @@ li {
   color: var(--c-ink-2);
   border: 1px solid var(--c-primary-2);   /* outline amber to convey warning */
 }
-.pill--purple {
+.pill--tag {
   background: transparent;
   color: var(--c-ink-2);
   border: 1px solid var(--c-rule);

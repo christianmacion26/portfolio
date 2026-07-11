@@ -167,9 +167,9 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
     border-radius: var(--radius);
     overflow: hidden;
     background: var(--c-bg-2);
-    box-shadow: 0 6px 24px -10px rgba(15, 23, 42, 0.5),
-                inset 0 0 0 1px rgba(232, 178, 32, 0.15);
   }
+  /* v6.10.6 — removed decorative drop-shadow + inset amber ring.
+     Flat border is the institutional chrome pattern. */
   .proj__hero-img {
     display: block;
     width: 100%;
