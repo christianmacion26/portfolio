@@ -30,7 +30,6 @@ function build(): void {
     'height: 2px',
     'width: 0',
     'background: var(--c-primary-2, #d4a017)',
-    'box-shadow: 0 0 6px rgba(212, 160, 23, 0.4)',
     'z-index: 60',
     'pointer-events: none',
     'transition: opacity 200ms ease',
