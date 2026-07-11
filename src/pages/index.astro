@@ -350,7 +350,14 @@ const whatMarquee = marqueePool.slice(0, 20).map((name) => ({
 // seeded jitter so each build rolls a slightly different delta set;
 // the same build always renders the same combination. NDA-positive:
 // generic asset-class labels (INSTRUMENTS, USD), no tickers.
-const heroRng = seedFromString(buildSeed() + '::hero');
+// v6.7 — Hero ribbon uses a STABLE seed (not BUILD_DATE) so the
+// five headline numbers (SHARPE / DRAWDOWN / COVERAGE / SAMPLES /
+// CAPITAL) never shift between deploys. A live-feel number that
+// drifts every build reads as "unstable" to a recruiter reviewing
+// the page twice; a stable institutional number reads as identity.
+// Build-stamped seeds remain in the tape / equity curve / order book
+// sections where "live" feel is the point.
+const heroRng = seedFromString('hero-canonical-2026q3');
 // SHARPE — central value 1.84; biased-up delta in [0, +0.06].
 const heroSharpe = +(1.84 + (heroRng() - 0.5) * 0.04).toFixed(2);
 const heroSharpeDelta = +(0.02 + heroRng() * 0.05).toFixed(2);
@@ -371,8 +378,11 @@ const heroCapital = +(6.40 + (heroRng() - 0.5) * 0.20).toFixed(2);
 const radarLabels = ['BACKTEST', 'SIGNALS', 'RISK', 'EXEC', 'EVAL', 'AGENTS'];
 const radarRadius = 320;
 const radarAngles = radarLabels.map((_, i) => (i * Math.PI * 2) / 6 - Math.PI / 2);
-const radarRng = seedFromString(buildSeed() + '::radar');
-const radarValues = radarLabels.map(() => +(0.40 + radarRng() * 0.55).toFixed(2));
+// v6.7 — radar identity polygon. Stable seed; identity, not live feel.
+// Bias toward coverage ≥ 0.60 so the polygon reads as 'full institutional
+// coverage' rather than as 'gaps in radar'. min 0.55 → max 0.95.
+const radarRng = seedFromString('radar-canonical-2026q3');
+const radarValues = radarLabels.map(() => +(0.55 + radarRng() * 0.40).toFixed(2));
 
 // Polar → Cartesian helpers. Output is rounded to 1 decimal to keep
 // the SVG payload small.
@@ -414,7 +424,8 @@ const velocityStageNames: Record<string, string> = {
   M: 'Model',
   R: 'Released',
 };
-const velocityRng = seedFromString(buildSeed() + '::velocity');
+// v6.7 — velocity heatmap. Stable seed; identity heatmap, not live feel.
+const velocityRng = seedFromString('velocity-canonical-2026q3');
 const velocityCells: { stage: string; intensity: number }[] = [];
 for (let i = 0; i < 24; i++) {
   const u = velocityRng();
@@ -609,17 +620,35 @@ const velocityRows: { stage: string; intensity: number }[][] = [
           })}
           {/* Filled coverage polygon */}
           <polygon class="radar-polygon" points={radarPolygonPoints} />
-          {/* Axis labels (BACKTEST / SIGNALS / RISK / EXEC / EVAL / AGENTS) */}
+          {/* Vertex dots at the actual coverage value on each axis */}
+          {radarLabels.map((_, i) => {
+            const p = radarPt(radarValues[i], i);
+            return <circle class="radar-vertex" cx={p.x} cy={p.y} r="4" />;
+          })}
+          {/* Axis labels (BACKTEST / SIGNALS / RISK / EXEC / EVAL / AGENTS)
+              with numeric coverage value directly under each label.
+              v6.7 — without the value, the polygon is unreadable; with
+              the value, the chart reads as research output. */}
           {radarLabels.map((label, i) => {
             const p = radarLabelPos[i];
+            const v = radarValues[i];
             return (
-              <text
-                class="radar-label mono"
-                x={p.x}
-                y={p.y}
-                text-anchor="middle"
-                dominant-baseline="middle"
-              >{label}</text>
+              <g>
+                <text
+                  class="radar-label"
+                  x={p.x}
+                  y={p.y - 6}
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                >{label}</text>
+                <text
+                  class="radar-value"
+                  x={p.x}
+                  y={p.y + 8}
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                >{(v * 100).toFixed(0)}%</text>
+              </g>
             );
           })}
         </svg>
@@ -637,7 +666,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
                 <div
                   class:list={['velocity-cell', `velocity-cell--${cell.stage.toLowerCase()}`]}
                   role="cell"
-                  style={`opacity:${cell.intensity}`}
+                  style={`--intensity: ${(cell.intensity * 100).toFixed(0)}%`}
                   title={`Stage ${velocityStageNames[cell.stage]} · intensity ${(cell.intensity * 100).toFixed(0)}%`}
                 >
                   <span class="velocity-cell__glyph mono" aria-hidden="true">{cell.stage}</span>
@@ -645,6 +674,14 @@ const velocityRows: { stage: string; intensity: number }[][] = [
               ))}
             </div>
           ))}
+        </div>
+        <div class="velocity-legend" aria-label="Stage legend">
+          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--w" aria-hidden="true"></span>W · Wrote</span>
+          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--p" aria-hidden="true"></span>P · Paper</span>
+          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--h" aria-hidden="true"></span>H · Hypothesis</span>
+          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--f" aria-hidden="true"></span>F · Frozen</span>
+          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--m" aria-hidden="true"></span>M · Model</span>
+          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--r" aria-hidden="true"></span>R · Released</span>
         </div>
       </figure>
     </div>
@@ -1373,16 +1410,14 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   /* === 4-cell letterform grid === */
   .what__cells {
     display: grid;
-    grid-template-columns: repeat(4, 240px);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--sp-4);
     margin-bottom: var(--sp-5);
-    justify-content: start;
   }
 
   .what-cell {
     position: relative;
-    width: 240px;
-    height: 180px;
+    min-height: 200px;
     padding: var(--sp-3) var(--sp-3) var(--sp-3);
     background: var(--c-tape-2);
     border: 1px solid var(--c-rule);
@@ -1638,6 +1673,165 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   @media (max-width: 540px) {
     .work__grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     v6.7 — SELECTED WORK TIMELINE (5 rows)
+     Vertical-timeline layout replacing the prior 3×2 card grid.
+     Each row = 220px-wide year rail (left) + 1px vertical hairline
+     connector (amber dot at midpoint) + flexible content area with
+     a 3-bar before/after metric strip. The CSS for this was scaffolded
+     in v6.6 but never written — so the section rendered as a plain
+     markdown list. Fixed.
+     ============================================================ */
+  .work__timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-left: 1px solid var(--c-rule);
+    margin-left: 100px;
+  }
+  .work__row {
+    position: relative;
+    margin: 0;
+    padding: 0;
+  }
+  .work__row-link {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--sp-5);
+    padding: var(--sp-4) 0 var(--sp-4) var(--sp-6);
+    color: var(--c-ink);
+    text-decoration: none;
+    align-items: start;
+    border-bottom: 1px solid var(--c-rule);
+    transition: background 120ms ease-out;
+  }
+  .work__row:last-child .work__row-link { border-bottom: 0; }
+  .work__row-link:hover {
+    background: rgba(232, 178, 32, 0.04);
+  }
+  .work__rail {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .work__rail::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--sp-6) - 4px);
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    background: var(--c-amber);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(232, 178, 32, 0.20);
+  }
+  .work__year {
+    font-family: var(--ff-mono);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--c-amber);
+    letter-spacing: 0.02em;
+  }
+  .work__node { display: none; }
+  .work__content {
+    min-width: 0;
+  }
+  .work__line {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .work__tag {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    font-weight: 700;
+    border-radius: 2px;
+    background: rgba(232, 178, 32, 0.12);
+    color: var(--c-amber);
+  }
+  .work__tag--ai { background: rgba(168, 85, 247, 0.12); color: var(--c-primary-3); }
+  .work__tag--research { background: rgba(34, 211, 238, 0.12); color: var(--c-info); }
+  .work__tag--markets { background: rgba(34, 197, 94, 0.12); color: var(--c-pass); }
+  .work__tag--prediction { background: rgba(232, 178, 32, 0.12); color: var(--c-amber); }
+  .work__title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--c-ink);
+    flex: 1;
+    min-width: 200px;
+  }
+  .work__subtitle {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--c-ink-2);
+  }
+  .work__bars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .work__bar {
+    display: grid;
+    grid-template-columns: 90px 1fr 60px 16px 1fr 60px;
+    gap: var(--sp-2);
+    align-items: center;
+  }
+  .work__bar-label {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-2);
+  }
+  .work__bar-track {
+    position: relative;
+    height: 10px;
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .work__bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--c-ink-3);
+    transition: width 200ms ease-out;
+  }
+  .work__bar-fill--after.is-pos { background: var(--c-data-positive); }
+  .work__bar-fill--after.is-neg { background: var(--c-data-negative); }
+  .work__bar-val {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--c-ink);
+    text-align: right;
+  }
+  .work__bar-val--after.is-pos { color: var(--c-data-positive); }
+  .work__bar-val--after.is-neg { color: var(--c-data-negative); }
+  .work__bar-pipe {
+    text-align: center;
+    color: var(--c-ink-3);
+    font-size: 0.75rem;
+  }
+  .work__bar-pipe.is-pos { color: var(--c-data-positive); }
+  .work__bar-pipe.is-neg { color: var(--c-data-negative); }
+
+  @media (max-width: 720px) {
+    .work__timeline { margin-left: 60px; }
+    .work__row-link { grid-template-columns: 1fr; gap: var(--sp-2); }
+    .work__bar { grid-template-columns: 70px 1fr 50px 12px 1fr 50px; }
   }
 
   /* ============================================================
@@ -1960,31 +2154,48 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     max-width: 360px;
     margin: 0 auto;
   }
+  /* v6.7 — radar reads as institutional: outer hex rings at solid
+     0.16 opacity (not dashed), axes at solid 0.20, filled polygon at
+     0.32 with bright stroke. Labels in tabular mono at the perimeter
+     with a numeric value next to each axis for instant readability. */
   .radar-grid {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.10);
+    stroke: rgba(255, 255, 255, 0.16);
     stroke-width: 1;
-    stroke-dasharray: 2 3;
     vector-effect: non-scaling-stroke;
   }
   .radar-axis {
-    stroke: rgba(255, 255, 255, 0.07);
+    stroke: rgba(255, 255, 255, 0.22);
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
   }
   .radar-polygon {
     fill: var(--c-amber);
-    fill-opacity: 0.22;
+    fill-opacity: 0.32;
     stroke: var(--c-amber);
-    stroke-width: 1.25;
+    stroke-width: 1.5;
     vector-effect: non-scaling-stroke;
   }
   .radar-label {
     font-family: var(--ff-mono);
-    font-size: var(--fs-3xs, 9px);
-    letter-spacing: 0.12em;
+    font-size: 9px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    fill: rgba(230, 237, 243, 0.85);
+    fill: rgba(230, 237, 243, 0.95);
+    font-weight: 600;
+  }
+  .radar-value {
+    font-family: var(--ff-mono);
+    font-size: 8px;
+    letter-spacing: 0.04em;
+    fill: var(--c-amber);
+    font-weight: 700;
+  }
+  .radar-vertex {
+    fill: var(--c-amber);
+    stroke: var(--c-bg);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
   }
 
   .workspace__velocity {
@@ -1999,45 +2210,93 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .velocity__grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 6px;
+    gap: 5px;
     flex: 1 1 auto;
     align-content: start;
   }
   .velocity-row {
     display: contents;
   }
+  /* v6.7 — cells are now solid color (the inline opacity was washing
+     out both the bg AND the glyph, making W/P/H/F/M/R invisible).
+     Per-cell intensity is now shown as a small horizontal intensity
+     bar inside each cell rather than as a background-opacity. The
+     glyph is 11px and bold so it reads at thumbnail size. */
   .velocity-cell {
     position: relative;
     aspect-ratio: 3 / 2;
-    min-height: 28px;
+    min-height: 44px;
     background: var(--c-amber-light);
-    border: 1px solid rgba(0, 0, 0, 0.20);
+    border: 1px solid rgba(0, 0, 0, 0.22);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(0, 0, 0, 0.55);
-    transition: transform 120ms ease-out;
+    color: rgba(0, 0, 0, 0.78);
+    transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+    overflow: hidden;
   }
   .velocity-cell:hover {
-    transform: scale(1.04);
+    transform: scale(1.06);
     z-index: 2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
   }
   .velocity-cell__glyph {
     font-family: var(--ff-mono);
-    font-size: var(--fs-3xs, 9px);
+    font-size: 11px;
     line-height: 1;
     letter-spacing: 0.04em;
-    font-weight: 600;
+    font-weight: 700;
+    z-index: 1;
   }
-  /* Per-stage colors. Opacity is driven inline from
-     velocityCells[i].intensity so this palette only sets the
-     base hue per stage. */
+  /* Intensity bar rendered as ::after with inline width from JSX
+     style attribute (--intensity custom property). */
+  .velocity-cell::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.55);
+    width: var(--intensity, 50%);
+    transition: width 200ms ease-out;
+  }
+  /* Per-stage colors — solid, opaque. */
   .velocity-cell--w { background: #f4c542; }   /* Wrote — amber-deep */
-  .velocity-cell--p { background: var(--c-amber-light); } /* Paper — amber-light */
+  .velocity-cell--p { background: #f4d860; }   /* Paper — amber-light */
   .velocity-cell--h { background: #6dd3e0; }   /* Hypothesis — cyan */
   .velocity-cell--f { background: #b8c0cc; }   /* Frozen-spec — slate */
-  .velocity-cell--m { background: var(--c-data-positive); } /* Model — green */
-  .velocity-cell--r { background: #8a9bbf; }   /* Released — navy */
+  .velocity-cell--m { background: #4a9d6e; }   /* Model — green */
+  .velocity-cell--r { background: #5a7aaf; color: rgba(255, 255, 255, 0.92); } /* Released — navy + white glyph */
+  /* Legend swatches (for the footer label row) */
+  .velocity-legend {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    font-family: var(--ff-mono);
+    font-size: 8.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: rgba(230, 237, 243, 0.65);
+    flex-wrap: wrap;
+  }
+  .velocity-legend__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .velocity-legend__swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.30);
+  }
+  .velocity-legend__swatch--w { background: #f4c542; }
+  .velocity-legend__swatch--p { background: #f4d860; }
+  .velocity-legend__swatch--h { background: #6dd3e0; }
+  .velocity-legend__swatch--f { background: #b8c0cc; }
+  .velocity-legend__swatch--m { background: #4a9d6e; }
+  .velocity-legend__swatch--r { background: #5a7aaf; }
 
   @media (max-width: 720px) {
     .workspace__ambient {

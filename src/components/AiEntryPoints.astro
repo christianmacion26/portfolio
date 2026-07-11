@@ -144,28 +144,31 @@ const ICONS: Record<ChipIcon, string> = {
       transform var(--transition);
   }
 
-  /* Animated radial-gradient orb top-right, 0.4 opacity. Uses palette
-     tokens only. Slow rotate + soft scale = "graphic visual dynamic". */
+  /* v6.7 — Animated radial-gradient orb top-right. v6.6 had it
+     positioned outside the tile (top:-38, right:-38) which made it
+     render as a half-circle smudge. Pulled fully inside the tile
+     and trimmed the size so it reads as decoration, not bleed. */
   .epip-tile__orb {
     position: absolute;
-    top: -38px;
-    right: -38px;
-    width: 120px;
-    height: 120px;
+    top: -16px;
+    right: -16px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: radial-gradient(
       circle at 30% 30%,
       var(--c-amber-light),
       var(--c-tape) 70%
     );
-    opacity: 0.4;
+    opacity: 0.55;
     animation: epip-orb-pulse 6s ease-in-out infinite;
     pointer-events: none;
+    filter: blur(0.5px);
   }
 
   @keyframes epip-orb-pulse {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.4; }
-    50%      { transform: scale(1.08) rotate(8deg); opacity: 0.5; }
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.50; }
+    50%      { transform: scale(1.08) rotate(8deg); opacity: 0.62; }
   }
 
   /* Center text — 14px tracked mono caps. Icon glyph sits over the orb. */
