@@ -1817,6 +1817,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     flex-direction: column;
     gap: var(--sp-2);
   }
+  /* F23 — institutional: timeline rail dot. No halo. Solid amber dot,
+     tick mark reads as data-point on a rail (Bloomberg research-report
+     style). */
   .work__rail::before {
     content: '';
     position: absolute;
@@ -1826,7 +1829,6 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     height: 8px;
     background: var(--c-amber);
     border-radius: 50%;
-    box-shadow: 0 0 0 3px rgba(232, 178, 32, 0.20);
   }
   .work__year {
     font-family: var(--ff-mono);

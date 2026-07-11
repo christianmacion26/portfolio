@@ -192,16 +192,17 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
   .trust-pill__dot {
     display: inline-block;
     width: 6px;
+    /* F21 — institutional: kill the halo-pulse. Subtle opacity pulse
+       remains (it's a status semantics, not a glow ring). */
     height: 6px;
     border-radius: 50%;
-    background: var(--c-pass);
-    box-shadow: 0 0 0 0 var(--c-pass-soft);
+    background: var(--c-primary-2);   /* single amber accent, not pass-green */
     animation: trust-pulse 2.4s var(--ease-snappy) infinite;
     flex-shrink: 0;
   }
   @keyframes trust-pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--c-pass-soft); }
-    50%      { opacity: 0.85; box-shadow: 0 0 0 3px var(--c-pass-soft); }
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.6; }
   }
   @media (prefers-reduced-motion: reduce) {
     .trust-pill__dot { animation: none; }

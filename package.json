@@ -26,7 +26,8 @@
     "version:bump": "tsx scripts/bump-version.ts",
     "sitemap:check": "tsx scripts/validate-sitemap.ts",
     "typecheck": "astro check",
-    "ci": "npm run lint:md && npm run lint && npm run format:check && npm run knip && npm run build && npm run audit && npm run sitemap:check"
+    "ci": "npm run lint:md && npm run lint && npm run format:check && npm run knip && npm run no-bulbs && npm run build && npm run audit && npm run sitemap:check",
+    "no-bulbs": "bash scripts/check-no-lightbulb-halos.sh"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
