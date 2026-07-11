@@ -145,6 +145,15 @@ const gaugeTicks: Array<{ pct: number; label: string }> = [
   { pct: 100, label: '100' },
 ];
 
+// v6.7.1 — minor ticks at the quarter marks (12.5 / 37.5 / 62.5 / 87.5)
+// for finer-grained read. 0.75px ink-3 hairline, no label.
+const gaugeMinorTicks: Array<{ pct: number }> = [
+  { pct: 12.5 },
+  { pct: 37.5 },
+  { pct: 62.5 },
+  { pct: 87.5 },
+];
+
 // ============================================================================
 // 4. SIGNAL MATRIX — 4 rows × 4 cols of mini-sparklines.
 //    Rows = signals (MOM · MR · CRY · VRP); cols = windows (1D · 5D · 10D · 30D).
@@ -358,6 +367,18 @@ const fmtPct = (n: number) => formatPct(n);
           <path d={arcStroke(0, 50, 1)} class="desk__gauge-arc desk__gauge-arc--safe" fill="none" />
           <path d={arcStroke(50, 75, 1)} class="desk__gauge-arc desk__gauge-arc--warn" fill="none" />
           <path d={arcStroke(75, 100, 1)} class="desk__gauge-arc desk__gauge-arc--alert" fill="none" />
+          {/* Minor quarter-marks (no labels) */}
+          {gaugeMinorTicks.map((t) => {
+            const inner = polarXY(t.pct, 0.90);
+            const outer = polarXY(t.pct, 1.00);
+            return (
+              <line
+                x1={inner.x.toFixed(2)} y1={inner.y.toFixed(2)}
+                x2={outer.x.toFixed(2)} y2={outer.y.toFixed(2)}
+                class="desk__gauge-tick desk__gauge-tick--minor"
+              />
+            );
+          })}
           {/* Tick marks + labels */}
           {gaugeTicks.map((t) => {
             const inner = polarXY(t.pct, 0.86);
@@ -817,8 +838,18 @@ const fmtPct = (n: number) => formatPct(n);
   .desk__gauge-arc--safe  { stroke: var(--c-pass); stroke-opacity: 0.45; }
   .desk__gauge-arc--warn  { stroke: var(--c-amber); stroke-opacity: 0.55; }
   .desk__gauge-arc--alert { stroke: var(--c-fail);  stroke-opacity: 0.55; }
-  .desk__gauge-tick { stroke: var(--c-ink-2); stroke-width: 1; }
-  .desk__gauge-ticklbl { font-size: 8px; fill: var(--c-ink-2); }
+  /* v6.7.1 — gauge ticks made more visible. v6.6 had them at ink-2
+     8px which read as ghostly hairline. Bumped to ink + 9px + amber
+     sub-ticks at quarter marks (12.5 / 37.5 / 62.5 / 87.5) for
+     finer-grained read. */
+  .desk__gauge-tick { stroke: var(--c-amber); stroke-width: 1.25; }
+  .desk__gauge-ticklbl {
+    font-size: 9px;
+    fill: var(--c-ink);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .desk__gauge-tick--minor { stroke: var(--c-ink-3); stroke-width: 0.75; }
   .desk__gauge-needle { stroke: var(--c-amber); stroke-width: 1.8; stroke-linecap: round; }
   .desk__gauge-hub { fill: var(--c-amber-light); }
   .desk__gauge-readout { font-size: 18px; font-weight: 700; }

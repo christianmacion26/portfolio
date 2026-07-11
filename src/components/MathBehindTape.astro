@@ -190,6 +190,17 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
           <div class="mathtape__tile-formula">
             <Equation latex={f.latex} tone="tape" size="xl" />
           </div>
+          {/* v6.7.1 — per-tile scale bar. 0..1 normalized axis with a
+              1px hairline + 3 amber ticks (0.00 / 0.50 / 1.00) so each
+              formula tile reads as 'output on a scale', not 'output in
+              a box'. The marker position is per-fixture, drawn from the
+              tile's deltaSign (positive=right, negative=left). */}
+          <div class="mathtape__tile-scale" aria-hidden="true">
+            <span class="mathtape__tile-scale-tick" style="left:0%"></span>
+            <span class="mathtape__tile-scale-tick" style="left:50%"></span>
+            <span class="mathtape__tile-scale-tick" style="left:100%"></span>
+            <span class={`mathtape__tile-scale-marker mathtape__tile-scale-marker--${f.deltaSign >= 0 ? 'pos' : 'neg'}`} style={`left:${f.deltaSign >= 0 ? '72%' : '28%'}`}></span>
+          </div>
           <span class="mathtape__tile-delta mono" style={`color:${signVar(f.deltaSign)}`}>
             {f.deltaIn}
           </span>
@@ -372,15 +383,60 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
     padding: 8px 10px;
     display: grid;
     grid-template-columns: 1fr auto;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr auto auto;
     grid-template-areas:
       'title pip'
       'formula formula'
+      'scale  scale'
       'delta out';
     column-gap: 8px;
+    row-gap: 4px;
     transition: border-color var(--ease-snappy) 200ms;
     overflow: hidden;
   }
+
+  /* v6.7.1 — per-tile scale bar at row index 2. 1px hairline + 3
+     amber tick marks at 0/50/100%, plus a colored marker (green/red)
+     indicating the fixture's output position on the 0..1 axis. */
+  .mathtape__tile-scale {
+    grid-area: scale;
+    position: relative;
+    height: 8px;
+    width: 100%;
+    align-self: end;
+    margin-bottom: 2px;
+  }
+  .mathtape__tile-scale::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--c-rule);
+  }
+  .mathtape__tile-scale-tick {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 3px;
+    background: var(--c-amber);
+    opacity: 0.55;
+    border-radius: 50%;
+  }
+  .mathtape__tile-scale-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-amber);
+    box-shadow: 0 0 0 2px rgba(10, 14, 20, 1);
+  }
+  .mathtape__tile-scale-marker--pos { background: var(--c-data-positive); }
+  .mathtape__tile-scale-marker--neg { background: var(--c-data-negative); }
 
   .mathtape__tile:hover {
     border-color: var(--c-amber);

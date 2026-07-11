@@ -498,11 +498,32 @@ const velocityRows: { stage: string; intensity: number }[][] = [
             remote-first, async-friendly
           </p>
 
+          {/* v6.7.1 — CTA measurement rail. Replaces the 4-link row
+              (Get in touch / Selected work / Methodology / Resume)
+              with a 4-cell grid where each cell carries a measured
+              value alongside the link. Reads as 'institutional index'
+              not 'navigation menu'. */}
           <div class="hero__actions">
-            <a href={path('/contact')} class="btn btn--primary">Get in touch →</a>
-            <a href={path('/projects')} class="hero__link">Selected work</a>
-            <a href={path('/methodology')} class="hero__link">Methodology (G1–G31)</a>
-            <a href={path('/resume')} class="hero__link">Resume ↓</a>
+            <a href={path('/contact')} class="hero__rail-cell">
+              <span class="hero__rail-key mono">CONTACT</span>
+              <span class="hero__rail-val mono">≤ 24 h</span>
+              <span class="hero__rail-sub mono">avg reply · UTC+8</span>
+            </a>
+            <a href={path('/projects')} class="hero__rail-cell">
+              <span class="hero__rail-key mono">WORK</span>
+              <span class="hero__rail-val mono">15 / 9</span>
+              <span class="hero__rail-sub mono">projects / quant</span>
+            </a>
+            <a href={path('/methodology')} class="hero__rail-cell">
+              <span class="hero__rail-key mono">METHOD</span>
+              <span class="hero__rail-val mono">G1–G31</span>
+              <span class="hero__rail-sub mono">31 gates · 9 categories</span>
+            </a>
+            <a href={path('/resume')} class="hero__rail-cell hero__rail-cell--accent">
+              <span class="hero__rail-key mono">RESUME ↓</span>
+              <span class="hero__rail-val mono">3 × 3</span>
+              <span class="hero__rail-sub mono">variants × formats</span>
+            </a>
           </div>
         </div>
 
@@ -517,6 +538,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
               fit="contain"
               eager={true}
             />
+            <span class="hero__id-eyebrow mono">PROVENANCE · TAPE 01</span>
+            <span class="hero__id-caption mono">
+              CTA cert #260197 · Society of Technical Analysts · Jan 2026
+            </span>
           </figure>
         </aside>
       </div>
@@ -561,6 +586,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
           <span class="live-tape__label">BRENT</span>
           <span class="live-tape__val">{tapeSnapshot.brent.toFixed(2)}</span>
         </span>
+        <span class="live-tape__sep" aria-hidden="true">·</span>
         <span class="live-tape__asof" aria-label="As-of timestamp">AS OF {tapeSnapshot.asOf}</span>
       </div>
     </div>
@@ -928,7 +954,11 @@ const velocityRows: { stage: string; intensity: number }[][] = [
       </ol>
 
       <div class="section__foot">
-        <a href={path('/projects')} class="hero__link">All 15 projects →</a>
+        <a href={path('/projects')} class="projects-cta">
+          <span class="projects-cta__eyebrow mono">→ ALL PROJECTS</span>
+          <span class="projects-cta__main">15 projects · 9 quant · 4 markets · 2 prediction</span>
+          <span class="projects-cta__arrow" aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </section>
@@ -1228,8 +1258,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   .hero__top {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(220px, 28%, 320px);
-    gap: var(--sp-7);
+    grid-template-columns: minmax(0, 1fr) clamp(280px, 32%, 360px);
+    gap: var(--sp-6);
     align-items: start;
     min-width: 0;
   }
@@ -1241,12 +1271,50 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     padding: 0;
     min-width: 0;
   }
+  /* v6.7.1 — hero portrait sized to match the institutional H1 weight.
+     v6.6 had it at ~220px wide which read as a small thumbnail next to
+     a 600px H1. Bumped to ~340px max + amber-rim border + caption
+     block below the figure (CTA cert #260197 + Society of Technical
+     Analysts + Jan 2026). */
   .hero__portrait {
     margin: 0;
-    padding: var(--sp-2);
+    padding: 0;
     background: var(--c-tape-2);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(232, 178, 32, 0.45);
     border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+  }
+  .hero__portrait::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(10, 14, 20, 0.85) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hero__portrait figcaption,
+  .hero__portrait .proof-card figcaption {
+    position: relative;
+    z-index: 2;
+  }
+  .hero__id-eyebrow {
+    display: block;
+    margin: var(--sp-2) var(--sp-3) 0;
+    font-family: var(--ff-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--c-amber);
+    font-weight: 700;
+  }
+  .hero__id-caption {
+    display: block;
+    margin: 0 var(--sp-3) var(--sp-3);
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: rgba(230, 237, 243, 0.75);
+    line-height: 1.4;
   }
   .hero__eyebrow {
     display: inline-block;
@@ -1286,6 +1354,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-weight: 400;
 
     color: rgba(255, 255, 255, 0.78);
+
+    margin-top: var(--sp-4);
+    margin-bottom: var(--sp-5);
 
     max-width: 100%;
 
@@ -1356,23 +1427,65 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: rgba(255, 255, 255, 0.3);
   }
 
+  /* v6.7.1 — CTA measurement rail. 4 cells × { key, value, sub }.
+     Mirrors the hero ribbon visual rhythm so the eye reads the
+     actions section as data, not navigation. Amber accent on the
+     Resume cell. */
   .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--sp-4) var(--sp-5);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
     min-width: 0;
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow: hidden;
   }
-  .hero__actions .btn--primary {
-    background: var(--c-primary-2);
-    color: #0a0a0a;
-    border-color: var(--c-primary-2);
-    padding: 0.7rem 1.3rem;
+  .hero__rail-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-tape-2);
+    color: var(--c-ink);
+    text-decoration: none;
+    border-right: 1px solid var(--c-rule);
+    transition: background 120ms ease-out, transform 120ms ease-out;
+    min-height: 76px;
+  }
+  .hero__rail-cell:last-child { border-right: 0; }
+  .hero__rail-cell:hover {
+    background: rgba(232, 178, 32, 0.06);
+  }
+  .hero__rail-cell--accent {
+    background: rgba(232, 178, 32, 0.10);
+  }
+  .hero__rail-cell--accent:hover {
+    background: rgba(232, 178, 32, 0.18);
+  }
+  .hero__rail-key {
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-amber);
+    font-weight: 700;
+  }
+  .hero__rail-val {
+    font-size: 1.0625rem;
+    line-height: 1;
     font-weight: 600;
+    color: var(--c-ink);
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
   }
-  .hero__actions .btn--primary:hover {
-    background: #f5b94a;
-    border-color: #f5b94a;
+  .hero__rail-cell--accent .hero__rail-val {
+    color: var(--c-amber);
+  }
+  .hero__rail-sub {
+    font-size: 9.5px;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    color: rgba(230, 237, 243, 0.55);
   }
   .hero__link {
     color: var(--c-primary-2);
@@ -1952,7 +2065,46 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     display: flex;
     justify-content: center;
     gap: var(--sp-4);
-    margin-top: var(--sp-4);
+    margin-top: var(--sp-5);
+  }
+  /* v6.7.1 — beefed-up CTA rail below the Five Proofs timeline.
+     The previous "All 15 projects →" text link read as dead. */
+  .projects-cta {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--sp-4);
+    width: 100%;
+    max-width: 720px;
+    padding: var(--sp-3) var(--sp-5);
+    background: rgba(232, 178, 32, 0.04);
+    border: 1px solid rgba(232, 178, 32, 0.35);
+    border-radius: var(--radius);
+    color: var(--c-ink);
+    text-decoration: none;
+    transition: background 120ms ease-out, border-color 120ms ease-out, transform 120ms ease-out;
+  }
+  .projects-cta:hover {
+    background: rgba(232, 178, 32, 0.10);
+    border-color: rgba(232, 178, 32, 0.55);
+    transform: translateY(-1px);
+  }
+  .projects-cta__eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--c-amber);
+    font-weight: 700;
+  }
+  .projects-cta__main {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--c-ink);
+    letter-spacing: -0.01em;
+  }
+  .projects-cta__arrow {
+    font-size: 1.125rem;
+    color: var(--c-amber);
+    font-weight: 700;
   }
 
   /* ============================================================

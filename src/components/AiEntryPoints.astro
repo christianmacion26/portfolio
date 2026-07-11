@@ -171,20 +171,23 @@ const ICONS: Record<ChipIcon, string> = {
     50%      { transform: scale(1.08) rotate(8deg); opacity: 0.62; }
   }
 
-  /* Center text — 14px tracked mono caps. Icon glyph sits over the orb. */
+  /* v6.7.1 — Tile label moved from center to bottom-left so the
+     orb can breathe top-right without competing. The bar still
+     anchors the bottom; the label sits between the orb and the bar. */
   .epip-tile__label {
-    align-self: center;
-    justify-self: center;
+    align-self: end;
+    justify-self: start;
     font-family: var(--ff-mono);
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--c-ink);
     z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    margin-bottom: 32px;
   }
   .epip-tile__label svg {
     color: var(--c-primary-2-light);
