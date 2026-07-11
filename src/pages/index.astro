@@ -464,8 +464,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
           the eyebrow. Indicates "open to remote QR / AI roles" in the
           institutional voice. */}
       <p class="hero__badge mono">
-        <span class="hero__badge-dot" aria-hidden="true"></span>
-        Q3 2026 · OPEN TO REMOTE QR / AI ROLES
+        <a href="/contact/" class="hero__badge-link">Q3 2026 · Open to remote QR / AI roles →</a>
       </p>
       <p class="hero__eyebrow">
         <span class="hero__eyebrow-name">{profile.fullName}</span>
@@ -669,29 +668,61 @@ const velocityRows: { stage: string; intensity: number }[][] = [
           <span class="workspace__viz-rule" aria-hidden="true"></span>
           Project velocity · last 24 weeks
         </figcaption>
+
+        {/* F13.1 — replaced the colored-grid-of-letters with a real
+            burndown matrix. 4 rows × 6 cols where each ROW is a 6-week
+            window (W18–W23 / W12–W17 / W06–W11 / W00–W05) and each COLUMN
+            is one of 6 pipeline stages (W/P/H/F/M/R). Cell = the stage
+            that shipped that week, intensity = how much output. Bottom
+            rail: stage legend with counts. */}
         <div class="velocity__grid" role="table" aria-label="24-week project velocity matrix">
-          {velocityRows.map((row, ri) => (
-            <div class="velocity-row" role="row">
-              {row.map((cell) => (
-                <div
-                  class:list={['velocity-cell', `velocity-cell--${cell.stage.toLowerCase()}`]}
-                  role="cell"
-                  style={`--intensity: ${(cell.intensity * 100).toFixed(0)}%`}
-                  title={`Stage ${velocityStageNames[cell.stage]} · intensity ${(cell.intensity * 100).toFixed(0)}%`}
-                >
-                  <span class="velocity-cell__glyph mono" aria-hidden="true">{cell.stage}</span>
-                </div>
-              ))}
-            </div>
-          ))}
+          {/* Header row: stage labels */}
+          <div class="velocity-row velocity-row--header" role="row">
+            <span class="velocity-rowlabel velocity-rowlabel--head" aria-hidden="true">WEEK</span>
+            {velocityStages.map((s) => (
+              <span class="velocity-colhead mono" role="columnheader" title={velocityStageNames[s]}>
+                {s}
+              </span>
+            ))}
+          </div>
+
+          {/* Data rows: 4 windows × 6 weeks each. Top = oldest, bottom = newest. */}
+          {velocityRows.map((row, ri) => {
+            // Window label: ri=0 → W18–W23 (oldest), ri=3 → W00–W05 (newest)
+            const highWeek = (3 - ri) * 6 + 5;
+            const lowWeek = (3 - ri) * 6;
+            const label = `W${String(lowWeek).padStart(2, '0')}–W${String(highWeek).padStart(2, '0')}`;
+            return (
+              <div class="velocity-row" role="row">
+                <span class="velocity-rowlabel mono" role="rowheader" aria-hidden="true">{label}</span>
+                {row.map((cell, ci) => (
+                  <div
+                    class:list={['velocity-cell', `velocity-cell--${cell.stage.toLowerCase()}`]}
+                    role="cell"
+                    style={`--intensity: ${(cell.intensity * 100).toFixed(0)}%`}
+                    title={`${label} col ${ci + 1} · ${velocityStageNames[cell.stage]} · intensity ${(cell.intensity * 100).toFixed(0)}%`}
+                  >
+                    <span class="velocity-cell__glyph mono" aria-hidden="true">{cell.stage}</span>
+                    <span class="velocity-cell__bar" aria-hidden="true"></span>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
-        <div class="velocity-legend" aria-label="Stage legend">
-          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--w" aria-hidden="true"></span>W · Wrote</span>
-          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--p" aria-hidden="true"></span>P · Paper</span>
-          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--h" aria-hidden="true"></span>H · Hypothesis</span>
-          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--f" aria-hidden="true"></span>F · Frozen</span>
-          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--m" aria-hidden="true"></span>M · Model</span>
-          <span class="velocity-legend__item"><span class="velocity-legend__swatch velocity-legend__swatch--r" aria-hidden="true"></span>R · Released</span>
+
+        <div class="velocity-legend" aria-label="Stage legend with totals">
+          {velocityStages.map((s) => {
+            const count = velocityCells.filter((c) => c.stage === s).length;
+            return (
+              <span class="velocity-legend__item">
+                <span class={`velocity-legend__swatch velocity-legend__swatch--${s.toLowerCase()}`} aria-hidden="true"></span>
+                <span class="mono">{s}</span>
+                <span class="velocity-legend__name">{velocityStageNames[s]}</span>
+                <span class="velocity-legend__count mono">{count}×</span>
+              </span>
+            );
+          })}
         </div>
       </figure>
     </div>
@@ -1701,14 +1732,15 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     border-color: var(--c-primary);
     transform: translateY(-2px);
   }
+  /* F14 — institutional: monochrome work-card tag (no per-variant color). */
   .work-card__tag {
     font-size: var(--fs-xs);
-    color: var(--c-primary);
+    color: var(--c-ink-3);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     font-weight: 700;
   }
-  .work-card--ai .work-card__tag { color: var(--c-primary-3); }
+  .work-card--ai .work-card__tag { color: var(--c-ink-3); }
   .work-card__title {
     font-size: var(--fs-lg);
     font-weight: 600;
@@ -1814,6 +1846,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     margin-bottom: var(--sp-3);
     flex-wrap: wrap;
   }
+  /* F14 — institutional: monochrome tags, no traffic-light pills.
+     Man Group / AQR / Bridgewater use plain text category labels with
+     a hairline border (not multi-color backgrounds). All tag variants
+     collapse to the same ink-3 hairline-bordered chip. */
   .work__tag {
     display: inline-block;
     padding: 2px 8px;
@@ -1822,13 +1858,14 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: 0.10em;
     font-weight: 700;
     border-radius: 2px;
-    background: rgba(232, 178, 32, 0.12);
-    color: var(--c-amber);
+    background: transparent;
+    border: 1px solid var(--c-rule);
+    color: var(--c-ink-3);
   }
-  .work__tag--ai { background: rgba(168, 85, 247, 0.12); color: var(--c-primary-3); }
-  .work__tag--research { background: rgba(34, 211, 238, 0.12); color: var(--c-info); }
-  .work__tag--markets { background: rgba(34, 197, 94, 0.12); color: var(--c-pass); }
-  .work__tag--prediction { background: rgba(232, 178, 32, 0.12); color: var(--c-amber); }
+  .work__tag--ai { border-color: var(--c-rule); color: var(--c-ink-3); }
+  .work__tag--research { border-color: var(--c-rule); color: var(--c-ink-3); }
+  .work__tag--markets { border-color: var(--c-rule); color: var(--c-ink-3); }
+  .work__tag--prediction { border-color: rgba(232, 178, 32, 0.45); color: var(--c-primary-2); }
   .work__title {
     margin: 0;
     font-size: 1.0625rem;
@@ -2365,38 +2402,74 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     display: flex;
     flex-direction: column;
   }
+  /* F13.1 — burndown matrix: 1 header row (column labels W/P/H/F/M/R)
+     + 4 data rows (week windows W18-W23, W12-W17, W06-W11, W00-W05).
+     Row labels are in the gutter; cells carry the stage letter +
+     intensity bar. Reads as a project pipeline heatmap, not piano keys. */
   .velocity__grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 5px;
+    grid-template-columns: 64px repeat(6, 1fr);
+    gap: 4px;
     flex: 1 1 auto;
     align-content: start;
   }
   .velocity-row {
     display: contents;
   }
-  /* v6.7 — cells are now solid color (the inline opacity was washing
-     out both the bg AND the glyph, making W/P/H/F/M/R invisible).
-     Per-cell intensity is now shown as a small horizontal intensity
-     bar inside each cell rather than as a background-opacity. The
-     glyph is 11px and bold so it reads at thumbnail size. */
+  .velocity-row--header {
+    /* Header row: column labels W/P/H/F/M/R */
+  }
+  .velocity-rowlabel {
+    font-family: var(--ff-mono);
+    font-size: 8.5px;
+    line-height: 1;
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    align-self: center;
+    text-align: right;
+    padding-right: 8px;
+  }
+  .velocity-rowlabel--head {
+    color: var(--c-ink-3);
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+  }
+  .velocity-colhead {
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: var(--c-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--c-rule);
+  }
+  /* Cells: monochrome amber gradient by stage, no traffic-light rainbow.
+     F14 — institutional pattern (AQR/Renaissance data viz aesthetic):
+     single color, 6 alpha steps. The "stage" modulates fill intensity
+     along a single channel — same hue, different opacity — exactly how
+     institutional research prints heatmaps. */
   .velocity-cell {
     position: relative;
     aspect-ratio: 3 / 2;
-    min-height: 44px;
-    background: var(--c-amber-light);
-    border: 1px solid rgba(0, 0, 0, 0.22);
+    min-height: 38px;
+    background: rgba(232, 178, 32, 0.18);   /* default = mid intensity */
+    border: 1px solid var(--c-rule);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(0, 0, 0, 0.78);
-    transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+    color: var(--c-ink);
+    transition: transform 120ms ease-out, box-shadow 120ms ease-out, background var(--transition);
     overflow: hidden;
   }
   .velocity-cell:hover {
-    transform: scale(1.06);
+    transform: scale(1.04);
     z-index: 2;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30);
   }
   .velocity-cell__glyph {
     font-family: var(--ff-mono);
@@ -2405,56 +2478,67 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: 0.04em;
     font-weight: 700;
     z-index: 1;
+    color: var(--c-ink-2);
   }
-  /* Intensity bar rendered as ::after with inline width from JSX
-     style attribute (--intensity custom property). */
-  .velocity-cell::after {
-    content: '';
+  /* Intensity bar — left edge filled proportional to cell.intensity */
+  .velocity-cell__bar {
     position: absolute;
     left: 0;
-    right: 0;
+    top: 0;
     bottom: 0;
-    height: 3px;
-    background: rgba(0, 0, 0, 0.55);
     width: var(--intensity, 50%);
-    transition: width 200ms ease-out;
+    background: rgba(232, 178, 32, 0.55);
+    pointer-events: none;
   }
-  /* Per-stage colors — solid, opaque. */
-  .velocity-cell--w { background: #f4c542; }   /* Wrote — amber-deep */
-  .velocity-cell--p { background: #f4d860; }   /* Paper — amber-light */
-  .velocity-cell--h { background: #6dd3e0; }   /* Hypothesis — cyan */
-  .velocity-cell--f { background: #b8c0cc; }   /* Frozen-spec — slate */
-  .velocity-cell--m { background: #4a9d6e; }   /* Model — green */
-  .velocity-cell--r { background: #5a7aaf; color: rgba(255, 255, 255, 0.92); } /* Released — navy + white glyph */
-  /* Legend swatches (for the footer label row) */
+  /* Per-stage alpha — single amber, 6 steps. Letter is always ink-2. */
+  .velocity-cell--w { background: rgba(232, 178, 32, 0.62); }   /* Wrote — top */
+  .velocity-cell--p { background: rgba(232, 178, 32, 0.48); }   /* Paper */
+  .velocity-cell--h { background: rgba(232, 178, 32, 0.36); }   /* Hypothesis */
+  .velocity-cell--f { background: rgba(232, 178, 32, 0.24); }   /* Frozen-spec */
+  .velocity-cell--m { background: rgba(232, 178, 32, 0.14); }   /* Model */
+  .velocity-cell--r { background: rgba(232, 178, 32, 0.06); border-color: rgba(232, 178, 32, 0.40); }   /* Released — barely there, hairline border */
+
+  /* F13.1 legend — full stage label + count */
   .velocity-legend {
     display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    font-family: var(--ff-mono);
-    font-size: 8.5px;
-    text-transform: uppercase;
-    letter-spacing: 0.10em;
-    color: rgba(230, 237, 243, 0.65);
     flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--c-rule);
+    font-family: var(--ff-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--c-ink-2);
   }
   .velocity-legend__item {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
+  }
+  .velocity-legend__name {
+    opacity: 0.7;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+  .velocity-legend__count {
+    color: var(--c-amber);
+    font-weight: 700;
   }
   .velocity-legend__swatch {
     display: inline-block;
     width: 10px;
     height: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.30);
+    border: 1px solid var(--c-rule);
   }
-  .velocity-legend__swatch--w { background: #f4c542; }
-  .velocity-legend__swatch--p { background: #f4d860; }
-  .velocity-legend__swatch--h { background: #6dd3e0; }
-  .velocity-legend__swatch--f { background: #b8c0cc; }
-  .velocity-legend__swatch--m { background: #4a9d6e; }
-  .velocity-legend__swatch--r { background: #5a7aaf; }
+  /* F14 — single amber channel, 6 alpha steps matching cells above. */
+  .velocity-legend__swatch--w { background: rgba(232, 178, 32, 0.62); }
+  .velocity-legend__swatch--p { background: rgba(232, 178, 32, 0.48); }
+  .velocity-legend__swatch--h { background: rgba(232, 178, 32, 0.36); }
+  .velocity-legend__swatch--f { background: rgba(232, 178, 32, 0.24); }
+  .velocity-legend__swatch--m { background: rgba(232, 178, 32, 0.14); }
+  .velocity-legend__swatch--r { background: rgba(232, 178, 32, 0.06); border-color: rgba(232, 178, 32, 0.40); }
 
   @media (max-width: 720px) {
     .workspace__ambient {
@@ -2467,39 +2551,32 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
 
   /* ============================================================
-     v6.5 — HERO BADGE
-     Institutional Q3 2026 pill above the existing eyebrow. Amber-on-tape,
-     mono caps, with a tiny status dot indicating "live / open". The
-     badge is the first pixel the reader lands on after the hero glow.
+     v6.7.1.F14 — HERO BADGE (institutional editorial link)
+     No pill, no glow, no dot. Man Group / AQR / Bridgewater use
+     plain text links with hairline underlines, not filled chips.
+     Pattern: uppercase mono text + → arrow + 1px underline that
+     thickens on hover.
      ============================================================ */
   .hero__badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5em;
-    padding: 0.32rem 0.7rem;
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.10em;
-    color: var(--c-primary-2);
-    background: rgba(232, 178, 32, 0.10);
-    border: 1px solid rgba(232, 178, 32, 0.30);
-    border-radius: 999px;
-    font-weight: 600;
+    gap: 0;
     margin-bottom: var(--sp-4);
     line-height: 1;
-    transition: border-color var(--transition), background var(--transition);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
-  .hero__badge:hover {
-    border-color: rgba(232, 178, 32, 0.55);
-    background: rgba(232, 178, 32, 0.16);
+  .hero__badge-link {
+    color: var(--c-ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-rule);
+    padding-bottom: 2px;
+    transition: color var(--transition), border-color var(--transition);
   }
-  .hero__badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--c-primary-2);
-    box-shadow: 0 0 0 3px rgba(232, 178, 32, 0.20);
-    flex-shrink: 0;
+  .hero__badge-link:hover {
+    color: var(--c-primary-2);
+    border-bottom-color: var(--c-primary-2);
   }
 
   /* ============================================================

@@ -144,31 +144,25 @@ const ICONS: Record<ChipIcon, string> = {
       transform var(--transition);
   }
 
-  /* v6.7 — Animated radial-gradient orb top-right. v6.6 had it
-     positioned outside the tile (top:-38, right:-38) which made it
-     render as a half-circle smudge. Pulled fully inside the tile
-     and trimmed the size so it reads as decoration, not bleed. */
+  /* F14 — institutional: kill the decorative radial-gradient orb.
+     Man Group / Renaissance / AQR / Bridgewater do not use glowing
+     3D orbs as decoration — they use typography + whitespace. The
+     icon slot becomes a 1px hairline-bordered square holding the
+     inline SVG icon, monochrome ink. */
   .epip-tile__orb {
     position: absolute;
-    top: -16px;
-    right: -16px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle at 30% 30%,
-      var(--c-amber-light),
-      var(--c-tape) 70%
-    );
-    opacity: 0.55;
-    animation: epip-orb-pulse 6s ease-in-out infinite;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-ink-3);
     pointer-events: none;
-    filter: blur(0.5px);
-  }
-
-  @keyframes epip-orb-pulse {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.50; }
-    50%      { transform: scale(1.08) rotate(8deg); opacity: 0.62; }
   }
 
   /* v6.7.1 — Tile label moved from center to bottom-left so the
@@ -190,7 +184,7 @@ const ICONS: Record<ChipIcon, string> = {
     margin-bottom: 32px;
   }
   .epip-tile__label svg {
-    color: var(--c-primary-2-light);
+    color: var(--c-ink-3);
   }
 
   /* Bottom 24px-tall progress bar at full-width.
@@ -264,11 +258,8 @@ const ICONS: Record<ChipIcon, string> = {
     }
   }
 
-  /* Reduced motion: kill the orb pulse + hover slide. */
+  /* Reduced motion: hover rail slide only (no orb pulse — F14). */
   @media (prefers-reduced-motion: reduce) {
-    .epip-tile__orb {
-      animation: none;
-    }
     .epip-tile::before,
     .epip-tile:hover::before {
       transition: none;

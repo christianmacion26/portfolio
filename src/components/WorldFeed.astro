@@ -367,11 +367,14 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
     border-radius: 50%;
     animation: worldfeed-dot 2.4s var(--ease-out) infinite;
   }
-  /* per-lane dot color */
+  /* F14 — monochrome channel accent: only the active/highlighted lane
+     gets amber; all other lanes render in ink-3 (subdued editorial).
+     Per Man Group / Renaissance / AQR convention: data sections use
+     ONE accent for emphasis, everything else is monochrome ink. */
   .worldfeed__lane--amber .worldfeed__lane-dot-pulse { background: var(--c-primary-2); }
-  .worldfeed__lane--pass .worldfeed__lane-dot-pulse  { background: var(--c-pass); }
-  .worldfeed__lane--info .worldfeed__lane-dot-pulse  { background: var(--c-info); }
-  .worldfeed__lane--ai   .worldfeed__lane-dot-pulse  { background: var(--c-primary-3); }
+  .worldfeed__lane--pass .worldfeed__lane-dot-pulse  { background: rgba(230, 237, 243, 0.55); }
+  .worldfeed__lane--info .worldfeed__lane-dot-pulse  { background: rgba(230, 237, 243, 0.35); }
+  .worldfeed__lane--ai   .worldfeed__lane-dot-pulse  { background: rgba(230, 237, 243, 0.25); }
   @keyframes worldfeed-dot {
     0%, 100% { opacity: 0.55; transform: scale(1); }
     50%      { opacity: 1;    transform: scale(1.18); }
@@ -443,15 +446,18 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
     min-width: 0;
   }
 
-  /* per-lane accent on the chip + headline */
+  /* F14 — per-lane accent on the chip + headline: monochrome ink except
+     the first/active lane (amber). Removes the traffic-light rainbow
+     that read as "AI-generated status dashboard" and replaces it with
+     the institutional pattern of one accent + ink variants. */
   .worldfeed__lane--amber .worldfeed__chip,
   .worldfeed__lane--amber .worldfeed__lane-label { color: var(--c-primary-2); }
   .worldfeed__lane--pass  .worldfeed__chip,
-  .worldfeed__lane--pass  .worldfeed__lane-label { color: var(--c-pass); }
+  .worldfeed__lane--pass  .worldfeed__lane-label { color: rgba(230, 237, 243, 0.65); }
   .worldfeed__lane--info  .worldfeed__chip,
-  .worldfeed__lane--info  .worldfeed__lane-label { color: var(--c-info); }
+  .worldfeed__lane--info  .worldfeed__lane-label { color: rgba(230, 237, 243, 0.45); }
   .worldfeed__lane--ai    .worldfeed__chip,
-  .worldfeed__lane--ai    .worldfeed__lane-label { color: var(--c-primary-3); }
+  .worldfeed__lane--ai    .worldfeed__lane-label { color: rgba(230, 237, 243, 0.35); }
 
   /* === lane footer === */
   .worldfeed__lane-foot {

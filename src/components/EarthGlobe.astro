@@ -1256,6 +1256,10 @@ const headerLabel =
   .eg:has(.eg__rotate-toggle:not(:checked)) .eg__globe-rotating {
     animation-play-state: paused;
   }
+  /* F12 — drag-to-rotate driver pauses the auto-orbit via data-paused */
+  .eg[data-paused] .eg__globe-rotating {
+    animation-play-state: paused;
+  }
   @media (prefers-reduced-motion: reduce) {
     .eg__globe-rotating {
       animation: none !important;
