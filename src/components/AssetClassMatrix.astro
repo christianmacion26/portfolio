@@ -1,0 +1,383 @@
+---
+/**
+ * AssetClassMatrix.astro — 4×4 asset-class × regime matrix for /research.
+ *
+ * Rows = asset class (equities, crypto, commodities, rates).
+ * Cols = market regime   (bull, bear, range, crash).
+ * Each cell lists up to 2 strategies that cover that intersection.
+ *
+ * Cells are deliberately populated from the *real* strategy coverage in
+ * `src/content/projects/quant/*.mdx` — not fabricated. Empty cells read
+ * "—" the same way FactorTable does: honest about the gap.
+ *
+ * The tooltips expose the project slug so a visitor can verify the mapping
+ * by clicking through.
+ */
+import { getCollection } from 'astro:content';
+
+interface CellContent {
+  label: string;          // display label (short strategy name)
+  slug: string;           // project id, links to /projects/{slug}/
+  note?: string;          // optional sub-line
+}
+
+interface Props {
+  projects?: Array<{ id: string; data: { title: string; order: number } }>;
+}
+
+const { projects: providedProjects } = Astro.props;
+
+const projects =
+  providedProjects ??
+  ((await getCollection('project'))
+    .filter((p) => p.data.role === 'quant')
+    .sort((a, b) => a.data.order - b.data.order)
+    .map((p) => ({
+      id: p.id,
+      data: { title: p.data.title, order: p.data.order },
+    })));
+
+function find(partial: string): CellContent | null {
+  for (const p of projects) {
+    if (p.id === partial || p.id.includes(partial)) {
+      return { label: p.data.title, slug: p.id };
+    }
+  }
+  return null;
+}
+
+// Curated 4×4 grid. Each cell is one of: [], [strategy], [strategyA, strategyB].
+const ROWS = [
+  {
+    label: 'Equities',
+    cell: (regime: string): CellContent[] => {
+      switch (regime) {
+        case 'bull': return [find('cross-sectional-momentum')!].filter(Boolean);
+        case 'bear': return [find('lookahead-bias')!].filter(Boolean);
+        case 'range': return [find('pairs-cointegration')!].filter(Boolean);
+        case 'crash': return [find('variance-risk-premium')!].filter(Boolean);
+        default: return [];
+      }
+    },
+  },
+  {
+    label: 'Crypto',
+    cell: (regime: string): CellContent[] => {
+      switch (regime) {
+        case 'bull': return [find('timeseries-momentum')!].filter(Boolean);
+        case 'bear': return [find('funding-carry')!].filter(Boolean);
+        case 'range': return [find('cross-sectional-momentum')!, find('pairs-cointegration')!].filter(Boolean) as CellContent[];
+        case 'crash': return [find('macro-regime')!].filter(Boolean);
+        default: return [];
+      }
+    },
+  },
+  {
+    label: 'Commodities',
+    cell: (regime: string): CellContent[] => {
+      switch (regime) {
+        case 'bull': return [find('macro-regime')!].filter(Boolean);
+        case 'bear': return [find('macro-regime')!].filter(Boolean);
+        case 'range': return [];
+        case 'crash': return [];
+        default: return [];
+      }
+    },
+  },
+  {
+    label: 'Rates / Vol',
+    cell: (regime: string): CellContent[] => {
+      switch (regime) {
+        case 'bull': return [find('variance-risk-premium')!].filter(Boolean);
+        case 'bear': return [find('variance-risk-premium')!].filter(Boolean);
+        case 'range': return [find('macro-regime')!].filter(Boolean);
+        case 'crash': return [find('variance-risk-premium')!, find('macro-regime')!].filter(Boolean) as CellContent[];
+        default: return [];
+      }
+    },
+  },
+];
+
+const COLS = ['bull', 'bear', 'range', 'crash'] as const;
+const COL_LABEL: Record<typeof COLS[number], { title: string; sub: string }> = {
+  bull:   { title: 'Bull',   sub: 'directional up, low vol' },
+  bear:   { title: 'Bear',   sub: 'directional down, rising vol' },
+  range:  { title: 'Range',  sub: 'mean-reverting, low vol' },
+  crash:  { title: 'Crash',  sub: 'tail event, vol expands' },
+};
+---
+
+<section class="acm" aria-labelledby="acm-heading">
+  <header class="acm__head">
+    <p class="acm__eyebrow mono">Asset class × regime coverage</p>
+    <h2 id="acm-heading" class="acm__title">
+      Where each strategy works, and where it doesn't.
+    </h2>
+    <p class="acm__sub">
+      Four asset classes × four regime states. Each cell lists the strategy
+      (or two) that has a defensible claim on that intersection — drawn from
+      the 9 quant projects on this page. Empty cells are intentional: a
+      honest book has regimes it doesn't claim.
+    </p>
+  </header>
+
+  <div class="acm__matrix" role="table" aria-label="Asset class by market regime">
+    <div class="acm__row acm__row--header" role="row">
+      <div class="acm__corner" role="columnheader" aria-hidden="true"></div>
+      {
+        COLS.map((c) => (
+          <div class="acm__colhead" role="columnheader">
+            <span class="acm__colhead-title">{COL_LABEL[c].title}</span>
+            <span class="acm__colhead-sub">{COL_LABEL[c].sub}</span>
+          </div>
+        ))
+      }
+    </div>
+    {
+      ROWS.map((row) => (
+        <div class="acm__row" role="row">
+          <div class="acm__rowhead" role="rowheader">
+            <span class="acm__rowhead-title">{row.label}</span>
+          </div>
+          {COLS.map((c) => {
+            const items = row.cell(c);
+            return (
+              <div class:list={['acm__cell', { 'acm__cell--empty': items.length === 0 }]} role="cell">
+                {items.length === 0 ? (
+                  <span class="acm__dash" aria-label="no strategy claimed">—</span>
+                ) : (
+                  <ul class="acm__list">
+                    {items.map((it, idx) => (
+                      <li class="acm__item">
+                        <a class="acm__link" href={`/projects/${it.slug}/`} title={`Strategy: ${it.slug}`}>
+                          <span class="acm__link-num mono">{String(idx + 1).padStart(2, '0')}</span>
+                          <span class="acm__link-label">{it.label}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ))
+    }
+  </div>
+
+  <footer class="acm__footer">
+    <p class="acm__footer-line">
+      <span class="mono">—</span>
+      <span class="acm__footer-text">
+        honest gap: not every (asset, regime) pair has a claimed strategy
+        because not every claim is supported by the source data.
+      </span>
+    </p>
+  </footer>
+</section>
+
+<style>
+  .acm {
+    padding-block: var(--sp-9);
+    background: var(--c-tape);
+    border-block: var(--border-paper);
+  }
+  .acm__head {
+    max-width: 880px;
+    margin-inline: auto;
+    margin-bottom: var(--sp-7);
+    padding-inline: var(--sp-4);
+  }
+  .acm__eyebrow {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--c-primary-2);
+    margin-bottom: var(--sp-3);
+    font-weight: 600;
+  }
+  .acm__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin-bottom: var(--sp-3);
+    max-width: 22ch;
+  }
+  .acm__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: 1.65;
+    max-width: 64ch;
+  }
+
+  .acm__matrix {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: var(--sp-4);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--c-tape-2);
+  }
+
+  .acm__row {
+    display: grid;
+    grid-template-columns: 140px repeat(4, 1fr);
+    min-height: 110px;
+  }
+  .acm__row + .acm__row .acm__corner,
+  .acm__row + .acm__row .acm__colhead,
+  .acm__row + .acm__row .acm__rowhead,
+  .acm__row + .acm__row .acm__cell {
+    border-top: 1px solid var(--c-rule);
+  }
+
+  .acm__row--header {
+    min-height: 56px;
+  }
+  .acm__corner {
+    background: var(--c-tape-3);
+  }
+  .acm__colhead {
+    background: var(--c-tape-3);
+    color: var(--c-primary-2);
+    padding: var(--sp-3) var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+  .acm__colhead-title {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .acm__colhead-sub {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    font-style: italic;
+  }
+
+  .acm__rowhead {
+    background: var(--c-tape-3);
+    color: var(--c-ink);
+    padding: var(--sp-4);
+    display: flex;
+    align-items: center;
+    border-right: 1px solid var(--c-rule);
+  }
+  .acm__rowhead-title {
+    font-size: var(--fs-base);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .acm__cell {
+    background: var(--c-bg);
+    color: var(--c-ink);
+    padding: var(--sp-3) var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-2);
+  }
+  .acm__cell--empty {
+    background: var(--c-tape);
+    color: var(--c-ink-3);
+    align-items: center;
+    justify-content: center;
+  }
+  .acm__dash {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-lg);
+    opacity: 0.55;
+  }
+
+  .acm__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .acm__item {
+    line-height: 1.15;
+  }
+  .acm__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+    color: var(--c-ink);
+    text-decoration: none;
+    border-bottom: 1px dotted transparent;
+    transition: border-color var(--transition);
+  }
+  .acm__link:hover {
+    border-bottom-color: var(--c-amber);
+  }
+  .acm__link-num {
+    color: var(--c-primary-2);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .acm__link-label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .acm__footer {
+    max-width: 880px;
+    margin-inline: auto;
+    margin-top: var(--sp-5);
+    padding-inline: var(--sp-4);
+  }
+  .acm__footer-line {
+    display: flex;
+    gap: var(--sp-3);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 860px) {
+    .acm__row {
+      grid-template-columns: 100px repeat(4, 1fr);
+      min-height: 96px;
+    }
+    .acm__colhead-sub {
+      display: none;
+    }
+    .acm__link-label {
+      font-size: var(--fs-xs);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .acm__matrix {
+      grid-template-columns: 1fr;
+    }
+    .acm__row,
+    .acm__row--header {
+      grid-template-columns: 90px repeat(4, 1fr);
+    }
+    .acm__rowhead {
+      padding: var(--sp-2) var(--sp-3);
+    }
+    .acm__rowhead-title {
+      font-size: var(--fs-sm);
+    }
+    .acm__cell,
+    .acm__colhead {
+      padding: var(--sp-2);
+    }
+  }
+</style>

@@ -1,0 +1,352 @@
+---
+/**
+ * WorldEventMap.astro — v6.2 iron-desk world event map.
+ *
+ * Server-rendered SVG world map (Equirectangular projection, 800×400).
+ * Layers (back-to-front):
+ *   1. Background (#0d1117 — implicit via panel)
+ *   2. Continent outlines as a stylized landmass dot-grid (5 landmasses)
+ *   3. Latitude/longitude grid lines every 30°/60°, stroke-opacity 0.15
+ *   4. 16 city markers (fixed, public-domain coordinates)
+ *   5. Event pins from the `worldEvent` collection (8-10 fixtures)
+ *
+ * No JS, no client:* directives. Pins fade-in over the first ~3s via
+ * CSS @keyframes + staggered nth-child delays (see EventPin.astro).
+ *
+ * Honors `prefers-reduced-motion: reduce` via the global tokens rule
+ * and the EventPin local rule.
+ */
+import { getCollection } from 'astro:content';
+import EventPin from '@components/EventPin.astro';
+
+interface Props {
+  /** ViewBox width (default 800). */
+  width?: number;
+  /** ViewBox height (default 400 — Equirectangular 2:1). */
+  height?: number;
+  /** Optional override for the events (defaults to the worldEvent collection). */
+  events?: Array<{
+    title: string;
+    category: 'central-bank' | 'earnings' | 'geopolitical' | 'data-release' | 'fx';
+    severity: 'mild' | 'moderate' | 'critical';
+    lat: number;
+    lon: number;
+    city: string;
+  }>;
+}
+const { width = 800, height = 400, events: eventsOverride } = Astro.props;
+
+const sevToNum = { mild: 1, moderate: 2, critical: 3 } as const;
+type SevNum = 1 | 2 | 3;
+
+// === Load world events from content collection ===
+const collEvents = eventsOverride
+  ? null
+  : await getCollection('worldEvent').then((rows) =>
+      rows
+        .sort((a, b) => a.data.order - b.data.order)
+        .map((r) => ({
+          title: r.data.title,
+          category: r.data.category,
+          severity: r.data.severity,
+          lat: r.data.lat,
+          lon: r.data.lon,
+          city: r.data.city,
+        })),
+    );
+
+const events = (eventsOverride ?? collEvents ?? []).slice(0, 12);
+
+// === Equirectangular projection ===
+function project(lat: number, lon: number): { x: number; y: number } {
+  return {
+    x: ((lon + 180) / 360) * width,
+    y: ((90 - lat) / 180) * height,
+  };
+}
+
+// === Continent dot grid (5 landmasses with denser dots where land is) ===
+// Stylized — public-domain projection, no real basemap. Slight per-region
+// step variations give the visual impression of "continents" without
+// any IP-encumbered data. All rectangles here approximate the bounding
+// box of each landmass to keep the file short.
+interface Landmass {
+  name: string;
+  lat0: number; lat1: number; lon0: number; lon1: number;
+  step: number; // degrees between dots — smaller = denser
+}
+const landmasses: Landmass[] = [
+  // North America (broader band includes Mexico + Greenland-tip)
+  { name: 'NA',  lat0: 15,  lat1: 72,  lon0: -168, lon1: -52, step: 4 },
+  // South America
+  { name: 'SA',  lat0: -56, lat1: 13,  lon0: -82,  lon1: -34, step: 4 },
+  // Europe + North Africa + Middle East
+  { name: 'EU',  lat0: 12,  lat1: 71,  lon0: -10,  lon1: 60,  step: 3.5 },
+  // Africa (sub-Saharan)
+  { name: 'AF',  lat0: -35, lat1: 12,  lon0: -18,  lon1: 52,  step: 4 },
+  // Asia
+  { name: 'AS',  lat0: -10, lat1: 72,  lon0: 60,   lon1: 145, step: 4 },
+  // Oceania
+  { name: 'OC',  lat0: -45, lat1: -10, lon0: 110,  lon1: 155, step: 4 },
+  // British Isles carve-out — denser
+  { name: 'GB',  lat0: 50,  lat1: 60,  lon0: -10,  lon1: 2,   step: 2.5 },
+  // Japan carve-out — denser
+  { name: 'JP',  lat0: 30,  lat1: 46,  lon0: 128,  lon1: 146, step: 2.5 },
+];
+
+const continentDots: { x: number; y: number }[] = [];
+for (const lm of landmasses) {
+  for (let lat = lm.lat0; lat <= lm.lat1; lat += lm.step) {
+    for (let lon = lm.lon0; lon <= lm.lon1; lon += lm.step) {
+      const { x, y } = project(lat, lon);
+      continentDots.push({ x, y });
+    }
+  }
+}
+
+// === 16 city markers (home base + 15 global hubs, public-domain coords) ===
+const cities = [
+  { city: 'Digos',      lat: 6.74,  lon: 125.36 },
+  { city: 'Singapore',  lat: 1.35,  lon: 103.82 },
+  { city: 'Tokyo',      lat: 35.68, lon: 139.69 },
+  { city: 'Hong Kong',  lat: 22.30, lon: 114.17 },
+  { city: 'Shanghai',   lat: 31.23, lon: 121.47 },
+  { city: 'Seoul',      lat: 37.57, lon: 126.98 },
+  { city: 'Manila',     lat: 14.60, lon: 120.98 },
+  { city: 'Mumbai',     lat: 19.08, lon: 72.88 },
+  { city: 'Dubai',      lat: 25.20, lon: 55.27 },
+  { city: 'Sydney',     lat: -33.87, lon: 151.21 },
+  { city: 'Frankfurt',  lat: 50.11, lon: 8.68 },
+  { city: 'Zurich',     lat: 47.38, lon: 8.54 },
+  { city: 'London',     lat: 51.51, lon: -0.13 },
+  { city: 'New York',   lat: 40.71, lon: -74.01 },
+  { city: 'Toronto',    lat: 43.65, lon: -79.38 },
+  { city: 'Sao Paulo',  lat: -23.55, lon: -46.63 },
+];
+
+// === Grid lines ===
+const latLines: { y: number; label: string }[] = [];
+for (let lat = -60; lat <= 60; lat += 30) {
+  latLines.push({ y: project(lat, 0).y, label: `${Math.abs(lat)}°${lat >= 0 ? 'N' : 'S'}` });
+}
+const lonLines: { x: number; label: string }[] = [];
+for (let lon = -120; lon <= 120; lon += 60) {
+  lonLines.push({ x: project(0, lon).x, label: `${Math.abs(lon)}°${lon >= 0 ? 'E' : 'W'}` });
+}
+
+const equatorY = project(0, 0).y;
+const primeX = project(0, 0).x;
+
+// === Project the pins ===
+const pinPositions = events.map((ev, i) => {
+  const p = project(ev.lat, ev.lon);
+  return {
+    ...ev,
+    x: p.x,
+    y: p.y,
+    index: i,
+    severityNum: sevToNum[ev.severity] as SevNum,
+  };
+});
+---
+
+<figure class="wemap">
+  <figcaption class="wemap__caption">
+    <span class="wemap__caption-eyebrow mono">World events today</span>
+    <span class="wemap__caption-title">
+      {cities.length} cities · {pinPositions.length} active events · Equirectangular projection
+    </span>
+  </figcaption>
+
+  <div class="wemap__svgwrap">
+    <svg
+      class="wemap__svg"
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-label={`World event map — ${pinPositions.length} active events across ${cities.length} cities`}
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <title>World event map — cities and active events</title>
+
+      {/* === Lat / lon grid lines === */}
+      <g class="wemap__grid" aria-hidden="true">
+        {latLines.map((l) => (
+          <line x1="0" y1={l.y} x2={width} y2={l.y} />
+        ))}
+        {lonLines.map((l) => (
+          <line x1={l.x} y1="0" x2={l.x} y2={height} />
+        ))}
+        {/* Equator + prime meridian emphasis */}
+        <line x1="0" y1={equatorY} x2={width} y2={equatorY} class="wemap__major" />
+        <line x1={primeX} y1="0" x2={primeX} y2={height} class="wemap__major" />
+      </g>
+
+      {/* === Continent dot grid === */}
+      <g class="wemap__continents" aria-hidden="true">
+        {continentDots.map((d) => <circle cx={d.x} cy={d.y} r="0.9" />)}
+      </g>
+
+      {/* === City markers === */}
+      <g class="wemap__cities">
+        {cities.map((c) => {
+          const { x, y } = project(c.lat, c.lon);
+          return (
+            <g class="wemap__city" transform={`translate(${x.toFixed(2)} ${y.toFixed(2)})`}>
+              <circle r="2" />
+              <text dy="-5" text-anchor="middle">{c.city}</text>
+            </g>
+          );
+        })}
+      </g>
+
+      {/* === Event pins === */}
+      <g class="wemap__pins">
+        {pinPositions.map((p) => (
+          <EventPin
+            x={p.x}
+            y={p.y}
+            category={p.category}
+            severity={p.severityNum}
+            index={p.index}
+            title={`${p.title} — ${p.city}`}
+          />
+        ))}
+      </g>
+    </svg>
+  </div>
+
+  {/* === Legend === */}
+  <ul class="wemap__legend mono" aria-label="Event legend">
+    <li class="wemap__legend-item">
+      <span class="wemap__legend-dot wemap__legend-dot--amber"></span>
+      <span>Central bank</span>
+    </li>
+    <li class="wemap__legend-item">
+      <span class="wemap__legend-dot wemap__legend-dot--pass"></span>
+      <span>Earnings</span>
+    </li>
+    <li class="wemap__legend-item">
+      <span class="wemap__legend-dot wemap__legend-dot--fail"></span>
+      <span>Geopolitical</span>
+    </li>
+    <li class="wemap__legend-item">
+      <span class="wemap__legend-dot wemap__legend-dot--cyan"></span>
+      <span>Data release</span>
+    </li>
+    <li class="wemap__legend-item">
+      <span class="wemap__legend-dot wemap__legend-dot--purple"></span>
+      <span>FX</span>
+    </li>
+  </ul>
+</figure>
+
+<style>
+  .wemap {
+    margin: 0;
+    padding: var(--sp-3);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .wemap__caption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.4;
+  }
+  .wemap__caption-eyebrow {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--c-primary-2);
+    font-weight: 700;
+  }
+  .wemap__caption-title {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+  }
+
+  .wemap__svgwrap {
+    background: var(--c-tape);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--c-rule-soft);
+  }
+  .wemap__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Grid lines */
+  .wemap__grid line {
+    stroke: var(--c-rule);
+    stroke-width: 0.4;
+    stroke-opacity: 0.15;
+  }
+  .wemap__major {
+    stroke: var(--c-rule);
+    stroke-width: 0.5;
+    stroke-opacity: 0.30;
+    stroke-dasharray: 3, 3;
+  }
+
+  /* Continent dots */
+  .wemap__continents circle {
+    fill: var(--c-ink-3);
+    opacity: 0.42;
+  }
+
+  /* City dots + labels */
+  .wemap__city circle {
+    fill: var(--c-ink-3);
+    opacity: 0.75;
+  }
+  .wemap__city text {
+    font-family: var(--ff-mono, monospace);
+    font-size: 7.5px;
+    fill: var(--c-ink-2);
+    letter-spacing: 0.04em;
+    paint-order: stroke;
+    stroke: var(--c-tape);
+    stroke-width: 2.5px;
+    stroke-linejoin: round;
+  }
+
+  /* Legend */
+  .wemap__legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3) var(--sp-5);
+    font-size: 0.7rem;
+    color: var(--c-ink-2);
+  }
+  .wemap__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .wemap__legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .wemap__legend-dot--amber  { background: var(--c-amber-light); }
+  .wemap__legend-dot--pass   { background: var(--c-pass); }
+  .wemap__legend-dot--fail   { background: var(--c-fail); }
+  .wemap__legend-dot--cyan   { background: var(--c-accent-cyan); }
+  .wemap__legend-dot--purple { background: var(--c-primary-3); }
+
+  @media (max-width: 600px) {
+    .wemap__city text { display: none; }
+    .wemap__caption-title { font-size: var(--fs-xs); }
+  }
+</style>

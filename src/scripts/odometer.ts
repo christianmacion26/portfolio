@@ -27,7 +27,10 @@ function init(): void {
     }
 
     el.textContent = '0';
-    const duration = 1200;
+    // Allow per-element duration override via `data-duration` (ms).
+    // Default 1200ms — same as Stat.astro's prior behavior.
+    const overrideDur = Number.parseFloat(el.dataset.duration ?? '');
+    const duration = Number.isFinite(overrideDur) && overrideDur > 0 ? overrideDur : 1200;
     const start = performance.now();
     let fired = false;
 

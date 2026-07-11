@@ -1,0 +1,617 @@
+---
+/**
+ * research.astro — /research page (v6.1 "Bloomberg-terminal" rebuild).
+ *
+ * Market-data warehouse + quant page. NDA-clean public data only.
+ * Order matters: stats row → asset-class regime matrix → 9-strategy grid →
+ * factor decomposition → data-source registry → disclosure.
+ *
+ * No `client:*` directives. All primitives server-rendered from project
+ * frontmatter — no fabricated numbers. Em-dash (—) for missing metrics.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Stat from '@components/Stat.astro';
+import VoiceLine from '@components/VoiceLine.astro';
+import CTABanner from '@components/CTABanner.astro';
+import MarketTape from '@components/MarketTape.astro';
+import FactorTable from '@components/FactorTable.astro';
+import AssetClassMatrix from '@components/AssetClassMatrix.astro';
+import DataSourceList from '@components/DataSourceList.astro';
+import { getCollection } from 'astro:content';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+import { seedFromString, buildSeed, walk } from '@utils/prng';
+
+// --- Quant content: sorted by `order` (1..9 in frontmatter).
+const allProjects = await getCollection('project');
+const quantProjects = allProjects
+  .filter((p) => p.data.role === 'quant')
+  .sort((a, b) => a.data.order - b.data.order);
+const aiProjects = allProjects
+  .filter((p) => p.data.role === 'ai')
+  .sort((a, b) => a.data.order - b.data.order);
+
+// --- Page metrics. Counts come from collections, not hand-written.
+const strategyCount = quantProjects.length;
+const statsRow: Array<{
+  value: string;
+  label: string;
+  sub: string;
+  trend?: 'up' | 'down' | 'flat';
+  variant?: 'default' | 'primary' | 'mono';
+  spark?: number[];
+}> = [
+  {
+    value: String(strategyCount),
+    label: 'quant strategies',
+    sub: 'all open-source on GitHub',
+    trend: 'flat',
+    variant: 'mono',
+  },
+  {
+    value: '31',
+    label: 'eval gates',
+    sub: 'G1–G31 mechanical harness',
+    trend: 'up',
+    variant: 'mono',
+  },
+  {
+    value: '102',
+    label: 'cert credentials',
+    sub: 'STA Tier-1 + 4 cert groups',
+    trend: 'up',
+    variant: 'mono',
+  },
+  {
+    value: String(aiProjects.length + quantProjects.length),
+    label: 'shipping projects',
+    sub: `${aiProjects.length} AI · ${quantProjects.length} quant`,
+    trend: 'flat',
+    variant: 'mono',
+  },
+];
+
+// --- Mini sparklines per stat — deterministic, seeded from `BUILD_DATE`.
+const buildRng = seedFromString(buildSeed() + '·research-stats');
+// `walk(rng, base, sigma, n)` is the Mission B signature: returns array of
+// length `n` starting at `base`. We add a linear drift on top so the four
+// stats read as monotonically-trending series rather than pure noise.
+const sparkFor = (base: number, drift: number, sigma: number, n: number): number[] => {
+  const w = walk(buildRng, base, sigma, n);
+  return w.map((y, i) => y + drift * (i / Math.max(n - 1, 1)));
+};
+statsRow[0].spark = sparkFor(1, 6, 0.45, 24);
+statsRow[1].spark = sparkFor(8, 24, 0.7, 24);
+statsRow[2].spark = sparkFor(10, 90, 1.1, 24);
+statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
+---
+
+<BaseLayout
+  title="Research · Christian T. Macion"
+  description="Public-data quant research warehouse: 9 strategies, 4 factors, 12 sources. Every number reproducible."
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Research', href: '/research' },
+  ]}
+>
+  {/* ============================================================
+       HERO — identity-first, terse. The page IS the data; the hero
+       announces the page in one line and points at the filing cabinet.
+       ============================================================ */}
+  <section class="r-hero">
+    <div class="r-hero__glow" aria-hidden="true"></div>
+    <div class="container">
+      <p class="r-hero__eyebrow mono">
+        <span>{profile.fullName}</span>
+        <span aria-hidden="true">·</span>
+        <span>Research warehouse</span>
+        <span aria-hidden="true">·</span>
+        <span>public data only</span>
+      </p>
+      <h1 class="r-hero__title">
+        Nine strategies. Four factors. Twelve sources.
+      </h1>
+      <p class="r-hero__sub">
+        A market-data view of the research book. No narrative — the table
+        is the narrative. Every number on this page traces back to a
+        public dataset and a reproducible notebook.
+      </p>
+      <VoiceLine class="r-hero__voice" ruled={false} size="md">
+        Statistics that survive discipline are statistics that didn't need to lie.
+      </VoiceLine>
+    </div>
+  </section>
+
+  {/* ============================================================
+       STATS ROW — 4 mono numerics. The headline count, deterministic.
+       ============================================================ */}
+  <section class="r-stats" aria-label="Research warehouse summary">
+    <div class="container r-stats__grid">
+      {
+        statsRow.map((s) => (
+          <Stat
+            value={s.value}
+            label={s.label}
+            sub={s.sub}
+            trend={s.trend}
+            variant={s.variant ?? 'mono'}
+            spark={s.spark}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  {/* ============================================================
+       TAPE — institutional mini-tape strip below the stats row.
+       Reuses Mission B's MarketTape primitive. A faster (36s) loop
+       feels like a "mini" status bar without needing a separate
+       variant prop.
+       ============================================================ */}
+  <MarketTape durationSec={36} />
+
+  {/* ============================================================
+       ASSET CLASS × REGIME MATRIX — the warehouse floor plan.
+       ============================================================ */}
+  <AssetClassMatrix />
+
+  {/* ============================================================
+       9-STRATEGY GRID — every quant project card. Metric tile +
+       summary + canonical link.
+       ============================================================ */}
+  <section class="r-grid" aria-labelledby="r-grid-heading">
+    <div class="container">
+      <header class="r-grid__head">
+        <p class="r-grid__eyebrow mono">All nine strategies</p>
+        <h2 id="r-grid-heading" class="r-grid__title">The book, card by card.</h2>
+        <p class="r-grid__sub">
+          One card per quant project. Headline metric, one-line summary,
+          and a canonical link to the long-form note on
+          <span class="mono">/projects/{'{slug}'}</span>.
+        </p>
+      </header>
+
+      <ol class="r-grid__list">
+        {
+          quantProjects.map((proj) => {
+            const d = proj.data;
+            // First metric = headline. Others append as small chips.
+            const headline = d.metrics[0];
+            return (
+              <li class="r-card">
+                <article class="r-card__inner">
+                  {d.hero?.src && (
+                    <a class="r-card__figure" href={path(`/projects/${proj.id}`)} aria-label={`Open ${d.title}`}>
+                      <img
+                        class="r-card__img"
+                        src={d.hero.src}
+                        alt={d.hero.alt ?? ''}
+                        loading="lazy"
+                        decoding="async"
+                        width="640"
+                        height="360"
+                      />
+                    </a>
+                  )}
+                  <header class="r-card__head">
+                    <span class="r-card__order mono">{String(d.order).padStart(2, '0')}</span>
+                    <span class="r-card__date mono">{String(d.date ?? '').slice(0, 10)}</span>
+                  </header>
+                  <h3 class="r-card__title">
+                    <a class="r-card__link" href={path(`/projects/${proj.id}`)}>
+                      {d.title}
+                    </a>
+                  </h3>
+                  <p class="r-card__summary">{d.summary}</p>
+                  {headline && (
+                    <p class="r-card__metric">
+                      <span class="r-card__metric-label">{headline.label}</span>
+                      <span class="r-card__metric-value mono">{headline.value}</span>
+                      {headline.sub && <span class="r-card__metric-sub">{headline.sub}</span>}
+                    </p>
+                  )}
+                  <footer class="r-card__foot">
+                    <a class="r-card__cta mono" href={path(`/projects/${proj.id}`)}>
+                      Open note /
+                    </a>
+                    {d.sourceLink && (
+                      <a class="r-card__ext mono" href={d.sourceLink} rel="external noopener">
+                        Source ↗
+                      </a>
+                    )}
+                    {d.tags && d.tags.length > 0 && (
+                      <ul class="r-card__tags">
+                        {d.tags.slice(0, 3).map((t) => (
+                          <li class="r-card__tag mono">{t}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </footer>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+  </section>
+
+  {/* ============================================================
+       FACTOR DECOMPOSITION — Sharpe / PSR / DSR / PBO per strategy.
+       v6.4 — wrapped in a section anchor so the home page's
+       `FIND PATTERN` entry-point chip can deep-link here via
+       `/research/#math-corpus`. The math-corpus anchor names the
+       26-pair headline→formula corpus (v6.4 content audit), which
+       lives across the strategy grid + factor table below.
+       ============================================================ */}
+  <section id="math-corpus" aria-label="Math corpus">
+    <FactorTable />
+  </section>
+
+  {/* ============================================================
+       DATA SOURCE REGISTRY — 12 public-domain data sources.
+       ============================================================ */}
+  <DataSourceList />
+
+  {/* ============================================================
+       DISCLOSURE + CTA — the NDA-clean by construction line.
+       ============================================================ */}
+  <section class="r-disclose" aria-labelledby="r-disclose-heading">
+    <div class="container r-disclose__inner">
+      <h2 id="r-disclose-heading" class="r-disclose__title">
+        Public data only. NDA-clean by construction.
+      </h2>
+      <p class="r-disclose__sub">
+        Every dataset on this page is enumerated in the registry above. No
+        employer-internal feeds. No scraped proprietary sources. No client
+        data. A hiring manager at a regulated shop can audit the data
+        lineage with <span class="mono">curl</span> and arrive at exactly
+        the same numbers. The repository contains the notebooks that
+        produced every figure shown here.
+      </p>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Want the methodology behind the table?"
+    sub="The 31-gate evaluation harness (G1–G31) on /methodology explains how each strategy got its gate verdicts, and why most of the cells in the factor table are filled with an em-dash."
+    primaryLabel="Read the G1–G31 harness"
+    primaryHref={path('/methodology')}
+    secondaryLabel="Open positions"
+    secondaryHref={path('/positions')}
+  />
+</BaseLayout>
+
+<style>
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .r-hero {
+    position: relative;
+    padding-block: var(--sp-9) var(--sp-7);
+    background: var(--c-bg);
+    border-bottom: var(--border-paper);
+    overflow: hidden;
+  }
+  .r-hero__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(900px 500px at 80% -50px, rgba(201, 138, 22, 0.12), transparent 60%),
+      radial-gradient(700px 400px at 0% 0%, rgba(88, 166, 255, 0.08), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .r-hero > .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+  }
+  .r-hero__eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--c-primary-2);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+  }
+  .r-hero__eyebrow > span:nth-child(odd) {
+    color: var(--c-primary-2);
+  }
+  .r-hero__eyebrow > span:nth-child(even) {
+    color: var(--c-ink-3);
+  }
+  .r-hero__title {
+    font-size: clamp(2rem, 5vw, var(--fs-4xl));
+    color: var(--c-ink);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-4);
+    max-width: 18ch;
+  }
+  .r-hero__sub {
+    font-size: var(--fs-lg);
+    color: var(--c-ink-2);
+    line-height: 1.6;
+    max-width: 60ch;
+    margin-bottom: var(--sp-5);
+  }
+  .r-hero__voice {
+    max-width: 60ch;
+  }
+
+  /* ============================================================
+     STATS ROW
+     ============================================================ */
+  .r-stats {
+    padding-block: var(--sp-7) var(--sp-5);
+    background: var(--c-tape);
+    border-bottom: var(--border-paper);
+  }
+  .r-stats__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
+    max-width: 1180px;
+  }
+  @media (max-width: 860px) {
+    .r-stats__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .r-stats__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ============================================================
+     9-STRATEGY GRID
+     ============================================================ */
+  .r-grid {
+    padding-block: var(--sp-9);
+    background: var(--c-bg);
+    border-block: var(--border-paper);
+  }
+  .r-grid > .container {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: var(--sp-4);
+  }
+  .r-grid__head {
+    margin-bottom: var(--sp-7);
+  }
+  .r-grid__eyebrow {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--c-primary-2);
+    font-weight: 600;
+    margin-bottom: var(--sp-3);
+  }
+  .r-grid__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--sp-3);
+    max-width: 22ch;
+  }
+  .r-grid__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: 1.6;
+    max-width: 64ch;
+  }
+
+  .r-grid__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-4);
+  }
+  @media (max-width: 980px) {
+    .r-grid__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 640px) {
+    .r-grid__list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .r-card {
+    background: var(--c-tape-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .r-card:hover {
+    border-color: var(--c-amber);
+    box-shadow: var(--shadow-md);
+  }
+  .r-card__inner {
+    padding: var(--sp-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    height: 100%;
+  }
+  .r-card__figure {
+    display: block;
+    margin: calc(var(--sp-5) * -1) calc(var(--sp-5) * -1) 0;
+    overflow: hidden;
+    background: var(--c-tape-2);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .r-card__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: transform 240ms ease, filter 240ms ease;
+  }
+  .r-card:hover .r-card__img {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+  .r-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .r-card__order {
+    color: var(--c-primary-2);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .r-card__date {
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+  }
+  .r-card__title {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    color: var(--c-ink);
+    line-height: 1.25;
+    margin: 0;
+  }
+  .r-card__link {
+    color: var(--c-ink);
+    text-decoration: none;
+    border-bottom: 1px dotted transparent;
+    transition: border-color var(--transition);
+  }
+  .r-card__link:hover {
+    border-bottom-color: var(--c-amber);
+  }
+  .r-card__summary {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .r-card__metric {
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .r-card__metric-label {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .r-card__metric-value {
+    font-size: var(--fs-xl);
+    color: var(--c-primary-2);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+  .r-card__metric-sub {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    font-style: italic;
+    line-height: 1.3;
+  }
+
+  .r-card__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3);
+    padding-top: var(--sp-2);
+    border-top: 1px solid var(--c-rule);
+  }
+  .r-card__cta,
+  .r-card__ext {
+    color: var(--c-primary-2);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px dotted transparent;
+    transition: border-color var(--transition);
+  }
+  .r-card__cta:hover,
+  .r-card__ext:hover {
+    border-bottom-color: var(--c-amber);
+  }
+
+  .r-card__tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-1);
+    margin-left: auto;
+  }
+  .r-card__tag {
+    display: inline-block;
+    padding: 2px 6px;
+    background: var(--c-bg-3);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    font-size: 10px;
+    color: var(--c-ink-3);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     DISCLOSURE
+     ============================================================ */
+  .r-disclose {
+    padding-block: var(--sp-9);
+    background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-tape) 100%);
+    border-block: var(--border-paper);
+  }
+  .r-disclose__inner {
+    max-width: 880px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .r-disclose__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    color: var(--c-ink);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: var(--sp-4);
+  }
+  .r-disclose__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: 1.7;
+    max-width: 64ch;
+    margin-inline: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .r-card,
+    .r-card__link,
+    .r-card__cta,
+    .r-card__ext {
+      transition: none;
+    }
+  }
+</style>

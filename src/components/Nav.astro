@@ -24,6 +24,16 @@ const primary = [
   { href: path('/now'), label: 'Now' },
 ];
 
+// v6.1.0 (Mission G) — Markets dropdown sits between Proof and Projects
+// on desktop (as a <details><summary> disclosure), flat with a heading
+// inside the burger menu on mobile. /ai is a sub-route of /research for
+// nav IA but is its own page.
+const markets = [
+  { href: path('/markets'), label: 'Markets' },
+  { href: path('/prediction-markets'), label: 'Prediction' },
+  { href: path('/research'), label: 'Research' },
+];
+
 // Secondary links - behind a "Resources" details disclosure on desktop,
 // flat list on mobile.
 const secondary = [
@@ -66,8 +76,19 @@ const secondary = [
 
     <nav class="nav__links" aria-label="Primary">
       <div class="nav__primary">
+        {/* v6.1.0 (Mission G) — Markets dropdown sits BETWEEN Proof and Projects.
+            Split the loop into 3 chunks so the dropdown interrupts the linear
+            flow at the spec'd position. */}
         {
-          primary.map(({ href, label }) => (
+          primary.slice(0, 3).map(({ href, label }) => (
+            <a href={href} class:list={['nav__link', { 'nav__link--active': isActive(href) }]}>
+              {label}
+            </a>
+          ))
+        }
+        <NavMore items={markets} mode="dropdown" label="Markets" class="nav__more" />
+        {
+          primary.slice(3).map(({ href, label }) => (
             <a href={href} class:list={['nav__link', { 'nav__link--active': isActive(href) }]}>
               {label}
             </a>
@@ -77,6 +98,7 @@ const secondary = [
       </div>
 
       <div class="nav__secondary-row">
+        <NavMore items={markets} mode="inline" label="Markets" class="nav__more-flat" />
         <NavMore items={secondary} mode="inline" class="nav__more-flat" />
         <a
           href={path('/resume')}
@@ -129,6 +151,12 @@ const secondary = [
     text-decoration: none;
     color: #fff;        /* v6.1.0 — always tape nav, light text */
     flex-shrink: 0;
+    /* v6.3 polish — enforce ≥ 44 px tap target on the brand link.
+       The audit flagged "Christian T. Macion, CTA®" at 184×36 px.
+       min-height:44 lifts the rect without shifting visible content
+       because the brand is centered in a 56 px nav row. */
+    min-height: 44px;
+    padding: 0.25rem 0;
   }
   .nav__brand-mark {    display: block;
     width: 36px;
@@ -171,6 +199,13 @@ const secondary = [
     font-size: var(--fs-sm);
     font-weight: 500;
     padding: 0.5rem 0;
+    /* v6.1 polish — enforce ≥ 44 px tap target on every nav link.
+       The nav itself is 56 px tall; previous padding (0.5rem top/bot)
+       rendered ~30 px high. min-height doesn't shift layout because
+       the parent flex container centers content vertically. */
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
     border-bottom: 2px solid transparent;
     transition:
       color var(--transition),
@@ -182,6 +217,39 @@ const secondary = [
   .nav__link--active {
     color: var(--c-primary-2-light);
     border-bottom-color: var(--c-primary-2);
+  }
+  /* v6.1.0 — Match .nav__link color treatment when NavMore is nested
+     in the primary row (Markets dropdown + Resources dropdown).
+     NavMore's default styles are tuned for `--c-ink-2` against light bg;
+     here the nav is institutional-tape, so re-color and remove the
+     pill-shaped hover background that no longer fits the row layout. */
+  .nav__primary .nav-more__summary {
+    color: rgba(230, 237, 243, 0.7);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-radius: 0;
+    /* v6.1 polish — min-height + flex centering so the dropdown summary
+       matches the .nav__link touch target. */
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .nav__primary .nav-more__summary:hover,
+  .nav__primary .nav-more[open] .nav-more__summary {
+    color: var(--c-primary-2-light);
+    background: transparent;
+  }
+  .nav__primary .nav-more[open] .nav-more__summary {
+    border-bottom: 2px solid var(--c-primary-2);
+  }
+  /* Highlight the Markets summary when any of its children is the
+     current page. We can't use NavMore's built-in isActive on the
+     summary because that helper is scoped to a single href; mark
+     the summary manually via data-active on the <details>. */
+  .nav__primary .nav-more[data-active] .nav-more__summary {
+    color: var(--c-primary-2-light);
+    border-bottom: 2px solid var(--c-primary-2);
   }
   .nav__cta--mobile {
     display: none;
@@ -202,13 +270,20 @@ const secondary = [
 
   /* === v6.1.0 — theme toggle CSS removed (the button is gone) === */
 
-  /* === Search shortcut === */
+  /* === Search shortcut ===
+   * v6.1.1 polish — the 32×32 icon button failed WCAG 2.5.5 (44×44).
+   * The visual stays 32×32; an invisible `::after` pseudo-element
+   * expands the hit target by 6px on every side (32 + 12 = 44×44),
+   * without shifting the layout or changing the visible button box. */
   .nav-search {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 32px;
     height: 32px;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -219,6 +294,11 @@ const secondary = [
       color var(--transition),
       border-color var(--transition),
       background var(--transition);
+  }
+  .nav-search::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
   }
   .nav-search:hover {
     color: var(--c-primary-2-deep);

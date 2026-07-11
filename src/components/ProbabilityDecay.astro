@@ -1,0 +1,450 @@
+---
+/**
+ * ProbabilityDecay.astro — aggregate panel showing all 8 events as
+ * polylines on a probability-over-tenor axis.
+ *
+ * Server-rendered SVG, no JS. The X axis is the tenors normalized to a
+ * fractional-of-year scale. The Y axis is probability in [0, 1]. Each
+ * event is a polyline connecting a starting anchor (the implied
+ * probability at "now") to an asymptotic endpoint anchored near the
+ * implied price, with the line slightly perturbed by a deterministic
+ * PRNG walk seeded from the event slug so the same event renders
+ * identically across builds.
+ *
+ * NDA-positive: no platform names. Generic language: "implied", "fair",
+ * "edge", "binary event market".
+ *
+ * Each event must include: id (string slug), title, impliedPx (0..1),
+ * tenor (e.g. "by 2026-12-31"), edge (-1..1), category.
+ */
+interface DecayPointShape {
+  id: string;
+  title: string;
+  impliedPx: number;
+  tenor: string;
+  edge: number;
+  category: string;
+}
+type DecayPoint = DecayPointShape;
+interface Props {
+  events: DecayPoint[];
+  width?: number;
+  height?: number;
+  buildDate?: string;
+}
+const {
+  events,
+  width = 1080,
+  height = 320,
+  buildDate = '2026-07-10',
+} = Astro.props;
+
+// Layout constants — padL/R/T/B sized for axis labels + legend
+const padL = 56,
+  padR = 220,
+  padT = 24,
+  padB = 44;
+const innerW = width - padL - padR;
+const innerH = height - padT - padB;
+
+// Anchor date for "now" on the tenor axis. Deterministic per build.
+const anchorIso = (buildDate.includes('T') ? buildDate : `${buildDate}T00:00:00Z`);
+const anchorMs = new Date(anchorIso).getTime();
+// Max tenor months → convert to fractional years for x-axis.
+// Use 2028-05-09 (latest event in the set) as the right edge.
+const xEndIso = '2028-05-09T00:00:00Z';
+const xEndMs = new Date(xEndIso).getTime();
+const xSpanMs = xEndMs - anchorMs || 1;
+
+function fracX(isoLike: string): number {
+  const m = new Date(isoLike).getTime();
+  return Math.max(0, Math.min(1, (m - anchorMs) / xSpanMs));
+}
+
+function parseTenor(tenor: string): { x: number; label: string } {
+  // Strip leading "by " prefix.
+  const m = tenor.replace(/^by\s+/i, '').trim();
+  const dt = new Date(m);
+  if (Number.isNaN(dt.getTime())) {
+    return { x: 0.5, label: tenor };
+  }
+  const x = Math.max(0, Math.min(1, (dt.getTime() - anchorMs) / xSpanMs));
+  const label = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}`;
+  return { x, label };
+}
+
+// Simple FNV-1a + small step hash to derive a deterministic seed per slug.
+function slugSeed(slug: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < slug.length; i++) {
+    h ^= slug.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0) / 4294967296;
+}
+
+function yForProb(p: number): number {
+  // Map [0,1] to plot Y (1 at top, 0 at bottom).
+  return padT + innerH * (1 - Math.max(0, Math.min(1, p)));
+}
+
+// X-axis ticks: every ~3 months from anchor to end.
+const tickDates: { x: number; label: string }[] = [];
+for (let m = 0; m <= 30; m += 3) {
+  const d = new Date(anchorMs + ((m * 30.4 * 24 * 3600) / 12) * 1000 * (m === 0 ? 0.01 : 1));
+  const ms = d.getTime();
+  if (ms > xEndMs) break;
+  const x = (ms - anchorMs) / xSpanMs;
+  tickDates.push({
+    x,
+    label: `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`,
+  });
+}
+
+// Y-axis ticks: 0, 25, 50, 75, 100 cents.
+const yTicks = [0, 0.25, 0.5, 0.75, 1].map((v) => ({ p: v, y: yForProb(v) }));
+
+// Category → palette color mapping (palette-locked tokens).
+const CATEGORY_COLOR: Record<string, string> = {
+  macro: 'var(--c-primary-2)',
+  crypto: 'var(--c-primary-2-light)',
+  rates: 'var(--c-accent-cyan)',
+  political: 'var(--c-primary-3)',
+  equity: 'var(--c-gold)',
+  volatility: 'var(--c-fail)',
+};
+
+interface Series {
+  id: string;
+  title: string;
+  category: string;
+  color: string;
+  points: { x: number; y: number; implied: number }[];
+  endpoint: { x: number; y: number; label: string; implied: number };
+  edgeLabel: string;
+}
+
+const series: Series[] = events.map((e) => {
+  const { x, label } = parseTenor(e.tenor);
+  // Seeded walk: build 24 points between t=0 (now) and t=tenor.
+  const seed = slugSeed(e.id);
+  const steps = 24;
+  const pts: { x: number; y: number; implied: number }[] = [];
+  // Anchor at impliedPx (today). End-anchor at clamp(impliedPx + edge, 0, 1)
+  // so the line visually terminates at the model-implied fair value.
+  const endImplied = Math.max(0.01, Math.min(0.99, e.impliedPx + e.edge));
+  // Walk with mean-reversion toward (endImplied), sigma 0.025.
+  let cur = e.impliedPx;
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    // Distance-weighted pull toward endImplied.
+    const pull = (endImplied - cur) * 0.18;
+    // Deterministic noise from a sinusoidal + seeded pseudo-random.
+    const phase = seed * Math.PI * 2;
+    const noise = Math.sin(phase + t * Math.PI * 6) * 0.018;
+    cur = Math.max(0.005, Math.min(0.995, cur + pull + noise));
+    pts.push({ x: x * t, y: yForProb(cur), implied: cur });
+  }
+  // Force last point exactly at the fair value for clean terminal anchor.
+  pts[pts.length - 1] = { x, y: yForProb(endImplied), implied: endImplied };
+  const edgeSign = e.edge >= 0 ? '+' : '−';
+  const edgeLabel = `${edgeSign}${Math.abs(e.edge * 100).toFixed(0)}¢`;
+  return {
+    id: e.id,
+    title: e.title,
+    category: e.category,
+    color: CATEGORY_COLOR[e.category] ?? 'var(--c-primary-2)',
+    points: pts,
+    endpoint: { x, y: yForProb(endImplied), label, implied: endImplied },
+    edgeLabel,
+  };
+});
+
+function linePath(pts: { x: number; y: number }[]): string {
+  return pts
+    .map((p, i) => {
+      const px = padL + p.x * innerW;
+      return `${i === 0 ? 'M' : 'L'} ${px.toFixed(2)} ${p.y.toFixed(2)}`;
+    })
+    .join(' ');
+}
+
+// Legend rows (one per series), rendered as anchor labels at right edge.
+---
+
+<figure class="prob-decay">
+  <figcaption class="prob-decay__head">
+    <span class="prob-decay__eyebrow mono">PROBABILITY DECAY · TENOR LADDER</span>
+    <span class="prob-decay__sub">8 events · implied → fair · seeded from build date</span>
+  </figcaption>
+
+  <svg
+    class="prob-decay__svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label="Probability decay across tenors for 8 binary event markets"
+  >
+    {/* Y grid + ticks (price in cents) */}
+    {
+      yTicks.map((t) => (
+        <g>
+          <line
+            x1={padL}
+            y1={t.y}
+            x2={padL + innerW}
+            y2={t.y}
+            class="prob-decay__grid"
+          />
+          <text
+            x={padL - 8}
+            y={t.y + 3}
+            class="prob-decay__tick mono"
+            text-anchor="end"
+          >
+            {(t.p * 100).toFixed(0)}¢
+          </text>
+        </g>
+      ))
+    }
+
+    {/* X axis line */}
+    <line
+      x1={padL}
+      y1={padT + innerH}
+      x2={padL + innerW}
+      y2={padT + innerH}
+      class="prob-decay__axis"
+    />
+
+    {/* X-axis date ticks */}
+    {
+      tickDates.map((t) => {
+        const px = padL + t.x * innerW;
+        return (
+          <g>
+            <line
+              x1={px}
+              y1={padT + innerH}
+              x2={px}
+              y2={padT + innerH + 4}
+              class="prob-decay__axis"
+            />
+            <text
+              x={px}
+              y={padT + innerH + 16}
+              class="prob-decay__tick mono"
+              text-anchor="middle"
+            >
+              {t.label}
+            </text>
+          </g>
+        );
+      })
+    }
+
+    {/* Series polylines */}
+    {
+      series.map((s) => (
+        <path
+          d={linePath(s.points)}
+          fill="none"
+          stroke={s.color}
+          stroke-width="1.4"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          opacity="0.85"
+        />
+      ))
+    }
+
+    {/* Terminal anchor markers (right-edge implied-fair dots) */}
+    {
+      series.map((s) => {
+        const px = padL + s.endpoint.x * innerW;
+        return (
+          <g>
+            <circle cx={px} cy={s.endpoint.y} r="3" fill={s.color} />
+            <line
+              x1={px}
+              y1={s.endpoint.y}
+              x2={px + 6}
+              y2={s.endpoint.y}
+              stroke={s.color}
+              stroke-width="1"
+              opacity="0.6"
+            />
+          </g>
+        );
+      })
+    }
+
+    {/* Legend strip on the right edge */}
+    {
+      series.map((s, i) => {
+        const ly = padT + 4 + i * 14;
+        return (
+          <g>
+            <rect
+              x={padL + innerW + 12}
+              y={ly - 5}
+              width="8"
+              height="8"
+              fill={s.color}
+              opacity="0.85"
+            />
+            <text
+              x={padL + innerW + 26}
+              y={ly + 1}
+              class="prob-decay__legend-text"
+            >
+              {s.title.length > 30 ? s.title.slice(0, 28) + '…' : s.title}
+            </text>
+          </g>
+        );
+      })
+    }
+  </svg>
+
+  <div class="prob-decay__table-wrap">
+    <table class="prob-decay__table">
+      <thead>
+        <tr>
+          <th class="mono">EVENT</th>
+          <th class="mono">CAT</th>
+          <th class="mono">IMPLIED</th>
+          <th class="mono">EDGE</th>
+          <th class="mono">TENOR</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          series.map((s) => (
+            <tr>
+              <td>
+                <span class="prob-decay__swatch" style={`background:${s.color}`} />
+                {s.title}
+              </td>
+              <td class="mono faint">{s.category}</td>
+              <td class="mono tnum">{(s.points[0].implied * 100).toFixed(0)}¢</td>
+              <td
+                class:list={['mono', 'tnum', s.edgeLabel.startsWith('+') ? 'edge--pos' : 'edge--neg']}
+              >
+                {s.edgeLabel}
+              </td>
+              <td class="mono faint">{s.endpoint.label}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</figure>
+
+<style>
+  .prob-decay {
+    margin: 0;
+    padding: var(--sp-5);
+    background: var(--c-tape-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+  }
+  .prob-decay__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+  }
+  .prob-decay__eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2);
+    text-transform: uppercase;
+  }
+  .prob-decay__sub {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    font-family: var(--ff-mono);
+    letter-spacing: 0.04em;
+  }
+  .prob-decay__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule-soft);
+    border-radius: var(--radius-sm);
+  }
+  .prob-decay__grid {
+    stroke: var(--c-rule-soft);
+    stroke-width: 1;
+    stroke-dasharray: 2, 3;
+  }
+  .prob-decay__axis {
+    stroke: var(--c-rule);
+    stroke-width: 1;
+  }
+  .prob-decay__tick {
+    font-size: 9px;
+    fill: var(--c-ink-2);
+  }
+  .prob-decay__legend-text {
+    font-size: 9.5px;
+    fill: var(--c-ink);
+    font-family: var(--ff-mono);
+  }
+  .prob-decay__table-wrap {
+    margin-top: var(--sp-4);
+    overflow-x: auto;
+  }
+  .prob-decay__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-xs);
+  }
+  .prob-decay__table th,
+  .prob-decay__table td {
+    padding: var(--sp-2) var(--sp-3);
+    border-bottom: 1px solid var(--c-rule-soft);
+    text-align: left;
+    white-space: nowrap;
+  }
+  .prob-decay__table th {
+    color: var(--c-ink-2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.68rem;
+  }
+  .prob-decay__swatch {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 0.5em;
+    border-radius: 1px;
+    vertical-align: middle;
+  }
+  .edge--pos {
+    color: var(--c-pass);
+    font-weight: 600;
+  }
+  .edge--neg {
+    color: var(--c-fail);
+    font-weight: 600;
+  }
+  .faint {
+    color: var(--c-ink-2);
+  }
+
+  @media (max-width: 720px) {
+    .prob-decay__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .prob-decay__legend-text {
+      font-size: 8px;
+    }
+  }
+</style>

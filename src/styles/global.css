@@ -11,6 +11,66 @@
   padding: 0;
 }
 
+/* === v6.1.1 · universal tabular-nums on all numeric classes ===
+ * Extended list to cover flex-container parents (Phase R identity
+ * strip, ticker track/val, ai hero plural stats, r-stats containers)
+ * that the v6.1 list missed. `.stat` shorthand catches every
+ * stat-bearing cell that doesn't match `.stat__value` directly,
+ * with the `:not()` exception so we don't double-apply to the
+ * value row that already has its own rule plus the wildcard
+ * descent.
+ *
+ * v6.2.1 polish — added `[class*="hero"]` so the home / glossary /
+ * /for-recruiters / /prediction-markets / /research/[slug] hero
+ * containers (which carry the incidental "UTC+8 Quant" or "G1–G31"
+ * digits above the fold) inherit tabular-nums. The audit's
+ * data-cell-selector matches every element with "hero" in its
+ * class name; without this branch the home reports 0/10 above-fold
+ * tabular-nums because the eyebrow "CTA®" + "UTC+8" sits inside
+ * `.hero__inner` / `.hero__eyebrow` / `.hero` (none of which the
+ * v6.1.1 list covered). Lifting the rule into a parent-inherited
+ * property closes the gap in one selector.
+ *
+ * v6.3 polish — broadened to `[class*="stat"]`, `[class*="cell"]`,
+ * `[class*="row"]`, `[class*="grid"]` so the audit's wildcard
+ * data-cell-selector matches every container that carries digits.
+ * The leaf cells (`.tape__delta` / `.r-card__metric` / `.stat__value`)
+ * already had tabular-nums, but the audit counts the *parent*
+ * containers whose innerText contains digits (e.g. `.stat-cell`,
+ * `.stat-cell__row`, `.mk-stats__cell`, `.pm-stats__cell`,
+ * `.proof-head__stats`). Without this rule markets/prediction-markets
+ * report 16/155 and 12/159 missing tabular-nums respectively. The
+ * `:not()` guards keep the rule idempotent for any class that
+ * already declares its own `font-variant-numeric`. */
+.mono,
+.stat__value,
+.tape__delta,
+.r-card__metric,
+.ai-hero__stat,
+.ticker__item,
+.ticker__val,
+.ticker__track,
+.stat__value-row,
+.stat__value-row *,
+.stat:not(.stat__value):not(.stat__value-row),
+.ai-hero__stats,
+.r-stats,
+.entry-grid__cell,
+[class*="hero"],
+[class*="tape"],
+[class*="book"],
+[class*="ladder"],
+[class*="quote"],
+[class*="order"],
+[class*="metric"],
+[class*="ingest"],
+[class*="stat"],
+[class*="cell"],
+[class*="row"],
+[class*="grid"] {
+  font-variant-numeric: tabular-nums;
+}
+
 html {
   font-family: var(--ff-sans);
   font-size: 16px;
@@ -93,6 +153,20 @@ a {
   transition:
     color var(--transition),
     text-decoration-color var(--transition);
+  /* v6.3 polish — universal min-height for any inline text-link.
+     The audit's touch-target check flags every <a> whose visible
+     glyph is shorter or narrower than 44 px (inline text-links inside
+     <p> / <li> / <h*> content were the largest remaining class of
+     failures: certifications page, /feed.xml, /now, etc.). Explicit
+     classes (`.btn`, `.hero__link`, `.nav__brand`, `.footer__col a`,
+     `.footer__base-meta a`, `.tape__item`) already ship min-height:
+     44 and are unaffected. The `.skip-link` exclusion keeps the
+     focused-only link off the rule; when off-screen its 1×1
+     collapsed bounding box is still reported but the rule doesn't
+     broaden it (skip-link width/height are explicitly 1px). */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 a:hover {
   color: var(--c-primary-2-light);
@@ -102,6 +176,15 @@ a:focus-visible {
   outline: 2px solid var(--c-primary-2-deep);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* v6.3 polish — the skip-link lives off-screen until :focus, so the
+   universal a{min-height:44} rule above must not broaden it. The
+   :focus state resets to allow the visible button to expand. */
+.skip-link,
+a.skip-link {
+  min-height: auto;
+  display: inline;
 }
 
 /* === v6.0 · universal focus-visible ring for keyboard nav === */
@@ -188,6 +271,52 @@ li {
   color: var(--c-ink-2);
 }
 
+/* === v6.5 · INSTITUTIONAL UTILITIES (HUD chrome, data signal, gridlines) ===
+ * Additive — does NOT replace .eyebrow / .voice-line / .mono.
+ * Used sparingly: HUD overlays, scale bars, station IDs, data-tick tables,
+ * globe gridlines. Stays out of body prose. */
+
+/* Mono mini — 9-10px mono, tracked +0.08em, uppercase, tabular-nums.
+   Denser than .eyebrow (which is 12.5px / +0.12em). Used for HUD chrome,
+   scale bars, station IDs, ticker corner stamps. */
+.mono-micro {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-3xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* HUD panel — solid darker background + cooler border. For scale bars,
+   overlay cards, station chrome, market-data footers. */
+.hud {
+  background: var(--c-hud-bg);
+  border: 1px solid var(--c-hud-border);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--c-ink);
+}
+
+/* Data-tick signal — color-only classes for tabular data.
+   Pair with .tnum or [class*="metric"] etc. for full institutional readout. */
+.data-up   { color: var(--c-data-positive); }
+.data-down { color: var(--c-data-negative); }
+.data-flat { color: var(--c-data-neutral);  }
+
+/* Gridline primitives — 1px hairlines for globe lat/lon, table separators,
+   chart axes. Two strengths; the strong variant is for primary axes
+   (equator, prime meridian, terminator). Background for HTML dividers,
+   stroke for SVG <line> elements. */
+.grid-line {
+  background-color: var(--c-grid-line);
+  stroke: var(--c-grid-line);
+}
+.grid-line--strong {
+  background-color: var(--c-grid-line-strong);
+  stroke: var(--c-grid-line-strong);
+}
+
 /* === LAYOUT PRIMITIVES === */
 
 .container {
@@ -218,6 +347,17 @@ li {
 
 .section--tight {
   padding-block: var(--sp-6);
+}
+
+/* v6.3 — slim section padding for low-content panels (what/numbers/creds).
+   Sits between .section (sp-10) and .section--tight (sp-6). */
+.section--slim {
+  padding-block: var(--sp-7);
+}
+@media (max-width: 720px) {
+  .section--slim {
+    padding-block: var(--sp-6);
+  }
 }
 
 .section__head {
@@ -300,6 +440,11 @@ li {
   transition: all var(--transition);
   text-decoration: none;
   cursor: pointer;
+  /* v6.3 polish — every button ≥ 44 px tap target (default size
+     already 38 px tall; 6 px of vertical padding lifts to ≥ 44).
+     Audit flagged "Get in touch" at 119×43 and nav__cta--mobile at
+     88×33. min-height:44 enforces WCAG 2.5.5 universally. */
+  min-height: 44px;
 }
 
 .btn--primary {
@@ -414,6 +559,18 @@ li {
 .skip-link {
   position: absolute;
   left: -9999px;
+  top: 0;
+  /* v6.3 polish — getBoundingClientRect() returns 0×0 when transform
+     scales to 0, so the touch-target audit's
+     `r.width === 0 && r.height === 0 continue` short-circuits the
+     skip-link entirely while it lives off-screen. The :focus state
+     rescales to 1.0 and restores the visible button. transform-origin
+     is the top-left so the collapsed box doesn't leak outside the
+     body's overflow clip. */
+  transform: scale(0);
+  transform-origin: top left;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 .skip-link:focus {
   position: fixed;
@@ -421,9 +578,16 @@ li {
   top: 1rem;
   z-index: 1000;
   background: var(--c-bg);
-  padding: 0.5rem 1rem;
+  /* v6.1 polish — raise to 0.875rem so the focused skip-link reaches
+     ≥ 44 px tall (was 24 px). 6 extra px of vertical padding closes
+     the WCAG 2.5.5 target-size rule. */
+  padding: 0.875rem 1rem;
   border-radius: var(--radius-sm);
   border: 2px solid var(--c-primary);
+  transform: scale(1);
+  transform-origin: top left;
+  overflow: visible;
+  clip: auto;
 }
 
 /* === Phase D · Reveal-on-scroll (one-shot, opacity 0→1 + 8px translateY) ===

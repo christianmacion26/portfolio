@@ -101,7 +101,7 @@ const deployedStamp = buildStampUtc8();
           <a href={path('/humans.md')}>humans.md</a> · AI-agent identity document
         </small>
         <small class="mono">
-          portfolio.os · v6.0.12 · last deployed {deployedStamp} · built
+          portfolio.os · v6.1.0 · last deployed {deployedStamp} · built
           with Astro
         </small>
       </div>
@@ -190,6 +190,16 @@ const deployedStamp = buildStampUtc8();
   }
   .footer__col a {
     color: rgba(230, 237, 243, 0.7);
+    /* v6.3 polish — every footer link gets ≥ 44×44 tap target.
+       The audit flagged column links at 33-141×17-20 px on mobile
+       (Proof, Skills, Uses, About, humans.md). min-height:44 +
+       inline-flex + padding-inline:1rem lifts the click rect to
+       WCAG 2.5.5 ≥ 44×44 without affecting the visible row rhythm
+       (the parent column gap already provides visual breathing). */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.25rem 0.75rem;
   }
   .footer__col a:hover {
     color: #3fb950;
@@ -221,6 +231,13 @@ const deployedStamp = buildStampUtc8();
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-color: rgba(212, 160, 23, 0.4);
+    /* v6.3 polish — humans.md link was 67×17 on mobile. Same
+       min-height:44 + inline-flex treatment as the column links
+       above so the audit clears every footer <a> on the page. */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.25rem 0.5rem;
   }
   .footer__base-meta a:hover {
     color: var(--c-primary-2-deep);

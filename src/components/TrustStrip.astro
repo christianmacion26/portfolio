@@ -147,6 +147,14 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
     background: var(--c-bg);
     color: var(--c-ink);
     text-decoration: none;
+    /* v6.3 polish — audit flagged 4 pills at 176-208×30 px on mobile
+       ("tested numerical-eval", "reproducible public repos",
+       "NDA-clean by construction", "RSS /feed.xml"). The visible
+       pill is fine but the touch rect was only 30 px tall;
+       min-height:44 lifts the rect without enlarging the visible
+       capsule (the border + padding absorb the extra 14 px inside
+       the hit area). */
+    min-height: 44px;
     transition:
       border-color var(--transition),
       background var(--transition),

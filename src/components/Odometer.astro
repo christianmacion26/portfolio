@@ -1,0 +1,74 @@
+---
+/**
+ * Odometer.astro — v6.2 (Mission T, part 1)
+ * Kinetic counter that animates 0 → value on first viewport entry.
+ *
+ * Driver lives in `src/scripts/odometer.ts` (already loaded by BaseLayout);
+ * this component just renders the markup with the `data-counter` attribute
+ * the driver reads.
+ *
+ * Props:
+ *   value       — numeric target the odometer animates to
+ *   label       — caption beneath the value (optional)
+ *   duration    — override of driver default (1200ms). Pass as data-duration.
+ *   format      — optional formatter; if omitted the raw `value` is shown.
+ *
+ * Usage:
+ *   <Odometer value={31} label="eval gates, G1–G31" />
+ *   <Odometer value={1200} duration={1800} label="lines of harness code" />
+ *
+ * NDA-positive: just renders a number and a label — no platform references.
+ * Reduced-motion: driver side snaps to final value, no animation.
+ */
+interface Props {
+  value: number;
+  label?: string;
+  duration?: number;
+  format?: (n: number) => string;
+  /** Optional class hooks for layout position. */
+  class?: string;
+}
+const { value, label, duration, format, class: className } = Astro.props;
+// Coerce to a clean numeric string for both display and driver.
+// If a formatter was passed, use it for the rendered text but pass the raw
+// number to the driver so `parseFloat` reads it cleanly.
+const rawStr = String(value);
+const displayStr = format ? format(value) : rawStr;
+// `data-counter` accepts numeric strings (driver does Number.parseFloat on
+// the dataset value). Carry `data-duration` only if the caller overrode it.
+const counterAttr = Number.isFinite(value) ? rawStr : null;
+const dataDuration = typeof duration === 'number' ? String(duration) : undefined;
+---
+<div class:list={['odometer', className]}>
+  <span
+    class="odometer__value mono tnum"
+    data-counter={counterAttr}
+    data-duration={dataDuration}
+  >{displayStr}</span>
+  {label && <span class="odometer__label">{label}</span>}
+</div>
+
+<style>
+  .odometer {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+  .odometer__value {
+    font-size: clamp(1.85rem, 4vw, 2.4rem);
+    font-weight: 600;
+    color: var(--c-primary-2);
+    line-height: 1;
+    letter-spacing: -0.018em;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: var(--tnum);
+  }
+  .odometer__label {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+</style>

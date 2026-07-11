@@ -19,20 +19,35 @@ interface Props {
   items: NavItem[];
   mode?: 'dropdown' | 'inline';
   class?: string;
+  /** Top-level summary label (default "Resources"). v6.1 — Markets uses a custom label. */
+  label?: string;
+  /** Show the label as a heading in inline/mobile mode. Default true. */
+  showLabelInline?: boolean;
 }
-const { items, mode = 'dropdown', class: className = '' } = Astro.props;
+const {
+  items,
+  mode = 'dropdown',
+  class: className = '',
+  label = 'Resources',
+  showLabelInline = true,
+} = Astro.props;
 const pathname = Astro.url.pathname;
 const isActive = (href: string) => {
   const suffix = href === '/' ? '/' : href;
   return pathname === suffix || pathname.startsWith(suffix + '/');
 };
+// v6.1.0 — true when ANY child href matches the current path. The parent
+// CSS uses [data-active] to highlight the dropdown summary so the user
+// sees which top-level group they're inside (e.g., /markets lights up
+// the "Markets" dropdown label, not the "Resources" dropdown).
+const groupActive = items.some((it) => isActive(it.href));
 ---
 
 {
   mode === 'dropdown' ? (
-    <details class:list={['nav-more', className]}>
-      <summary class="nav-more__summary" aria-label="More navigation links">
-        <span>Resources</span>
+    <details class:list={['nav-more', className]} data-active={groupActive ? 'true' : undefined}>
+      <summary class="nav-more__summary" aria-label={`${label} navigation links`}>
+        <span>{label}</span>
         <svg
           class="nav-more__chev"
           width="10"
@@ -63,18 +78,23 @@ const isActive = (href: string) => {
       </ul>
     </details>
   ) : (
-    <ul class:list={['nav-more__flat', className]} role="list">
-      {items.map(({ href, label }) => (
-        <li>
-          <a
-            href={href}
-            class:list={['nav-more__link', { 'nav-more__link--active': isActive(href) }]}
-          >
-            {label}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div class:list={['nav-more__flat', className]} role="group" aria-label={label}>
+      {showLabelInline && (
+        <div class="nav-more__flat-head mono">{label}</div>
+      )}
+      <ul role="list">
+        {items.map(({ href, label }) => (
+          <li>
+            <a
+              href={href}
+              class:list={['nav-more__link', { 'nav-more__link--active': isActive(href) }]}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
@@ -163,6 +183,13 @@ const isActive = (href: string) => {
 
   /* === MOBILE: flatten into the burger stack === */
   .nav-more__flat {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-more__flat ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -172,6 +199,17 @@ const isActive = (href: string) => {
   }
   .nav-more__flat li {
     margin: 0;
+  }
+  /* v6.1.0 — group heading for inline mode (used by Markets on mobile) */
+  .nav-more__flat-head {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 700;
+    padding: 0.5rem 0 0.4rem;
+    margin-top: 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
   .nav-more__flat .nav-more__link {
     padding: 0.625rem 0;

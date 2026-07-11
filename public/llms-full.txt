@@ -17,98 +17,1181 @@ Source: `/index/`
 
 [Skip to content](#main)
 
+Q3 2026 · OPEN TO REMOTE QR / AI ROLES
+
 Christian T. Macion, CTA®·Open to remote roles · UTC+8
 
 # Quantitative researcher. AI engineer. One eval harness.
 
 I build research systems, and I ship the evals that prove they work.
+SHARPE1.84+0.03DRAWDOWN−4.6%STABLECOVERAGE12INSTRUMENTSSAMPLES1.2MOBSCAPITAL6.5MUSD
 
-Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk/wk·remote-first, async-friendly
-[Get in touch →](/contact)[Selected work](/projects)[Methodology (G1–G31)](/methodology)[Resume ↓](/resume) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026DSRBailey & López de Prado (2014)·OOSlocked windows✓PBOCSCV-based·SHARPEdeflated — not raw·GATESG1–G31 mechanical✓NDAclean — public data only✓PROJ9 quant projects✓CTATier-1 STA✓PITpoint-in-time enforced✓UTC+8 PHT·DSRBailey & López de Prado (2014)·OOSlocked windows✓PBOCSCV-based·SHARPEdeflated — not raw·GATESG1–G31 mechanical✓NDAclean — public data only✓PROJ9 quant projects✓CTATier-1 STA✓PITpoint-in-time enforced✓UTC+8 PHT·
+Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk·remote-first, async-friendly
+[Get in touch →](/contact)[Selected work](/projects)[Methodology (G1–G31)](/methodology)[Resume ↓](/resume) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026YIELD 2s10s-17.47 BP·DXY101.89·VIX21.04·BRENT86.28AS OF 10:18 UTC+8Research coverageResearch coverage · 6-axis radarBACKTESTSIGNALSRISKEXECEVALAGENTSProject velocity · last 24 weeksHRRWPWPMPPPWWRWRRFRRMMRW
+
+World wire — 4 channels, 80 fixtures
+
+Build-stamp seeded. Four lanes scroll in parallel, one headline per channel every 8 seconds. NDA-clean by construction.
+01MARKETS14:32:00MARKETS
+
+S&P 500 closes +1.4% on cooling inflation print
+14:30:32MARKETS
+
+30-year Treasury yield slips 6bp on dovish Fed minutes
+14:29:04MARKETS
+
+Russell 2000 leads small-cap rotation; breadth +0.8 sigma
+14:27:36MARKETS
+
+Brent crude settles +2.1% on supply-discipline headline
+14:26:08MARKETS
+
+VIX term structure in mild contango; front-month at 14.2
+14:24:40MARKETS
+
+Copper-to-gold ratio extends 3-day rally; cyclical bid
+14:23:12MARKETS
+
+DXY softens on softer services PMI print
+14:21:44MARKETS
+
+Gold settles near cycle high on real-yield compression
+14:20:16MARKETS
+
+IG credit spreads tighten 4bp; CDX-IG at 52bps
+14:18:48MARKETS
+
+10Y TIPS breakeven lifts to 2.42% on hotter core PCE
+14:17:20MARKETS
+
+Nikkei +2.3% on weak yen; TOPIX at 32-year high
+14:15:52MARKETS
+
+DAX breaks out of 6-month range; Bund yields steady
+14:14:24MARKETS
+
+EM FX carry basket widens; BRL outperforms
+14:12:56MARKETS
+
+WTI curve flattens on prompt-month tightness
+14:11:28MARKETS
+
+HY index OAS compresses 8bp; CCC down 27bp
+14:10:00MARKETS
+
+Yen rallies as policy board signals taper continuity
+14:08:32MARKETS
+
+Baltic Dry index posts third weekly gain
+14:07:04MARKETS
+
+EUR/USD technical breakout above 1.0940 resistance
+14:05:36MARKETS
+
+Silver-to-gold ratio at 11-year low; deficit flagged
+14:04:08MARKETS
+
+US 2s10s curve steepens 5bp; bull-steepener extends
+14:32:00MARKETS
+
+S&P 500 closes +1.4% on cooling inflation print
+14:30:32MARKETS
+
+30-year Treasury yield slips 6bp on dovish Fed minutes
+14:29:04MARKETS
+
+Russell 2000 leads small-cap rotation; breadth +0.8 sigma
+14:27:36MARKETS
+
+Brent crude settles +2.1% on supply-discipline headline
+14:26:08MARKETS
+
+VIX term structure in mild contango; front-month at 14.2
+14:24:40MARKETS
+
+Copper-to-gold ratio extends 3-day rally; cyclical bid
+14:23:12MARKETS
+
+DXY softens on softer services PMI print
+14:21:44MARKETS
+
+Gold settles near cycle high on real-yield compression
+14:20:16MARKETS
+
+IG credit spreads tighten 4bp; CDX-IG at 52bps
+14:18:48MARKETS
+
+10Y TIPS breakeven lifts to 2.42% on hotter core PCE
+14:17:20MARKETS
+
+Nikkei +2.3% on weak yen; TOPIX at 32-year high
+14:15:52MARKETS
+
+DAX breaks out of 6-month range; Bund yields steady
+14:14:24MARKETS
+
+EM FX carry basket widens; BRL outperforms
+14:12:56MARKETS
+
+WTI curve flattens on prompt-month tightness
+14:11:28MARKETS
+
+HY index OAS compresses 8bp; CCC down 27bp
+14:10:00MARKETS
+
+Yen rallies as policy board signals taper continuity
+14:08:32MARKETS
+
+Baltic Dry index posts third weekly gain
+14:07:04MARKETS
+
+EUR/USD technical breakout above 1.0940 resistance
+14:05:36MARKETS
+
+Silver-to-gold ratio at 11-year low; deficit flagged
+14:04:08MARKETS
+
+US 2s10s curve steepens 5bp; bull-steepener extends
+14:32:00MARKETS
+
+S&P 500 closes +1.4% on cooling inflation print
+14:30:32MARKETS
+
+30-year Treasury yield slips 6bp on dovish Fed minutes
+14:29:04MARKETS
+
+Russell 2000 leads small-cap rotation; breadth +0.8 sigma
+14:27:36MARKETS
+
+Brent crude settles +2.1% on supply-discipline headline
+14:26:08MARKETS
+
+VIX term structure in mild contango; front-month at 14.2
+14:24:40MARKETS
+
+Copper-to-gold ratio extends 3-day rally; cyclical bid
+14:23:12MARKETS
+
+DXY softens on softer services PMI print
+14:21:44MARKETS
+
+Gold settles near cycle high on real-yield compression
+14:20:16MARKETS
+
+IG credit spreads tighten 4bp; CDX-IG at 52bps
+14:18:48MARKETS
+
+10Y TIPS breakeven lifts to 2.42% on hotter core PCE
+14:17:20MARKETS
+
+Nikkei +2.3% on weak yen; TOPIX at 32-year high
+14:15:52MARKETS
+
+DAX breaks out of 6-month range; Bund yields steady
+14:14:24MARKETS
+
+EM FX carry basket widens; BRL outperforms
+14:12:56MARKETS
+
+WTI curve flattens on prompt-month tightness
+14:11:28MARKETS
+
+HY index OAS compresses 8bp; CCC down 27bp
+14:10:00MARKETS
+
+Yen rallies as policy board signals taper continuity
+14:08:32MARKETS
+
+Baltic Dry index posts third weekly gain
+14:07:04MARKETS
+
+EUR/USD technical breakout above 1.0940 resistance
+14:05:36MARKETS
+
+Silver-to-gold ratio at 11-year low; deficit flagged
+14:04:08MARKETS
+
+US 2s10s curve steepens 5bp; bull-steepener extends
+02POLICY14:32:00POLICY
+
+Policy-board minutes signal patient stance; 25-bp path narrows
+14:30:32POLICY
+
+ECB minutes reveal divided council on September cut
+14:29:04POLICY
+
+BoJ reaffirms yield-band guidance; JGB order-book quiet
+14:27:36POLICY
+
+Headline CPI prints 2.0% YoY; in line with consensus
+14:26:08POLICY
+
+Daily fix at 7.18; steady against USD basket
+14:24:40POLICY
+
+Voting minutes scheduled for Wednesday 14:00 local
+14:23:12POLICY
+
+Council member: data-dependent, not calendar-driven
+14:21:44POLICY
+
+ETF-purchase guidance review scheduled for October meeting
+14:20:16POLICY
+
+Minutes: services inflation still sticky into Q3
+14:18:48POLICY
+
+Statement cites weak productivity; rate held
+14:17:20POLICY
+
+Balance-sheet runoff pace to continue at $60bn / month
+14:15:52POLICY
+
+Repo facility usage falls to 12-month low
+14:14:24POLICY
+
+Supervisory letter to pensions on LDI leverage thresholds
+14:12:56POLICY
+
+MLF rollover at unchanged 2.30% policy rate
+14:11:28POLICY
+
+Regional president speech: policy now well-calibrated
+14:10:00POLICY
+
+Policy rate held; trade-weighted FX firming
+14:08:32POLICY
+
+Minutes: more transmission evidence needed before next move
+14:07:04POLICY
+
+Budget committee testimony scheduled for next month
+14:05:36POLICY
+
+Working paper published on fiscal-monetary interaction
+14:04:08POLICY
+
+Quarterly refunding plan announced; coupon mix steady
+14:32:00POLICY
+
+Policy-board minutes signal patient stance; 25-bp path narrows
+14:30:32POLICY
+
+ECB minutes reveal divided council on September cut
+14:29:04POLICY
+
+BoJ reaffirms yield-band guidance; JGB order-book quiet
+14:27:36POLICY
+
+Headline CPI prints 2.0% YoY; in line with consensus
+14:26:08POLICY
+
+Daily fix at 7.18; steady against USD basket
+14:24:40POLICY
+
+Voting minutes scheduled for Wednesday 14:00 local
+14:23:12POLICY
+
+Council member: data-dependent, not calendar-driven
+14:21:44POLICY
+
+ETF-purchase guidance review scheduled for October meeting
+14:20:16POLICY
+
+Minutes: services inflation still sticky into Q3
+14:18:48POLICY
+
+Statement cites weak productivity; rate held
+14:17:20POLICY
+
+Balance-sheet runoff pace to continue at $60bn / month
+14:15:52POLICY
+
+Repo facility usage falls to 12-month low
+14:14:24POLICY
+
+Supervisory letter to pensions on LDI leverage thresholds
+14:12:56POLICY
+
+MLF rollover at unchanged 2.30% policy rate
+14:11:28POLICY
+
+Regional president speech: policy now well-calibrated
+14:10:00POLICY
+
+Policy rate held; trade-weighted FX firming
+14:08:32POLICY
+
+Minutes: more transmission evidence needed before next move
+14:07:04POLICY
+
+Budget committee testimony scheduled for next month
+14:05:36POLICY
+
+Working paper published on fiscal-monetary interaction
+14:04:08POLICY
+
+Quarterly refunding plan announced; coupon mix steady
+14:32:00POLICY
+
+Policy-board minutes signal patient stance; 25-bp path narrows
+14:30:32POLICY
+
+ECB minutes reveal divided council on September cut
+14:29:04POLICY
+
+BoJ reaffirms yield-band guidance; JGB order-book quiet
+14:27:36POLICY
+
+Headline CPI prints 2.0% YoY; in line with consensus
+14:26:08POLICY
+
+Daily fix at 7.18; steady against USD basket
+14:24:40POLICY
+
+Voting minutes scheduled for Wednesday 14:00 local
+14:23:12POLICY
+
+Council member: data-dependent, not calendar-driven
+14:21:44POLICY
+
+ETF-purchase guidance review scheduled for October meeting
+14:20:16POLICY
+
+Minutes: services inflation still sticky into Q3
+14:18:48POLICY
+
+Statement cites weak productivity; rate held
+14:17:20POLICY
+
+Balance-sheet runoff pace to continue at $60bn / month
+14:15:52POLICY
+
+Repo facility usage falls to 12-month low
+14:14:24POLICY
+
+Supervisory letter to pensions on LDI leverage thresholds
+14:12:56POLICY
+
+MLF rollover at unchanged 2.30% policy rate
+14:11:28POLICY
+
+Regional president speech: policy now well-calibrated
+14:10:00POLICY
+
+Policy rate held; trade-weighted FX firming
+14:08:32POLICY
+
+Minutes: more transmission evidence needed before next move
+14:07:04POLICY
+
+Budget committee testimony scheduled for next month
+14:05:36POLICY
+
+Working paper published on fiscal-monetary interaction
+14:04:08POLICY
+
+Quarterly refunding plan announced; coupon mix steady
+03QUANT14:32:00QUANT
+
+Deflated-Sharpe discipline cuts false-positive rate 60% in walk-forward
+14:30:32QUANT
+
+PBO of cross-sectional momentum at 42%; selection bias dominates
+14:29:04QUANT
+
+PSR vs DSR gap of 0.18 alerts to multiple-testing risk
+14:27:36QUANT
+
+Combinatorially-purged CV PBO at 38%; statistically marginal
+14:26:08QUANT
+
+Out-of-sample Sharpe degrades 0.42 to 0.18 across frozen-spec windows
+14:24:40QUANT
+
+Block-bootstrap on 1440-bar blocks passes serial-dependence test
+14:23:12QUANT
+
+Variance-risk-premium harvest: vol-targeted Sharpe 1.62
+14:21:44QUANT
+
+Cointegration half-life estimate 32 days; mean-reversion quality good
+14:20:16QUANT
+
+Funding-carry basis annualized 8.4%; vol-adjusted 5.1%
+14:18:48QUANT
+
+Lookahead audit flags 2 of 9 strategies; both repaired
+14:17:20QUANT
+
+Regime overlay adds 220bps of risk-adj alpha; turnover 1.4x
+14:15:52QUANT
+
+Cross-sectional vs time-series momentum blend to lowest drawdown
+14:14:24QUANT
+
+Frozen-spec walk-forward: 9 strategies survive in-sample to out-of-sample
+14:12:56QUANT
+
+PIT enforcement yields 4 fewer fills and 12 fewer survivors
+14:11:28QUANT
+
+Cost-adjusted backtest adds 3.2bps round-trip drag assumption
+14:10:00QUANT
+
+HV-RV spread at 4-sigma; variance risk premium compressed
+14:08:32QUANT
+
+PSR-based hypothesis count: 31 trials; DSR haircut applied
+14:07:04QUANT
+
+Survivorship-bias adjustment lowers total return by 380bps
+14:05:36QUANT
+
+Cash-futures basis annualized; ladder to 5 tenors, all positive
+14:04:08QUANT
+
+Regime classifier AUC 0.71 on out-of-sample macro prints
+14:32:00QUANT
+
+Deflated-Sharpe discipline cuts false-positive rate 60% in walk-forward
+14:30:32QUANT
+
+PBO of cross-sectional momentum at 42%; selection bias dominates
+14:29:04QUANT
+
+PSR vs DSR gap of 0.18 alerts to multiple-testing risk
+14:27:36QUANT
+
+Combinatorially-purged CV PBO at 38%; statistically marginal
+14:26:08QUANT
+
+Out-of-sample Sharpe degrades 0.42 to 0.18 across frozen-spec windows
+14:24:40QUANT
+
+Block-bootstrap on 1440-bar blocks passes serial-dependence test
+14:23:12QUANT
+
+Variance-risk-premium harvest: vol-targeted Sharpe 1.62
+14:21:44QUANT
+
+Cointegration half-life estimate 32 days; mean-reversion quality good
+14:20:16QUANT
+
+Funding-carry basis annualized 8.4%; vol-adjusted 5.1%
+14:18:48QUANT
+
+Lookahead audit flags 2 of 9 strategies; both repaired
+14:17:20QUANT
+
+Regime overlay adds 220bps of risk-adj alpha; turnover 1.4x
+14:15:52QUANT
+
+Cross-sectional vs time-series momentum blend to lowest drawdown
+14:14:24QUANT
+
+Frozen-spec walk-forward: 9 strategies survive in-sample to out-of-sample
+14:12:56QUANT
+
+PIT enforcement yields 4 fewer fills and 12 fewer survivors
+14:11:28QUANT
+
+Cost-adjusted backtest adds 3.2bps round-trip drag assumption
+14:10:00QUANT
+
+HV-RV spread at 4-sigma; variance risk premium compressed
+14:08:32QUANT
+
+PSR-based hypothesis count: 31 trials; DSR haircut applied
+14:07:04QUANT
+
+Survivorship-bias adjustment lowers total return by 380bps
+14:05:36QUANT
+
+Cash-futures basis annualized; ladder to 5 tenors, all positive
+14:04:08QUANT
+
+Regime classifier AUC 0.71 on out-of-sample macro prints
+14:32:00QUANT
+
+Deflated-Sharpe discipline cuts false-positive rate 60% in walk-forward
+14:30:32QUANT
+
+PBO of cross-sectional momentum at 42%; selection bias dominates
+14:29:04QUANT
+
+PSR vs DSR gap of 0.18 alerts to multiple-testing risk
+14:27:36QUANT
+
+Combinatorially-purged CV PBO at 38%; statistically marginal
+14:26:08QUANT
+
+Out-of-sample Sharpe degrades 0.42 to 0.18 across frozen-spec windows
+14:24:40QUANT
+
+Block-bootstrap on 1440-bar blocks passes serial-dependence test
+14:23:12QUANT
+
+Variance-risk-premium harvest: vol-targeted Sharpe 1.62
+14:21:44QUANT
+
+Cointegration half-life estimate 32 days; mean-reversion quality good
+14:20:16QUANT
+
+Funding-carry basis annualized 8.4%; vol-adjusted 5.1%
+14:18:48QUANT
+
+Lookahead audit flags 2 of 9 strategies; both repaired
+14:17:20QUANT
+
+Regime overlay adds 220bps of risk-adj alpha; turnover 1.4x
+14:15:52QUANT
+
+Cross-sectional vs time-series momentum blend to lowest drawdown
+14:14:24QUANT
+
+Frozen-spec walk-forward: 9 strategies survive in-sample to out-of-sample
+14:12:56QUANT
+
+PIT enforcement yields 4 fewer fills and 12 fewer survivors
+14:11:28QUANT
+
+Cost-adjusted backtest adds 3.2bps round-trip drag assumption
+14:10:00QUANT
+
+HV-RV spread at 4-sigma; variance risk premium compressed
+14:08:32QUANT
+
+PSR-based hypothesis count: 31 trials; DSR haircut applied
+14:07:04QUANT
+
+Survivorship-bias adjustment lowers total return by 380bps
+14:05:36QUANT
+
+Cash-futures basis annualized; ladder to 5 tenors, all positive
+14:04:08QUANT
+
+Regime classifier AUC 0.71 on out-of-sample macro prints
+04AI14:32:00AI
+
+31-gate eval harness catches regression in MCP round-trip parity
+14:30:32AI
+
+Agent roster revision: 11 nodes; orchestrator plus 4 inputs plus 3 middle plus 3 outputs
+14:29:04AI
+
+RAG recall@10 lifted 4pp via query-rewrite plus hybrid retrieval
+14:27:36AI
+
+Structured-output JSON-schema validation: 100% pass across 200 traces
+14:26:08AI
+
+MCP tool-call failure rate 0.8% over 1200 sample sessions
+14:24:40AI
+
+Eval harness gates G1 to G31 mechanical; no manual override
+14:23:12AI
+
+LLM judge scoring: 88% agreement with rubric-graded holdout
+14:21:44AI
+
+Prompt-injection probe: 9 attack variants; all refused by charter
+14:20:16AI
+
+Token-budget per trace: median 4.1k; p95 7.8k
+14:18:48AI
+
+Refusal quality score: 0.97 against policy v3.0 holdout
+14:17:20AI
+
+Tool-call latency p50 220ms p95 480ms over MCP stdio transport
+14:15:52AI
+
+Agent-system bootstrapped in 4.1s; deterministic per BUILD_DATE
+14:14:24AI
+
+Embedding model swap: recall parity plus or minus 2pp at iso-cost
+14:12:56AI
+
+Reranker on long context: NDCG@10 plus 3.4pp over base retriever
+14:11:28AI
+
+Hallucination probe: factual recall 96% on 1000 closed-domain questions
+14:10:00AI
+
+Agent-fleet harness regression suite: 12 of 31 gates auto-triggered
+14:08:32AI
+
+Eval traceability: every gate cross-links to source artifact
+14:07:04AI
+
+JSON-schema coverage: 41 contracts; lint pass at 100%
+14:05:36AI
+
+MCP server health-check: 0 missed heartbeats over 7-day window
+14:04:08AI
+
+Eval-driven prompt iteration: 6 prompts to 4 wins, 2 holds
+14:32:00AI
+
+31-gate eval harness catches regression in MCP round-trip parity
+14:30:32AI
+
+Agent roster revision: 11 nodes; orchestrator plus 4 inputs plus 3 middle plus 3 outputs
+14:29:04AI
+
+RAG recall@10 lifted 4pp via query-rewrite plus hybrid retrieval
+14:27:36AI
+
+Structured-output JSON-schema validation: 100% pass across 200 traces
+14:26:08AI
+
+MCP tool-call failure rate 0.8% over 1200 sample sessions
+14:24:40AI
+
+Eval harness gates G1 to G31 mechanical; no manual override
+14:23:12AI
+
+LLM judge scoring: 88% agreement with rubric-graded holdout
+14:21:44AI
+
+Prompt-injection probe: 9 attack variants; all refused by charter
+14:20:16AI
+
+Token-budget per trace: median 4.1k; p95 7.8k
+14:18:48AI
+
+Refusal quality score: 0.97 against policy v3.0 holdout
+14:17:20AI
+
+Tool-call latency p50 220ms p95 480ms over MCP stdio transport
+14:15:52AI
+
+Agent-system bootstrapped in 4.1s; deterministic per BUILD_DATE
+14:14:24AI
+
+Embedding model swap: recall parity plus or minus 2pp at iso-cost
+14:12:56AI
+
+Reranker on long context: NDCG@10 plus 3.4pp over base retriever
+14:11:28AI
+
+Hallucination probe: factual recall 96% on 1000 closed-domain questions
+14:10:00AI
+
+Agent-fleet harness regression suite: 12 of 31 gates auto-triggered
+14:08:32AI
+
+Eval traceability: every gate cross-links to source artifact
+14:07:04AI
+
+JSON-schema coverage: 41 contracts; lint pass at 100%
+14:05:36AI
+
+MCP server health-check: 0 missed heartbeats over 7-day window
+14:04:08AI
+
+Eval-driven prompt iteration: 6 prompts to 4 wins, 2 holds
+14:32:00AI
+
+31-gate eval harness catches regression in MCP round-trip parity
+14:30:32AI
+
+Agent roster revision: 11 nodes; orchestrator plus 4 inputs plus 3 middle plus 3 outputs
+14:29:04AI
+
+RAG recall@10 lifted 4pp via query-rewrite plus hybrid retrieval
+14:27:36AI
+
+Structured-output JSON-schema validation: 100% pass across 200 traces
+14:26:08AI
+
+MCP tool-call failure rate 0.8% over 1200 sample sessions
+14:24:40AI
+
+Eval harness gates G1 to G31 mechanical; no manual override
+14:23:12AI
+
+LLM judge scoring: 88% agreement with rubric-graded holdout
+14:21:44AI
+
+Prompt-injection probe: 9 attack variants; all refused by charter
+14:20:16AI
+
+Token-budget per trace: median 4.1k; p95 7.8k
+14:18:48AI
+
+Refusal quality score: 0.97 against policy v3.0 holdout
+14:17:20AI
+
+Tool-call latency p50 220ms p95 480ms over MCP stdio transport
+14:15:52AI
+
+Agent-system bootstrapped in 4.1s; deterministic per BUILD_DATE
+14:14:24AI
+
+Embedding model swap: recall parity plus or minus 2pp at iso-cost
+14:12:56AI
+
+Reranker on long context: NDCG@10 plus 3.4pp over base retriever
+14:11:28AI
+
+Hallucination probe: factual recall 96% on 1000 closed-domain questions
+14:10:00AI
+
+Agent-fleet harness regression suite: 12 of 31 gates auto-triggered
+14:08:32AI
+
+Eval traceability: every gate cross-links to source artifact
+14:07:04AI
+
+JSON-schema coverage: 41 contracts; lint pass at 100%
+14:05:36AI
+
+MCP server health-check: 0 missed heartbeats over 7-day window
+14:04:08AI
+
+Eval-driven prompt iteration: 6 prompts to 4 wins, 2 holds
+
+---
+
+↓SECTION 03 OF 17 · ENTRY STATIONS
+
+Entry points · stations grid
+
+## Four pages, four measured disciplines.
+
+[Station 01 · Markets
+
+### Where is rate-of-change concentrated?
++1.09 bp
+
+2s10s spread · UST
+
+DXY106.1
+
+VIX14.3
+
+BRENT80.8
+
+OPEN+0.0315:55 UTC+8[ UST ][ spread ]](/markets/)
+
+[Station 02 · Prediction
+
+### What does the market price next?
+0.62
+
+median implied probability
+
+events7
+
+edge ±0.30
+
+tenor2027-Q4
+
+LIVE+0.0020:37 UTC+8[ odds ][ edge ]](/prediction-markets/)
+
+[Station 03 · Research
+
+### Which strategies pass the gates?
+9
+
+strategies · G1–G31
+
+gates31
+
+categories4
+
+pass77%
+
+OPEN-0.0705:00 UTC+8[ ideas ][ G1-31 ]](/research/)
+
+[Station 04 · AI
+
+### How do evals ship?
+95%
+
+eval pass rate · 31 gates
+
+models12
+
+datasets7
+
+harnesses3
+
+OPEN-0.0319:50 UTC+8[ models ][ evals ]](/methodology/)
+
+Entry points
+
+## What would you like to see first?
+
+[READ METHOD31 GATES](/methodology/)
+
+[FIND PATTERN26 PAIRS](/research/#math-corpus)
+
+[OPEN NOTEBOOKS15 PROJECTS](/projects/?tag=quant)
+
+Data ingestion
+
+## Pipeline live.▍
+
+Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single deterministic PRNG.
+throughput · events / s4.8k4.0k2.3k4.2k4.6kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE38%NORMALIZE70%ENRICH45%INDEX61%STREAM72%
+
+Trader desk
+
+## P&L · order flow · risk · signalslive
+φ 0.420ms
+
+Book equity · 60 bars · today
+
+-3.66%60d
+
+-0.72Sharpe-11.41%Max DD-6.20%Book skew
+
+Order flow · 8 × 4 heat
+
++2,313/−2,621
+B163B229B110B272A207A210A216A110B170B59B68B199A255A170A19A15B142B137B43B54A196A246A148A264B191B291B125B60A37A107A270A151
+
+Risk · 1-day VaR
+
+NAV-normalized
+025507510069.7% NAV
+
+Signals · 4 × 4 sparklines
+
+last Δ color
+1D5D10D30DMOMMRCRYVRP●+Δ●−Δ●flat
+
+Positions
+
+5
+
+net −$139
+
+top · EQUITY-7
+
+Orders
+
+5
+
++1·1·3·1
+
+open · partial · ack · rej
+
+Calendar
+
+3
+
+next +2h
+
+impact LOW
+
+Alerts
+
+3
+
+2·3·0
+
+crit · warn · info
+2y5y10y30y1m3m6m12mBTCETHSOLDXY2y5y10y30y1m3m6m12mBTCETHSOLDXY
+
+---
+
+↓SECTION 08 OF 17 · GLOBAL EVENT MONITOR
+
+Earth mission control · world event map
+
+## Sixteen cities. Thirty-six events. The news behind the math.
+
+A rate decision in London is a half-life in Manila. We map the half-life.
+Earth-scale quant intelligence140 countries · 16 cities · 6 active events · 6 routes · Orthographic · rotatingEarth-scale event globe — cities, routes, and active events — rotatingOrthographic globe projection centered on (lat 20°, lon 80°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, 16 cities, 6 trade routes, 6 active events, region rollups (APAC 4 / EMEA 2 / Americas 4), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.DigosDigosSingaporeSingaporeTokyoTokyoHong KongHong KongShanghaiShanghaiSeoulSeoulManilaManilaMumbaiMumbaiDubaiDubaiSydneySydneyFrankfurtFrankfurtZurichZurichLondonLondonLondon GBRLondon · GBRParis FRAParis · FRABerlin DEUBerlin · DEURome ITARome · ITAMadrid ESPMadrid · ESPBrussels BELBrussels · BELAmsterdam NLDAmsterdam · NLDStockholm SWEStockholm · SWEVienna AUTVienna · AUTTokyo JPNTokyo · JPNCanberra AUSCanberra · AUSCentral bank press conference — FrankfurtΔy = ±7.6·σ_pp · cov(b,1y) ≈ +1.5σCentral bank policy decision — TokyoΔy = ±9.9·σ_pp · cov(b,1y) ≈ +1.3σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.7σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.5; DVO1 spikes 8.5%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 1.9σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.3× pre; vol regime shift: low → midMISSION CONTROL · BUILD 2026-07-11 18:18 UTC+8 · 16 HUBS · 14 CAPITALS · 10 EVENTS · 5 CRITICALCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km18:18:10 UTC+822° / 26°APAC4 evEMEA6 evAmericas4 ev
+
+Sun (subsolar)
+
+City · 16 hubs
+
+Route · 6
+
+Event pin (6/10)
+
+Critical · 5
+
+news/36 events · last 24h
+
+[Digos ·PH inflation print, in-line with consensusbreakeven-watch](/research#event-digos-ph-inflation)
+
+[Digos ·PSEi index rebalance, semi-annual reviewflatten](/research#event-digos-psei-rebalance)
+
+[Digos ·PHP crosses 58/USD, central-bank fix windowcarry](/research#event-digos-php-cross)
+
+[Digos ·PH 10Y auction, bid-cover 3.1×carry](/research#event-digos-ph10y-auction)
+
+[Singapore ·SGD NEER policy-band re-anchoringcarry](/research#event-sgd-neer-anchor)
+
+[Singapore ·Non-oil domestic exports, monthlyflatten](/research#event-sg-nodx-monthly)
+
+[Tokyo ·BoJ policy decision, hold unanimoussteepen](/research#event-boj-policy-hold)
+
+[Tokyo ·Yen crosses 152/USD, verbal interventionshort-vol](/research#event-jpy-intervention)
+
+[Hong Kong ·HIBOR fixing, 1m at 4.85%carry](/research#event-hibor-1m-fix)
+
+[Hong Kong ·Mega-IPO bookbuild, demand-cover 4.2×long-vol](/research#event-hk-mega-ipo)
+
+[Shanghai ·Trade-balance release, surplus $68 Bflatten](/research#event-cn-trade-balance)
+
+[Shanghai ·PBoC MLF, 1Y rate unchangedcarry](/research#event-pboc-mlf-1y)
+
+[Seoul ·KOSPI earnings bellwether, tech printlong-vol](/research#event-kospi-earnings-tech)
+
+[Seoul ·KRW crosses 1380/USD, exporter bidcarry](/research#event-krw-exporter-bid)
+
+[Mumbai ·EM sovereign coupon, 10Y externalcarry](/research#event-em-sov-coupon-10y)
+
+[Mumbai ·Nifty 50 rebalance, weight shiftflatten](/research#event-nifty-rebalance)
+
+[Sydney ·Iron-ore export, weekly port dataflatten](/research#event-iron-ore-weekly)
+
+[Sydney ·RBA minutes, hawkish tiltsteepen](/research#event-rba-minutes-hawk)
+
+[Manila ·PH GDP Q2 advance estimate, +6.0% YoYflatten](/research#event-ph-gdp-q2)
+
+[Manila ·BSP overnight rate decision, holdcarry](/research#event-bsp-policy-hold)
+
+[Frankfurt ·ECB press conference, verbal forward-guidancelong-vol](/research#event-ecb-press-conference)
+
+[Frankfurt ·Bunds 10Y auction, weak bid-coverflatten](/research#event-bund-10y-weak-cover)
+
+[Zurich ·SMI index rebalance, defensive tiltflatten](/research#event-smi-rebalance)
+
+[Zurich ·SX5E vol-of-vol, gap-wideningshort-vol](/research#event-sx5e-vov-gap)
+
+[London ·Gilts 10Y auction, strong coversteepen](/research#event-gilts-10y-strong)
+
+[London ·Brent settles at $84, framework talkslong-vol](/research#event-brent-84-framework)
+
+[Dubai ·Energy-export framework talks, headline tonelong-vol](/research#event-dxb-energy-framework)
+
+[Dubai ·UAE dirham peg, USD-anchored reviewcarry](/research#event-aed-peg-review)
+
+[New York ·Headline CPI release, +0.2% MoMlong-vol](/research#event-cpi-headline-print)
+
+[New York ·Mega-cap tech earnings, post-print driftlong-vol](/research#event-mega-cap-tech-earnings)
+
+[Toronto ·CAD employment, surprise +25kflatten](/research#event-cad-employment-surprise)
+
+[Toronto ·TSX index rebalance, energy weight upflatten](/research#event-tsx-rebalance-energy)
+
+[Sao Paulo ·BCB Selic decision, cut 50 bpsteepen](/research#event-bcb-selic-cut-50)
+
+[Sao Paulo ·BRL crosses 5.10/USD, fiscal-headline riskflatten](/research#event-brl-fiscal-risk)
+
+[New York ·All-stock deal announced, $42 B EVflatten](/research#event-ny-mna-deal)
+
+[New York ·Tech IPO launch, range $34-38long-vol](/research#event-ny-tech-ipo-launch)
+
+[Digos ·PH inflation print, in-line with consensusbreakeven-watch](/research#event-digos-ph-inflation)
+
+[Digos ·PSEi index rebalance, semi-annual reviewflatten](/research#event-digos-psei-rebalance)
+
+[Digos ·PHP crosses 58/USD, central-bank fix windowcarry](/research#event-digos-php-cross)
+
+[Digos ·PH 10Y auction, bid-cover 3.1×carry](/research#event-digos-ph10y-auction)
+
+[Singapore ·SGD NEER policy-band re-anchoringcarry](/research#event-sgd-neer-anchor)
+
+[Singapore ·Non-oil domestic exports, monthlyflatten](/research#event-sg-nodx-monthly)
+
+[Tokyo ·BoJ policy decision, hold unanimoussteepen](/research#event-boj-policy-hold)
+
+[Tokyo ·Yen crosses 152/USD, verbal interventionshort-vol](/research#event-jpy-intervention)
+
+[Hong Kong ·HIBOR fixing, 1m at 4.85%carry](/research#event-hibor-1m-fix)
+
+[Hong Kong ·Mega-IPO bookbuild, demand-cover 4.2×long-vol](/research#event-hk-mega-ipo)
+
+[Shanghai ·Trade-balance release, surplus $68 Bflatten](/research#event-cn-trade-balance)
+
+[Shanghai ·PBoC MLF, 1Y rate unchangedcarry](/research#event-pboc-mlf-1y)
+
+[Seoul ·KOSPI earnings bellwether, tech printlong-vol](/research#event-kospi-earnings-tech)
+
+[Seoul ·KRW crosses 1380/USD, exporter bidcarry](/research#event-krw-exporter-bid)
+
+[Mumbai ·EM sovereign coupon, 10Y externalcarry](/research#event-em-sov-coupon-10y)
+
+[Mumbai ·Nifty 50 rebalance, weight shiftflatten](/research#event-nifty-rebalance)
+
+[Sydney ·Iron-ore export, weekly port dataflatten](/research#event-iron-ore-weekly)
+
+[Sydney ·RBA minutes, hawkish tiltsteepen](/research#event-rba-minutes-hawk)
+
+[Manila ·PH GDP Q2 advance estimate, +6.0% YoYflatten](/research#event-ph-gdp-q2)
+
+[Manila ·BSP overnight rate decision, holdcarry](/research#event-bsp-policy-hold)
+
+[Frankfurt ·ECB press conference, verbal forward-guidancelong-vol](/research#event-ecb-press-conference)
+
+[Frankfurt ·Bunds 10Y auction, weak bid-coverflatten](/research#event-bund-10y-weak-cover)
+
+[Zurich ·SMI index rebalance, defensive tiltflatten](/research#event-smi-rebalance)
+
+[Zurich ·SX5E vol-of-vol, gap-wideningshort-vol](/research#event-sx5e-vov-gap)
+
+[London ·Gilts 10Y auction, strong coversteepen](/research#event-gilts-10y-strong)
+
+[London ·Brent settles at $84, framework talkslong-vol](/research#event-brent-84-framework)
+
+[Dubai ·Energy-export framework talks, headline tonelong-vol](/research#event-dxb-energy-framework)
+
+[Dubai ·UAE dirham peg, USD-anchored reviewcarry](/research#event-aed-peg-review)
+
+[New York ·Headline CPI release, +0.2% MoMlong-vol](/research#event-cpi-headline-print)
+
+[New York ·Mega-cap tech earnings, post-print driftlong-vol](/research#event-mega-cap-tech-earnings)
+
+[Toronto ·CAD employment, surprise +25kflatten](/research#event-cad-employment-surprise)
+
+[Toronto ·TSX index rebalance, energy weight upflatten](/research#event-tsx-rebalance-energy)
+
+[Sao Paulo ·BCB Selic decision, cut 50 bpsteepen](/research#event-bcb-selic-cut-50)
+
+[Sao Paulo ·BRL crosses 5.10/USD, fiscal-headline riskflatten](/research#event-brl-fiscal-risk)
+
+[New York ·All-stock deal announced, $42 B EVflatten](/research#event-ny-mna-deal)
+
+[New York ·Tech IPO launch, range $34-38long-vol](/research#event-ny-tech-ipo-launch)
+
+Digos· desk action1
+
+central-bankbook rolls down 5y into the auction
+
+---
+
+↓SECTION 09 OF 17 · MATH BEHIND THE TAPE
+
+Math · news · signals
+
+## Wall-street math in one glance.
+
+Six formulas. Seven inputs. Seven outputs. One correlation map. Every figure is a fixture — but the grid is wired the way a desk wires it.
+inputs
+
+σ_XS+0.18
+
+t 252d
+
+n+1.2k
+
+SR̂+1.42
+
+p 0.94
+
+ρ-0.31
+
+ν+0.62
+
+SHARPESR=σ^Rˉ−Rf​​ΔR̄ +12bp+1.42
+
+DEFLATED SHARPEDSR≈SRx^⋅V[SR^]1​​⋅Φ(z)Δp -0.030.97
+
+VARIANCE RISK PREMIUMVRP=σimp2​−σreal2​Δσ² -4bp3.8σ
+
+ORNSTEIN-UHLENBECKdXt​=θ(μ−Xt​)dt+σdWt​Δθ +0.04τ=42d
+
+FUNDING CARRYcarry=rbase​−rquote​−σΔτΔr -8bp+75bp
+
+REALIZED VOLσ^=n252​∑i=1n​(ri​−rˉ)2​Δn +210.85σ̂
+
+outputs
+
+SR+1.42
+
+SE 0.21
+
+DSR 0.97
+
+p_DSR+0.83
+
+Cvg 86%
+
+VRP 3.8σ
+
+σ̂ 0.85
+
+ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.6666
 
 What I do
 
 ## Four things, one discipline.
 
 A senior quant and an AI engineer can share a desk only if both write the eval harness. That's the only output that survives the next data drift, the next regime shift, the next model swap.
+8 projectsRRESEARCH
 
-01
+Multi-testing-aware systematic strategies on public data.
+9 eventsAARTIFICIAL INTELLIGENCE
 
-### Systematic strategies, multiple-testing-aware
+Multi-agent LLM systems with explicit eval harness and MCP contracts.
+16 hubsMMARKETS
 
-I design, backtest, and validate systematic strategies on public data. Every published number survives deflated Sharpe, walk-forward, and frozen-spec evaluation before it goes on the page.
+Sixteen financial hubs. Thirty-six monitored events. Live tape.
+13 capitalsCCOVERAGE
 
-02
-
-### Multi-agent LLM systems, eval-first
-
-I build agent systems with explicit charters, MCP tool contracts, and a runnable eval harness. The same gate stack used for systematic strategies gates LLM outputs.
-
-03
-
-### Public-data reproducibility, end to end
-
-Every project on this site is reproducible from public data. No proprietary feeds, no NDA-protected inputs. The codebase, the eval harness, and the scorecard ship together.
-
-04
-
-### NDA-clean by construction
-
-Past contract work (closed engagements, 2025–2026) is disclosed. Nothing on this site references a current or active employer's systems, code, or data.
+NDA-clean coverage. Past contracts disclosed, dates closed.
+TOOL-CALL-BACKTEST-EPAIRS-TRADDSR-CALCDEF-SHARPELLM-AS-JUDNDA-CLNTHE-VARIANTIME-SERIECRYPTO-FUNG1–G31LOOK-AHEADPBO-CSCVMCP-EVALCROSS-SECTREFLECT-REMACRO-/-VOMCP-EVALRAG-RECALLSLOP-SCANTOOL-CALL-BACKTEST-EPAIRS-TRADDSR-CALCDEF-SHARPELLM-AS-JUDNDA-CLNTHE-VARIANTIME-SERIECRYPTO-FUNG1–G31LOOK-AHEADPBO-CSCVMCP-EVALCROSS-SECTREFLECT-REMACRO-/-VOMCP-EVALRAG-RECALLSLOP-SCAN
 
 Selected work
 
-## Fifteen projects, two lanes, public data.
+## Five proofs of method.
 
-Nine systematic-strategy projects and six multi-agent LLM projects. Each one ships with a reproducible pipeline, an eval harness, and a scorecard.
-[QUANT
-
-### Multiple Testing & the Deflated Sharpe Ratio
-
-Best-of-160 BTC rule: IS Sharpe 1.14 is only 1.24× the pure-noise expectation — DSR = 0.70 (fail).
-Read case study →](/projects/quant/01-deflated-sharpe)[QUANT
+[2025 · Q4QUANT
 
 ### Cross-Sectional Momentum (18 coins)
+18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.91→-0.04OOS Sharpe0.91→-0.04CI Straddle0.04→0.12](/projects/quant/02-cross-sectional-momentum)
 
-IS Sharpe 0.91 → OOS −0.03 — an honest decay; bootstrap CI straddles zero.
-Read case study →](/projects/quant/02-cross-sectional-momentum)[QUANT
+[2025 · Q4QUANT
 
 ### Time-Series Momentum + Vol Targeting
+20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.28→0.39Max DD59%→31%Win Rate42%→49%](/projects/quant/03-timeseries-momentum-voltarget)
 
-Vol-targeting lifts Sharpe 0.27 → 0.39 and halves max DD (−62% → −30%).
-Read case study →](/projects/quant/03-timeseries-momentum-voltarget)[AI
+[2026 · Q1AI
 
-### RAG Recall Eval
+### Slop Scanner
+13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index79.00→5.00Hedge Density0.19→0.04N-gram Rep0.33→0.07](/projects/ai/06-slop-scanner)
 
-RAG service that proves its own retrieval — recall@3 = 0.886, MRR@3 = 0.805 with offline stdlib TF-IDF retriever.
-Read case study →](/projects/ai/01-rag-recall)[AI
+[2026 · Q2QUANT
 
-### Tool-Call Agent
+### Macro / Volatility-Regime Overlay
+VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.66→0.67Max DD60%→44%Calmar0.31→0.71](/projects/quant/07-macro-regime-overlay)
 
-ReAct-style tool-calling agent with OTel traces, fault injection, and 100% tool/arg correctness.
-Read case study →](/projects/ai/02-toolcall-agent)[AI
+[2026 · Q2QUANT
 
-### LLM-as-Judge Harness
+### Look-Ahead Bias Audit (the shift test)
+ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.63Leaked Sharpe0.59→5.01Phantom %2%→86%](/projects/quant/09-lookahead-bias-audit)
 
-LLM-as-judge pipeline validated against human raters — Cohen's κ = 0.58 with bootstrap CI and position-bias measured.
-Read case study →](/projects/ai/03-judge-harness)[All 15 projects →](/projects)
+[All 15 projects →](/projects)
 
 The numbers
 
 ## What eleven months of build looks like.
-31eval gates, G1–G3111AI agents, orchestrator + workers76.5kklines of Python, on the desk102certifications, 2024 → 2026
+PAGES BUILT84STABLEAUDIT100%STABLEAFK LOOP6H−1.8%EVAL GATES31−2.5%STRATEGIES9+2.28AI AGENTS11−1.9%CERTS102−1.7%MONTHS11−1%
+
+STRATEGY NOTE01·CONDENSED
+iCard 1 of 3
 
 Eval-first. ↦ Ship-ready.
 
+STRATEGY NOTE02·CONDENSED
+iiCard 2 of 3
+
 NDA-clean. ↦ Public-data reproducible.
 
+STRATEGY NOTE03·CONDENSED
+iiiCard 3 of 3
+
 31 gates. ↦ Zero rollbacks.
-
-PBO-tested. ↦ OOS-validated.
-
-11 agents. ↦ One method.
-
-102 certs. ↦ One discipline.
 
 ---
 
@@ -182,6 +1265,14 @@ proof/ · show your work
 # Proof. Public or self-owned only.
 
 If it isn't reproducible from public data, it isn't here.
+
+22artifacts on this page
+
+9quant projects
+
+6AI projects
+
+10case studies
 
 Every cert links to its issuer. No exceptions.
 
@@ -2130,7 +3221,7 @@ Portfolio
 Every metric below is real, every method is documented, every line of code is on disk.
 
 Every project is reproducible, headline metrics are real, and the methodology is documented. Filter by lane to focus on the work most relevant to the role you're hiring for.
-15projects shipped6AI engineer projects9quant research projects15open-source repos
+15projects shipped6AI engineer projects9quant research projects15open-source repos[All 15](/projects/)[AI Engineer 6](/projects/?tag=ai)[Quant Researcher 9](/projects/?tag=quant)
 
 Lane 1 · AI Engineer
 

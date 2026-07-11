@@ -24,14 +24,16 @@ function makeButton(pre: HTMLElement): HTMLButtonElement {
     position: absolute;
     top: 8px;
     right: 8px;
-    padding: 2px 8px;
-    font: 500 11px/1 var(--ff-mono, ui-monospace, monospace);
+    padding: 6px 12px;
+    font: 500 12px/1 var(--ff-mono, ui-monospace, monospace);
     color: var(--c-ink-2, #5a6473);
     background: var(--c-bg, #fff);
     border: 1px solid var(--c-rule, #c9ced6);
     border-radius: 4px;
     opacity: 0;
     pointer-events: none;
+    min-height: 44px;
+    min-width: 44px;
     transition: opacity 150ms var(--ease-snappy, ease), color 150ms ease, border-color 150ms ease;
     cursor: pointer;
   `;

@@ -134,4 +134,44 @@ const solution = defineCollection({
   }),
 });
 
-export const collections = { project, experience, skillGroup, certGroup, solution };
+// v6.1 — `predictionEvent` collection. Eight binary event contracts,
+// each with: market-implied probability (in [0,1] units), an edge over
+// the market (in probability units — positive means our model-implied
+// is higher than the implied price), a 1-line evidence string, and a
+// methodology pointer. NDA-positive by construction: no platform names
+// appear in any field. See `notes/v61-patterns.md` for the determinism
+// contract (the decay curves are PRNG-derived from `BUILD_DATE`).
+const predictionEvent = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/prediction' }),
+  schema: z.object({
+    title: z.string(),
+    category: z.enum(['macro', 'crypto', 'rates', 'political', 'equity', 'volatility']),
+    tenor: z.string(),
+    impliedPx: z.number().min(0).max(1),
+    edge: z.number().min(-1).max(1),
+    evidence: z.string(),
+    methodology: z.string(),
+    order: z.number(),
+    source: z.string(),
+  }),
+});
+
+// v6.2 — `worldEvent` collection. Fixture pins rendered on the
+// WorldEventMap iron-desk widget. Each entry has (lat, lon, category,
+// severity) so the map can render the pin and the legend can label it.
+// Generic language only — no platform or employer names (NDA-positive).
+const worldEvent = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/world-events' }),
+  schema: z.object({
+    title: z.string(),
+    category: z.enum(['central-bank', 'earnings', 'geopolitical', 'data-release', 'fx']),
+    severity: z.enum(['mild', 'moderate', 'critical']),
+    lat: z.number(),
+    lon: z.number(),
+    city: z.string(),
+    source: z.string(),
+    order: z.number(),
+  }),
+});
+
+export const collections = { project, experience, skillGroup, certGroup, solution, predictionEvent, worldEvent };

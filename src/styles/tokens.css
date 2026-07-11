@@ -86,6 +86,8 @@
   --ff-math:
     'KaTeX_Main', 'Latin Modern Math', 'Computer Modern Serif', 'STIX Two Math', 'Cambria Math',
     'Times New Roman', serif;
+  --fs-3xs: 0.5625rem;         /*  9px — HUD overlays, scale bars, station IDs */
+  --fs-2xs: 0.6875rem;         /* 11px — chrome labels, data-tick micro */
   --fs-xs: 0.78rem;            /* 12.5px */
   --fs-sm: 0.875rem;           /* 14px */
   --fs-base: 1rem;             /* 16px */
@@ -161,6 +163,19 @@
   --serif-display: "Iowan Old Style", "Source Serif 4", "Georgia", "Charter",
     "Iowan Old Style W01", "Sitka Text", "Cambria", serif;
 
+  /* === v6.5 · INSTITUTIONAL ACCENT TOKENS (HUD chrome, gridlines, data signal) ===
+   * Additive — does NOT replace any existing brand color.
+   * Usage scope: HUD overlays, lat/lon gridlines, data-tick semantics ONLY.
+   * Brand amber (--c-amber / --c-amber-light) + tape dark (--c-tape) remain the
+   * dominant palette; these accents are chrome punctuation. */
+  --c-hud-bg: #0a0e14;                      /* slightly darker than --c-tape for HUD overlays */
+  --c-hud-border: #2a3548;                  /* cooler than --c-rule (#30363d) for HUD chrome edges */
+  --c-grid-line: rgba(230, 237, 243, 0.08);         /* hairline lat/lon gridlines on globe */
+  --c-grid-line-strong: rgba(230, 237, 243, 0.18);  /* equator + prime meridian + terminator */
+  --c-data-positive: #4ade80;               /* institutional green — positive tick / data up */
+  --c-data-negative: #f87171;               /* institutional red   — negative tick / data down */
+  --c-data-neutral:  #94a3b8;               /* institutional gray  — unchanged / zero delta */
+
   color-scheme: dark;
 }
 
@@ -194,6 +209,19 @@
     transform: none !important;
     box-shadow: none !important;
     filter: none !important;
+  }
+
+  /* v6.5 — defensively pause CSS-driven motion inside Earth primitives.
+     The universal `* { animation: none !important }` above already kills
+     CSS keyframes, but EarthGlobe/EarthPulse/EarthFeed ship nested
+     decorative animations (flow-dots, ring-pulse, ticker). Re-asserting
+     `animation-play-state: paused` ensures nothing survives the cascade
+     in nested selectors. (SMIL `<animateMotion>` is handled separately
+     in EarthGlobe.astro by element removal.) */
+  .earth-globe *,
+  .earth-pulse *,
+  .earth-feed * {
+    animation-play-state: paused !important;
   }
 }
 

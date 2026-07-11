@@ -1,39 +1,35 @@
 ---
 /**
- * StatementCarousel.astro — single-line rotating statement carousel.
+ * StatementCarousel.astro — discipline-statement rotator.
  *
- * Per UI/UX research synthesis (v6.0.7), the institutional "rotating
- * statement" pattern is the HRT signature ("innovators. engineers.
- * technologists. mathematicians."). It demonstrates a firm's discipline
- * by rotating through complete sentences — not just vocabulary.
+ * Two variants:
+ *   - 'inline' (default): one-line rotating sentence (legacy). Six short
+ *     statements fade cross on a timer, dots beneath. Auto-advances,
+ *     pauses on hover/focus, honors prefers-reduced-motion.
  *
- * Auto-advances every 3s. Pauses on hover or keyboard focus. Dots
- * indicator below for manual navigation. Respects prefers-reduced-motion
- * (no auto-advance, no fade).
+ *   - 'graphic': 3-card layout. Each card has a 1px-stroked square in the
+ *     top-left holding a serif roman numeral (i / ii / iii) at 24px,
+ *     the statement text centered with line-height 1.4, and 3 mini-pip
+ *     indicators in the bottom-right (active = --c-amber, inactive =
+ *     --c-ink-3). A 10px mono eyebrow above each card reads
+ *     `STRATEGY NOTE 0X · CONDENSED`. Auto-advances, pauses on
+ *     hover/focus, honors prefers-reduced-motion (no auto-rotate when
+ *     reduced).
  *
- * v6.0.13 — Cross-fade bug fix:
- *   The previous CSS+JS had two slides at non-zero opacity for the full
- *   320 ms transition window (outgoing at 1→0, incoming at 0→1) because
- *   both `is-active` toggles ran synchronously in `show()` and both had
- *   the same CSS transition. The result was stacked glyphs bisecting each
- *   other, clipped to the viewport's overflow.
+ * v6.0.13 — Cross-fade bug fix (inline mode):
+ *   Outgoing slide snaps via 0 ms transition so the active slide's
+ *   280 ms fade-in never overlaps a fading-out slide. Track width
+ *   set to 100% so the 0-wide-content bug is fixed.
  *
- *   Fix: only the INCOMING slide animates. Outgoing snaps via 0 ms
- *   transition (`transition: opacity 0ms` outside `.is-active`).
- *   This eliminates the 320 ms visual overlap.
- *
- *   v6.0.13 also: track width set to 100% so the 0-wide-content bug
- *   (parent flex item with absolute-only children) is fixed; dots shrunk
- *   slightly; dot row centered via flex justify-content.
+ * v6.6.0 (Mission UI-X) — `variant="graphic"` for the home page:
+ *   Editorial 3-card layout (top-left roman numeral, center text,
+ *   bottom-right pips, eyebrow above each card). Deterministic
+ *   Roman numerals (i/ii/iii) regardless of statement count — only
+ *   the first 3 are shown when more are passed.
  *
  * Usage:
  *   <StatementCarousel />
- *   <StatementCarousel
- *     statements={[
- *       'Eval-first. ↦ Ship-ready.',
- *       'NDA-clean. ↦ Reproducible.',
- *     ]}
- *   />
+ *   <StatementCarousel statements={[...]} variant="graphic" />
  */
 
 interface Props {
@@ -43,6 +39,11 @@ interface Props {
   intervalMs?: number;
   /** Optional label for screen readers. */
   label?: string;
+  /**
+   * 'inline' (default): single-line rotating sentence.
+   * 'graphic': 3-card layout with roman-numeral cards.
+   */
+  variant?: 'inline' | 'graphic';
 }
 
 const {
@@ -56,41 +57,106 @@ const {
   ] as string[],
   intervalMs = 3000,
   label = 'Discipline statements — rotating',
+  variant = 'inline',
 } = Astro.props;
+
+// Graphic variant: cap at 3 cards (i, ii, iii). Roman numerals are
+// lowercase serif; pad with zeros for label alignment.
+const graphicStatements = statements.slice(0, 3);
+const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi'];
 ---
 
-<div class="stmt-carousel" data-stmt-carousel data-interval={String(intervalMs)} aria-roledescription="carousel" aria-label={label}>
-  <div class="stmt-carousel__viewport">
-    <ol class="stmt-carousel__track">
-      {statements.map((s, i) => (
-        <li
-          class:list={['stmt-carousel__slide', { 'is-active': i === 0 }]}
-          aria-hidden={i === 0 ? 'false' : 'true'}
-          data-stmt-index={i}
-        >
-          {/* Inner span gives us a real block child so `text-wrap: balance`
-              and `padding-inline` work — bare text inside a flex item
-              becomes an anonymous flex item with `min-width: auto` and
-              refuses to wrap properly. */}
-          <span class="stmt-carousel__text">{s}</span>
+{variant === 'inline' ? (
+  <div class="stmt-carousel" data-stmt-carousel data-interval={String(intervalMs)} aria-roledescription="carousel" aria-label={label}>
+    <div class="stmt-carousel__viewport">
+      <ol class="stmt-carousel__track">
+        {statements.map((s, i) => (
+          <li
+            class:list={['stmt-carousel__slide', { 'is-active': i === 0 }]}
+            aria-hidden={i === 0 ? 'false' : 'true'}
+            data-stmt-index={i}
+          >
+            {/* Inner span gives us a real block child so `text-wrap: balance`
+                and `padding-inline` work — bare text inside a flex item
+                becomes an anonymous flex item with `min-width: auto` and
+                refuses to wrap properly. */}
+            <span class="stmt-carousel__text">{s}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <ol class="stmt-carousel__dots" role="tablist" aria-label="Choose statement">
+      {statements.map((_s, i) => (
+        <li>
+          <button
+            type="button"
+            class:list={['stmt-carousel__dot', { 'is-active': i === 0 }]}
+            data-stmt-dot={i}
+            aria-label={`Show statement ${i + 1}`}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+          ></button>
         </li>
       ))}
     </ol>
   </div>
-  <ol class="stmt-carousel__dots" role="tablist" aria-label="Choose statement">
-    {statements.map((_s, i) => (
-      <li>
-        <button
-          type="button"
-          class:list={['stmt-carousel__dot', { 'is-active': i === 0 }]}
-          data-stmt-dot={i}
-          aria-label={`Show statement ${i + 1}`}
-          aria-pressed={i === 0 ? 'true' : 'false'}
-        ></button>
-      </li>
-    ))}
-  </ol>
-</div>
+) : (
+  <div
+    class="stmt-cards"
+    data-stmt-carousel
+    data-interval={String(intervalMs)}
+    aria-roledescription="carousel"
+    aria-label={label}
+  >
+    <div class="stmt-cards__viewport" aria-live="polite" aria-atomic="false">
+      {graphicStatements.map((s, i) => (
+        <article
+          class:list={['stmt-card', { 'is-active': i === 0 }]}
+          aria-hidden={i === 0 ? 'false' : 'true'}
+          aria-roledescription="slide"
+          aria-label={`Strategy note ${i + 1} of ${graphicStatements.length}`}
+          data-stmt-index={i}
+        >
+          <p class="stmt-card__eyebrow mono" aria-hidden="true">
+            <span>STRATEGY NOTE</span>
+            <span class="stmt-card__num-pad">0{i + 1}</span>
+            <span class="stmt-card__sep">·</span>
+            <span>CONDENSED</span>
+          </p>
+
+          <div class="stmt-card__head">
+            <span class="stmt-card__numeral" aria-hidden="true">{ROMAN[i]}</span>
+            <span class="stmt-card__sr">Card {i + 1} of {graphicStatements.length}</span>
+          </div>
+
+          <p class="stmt-card__text">{s}</p>
+
+          <div class="stmt-card__pips" aria-hidden="true">
+            {graphicStatements.map((_p, j) => (
+              <span
+                class:list={['stmt-card__pip', { 'is-active': j === 0 }]}
+                data-stmt-pip={j}
+              ></span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <ol class="stmt-cards__pips" role="tablist" aria-label="Choose statement">
+      {graphicStatements.map((_s, i) => (
+        <li>
+          <button
+            type="button"
+            class:list={['stmt-cards__pip', { 'is-active': i === 0 }]}
+            data-stmt-dot={i}
+            aria-label={`Show statement ${i + 1}`}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+          ></button>
+        </li>
+      ))}
+    </ol>
+  </div>
+)}
 
 <!-- Driver is in src/scripts/carousel.ts, imported via BaseLayout.
      Astro 7 was dropping per-component <script> blocks during the build
@@ -101,6 +167,7 @@ const {
      ships on every page that includes the carousel. -->
 
 <style>
+  /* === INLINE VARIANT (legacy) === */
   .stmt-carousel {
     display: flex;
     flex-direction: column;
@@ -223,11 +290,14 @@ const {
     transform: scale(1.4);
   }
 
-  /* Small viewport: shrink dots so 6 × 32 + 5 × 4 = 212 px fits in 320 px. */
+  /* v6.3 polish — keep dots at 44×44 even on small viewports.
+     The audit flagged `Show statement 1` etc. at 32×32 px on the
+     390 px mobile viewport (the legacy shrink rule). 6 × 44 + 5 × 4
+     = 284 px which fits comfortably in 390 px with 53 px margins. */
   @media (max-width: 480px) {
     .stmt-carousel__dot {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
     }
     .stmt-carousel__dots {
       gap: var(--sp-1);
@@ -239,4 +309,237 @@ const {
       transition: none;
     }
   }
+
+  /* === GRAPHIC VARIANT (v6.6 home page) ===
+     3 stacked cards. Each card lives in its own grid cell; the
+     .is-active card fades in (opacity + slight Y lift) and the prior
+     card fades out. The 44px tap targets live behind the pips so
+     hover/focus reveals the active card. */
+  .stmt-cards {
+    --stmt-card-w: min(720px, calc(100vw - 2 * var(--sp-4)));
+    --stmt-card-pad: var(--sp-6);
+    --stmt-card-gap: var(--sp-3);
+    --stmt-numeral: 40px;
+    --stmt-pip: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--sp-4);
+    padding: var(--sp-6) 0 var(--sp-7);
+    background: var(--c-bg);
+  }
+
+  .stmt-cards__viewport {
+    position: relative;
+    display: grid;
+    /* Single grid cell, all cards stack via position: absolute — same
+       cross-fade trick as the inline variant. width:100% on the
+       implicit row/column is what allows the absolute children to find
+       a non-zero box (Astro 7 collapses 0-wide tracks). */
+    width: 100%;
+    margin-inline: auto;
+    max-width: var(--stmt-card-w);
+    min-height: 220px;
+  }
+
+  .stmt-card {
+    grid-row: 1;
+    grid-column: 1;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      'eyebrow eyebrow'
+      'numeral text'
+      'pips   pips';
+    align-items: center;
+    column-gap: var(--sp-5);
+    row-gap: var(--sp-3);
+    padding: var(--stmt-card-pad);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition:
+      opacity 0ms,
+      transform 0ms;
+    z-index: 1;
+  }
+  .stmt-card.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 320ms var(--ease-out),
+      transform 320ms var(--ease-out);
+    z-index: 2;
+    pointer-events: auto;
+  }
+
+  /* Eyebrow — 10px mono all-caps tracked 0.08em, centered above. */
+  .stmt-card__eyebrow {
+    grid-area: eyebrow;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.5ch;
+    margin: 0;
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-ink-2);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: var(--tnum);
+  }
+  .stmt-card__sep {
+    color: var(--c-ink-3);
+  }
+  .stmt-card__num-pad {
+    color: var(--c-amber-light);
+  }
+
+  /* Numeral — 40×40 1px-stroked square, padded to ink, holding
+     a 24px serif roman numeral. Centered glyphs in both axes. */
+  .stmt-card__head {
+    grid-area: numeral;
+  }
+  .stmt-card__numeral {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--stmt-numeral);
+    height: var(--stmt-numeral);
+    border: 1px solid var(--c-ink);
+    padding: 2px;
+    box-sizing: border-box;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--c-ink);
+    background: transparent;
+  }
+  .stmt-card__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Text — kept as-is from inline, just tighter line-height 1.4
+     and the serif stays italic per house style. */
+  .stmt-card__text {
+    grid-area: text;
+    margin: 0;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    color: var(--c-ink);
+    text-wrap: balance;
+  }
+
+  /* Pips — bottom-right three small squares. Active = --c-amber,
+     inactive = --c-ink-3. They're aria-hidden inside the card; the
+     screen-reader-accessible tabs live in the .stmt-cards__pips
+     row below. */
+  .stmt-card__pips {
+    grid-area: pips;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+  }
+  .stmt-card__pip {
+    width: var(--stmt-pip);
+    height: var(--stmt-pip);
+    background: var(--c-ink-3);
+    transition: background var(--transition), transform var(--transition);
+  }
+  .stmt-card__pip.is-active {
+    background: var(--c-amber);
+    transform: scale(1.2);
+  }
+
+  /* Tabs row — same 44px hit-target pattern as inline variant. */
+  .stmt-cards__pips {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .stmt-cards__pips li {
+    display: flex;
+  }
+  .stmt-cards__pip {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition);
+  }
+  .stmt-cards__pip::before {
+    content: '';
+    width: var(--stmt-pip);
+    height: var(--stmt-pip);
+    border-radius: 0;
+    background: var(--c-ink-3);
+    transition: background var(--transition), transform var(--transition);
+  }
+  .stmt-cards__pip:hover::before {
+    background: var(--c-ink-2);
+  }
+  .stmt-cards__pip.is-active::before {
+    background: var(--c-amber);
+    transform: scale(1.25);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stmt-card {
+      transition: none;
+      transform: none;
+    }
+    .stmt-card.is-active {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .stmt-card {
+      grid-template-columns: var(--stmt-numeral) 1fr;
+      grid-template-areas:
+        'eyebrow eyebrow'
+        'numeral text'
+        'pips   pips';
+    }
+    .stmt-card__text {
+      font-size: 1.05rem;
+    }
+  }
 </style>
+</content>
+</invoke>

@@ -1,0 +1,20 @@
+---
+title: VIX prints above 40 intraday in 2026
+category: volatility
+tenor: by 2026-12-31
+impliedPx: 0.29
+edge: 0.11
+evidence: 30-day realized vol 1σ above the 60-day; vanna-gamma profile for SPX options is asymmetric, with leveraged-dealer hedging skewed to the upside
+methodology: Variance risk premium — vol-surface decomposition
+order: 8
+source: Yahoo Finance / CBOE-equivalent public options chains
+---
+Event contracts imply a 29¢ probability that the VIX prints above 40
+intraday at least once during 2026. My vol-surface decomposition puts
+fair probability at 40¢, an 11¢ edge. The decomposition isolates two
+contributors: (1) realized vol is in the 84th percentile of its 5-year
+distribution and rising; (2) dealer-gamma positioning under recent
+vol-suppression pressure is asymmetric and short-gamma into any
+4%+ intraday move, which mechanically amplifies VIX prints when
+spot gaps. Trade is binary, mechanical, and falsifiable on any single
+session close.

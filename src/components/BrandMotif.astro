@@ -79,94 +79,102 @@ for (const f of families) {
 ---
 
 <figure class="brand-motif" style={`--brand-w:${width}px;${height ? `--brand-h:${height}px;` : ''}`}>
-  <svg
-    viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-    width={width}
-    height={height}
-    role={decorative ? 'presentation' : 'img'}
-    aria-hidden={decorative ? 'true' : 'false'}
-    focusable="false"
-    preserveAspectRatio="xMidYMid meet"
+  {/* v6.3 polish — wrap the motif in a single 44×44+ anchor to
+     /methodology instead of 31 individual per-cell `<a>` tags.
+     The audit was flagging every cell anchor as a 26×26 SVG link
+     (insufficient tap target even with the 44-unit hit rect).
+     Now the motif has ONE link to the methodology page; the
+     native `<title>` tooltips on each cell still announce the
+     gate family on hover/long-press. */}
+  <a
+    href="/methodology"
+    class="brand-motif__link"
+    aria-label="See the full G1–G31 evaluation stack on /methodology"
   >
-    <title>Validation gate lattice — G1–G31 across 6 families</title>
-    <desc>
-      Thirty-three cells representing the G1–G31 statistical eval stack. Cells
-      16 and 27 are reserved indicator positions (ship, block). Each remaining
-      cell links to its gate family on /methodology.
-    </desc>
-    <g class="brand-motif__row">
-      {
-        Array.from({ length: N }).map((_, i) => {
-          const cx = stepX * (i + 1);
-          if (i === shipIndex) {
+    <svg
+      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+      width={width}
+      height={height}
+      role={decorative ? 'presentation' : 'img'}
+      aria-hidden={decorative ? 'true' : 'false'}
+      focusable="false"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <title>Validation gate lattice — G1–G31 across 6 families</title>
+      <desc>
+        Thirty-three cells representing the G1–G31 statistical eval stack. Cells
+        16 and 27 are reserved indicator positions (ship, block). Hover any cell
+        to read its family.
+      </desc>
+      <g class="brand-motif__row">
+        {
+          Array.from({ length: N }).map((_, i) => {
+            const cx = stepX * (i + 1);
+            if (i === shipIndex) {
+              return (
+                <g class="brand-motif__cell brand-motif__cell--ship">
+                  <circle cx={cx} cy={cy} r={radius + 1.6} fill="var(--c-primary-2)" opacity="0.18" />
+                  <circle cx={cx} cy={cy} r={radius} fill="var(--c-primary-2)" />
+                </g>
+              );
+            }
+            if (i === blockIndex) {
+              return (
+                <circle
+                  class="brand-motif__cell brand-motif__cell--block"
+                  cx={cx}
+                  cy={cy}
+                  r={radius}
+                  fill="none"
+                  stroke="var(--c-primary-2-deep)"
+                  stroke-width="1.2"
+                />
+              );
+            }
+            const family = cellToFamily.get(i);
+            if (!family) {
+              return (
+                <circle
+                  class="brand-motif__cell"
+                  cx={cx}
+                  cy={cy}
+                  r={radius}
+                  fill="var(--c-ink-3)"
+                  opacity="0.55"
+                />
+              );
+            }
             return (
-              <g class="brand-motif__cell brand-motif__cell--ship">
-                <circle cx={cx} cy={cy} r={radius + 1.6} fill="var(--c-primary-2)" opacity="0.18" />
-                <circle cx={cx} cy={cy} r={radius} fill="var(--c-primary-2)" />
+              <g class="brand-motif__cell brand-motif__cell--gate">
+                <title>{family.range} · {family.name}</title>
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={radius}
+                  fill="var(--c-ink-3)"
+                  opacity="0.55"
+                />
               </g>
             );
-          }
-          if (i === blockIndex) {
-            return (
-              <circle
-                class="brand-motif__cell brand-motif__cell--block"
-                cx={cx}
-                cy={cy}
-                r={radius}
-                fill="none"
-                stroke="var(--c-primary-2-deep)"
-                stroke-width="1.2"
-              />
-            );
-          }
-          const family = cellToFamily.get(i);
-          if (!family) {
-            // Should never happen — fallback to a plain dim cell.
-            return (
-              <circle
-                class="brand-motif__cell"
-                cx={cx}
-                cy={cy}
-                r={radius}
-                fill="var(--c-ink-3)"
-                opacity="0.55"
-              />
-            );
-          }
-          return (
-            <a
-              class="brand-motif__cell brand-motif__cell--gate"
-              href={family.href}
-              aria-label={`${family.range}: ${family.name}. Link to /methodology`}
-            >
-              <title>{family.range} · {family.name}</title>
-              <circle
-                cx={cx}
-                cy={cy}
-                r={radius}
-                fill="var(--c-ink-3)"
-                opacity="0.55"
-              />
-            </a>
-          );
-        })
-      }
-    </g>
-    {caption && (
-      <text
-        class="brand-motif__caption"
-        x={VIEW_W / 2}
-        y={captionY}
-        text-anchor="middle"
-        font-family="var(--ff-mono)"
-        font-size="7"
-        fill="var(--c-ink-3)"
-        letter-spacing="0.08em"
-      >
-        {caption}
-      </text>
-    )}
-  </svg>
+          })
+        }
+      </g>
+      {caption && (
+        <text
+          class="brand-motif__caption"
+          x={VIEW_W / 2}
+          y={captionY}
+          text-anchor="middle"
+          font-family="var(--ff-mono)"
+          font-size="7"
+          fill="var(--c-ink-3)"
+          letter-spacing="0.08em"
+        >
+          {caption}
+        </text>
+      )}
+    </svg>
+  </a>
 </figure>
 
 <style>
@@ -176,6 +184,19 @@ for (const f of families) {
     padding: 0;
     line-height: 0;
     max-width: 100%;
+  }
+  /* v6.3 polish — the wrapping <a> is inline-block so it sizes to the
+     SVG bounding box, then receives a safe ≥ 44 px tap target via
+     min-height (the visible lattice is already ≥ 240×60 px on desktop
+     and scales proportionally on mobile, so min-height only widens the
+     hit box, never the visible glyph). display on the link is critical
+     because the SVG inside is inline by default. */
+  .brand-motif__link {
+    display: inline-block;
+    min-height: 44px;
+    line-height: 0;
+    text-decoration: none;
+    color: inherit;
   }
   .brand-motif svg {
     display: block;

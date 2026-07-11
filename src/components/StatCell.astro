@@ -1,0 +1,119 @@
+---
+/**
+ * StatCell.astro — compact "metric tile" for terminal layouts.
+ *
+ * Reused on /markets, /positions, /certifications, /about, and any
+ * place where 4 metrics sit side-by-side as a strip. Smaller than
+ * Stat.astro (which is for hero "big number" tiles); this is the
+ * 4-up grid component that fits inside an institutional panel.
+ *
+ * Usage:
+ *   <StatCell label="S&P 500" value="5,872" delta={0.42} sub="+0.42% today" />
+ *   <StatCell label="VIX" value="14.62" delta={-2.1} />
+ *
+ * `delta` is a signed percentage; positive → pass (green), negative →
+ * fail (red), near-zero → muted.
+ */
+interface Props {
+  label: string;
+  value: string;
+  sub?: string;
+  delta?: number;
+  /** Show the delta arrow (▲ ▼) alongside the value. Default true. */
+  showArrow?: boolean;
+}
+const { label, value, sub, delta, showArrow = true } = Astro.props;
+const deltaClass =
+  typeof delta !== 'number'
+    ? ''
+    : Math.abs(delta) < 0.005
+      ? 'stat-cell--flat'
+      : delta > 0
+        ? 'stat-cell--up'
+        : 'stat-cell--down';
+const arrow =
+  typeof delta !== 'number'
+    ? ''
+    : Math.abs(delta) < 0.005
+      ? '·'
+      : delta > 0
+        ? '▲'
+        : '▼';
+const deltaStr =
+  typeof delta === 'number'
+    ? `${delta > 0 ? '+' : delta < 0 ? '' : ''}${delta.toFixed(2)}%`
+    : '';
+---
+
+<div class:list={['stat-cell', deltaClass]}>
+  <div class="stat-cell__head">
+    <span class="stat-cell__label">{label}</span>
+  </div>
+  <div class="stat-cell__row">
+    <span class="stat-cell__value mono">{value}</span>
+    {
+      typeof delta === 'number' && showArrow && (
+        <span class="stat-cell__delta mono">
+          {arrow} {deltaStr}
+        </span>
+      )
+    }
+  </div>
+  {sub && <div class="stat-cell__sub">{sub}</div>}
+</div>
+
+<style>
+  .stat-cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    min-width: 0;
+  }
+  .stat-cell__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .stat-cell__label {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-ink-2);
+    font-weight: 600;
+  }
+  .stat-cell__row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .stat-cell__value {
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    color: var(--c-ink);
+    line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: -0.01em;
+  }
+  .stat-cell__delta {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    color: var(--c-ink-2);
+  }
+  .stat-cell--up .stat-cell__delta { color: var(--c-pass); }
+  .stat-cell--down .stat-cell__delta { color: var(--c-fail); }
+  .stat-cell--flat .stat-cell__delta { color: var(--c-ink-3); }
+
+  .stat-cell__sub {
+    font-size: 0.66rem;
+    color: var(--c-ink-3);
+    letter-spacing: 0.04em;
+  }
+</style>

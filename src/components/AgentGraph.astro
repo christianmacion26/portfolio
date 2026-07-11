@@ -1,0 +1,414 @@
+---
+/**
+ * AgentGraph.astro — server-rendered SVG of the 11-agent platform DAG.
+ *
+ * v6.1 Mission F (`/ai` page) — the centerpiece diagram. Hand-rolled
+ * SVG (no runtime JS, no client:*). The active feedback loop is
+ * highlighted in amber; a small amber dot "travels" along the active
+ * path via CSS @keyframes (stroke-dashoffset). Honors
+ * `prefers-reduced-motion: reduce` to freeze the dot at one position.
+ *
+ * Coordinates are deterministic constants — no Math.random anywhere.
+ * Layout: 4 inputs (left) → 1 orchestrator (centre) → 3 middles →
+ * 3 outputs (right), with Feedback looping back to Orchestrator.
+ *
+ * Usage:
+ *   <AgentGraph />
+ */
+interface Props {
+  /** Optional CSS class on the outer wrapper (e.g. for grid sizing). */
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+// === DETERMINISTIC LAYOUT CONSTANTS ===
+// viewBox: 800 x 440. Boxes are 110 x 60 (orchestrator 130 x 70).
+const W = 800;
+const H = 440;
+const BOX_W = 110;
+const BOX_H = 60;
+const ORCH_W = 130;
+const ORCH_H = 70;
+
+// Node definitions: id, label, sub, cx (centre x), cy (centre y),
+// family (input / middle / output / orch).
+type Family = 'input' | 'middle' | 'output' | 'orch';
+type Node = {
+  id: string;
+  label: string;
+  sub: string;
+  cx: number;
+  cy: number;
+  w: number;
+  h: number;
+  family: Family;
+};
+
+const COL_X_INPUT = 110;
+const COL_X_MID = 305;
+const COL_X_ORCH = 455;
+const COL_X_OUT = 665;
+
+const nodes: Node[] = [
+  // Inputs (4)
+  { id: 'in1', label: 'Doc corpus',   sub: '17 · 34 chunks',  cx: COL_X_INPUT, cy: 60,  w: BOX_W, h: BOX_H, family: 'input' },
+  { id: 'in2', label: 'Eval set',     sub: '35 Q · gold',     cx: COL_X_INPUT, cy: 145, w: BOX_W, h: BOX_H, family: 'input' },
+  { id: 'in3', label: 'Build output', sub: 'ships · tests',   cx: COL_X_INPUT, cy: 230, w: BOX_W, h: BOX_H, family: 'input' },
+  { id: 'in4', label: 'Telemetry',    sub: 'OTel · traces',   cx: COL_X_INPUT, cy: 315, w: BOX_W, h: BOX_H, family: 'input' },
+  // Middles (3)
+  { id: 'mid1', label: 'RAG-Recall',  sub: 'recall@3 = 0.886', cx: COL_X_MID, cy: 110, w: BOX_W, h: BOX_H, family: 'middle' },
+  { id: 'mid2', label: 'Eval-Gate',   sub: 'G1–G31 · 31 gates', cx: COL_X_MID, cy: 220, w: BOX_W, h: BOX_H, family: 'middle' },
+  { id: 'mid3', label: 'Router',      sub: 'tier-aware',       cx: COL_X_MID, cy: 330, w: BOX_W, h: BOX_H, family: 'middle' },
+  // Orchestrator (1)
+  { id: 'orch', label: 'Orchestrator', sub: 'loop · budget · routing', cx: COL_X_ORCH, cy: 200, w: ORCH_W, h: ORCH_H, family: 'orch' },
+  // Outputs (3)
+  { id: 'out1', label: 'Artifact',  sub: 'repo · paper',       cx: COL_X_OUT, cy: 110, w: BOX_W, h: BOX_H, family: 'output' },
+  { id: 'out2', label: 'Metric',    sub: 'DSR · κ · SLOP',     cx: COL_X_OUT, cy: 220, w: BOX_W, h: BOX_H, family: 'output' },
+  { id: 'out3', label: 'Feedback',  sub: 'reflect & revise',   cx: COL_X_OUT, cy: 330, w: BOX_W, h: BOX_H, family: 'output' },
+];
+
+const nodeById = Object.fromEntries(nodes.map((n) => [n.id, n]));
+
+type Edge = { from: string; to: string; active?: boolean; kind?: 'fwd' | 'fb' };
+const edges: Edge[] = [
+  // Inputs → Orchestrator
+  { from: 'in1', to: 'orch' },
+  { from: 'in2', to: 'orch', active: true },   // active start (input feeds the loop)
+  { from: 'in3', to: 'orch' },
+  { from: 'in4', to: 'orch' },
+  // Orchestrator → Middles
+  { from: 'orch', to: 'mid1' },
+  { from: 'orch', to: 'mid2', active: true },
+  { from: 'orch', to: 'mid3' },
+  // Middles → Outputs
+  { from: 'mid1', to: 'out1' },
+  { from: 'mid2', to: 'out2', active: true },
+  { from: 'mid3', to: 'out1' },
+  // Feedback loop
+  { from: 'out2', to: 'out3', active: true },
+  { from: 'out3', to: 'orch', active: true, kind: 'fb' },
+];
+
+// Compute (x1, y1, x2, y2) anchor points on each box edge. We anchor on
+// the box's geometric centre edge (midpoint of the side closest to the
+// other endpoint) so arrows terminate on the box, not its centre.
+function anchor(id: string, side: 'right' | 'left' | 'top' | 'bottom' | 'auto' = 'auto'): { x: number; y: number } {
+  const n = nodeById[id]!;
+  const ax = { right: n.cx + n.w / 2, left: n.cx - n.w / 2, top: n.cy - n.h / 2, bottom: n.cy + n.h / 2 } as const;
+  const ay = n.cy;
+  if (side === 'auto') return { x: n.cx, y: n.cy };
+  return { x: ax[side], y: ay };
+}
+
+function sideFor(fromId: string, toId: string): 'right' | 'left' | 'top' | 'bottom' {
+  const a = nodeById[fromId]!;
+  const b = nodeById[toId]!;
+  if (Math.abs(b.cx - a.cx) > Math.abs(b.cy - a.cy)) {
+    return b.cx > a.cx ? 'right' : 'left';
+  }
+  return b.cy > a.cy ? 'bottom' : 'top';
+}
+
+interface ResolvedEdge extends Edge {
+  x1: number; y1: number; x2: number; y2: number;
+  sideA: 'right' | 'left' | 'top' | 'bottom';
+  sideB: 'right' | 'left' | 'top' | 'bottom';
+}
+
+const resolved: ResolvedEdge[] = edges.map((e) => {
+  const sideA = sideFor(e.from, e.to);
+  const sideB = sideFor(e.to, e.from);
+  const a = anchor(e.from, sideA);
+  const b = anchor(e.to, sideB);
+  return { ...e, x1: a.x, y1: a.y, x2: b.x, y2: b.y, sideA, sideB };
+});
+
+// Compute the active-loop polyline as a single combined SVG path. Used
+// twice — once for the static amber "track" and once with a smaller
+// dash + animation for the traveling dot.
+const activeEdges = resolved.filter((e) => e.active);
+const activePathD = activeEdges
+  .map((e, i) => `${i === 0 ? 'M' : 'L'} ${e.x1} ${e.y1} L ${e.x2} ${e.y2}`)
+  .join(' ');
+
+// Helper: render a non-active edge as a quadratic-curved path. Curve
+// bias is keyed off `from` so two edges between the same pair don't
+// visually merge. No Math.random — bias index is the edge's position in
+// `resolved`.
+function edgePath(e: ResolvedEdge, idx: number): string {
+  const dx = e.x2 - e.x1;
+  const dy = e.y2 - e.y1;
+  // 12% bow perpendicular to the line direction.
+  const len = Math.sqrt(dx * dx + dy * dy) || 1;
+  const nx = -dy / len;
+  const ny = dx / len;
+  const bow = ((idx % 3) - 1) * 0.12 * len; // -12%, 0%, +12%
+  const mx = (e.x1 + e.x2) / 2 + nx * bow;
+  const my = (e.y1 + e.y2) / 2 + ny * bow;
+  return `M ${e.x1} ${e.y1} Q ${mx} ${my} ${e.x2} ${e.y2}`;
+}
+
+// Estimate active-path length (sum of segment lengths) for stroke-dash.
+function dist(x1: number, y1: number, x2: number, y2: number): number {
+  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+}
+const activeLength = activeEdges.reduce(
+  (acc, e) => acc + dist(e.x1, e.y1, e.x2, e.y2),
+  0,
+);
+---
+<div class:list={['agent-graph', className]}>
+  <svg
+    class="agent-graph__svg"
+    viewBox={`0 0 ${W} ${H}`}
+    preserveAspectRatio="xMidYMid meet"
+    role="img"
+    aria-label="Agent platform: 11 agents arranged in a DAG. Inputs feed the Orchestrator, which dispatches to RAG-Recall, Eval-Gate, and Router, producing Artifact, Metric, and Feedback. Feedback loops back to the Orchestrator."
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <marker
+        id="ag-arrow"
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto-start-reverse"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0,0 L10,5 L0,10 Z" class="ag-arrow-head" />
+      </marker>
+      <marker
+        id="ag-arrow-active"
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto-start-reverse"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0,0 L10,5 L0,10 Z" class="ag-arrow-head ag-arrow-head--active" />
+      </marker>
+    </defs>
+
+    {/* === Subtle background grid === */}
+    <g class="ag-grid" aria-hidden="true">
+      {Array.from({ length: Math.floor(W / 40) + 1 }).map((_, i) => (
+        <line x1={i * 40} y1="0" x2={i * 40} y2={H} class="ag-grid-line ag-grid-line--v" />
+      ))}
+      {Array.from({ length: Math.floor(H / 40) + 1 }).map((_, i) => (
+        <line x1="0" y1={i * 40} x2={W} y2={i * 40} class="ag-grid-line ag-grid-line--h" />
+      ))}
+    </g>
+
+    {/* === Non-active edges (drawn first so nodes overlay them) === */}
+    {resolved.filter((e) => !e.active).map((e, i) => (
+      <path
+        d={edgePath(e, i)}
+        class="ag-edge"
+        fill="none"
+        marker-end="url(#ag-arrow)"
+      />
+    ))}
+
+    {/* === Active-loop static track (amber under-glow) === */}
+    <path
+      d={activePathD}
+      class="ag-edge ag-edge--active-track"
+      fill="none"
+      marker-end="url(#ag-arrow-active)"
+    />
+
+    {/* === Active-loop traveling dot via animated stroke-dashoffset === */}
+    <path
+      d={activePathD}
+      class="ag-edge ag-edge--active-flow"
+      fill="none"
+      style={`--ag-flow-len: ${Math.round(activeLength)}`}
+    />
+
+    {/* === Feedback-leg overlay (dashed segment from Out3 → Orchestrator) === */}
+    {activeEdges
+      .filter((e) => e.kind === 'fb')
+      .map((e, i) => {
+        const idx = activeEdges.indexOf(e);
+        const prior = activeEdges.slice(0, idx);
+        // Find the resolved index for visual re-curve. Use the in-list position
+        // so the bow varies the same way as for non-active edges.
+        const dummyIdx = resolved.findIndex((r) => r === e);
+        return (
+          <path
+            d={edgePath(e, dummyIdx)}
+            class="ag-edge ag-edge--active-flow"
+            fill="none"
+            marker-end="url(#ag-arrow-active)"
+            style={`--ag-flow-len: ${Math.round(activeLength)}; --ag-flow-delay: ${(prior.length / activeEdges.length) * 4}s;`}
+          />
+        );
+      })}
+
+    {/* === Nodes === */}
+    {nodes.map((n) => (
+      <g class:list={['ag-node', `ag-node--${n.family}`, n.id === 'orch' && 'ag-node--highlight']} transform={`translate(${n.cx - n.w / 2} ${n.cy - n.h / 2})`}>
+        <rect
+          class="ag-node-rect"
+          x="0"
+          y="0"
+          width={n.w}
+          height={n.h}
+          rx="6"
+          ry="6"
+        />
+        <text class="ag-node-label" x={n.w / 2} y={n.family === 'orch' ? 32 : 26} text-anchor="middle">
+          {n.label}
+        </text>
+        <text class="ag-node-sub" x={n.w / 2} y={n.family === 'orch' ? 52 : 46} text-anchor="middle">
+          {n.sub}
+        </text>
+      </g>
+    ))}
+
+    {/* === Caption / legend === */}
+    <g class="ag-legend" aria-hidden="true">
+      <text class="ag-legend-text" x="20" y={H - 12}>
+        11 agents · 4 inputs → orchestrator → 3 middles → 3 outputs · feedback loops to orchestrator
+      </text>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .agent-graph {
+    width: 100%;
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-4);
+  }
+  .agent-graph__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+    font-family: var(--ff-sans);
+  }
+
+  /* === Grid === */
+  .ag-grid-line {
+    stroke: var(--c-rule-soft);
+    stroke-width: 1;
+    opacity: 0.55;
+  }
+
+  /* === Edges === */
+  .ag-edge {
+    stroke: var(--c-rule);
+    stroke-width: 1.4;
+    fill: none;
+    opacity: 0.55;
+  }
+  .ag-arrow-head {
+    fill: var(--c-rule);
+    opacity: 0.55;
+  }
+  .ag-edge--active-track {
+    stroke: var(--c-amber);
+    stroke-width: 2.2;
+    opacity: 0.85;
+  }
+  .ag-arrow-head--active {
+    fill: var(--c-amber);
+    opacity: 1;
+  }
+
+  /* === Traveling dot (CSS-only) ===
+     Active path is rendered twice: once as a track, once as a flow
+     segment that uses stroke-dasharray to show a small dashed amber
+     "pulse" sliding along the path. Pure CSS @keyframes; honors
+     `prefers-reduced-motion: reduce`. */
+  .ag-edge--active-flow {
+    stroke: var(--c-amber);
+    stroke-width: 2.2;
+    fill: none;
+    stroke-linecap: round;
+    /* Show a 14-unit "dot" with 9999 units of empty path; the offset
+       animation scrolls the dash so the dot appears to travel. */
+    stroke-dasharray: 14 9999;
+    stroke-dashoffset: 0;
+    animation: ag-flow 4s linear infinite;
+    animation-delay: var(--ag-flow-delay, 0s);
+    opacity: 1;
+  }
+
+  @keyframes ag-flow {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: calc(-1 * var(--ag-flow-len, 1) * 1px);
+    }
+  }
+
+  /* === Reduced motion: freeze dot, no animation === */
+  @media (prefers-reduced-motion: reduce) {
+    .ag-edge--active-flow {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* === Nodes === */
+  .ag-node-rect {
+    fill: var(--c-tape-2);
+    stroke: var(--c-rule);
+    stroke-width: 1.4;
+  }
+  .ag-node--input .ag-node-rect {
+    stroke: var(--c-ink-3);
+  }
+  .ag-node--middle .ag-node-rect {
+    stroke: var(--c-amber-deep);
+  }
+  .ag-node--output .ag-node-rect {
+    stroke: var(--c-ink-3);
+  }
+  .ag-node--highlight .ag-node-rect {
+    fill: var(--c-tape-3);
+    stroke: var(--c-amber);
+    stroke-width: 2;
+  }
+
+  .ag-node-label {
+    fill: var(--c-primary);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .ag-node-sub {
+    fill: var(--c-ink-2);
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .ag-node--highlight .ag-node-label {
+    fill: #fff;
+  }
+  .ag-node--highlight .ag-node-sub {
+    fill: var(--c-amber);
+  }
+
+  .ag-legend-text {
+    fill: var(--c-ink-3);
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 760px) {
+    .agent-graph {
+      padding: var(--sp-3);
+    }
+  }
+</style>

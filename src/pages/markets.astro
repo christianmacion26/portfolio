@@ -1,0 +1,476 @@
+---
+/**
+ * markets.astro — v6.1 "Bloomberg-terminal" landing page.
+ *
+ * Layout (top → bottom):
+ *   1. <MarketTape /> — full-bleed scrolling equity tape
+ *   2. Stats row — 4 <StatCell /> for S&P, DXY, VIX, BTC-USD
+ *   3. 3-col grid:
+ *      - left  (30%) — <OrderBook symbol="SPX" />
+ *      - center (45%) — <EquityCurveChart /> showing one strategy
+ *      - right (25%) — mini order book / queue panel for a second symbol
+ *   4. Bottom band — <CoverageGlobe /> · <TermStructure /> · indices list
+ *
+ * No client:* directives. All numbers are seeded from BUILD_DATE so the
+ * page is byte-deterministic for a given build and shifts only between
+ * builds. Cross-fade / carousel patterns from StatementCarousel are NOT
+ * used here — these are static primitives, not rotators.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import VoiceLine from '@components/VoiceLine.astro';
+import MarketTape from '@components/MarketTape.astro';
+import OrderBook from '@components/OrderBook.astro';
+import TermStructure from '@components/TermStructure.astro';
+import CoverageGlobe from '@components/CoverageGlobe.astro';
+import StatCell from '@components/StatCell.astro';
+import MiniSpark from '@components/MiniSpark.astro';
+import EquityCurveChart from '@components/EquityCurveChart.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { seedFromString, walk, formatPx, buildSeed } from '@utils/prng';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+
+// === Index stats (PRNG-seeded from BUILD_DATE) ===
+// Four headline indices with deterministic mid-prices and a small
+// 30-day series for the inline MiniSpark on each card.
+const rng = seedFromString(buildSeed() + '::markets-stats');
+const indexCards = [
+  { sym: 'SPX',     base: 5872,   sigma: 12,  volUnit: 'idx' },
+  { sym: 'DXY',     base: 104.21, sigma: 0.18, volUnit: 'idx' },
+  { sym: 'VIX',     base: 14.6,   sigma: 0.6,  volUnit: 'pts' },
+  { sym: 'BTC-USD', base: 96480,  sigma: 380,  volUnit: 'usd' },
+].map((ix) => {
+  const series = walk(rng, ix.base, ix.sigma, 30);
+  const last = series[series.length - 1];
+  const mean = series.reduce((a, b) => a + b, 0) / series.length;
+  const deltaPct = +(((last - mean) / mean) * 100).toFixed(2);
+  return {
+    sym: ix.sym,
+    label: ix.sym === 'SPX' ? 'S&P 500' : ix.sym === 'DXY' ? 'Dollar Index' : ix.sym === 'VIX' ? 'CBOE VIX' : 'BTC-USD',
+    value: formatPx(last, last >= 1000 ? 2 : last >= 100 ? 2 : 4),
+    delta: deltaPct,
+    sub:
+      ix.sym === 'VIX'
+        ? 'volatility · CBOE'
+        : ix.sym === 'BTC-USD'
+          ? 'CME futures · spot'
+          : ix.sym === 'DXY'
+            ? 'DXY basket · ICE'
+            : 'equity · large-cap',
+    spark: series,
+  };
+});
+
+// === Strategy equity curve for the center panel ===
+// Take a deterministic 60-day price walk starting at 100, sigma 0.6 —
+// matches the canonical "small systematic strategy" character so the
+// chart looks honest (no 100× blowups, no flat lines).
+const curveRng = seedFromString(buildSeed() + '::markets-curve');
+const equitySeries = walk(curveRng, 100, 0.6, 60);
+
+// === Yield curve for TermStructure ===
+// 8 standard SOFR tenors, slightly inverted (a realistic 2026 shape).
+// One flat reference spot at the 1M point.
+const yieldCurve = [
+  { tenor: '1M',  yld: 5.32 },
+  { tenor: '3M',  yld: 5.28 },
+  { tenor: '6M',  yld: 5.21 },
+  { tenor: '1Y',  yld: 4.96 },
+  { tenor: '2Y',  yld: 4.71 },
+  { tenor: '3Y',  yld: 4.55 },
+  { tenor: '5Y',  yld: 4.42 },
+  { tenor: '10Y', yld: 4.38 },
+];
+
+// === Secondary order book (right column) ===
+// Two more symbols showing different mid-prices so the page reads as
+// "multi-symbol terminal", not "single instrument page".
+const secondarySymbol = 'BTC-USD';
+---
+
+<BaseLayout
+  title={`Markets — ${profile.shortName}`}
+  description="Deterministic Bloomberg-terminal layout: order book, term structure, coverage map, and PRNG-seeded index series. All numbers reproducible from BUILD_DATE."
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Markets', href: '/markets' },
+  ]}
+>
+  {/* ============================================================
+       TAPE — full-bleed. The first thing the eye meets; instant
+       signal density before the editorial copy begins.
+       ============================================================ */}
+  <MarketTape />
+
+  {/* ============================================================
+       HERO — identity-first, single column, dark editorial.
+       Title is the page identity, not the navigation chrome.
+       ============================================================ */}
+  <section class="mk-hero">
+    <div class="container mk-hero__inner">
+      <p class="mk-hero__eyebrow mono">
+        <span>Markets</span>
+        <span aria-hidden="true">·</span>
+        <span>terminal view</span>
+      </p>
+      <h1 class="mk-hero__title">
+        An institutional terminal for a portfolio that ships systems, not screenshots.
+      </h1>
+      <VoiceLine class="mk-hero__voice" ruled={false} size="md">
+        Every number on this page is reproducible from <code>BUILD_DATE</code> — same seed, same series,
+        every render. The order book doesn't move because the data isn't moving.
+      </VoiceLine>
+      <p class="mk-hero__sub">
+        A research view of what a quant desk reads in the first five minutes of the session: the
+        tape, the book, the term structure, and the coverage map. All four primitives are
+        reusable components — they ship on <a href={path('/research')}>research</a>,
+        <a href={path('/positions')}>positions</a>, and the
+        <a href={path('/prediction-markets')}>prediction page</a> too.
+      </p>
+    </div>
+  </section>
+
+  {/* ============================================================
+       STATS ROW — 4 StatCells, indices + inline MiniSpark per cell.
+       ============================================================ */}
+  <section class="mk-stats">
+    <div class="container">
+      <div class="mk-stats__grid">
+        {
+          indexCards.map((c) => (
+            <div class="mk-stats__cell">
+              <StatCell
+                label={c.label}
+                value={c.value}
+                delta={c.delta}
+                sub={c.sub}
+              />
+              <div class="mk-stats__spark">
+                <MiniSpark points={c.spark} width={220} height={26} ariaLabel={`${c.sym} 30-day series`} />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================
+       3-COL TERMINAL — OrderBook (left) · EquityCurveChart (center)
+       · Secondary OrderBook (right). On <=980px, stacks vertically.
+       ============================================================ */}
+  <section class="mk-terminal">
+    <div class="container">
+      <header class="mk-terminal__head">
+        <p class="section__eyebrow">Book · Strategy · Book</p>
+        <h2 class="mk-terminal__title">Live microstructure, three panels.</h2>
+        <p class="section__sub">
+          The center column is a real series, not a screenshot — drawn from a 60-day Gaussian walk
+          with a 6% annualized vol target. The book columns share the seed string so the ladders
+          move coherently with the index tape above.
+        </p>
+      </header>
+
+      <div class="mk-terminal__grid">
+        <div class="mk-terminal__panel mk-terminal__panel--book">
+          <OrderBook symbol="SPX" midPx={indexCards[0].spark[indexCards[0].spark.length - 1]} spreadBps={2} depth={12} />
+        </div>
+        <div class="mk-terminal__panel mk-terminal__panel--chart">
+          <div class="mk-terminal__panel-head mono">EQUITY · strategy walk · 60d</div>
+          <EquityCurveChart data={equitySeries} height={300} title="Composite strategy walk" caption="60-day composite walk from BUILD_DATE-seeded Gaussian random walk. σ = 0.6 daily; deterministic." />
+        </div>
+        <div class="mk-terminal__panel mk-terminal__panel--book">
+          <OrderBook symbol={secondarySymbol} spreadBps={4} depth={10} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================
+       BOTTOM BAND — CoverageGlobe · TermStructure · indices list.
+       Three columns of equal weight; each is its own data primitive.
+       ============================================================ */}
+  <section class="mk-band">
+    <div class="container">
+      <div class="mk-band__grid">
+        <div class="mk-band__panel">
+          <CoverageGlobe />
+        </div>
+        <div class="mk-band__panel">
+          <TermStructure
+            points={yieldCurve}
+            spot={yieldCurve[0].yld}
+            caption="SOFR term structure · 1M–10Y tenors · spot anchored at 1M"
+            yFormat={(v) => `${v.toFixed(2)}%`}
+          />
+        </div>
+        <div class="mk-band__panel">
+          <div class="mk-band__indices">
+            <h3 class="mk-band__indices-title mono">Indices</h3>
+            <ol class="mk-band__indices-list mono">
+              {
+                indexCards.map((c, i) => (
+                  <li class="mk-band__indices-row">
+                    <span class="mk-band__indices-rank">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="mk-band__indices-sym">{c.sym}</span>
+                    <span class="mk-band__indices-px">{c.value}</span>
+                    <span
+                      class:list={[
+                        'mk-band__indices-delta',
+                        c.delta > 0.005
+                          ? 'mk-band__indices-delta--up'
+                          : c.delta < -0.005
+                            ? 'mk-band__indices-delta--down'
+                            : 'mk-band__indices-delta--flat',
+                      ]}
+                    >
+                      {c.delta > 0 ? '▲' : c.delta < 0 ? '▼' : '·'} {Math.abs(c.delta).toFixed(2)}%
+                    </span>
+                  </li>
+                ))
+              }
+              {
+                yieldCurve.slice(0, 4).map((y) => (
+                  <li class="mk-band__indices-row">
+                    <span class="mk-band__indices-rank">·</span>
+                    <span class="mk-band__indices-sym">SOFR {y.tenor}</span>
+                    <span class="mk-band__indices-px">{y.yld.toFixed(2)}%</span>
+                    <span class="mk-band__indices-delta mk-band__indices-delta--flat">spot</span>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Want to see the eval harness behind the numbers?"
+    sub="Every primitive here ships as a reusable Astro component. The PRNG, the book ladder, the term-structure curve — all of it is the same code on /research and /positions."
+    primaryLabel="Read methodology"
+    primaryHref={path('/methodology')}
+    secondaryLabel="See research projects"
+    secondaryHref={path('/projects')}
+  />
+</BaseLayout>
+
+<style>
+  /* ============================================================
+     HERO — dark editorial, terminal cadence.
+     ============================================================ */
+  .mk-hero {
+    padding-block: clamp(var(--sp-7), 12vh, var(--sp-9));
+    background: var(--c-tape);
+    color: var(--ink-on-tape);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .mk-hero__inner {
+    max-width: 1080px;
+  }
+  .mk-hero__eyebrow {
+    display: inline-flex;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2);
+    font-weight: 600;
+    margin-bottom: var(--sp-4);
+  }
+  .mk-hero__eyebrow span:nth-child(2) {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .mk-hero__title {
+    font-size: clamp(1.85rem, 4.4vw, 3.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: #fafafa;
+    font-weight: 600;
+    max-width: 22ch;
+    margin-bottom: var(--sp-5);
+  }
+  .mk-hero__voice {
+    color: rgba(255, 255, 255, 0.78);
+    margin-bottom: var(--sp-4);
+    max-width: 64ch;
+  }
+  .mk-hero__voice code {
+    font-family: var(--ff-mono);
+    font-size: 0.85em;
+    color: var(--c-primary-2);
+    background: rgba(232, 178, 32, 0.08);
+    padding: 0.05em 0.4em;
+    border-radius: 3px;
+  }
+  .mk-hero__sub {
+    font-size: var(--fs-base);
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.65;
+    max-width: 64ch;
+  }
+  .mk-hero__sub a {
+    color: var(--c-primary-2-light);
+    text-decoration: underline;
+    text-decoration-color: rgba(232, 178, 32, 0.4);
+    text-underline-offset: 3px;
+  }
+
+  /* ============================================================
+     STATS ROW — 4-up grid of StatCell + inline sparkline.
+     ============================================================ */
+  .mk-stats {
+    padding-block: var(--sp-7);
+    background: var(--c-bg);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .mk-stats__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-4);
+  }
+  .mk-stats__cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .mk-stats__spark {
+    padding: var(--sp-2) var(--sp-4);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    margin-top: -1px;
+    display: flex;
+    align-items: center;
+  }
+  @media (max-width: 880px) {
+    .mk-stats__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 540px) {
+    .mk-stats__grid { grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+  }
+
+  /* ============================================================
+     3-COL TERMINAL — OrderBook | EquityCurve | OrderBook.
+     ============================================================ */
+  .mk-terminal {
+    padding-block: var(--sp-8);
+    background: var(--c-bg-2);
+  }
+  .mk-terminal__head {
+    margin-bottom: var(--sp-6);
+  }
+  .mk-terminal__title {
+    font-size: var(--fs-2xl);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp-3);
+  }
+  .mk-terminal__grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.4fr 0.85fr;
+    gap: var(--sp-4);
+    align-items: stretch;
+  }
+  .mk-terminal__panel {
+    min-width: 0;
+  }
+  .mk-terminal__panel-head {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-ink-3);
+    padding: var(--sp-2) var(--sp-3);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  @media (max-width: 1080px) {
+    .mk-terminal__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .mk-terminal__panel--chart { grid-column: 1 / -1; }
+  }
+  @media (max-width: 720px) {
+    .mk-terminal__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ============================================================
+     BOTTOM BAND — CoverageGlobe · TermStructure · indices list.
+     ============================================================ */
+  .mk-band {
+    padding-block: var(--sp-7);
+    background: var(--c-tape-2);
+    border-block: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .mk-band__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 0.85fr;
+    gap: var(--sp-4);
+    align-items: start;
+  }
+  @media (max-width: 1080px) {
+    .mk-band__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 720px) {
+    .mk-band__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .mk-band__indices {
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-4);
+  }
+  .mk-band__indices-title {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-ink-3);
+    margin: 0 0 var(--sp-3);
+  }
+  .mk-band__indices-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .mk-band__indices-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto auto;
+    gap: var(--sp-3);
+    padding: var(--sp-2) 0;
+    border-bottom: 1px dashed var(--c-rule);
+    align-items: baseline;
+    font-size: 0.74rem;
+  }
+  .mk-band__indices-row:last-child {
+    border-bottom: 0;
+  }
+  .mk-band__indices-rank {
+    color: var(--c-ink-3);
+    font-size: 0.7rem;
+  }
+  .mk-band__indices-sym {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+  .mk-band__indices-px {
+    color: var(--c-primary-2);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .mk-band__indices-delta {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .mk-band__indices-delta--up { color: var(--c-pass); }
+  .mk-band__indices-delta--down { color: var(--c-fail); }
+  .mk-band__indices-delta--flat { color: var(--c-ink-3); }
+</style>

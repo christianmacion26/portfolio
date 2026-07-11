@@ -1,0 +1,618 @@
+---
+/**
+ * EntryStations.astro — v6.6 denser GRAPHIC VISUAL DYNAMIC polish.
+ *
+ * Replaces the v6.5 measured-text stations grid with a denser panel that
+ * earns its space — Federal Reserve H.4.1 release tables / BIS Quarterly
+ * Review section dividers / NASA Worldview data panels, but with a
+ * Bloomberg-ticker wallop. Four stations, each now carries:
+ *
+ *   1. Top bar        — 1px solid amber line + station ID label (mono, tracked)
+ *   2. Title row      — serif italic, section name in question form
+ *   3. Big number     — sans tabular-nums, headline metric, with 14px icon
+ *   4. Caption        — mono subtitle clarifying the metric
+ *   5. 3 stats        — key/value pairs (mono, 11px) — existing
+ *   6. 4th row        — STATUS · DELTA · NEXT, 1px pipe-separated (NEW)
+ *   7. Trend strip    — 48-wide inline SVG, 4 deterministic bars (existing)
+ *   8. Mini-trend     — 240×40 SVG, 60 bars, last-bar amber, ink-3 rest (NEW)
+ *   9. Event tape     — 24×96 vertical, 5 stacked 6×6 ticks in 4-cat palette (NEW)
+ *  10. Flow arrow     — [ INPUT ] →→→ [ OUTPUT ] replacing old 3 pills (NEW)
+ *  11. Bottom rail    — 1px hairline divider (existing)
+ *
+ * Discipline:
+ *   - Server-rendered, no client JS, no Math.random(), no Date.now()
+ *   - All numbers deterministic from buildSeed() + per-station seed
+ *   - Palette tokens only — no new tokens, no raw hex outside tokens
+ *   - Each station is a clickable anchor with min-height ≥ 44px
+ *   - prefers-reduced-motion: reduce honored (no hover-translate)
+ */
+import { seedFromString, buildSeed } from '@utils/prng';
+import { path } from '@utils/url';
+
+const seed = buildSeed();
+
+// === STATION 01 · MARKETS =========================================
+// Plausible institutional ranges:
+//   2s10s spread (bp): -25..+25
+//   DXY:               99..108
+//   VIX:               11..22
+//   BRENT:             65..92
+const mkRng = seedFromString(seed + '::station-01');
+const mkTwoTen = +(0.42 + (mkRng() - 0.5) * 6).toFixed(2);
+const mkDxy = +(104.6 + (mkRng() - 0.5) * 3.4).toFixed(1);
+const mkVix = +(14.2 + (mkRng() - 0.5) * 4.4).toFixed(1);
+const mkBrent = +(78.4 + (mkRng() - 0.5) * 8.8).toFixed(1);
+const mkSpark = [0.5, 0.7, 0.4, 0.6].map((b) => +(b + (mkRng() - 0.5) * 0.2).toFixed(2));
+const mkSign = mkTwoTen >= 0 ? '+' : '';
+
+// === STATION 02 · PREDICTION ======================================
+//   median implied prob: 0.30..0.70
+//   events count:        6..10
+//   edge range (±):      0.20..0.40
+//   tenor mid:           2027-Q1..Q4
+const pdRng = seedFromString(seed + '::station-02');
+const pdMedian = +(0.62 + (pdRng() - 0.5) * 0.18).toFixed(2);
+const pdEvents = Math.max(6, Math.min(10, Math.round(8 + (pdRng() - 0.5) * 4)));
+const pdEdge = +(0.30 + pdRng() * 0.10).toFixed(2);
+const pdTenor = ['2027-Q1', '2027-Q2', '2027-Q3', '2027-Q4'][Math.floor(pdRng() * 4)];
+const pdSpark = [0.4, 0.6, 0.3, 0.7].map((b) => +(b + (pdRng() - 0.5) * 0.2).toFixed(2));
+
+// === STATION 03 · RESEARCH ========================================
+// Canonical: 9 strategies, 31 gates, 4 categories.
+// Pass rate fluctuates 76..88 across builds.
+const rsRng = seedFromString(seed + '::station-03');
+const rsPass = Math.max(76, Math.min(88, Math.round(82 + (rsRng() - 0.5) * 12)));
+const rsSpark = [0.5, 0.6, 0.7, 0.5].map((b) => +(b + (rsRng() - 0.5) * 0.2).toFixed(2));
+
+// === STATION 04 · AI ==============================================
+// Canonical: 12 models, 7 datasets, 3 harnesses.
+// Pass rate fluctuates 91..97 across builds.
+const aiRng = seedFromString(seed + '::station-04');
+const aiPass = Math.max(91, Math.min(97, Math.round(94 + (aiRng() - 0.5) * 6)));
+const aiSpark = [0.6, 0.5, 0.8, 0.7].map((b) => +(b + (aiRng() - 0.5) * 0.2).toFixed(2));
+
+// === STATUS ROW — AS OF (deterministic UTC+8 time) ================
+const tsRng = seedFromString(seed + '::station-asof');
+const hh = Math.floor(tsRng() * 24).toString().padStart(2, '0');
+const mm = Math.floor(tsRng() * 60).toString().padStart(2, '0');
+const asOf = hh + ':' + mm + ' UTC+8';
+
+// === Per-station new-feature RNGs =================================
+// Each station gets fresh closures so existing renderings stay stable
+// across the v6.5 → v6.6 polish (existing mkRng/pdRng/rsRng/aiRng above
+// are not touched). Pattern follows "seedFromString(buildSeed() +
+// '::station-X-' + i)" with X as the station index and i as the feature
+// tag (spark / row / tape / status / delta / next).
+function miniSparkRng(sIdx: string) {
+  return seedFromString(seed + '::station-' + sIdx + '-spark-' + sIdx);
+}
+function statusRowRng(sIdx: string) {
+  return seedFromString(seed + '::station-' + sIdx + '-row');
+}
+function tapeRngFn(sIdx: string) {
+  return seedFromString(seed + '::station-' + sIdx + '-tape');
+}
+
+// === Status row 4th row content per station =======================
+// STATUS ∈ {LIVE, OPEN, OBS}; DELTA a signed ±0.04-ish; NEXT a hh:mm UTC+8.
+const STATUS_KINDS = ['LIVE', 'OPEN', 'OBS'] as const;
+function statusRowFor(sIdx: string): { status: string; delta: string; next: string } {
+  const r = statusRowRng(sIdx);
+  const status = STATUS_KINDS[Math.floor(r() * STATUS_KINDS.length)];
+  const deltaRaw = (r() - 0.5) * 0.16;
+  const delta = (deltaRaw >= 0 ? '+' : '') + deltaRaw.toFixed(2);
+  const nHH = Math.floor(r() * 24).toString().padStart(2, '0');
+  const nMM = Math.floor(r() * 60).toString().padStart(2, '0');
+  return { status, delta, next: nHH + ':' + nMM + ' UTC+8' };
+}
+
+// === 60-bar mini sparkline generator ==============================
+// Returns an array of 60 [0,1) heights deterministic per station.
+function miniSpark(sIdx: string): number[] {
+  const r = miniSparkRng(sIdx);
+  return Array.from({ length: 60 }, () => r());
+}
+
+// === 5-tick event tape colors (4-color category palette) ==========
+const TAPE_COLORS = ['amber', 'pass', 'cyan', 'fail'] as const;
+function tapeColors(sIdx: string): number[] {
+  const r = tapeRngFn(sIdx);
+  return Array.from({ length: 5 }, () => Math.floor(r() * TAPE_COLORS.length));
+}
+
+// === 14px monoline icons (currentColor; ≤3 lines each) ===========
+const ICONS = {
+  chart:
+    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1.5,10 5,6 8.5,8 12.5,3"/><circle cx="12.5" cy="3" r="1" fill="currentColor" stroke="none"/></svg>',
+  cone:
+    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11 Q 7 1.5 12 11"/><line x1="2" y1="11" x2="12" y2="11"/></svg>',
+  grid:
+    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="1.5" width="3.5" height="3.5"/><rect x="5.25" y="1.5" width="3.5" height="3.5"/><rect x="9" y="1.5" width="3.5" height="3.5"/><rect x="1.5" y="5.25" width="3.5" height="3.5"/><rect x="5.25" y="5.25" width="3.5" height="3.5"/><rect x="9" y="5.25" width="3.5" height="3.5"/><rect x="1.5" y="9" width="3.5" height="3.5"/><rect x="5.25" y="9" width="3.5" height="3.5"/><rect x="9" y="9" width="3.5" height="3.5"/></svg>',
+  net:
+    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="3" cy="3" r="1.5"/><circle cx="11" cy="3" r="1.5"/><circle cx="7" cy="11" r="1.5"/><line x1="3" y1="3" x2="7" y2="11"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="3" y1="3" x2="11" y2="3"/></svg>',
+};
+
+// === 4-bar mini sparkline helper (existing 48x24) =================
+function sparkBars(values: number[]): string {
+  const w = 48;
+  const h = 24;
+  const barW = 6;
+  const gap = (w - barW * values.length) / (values.length - 1);
+  return values
+    .map((v, i) => {
+      const bh = Math.max(2, Math.min(h - 2, v * (h - 4)));
+      const x = i * (barW + gap);
+      const y = h - bh - 1;
+      return (
+        '<rect x="' + x.toFixed(2) + '" y="' + y.toFixed(2) +
+        '" width="' + barW + '" height="' + bh.toFixed(2) +
+        '" fill="currentColor" opacity="' + (0.55 + 0.15 * i).toFixed(2) + '" />'
+      );
+    })
+    .join('');
+}
+
+// === 60-bar mini sparkline (NEW, 240x40) ==========================
+// 60 bars, barW=3, gap=1 → 60*3 + 59*1 = 239 wide. Last bar gets the
+// `entry-station__bar--last` class for amber highlight via CSS.
+function spark60(values: number[]): string {
+  const n = values.length;
+  const barW = 3;
+  const gap = 1;
+  const h = 40;
+  return values
+    .map((v, i) => {
+      const bh = Math.max(2, Math.min(h - 4, v * (h - 6)));
+      const x = i * (barW + gap);
+      const y = h - bh - 1;
+      const cls = i === n - 1 ? ' entry-station__bar--last' : '';
+      return (
+        '<rect class="entry-station__bar' + cls + '"' +
+        ' x="' + x.toFixed(2) + '" y="' + y.toFixed(2) + '"' +
+        ' width="' + barW + '" height="' + bh.toFixed(2) + '" />'
+      );
+    })
+    .join('');
+}
+
+// === 5-tick event-tape SVG (NEW, 24x96) ==========================
+// 5 ticks of 6×6 stacked vertically with even gaps. Tick color comes
+// from the `entry-station__tape-tick--{amber|pass|cyan|fail}` class.
+function tapeRect(colors: number[]): string {
+  const h = 96;
+  const tickSize = 6;
+  const n = colors.length;
+  const totalGap = h - n * tickSize;
+  const gap = totalGap / (n + 1); // 6 gaps (top + 4 between + bottom)
+  return colors
+    .map((colorIdx, i) => {
+      const y = gap + i * (tickSize + gap);
+      const cls =
+        'entry-station__tape-tick entry-station__tape-tick--' +
+        TAPE_COLORS[colorIdx];
+      return (
+        '<rect class="' + cls + '"' +
+        ' x="9" y="' + y.toFixed(2) + '"' +
+        ' width="' + tickSize + '" height="' + tickSize + '" />'
+      );
+    })
+    .join('');
+}
+
+// === Flow arrow (NEW, replacing 3-pill status row) =================
+// [ INPUT ] ->->-> [ OUTPUT ]. Three chevron <path>s in inline SVG.
+function flowArrow(input: string, output: string): string {
+  const chev =
+    '<svg class="entry-station__chevron" width="5" height="8" viewBox="0 0 5 8" fill="none" aria-hidden="true">' +
+    '<path d="M1 1 L 4 4 L 1 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />' +
+    '</svg>';
+  return (
+    '<span class="entry-station__flow-node entry-station__flow-node--in">' +
+    '[ ' + input + ' ]</span>' +
+    '<span class="entry-station__flow-arrow">' + chev + chev + chev + '</span>' +
+    '<span class="entry-station__flow-node entry-station__flow-node--out">' +
+    '[ ' + output + ' ]</span>'
+  );
+}
+
+// === Build per-station feature bags ===============================
+const mkRow = statusRowFor('01');
+const pdRow = statusRowFor('02');
+const rsRow = statusRowFor('03');
+const aiRow = statusRowFor('04');
+const mkMini = miniSpark('01');
+const pdMini = miniSpark('02');
+const rsMini = miniSpark('03');
+const aiMini = miniSpark('04');
+const mkTape = tapeColors('01');
+const pdTape = tapeColors('02');
+const rsTape = tapeColors('03');
+const aiTape = tapeColors('04');
+
+// Compose the 4 stations as a data array so the template stays terse.
+const stations = [
+  {
+    n: '01', name: 'Markets', icon: 'chart', href: '/markets/',
+    title: 'Where is rate-of-change concentrated?',
+    numHtml: mkSign + mkTwoTen + '<span class="entry-station__unit"> bp</span>',
+    caption: '2s10s spread · UST',
+    stats: [['DXY', mkDxy], ['VIX', mkVix], ['BRENT', mkBrent]],
+    spark: mkSpark,
+    row: mkRow,
+    mini: mkMini,
+    tape: mkTape,
+    flowIn: 'UST',
+    flowOut: 'spread',
+  },
+  {
+    n: '02', name: 'Prediction', icon: 'cone', href: '/prediction-markets/',
+    title: 'What does the market price next?',
+    numHtml: pdMedian.toFixed(2),
+    caption: 'median implied probability',
+    stats: [['events', pdEvents], ['edge ±', pdEdge.toFixed(2)], ['tenor', pdTenor]],
+    spark: pdSpark,
+    row: pdRow,
+    mini: pdMini,
+    tape: pdTape,
+    flowIn: 'odds',
+    flowOut: 'edge',
+  },
+  {
+    n: '03', name: 'Research', icon: 'grid', href: '/research/',
+    title: 'Which strategies pass the gates?',
+    numHtml: '9',
+    caption: 'strategies · G1–G31',
+    stats: [['gates', 31], ['categories', 4], ['pass', rsPass + '%']],
+    spark: rsSpark,
+    row: rsRow,
+    mini: rsMini,
+    tape: rsTape,
+    flowIn: 'ideas',
+    flowOut: 'G1-31',
+  },
+  {
+    n: '04', name: 'AI', icon: 'net', href: '/methodology/',
+    title: 'How do evals ship?',
+    numHtml: aiPass + '<span class="entry-station__unit">%</span>',
+    caption: 'eval pass rate · 31 gates',
+    stats: [['models', 12], ['datasets', 7], ['harnesses', 3]],
+    spark: aiSpark,
+    row: aiRow,
+    mini: aiMini,
+    tape: aiTape,
+    flowIn: 'models',
+    flowOut: 'evals',
+  },
+];
+---
+
+<section class="entry-stations" aria-label="Entry points — institutional stations grid">
+  <div class="container entry-stations__inner">
+    <header class="entry-stations__head">
+      <p class="entry-stations__eyebrow mono">Entry points · stations grid</p>
+      <h2 class="entry-stations__title">Four pages, four measured disciplines.</h2>
+    </header>
+
+    <ol class="entry-stations__grid" role="list">
+      {stations.map((s) => (
+        <li class="entry-station-wrap">
+          <a href={path(s.href)} class="entry-station">
+            <div class="entry-station__id mono">
+              <span class="entry-station__id-bar" aria-hidden="true"></span>
+              <span>Station {s.n} · {s.name}</span>
+            </div>
+            <h3 class="entry-station__title">{s.title}</h3>
+            <div class="entry-station__big">
+              <span class="entry-station__icon" set:html={ICONS[s.icon]} />
+              <span class="entry-station__num" set:html={s.numHtml} />
+            </div>
+            <p class="entry-station__caption mono">{s.caption}</p>
+            <ul class="entry-station__stats mono" role="list">
+              {s.stats.map(([k, v]) => (
+                <li>
+                  <span class="entry-station__stat-k">{k}</span>
+                  <span class="entry-station__stat-v">{v}</span>
+                </li>
+              ))}
+            </ul>
+            <div class="entry-station__row mono" aria-label="status, delta, next">
+              <span class="entry-station__row-cell">{s.row.status}</span>
+              <span class="entry-station__row-cell">{s.row.delta}</span>
+              <span class="entry-station__row-cell">{s.row.next}</span>
+            </div>
+            <div class="entry-station__trend" aria-hidden="true">
+              <svg width="48" height="24" viewBox="0 0 48 24" set:html={sparkBars(s.spark)} />
+            </div>
+            <div class="entry-station__minitrend" aria-hidden="true">
+              <svg width="240" height="40" viewBox="0 0 240 40" preserveAspectRatio="xMinYMid meet" set:html={spark60(s.mini)} />
+            </div>
+            <svg class="entry-station__tape" width="24" height="96" viewBox="0 0 24 96" aria-hidden="true" set:html={tapeRect(s.tape)} />
+            <div class="entry-station__flow mono" set:html={flowArrow(s.flowIn, s.flowOut)} />
+            <span class="entry-station__rail" aria-hidden="true"></span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* ============================================================
+     ENTRY STATIONS — v6.6 denser GRAPHIC VISUAL DYNAMIC polish.
+     Federal Reserve H.4.1 / BIS Quarterly Review / NASA Worldview
+     stat-stations grid + Bloomberg-ticker wallop. Off-white text on
+     bg-2 panel, hairline --c-rule borders, --c-amber only on the ID
+     bar and the output node. No drop shadows, no gradients, no
+     rounded corners > 4px.
+     ============================================================ */
+  .entry-stations {
+    background: var(--c-bg-2);
+    color: var(--c-ink);
+    border-block: 1px solid var(--c-rule);
+    padding-block: var(--sp-7);
+  }
+  .entry-stations__inner {
+    max-width: 1080px;
+    min-width: 0;
+  }
+
+  /* === Head (eyebrow + title) === */
+  .entry-stations__head {
+    display: flex; align-items: baseline; gap: var(--sp-5);
+    margin-bottom: var(--sp-5); padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .entry-stations__eyebrow {
+    font-size: var(--fs-xs); text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--c-amber);
+    font-weight: 700; margin: 0;
+  }
+  .entry-stations__title {
+    font-size: var(--fs-lg); color: var(--c-ink);
+    font-weight: 500; letter-spacing: -0.012em; margin: 0;
+  }
+
+  /* === 4-col grid (2x2 tablet, 1x4 mobile) === */
+  .entry-stations__grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0; border-left: 1px solid var(--c-rule);
+  }
+  .entry-station-wrap { min-width: 0; }
+  .entry-station-wrap + .entry-station-wrap { border-left: 1px solid var(--c-rule); }
+
+  /* === Each station — a single clickable anchor ===
+     Right padding reserves a 24px-wide vertical strip on the right
+     edge for the absolute-positioned tape (NEW v6.6). */
+  .entry-station {
+    position: relative;
+    display: flex; flex-direction: column; gap: var(--sp-2);
+    padding: var(--sp-4) calc(var(--sp-4) + 28px) var(--sp-3);
+    min-height: 44px; color: var(--c-ink);
+    text-decoration: none; background: transparent;
+    transition: background var(--transition);
+  }
+  .entry-station:hover,
+  .entry-station:focus-visible {
+    background: rgba(232, 178, 32, 0.04);
+  }
+  .entry-station:focus-visible {
+    outline: 2px solid var(--c-amber); outline-offset: -2px;
+  }
+
+  /* === ID bar — 1px amber line + tracked mono label === */
+  .entry-station__id {
+    display: flex; align-items: center; gap: var(--sp-2);
+    font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--c-ink-2);
+    font-weight: 600; margin-bottom: var(--sp-1);
+  }
+  .entry-station__id-bar {
+    display: inline-block;
+    width: 18px; height: 1px;
+    background: var(--c-amber); flex-shrink: 0;
+    transition: width var(--transition);
+  }
+
+  /* === Title — serif italic (institutional question form) === */
+  .entry-station__title {
+    font-family: var(--ff-math); font-style: italic;
+    font-size: 1.0625rem; line-height: 1.25;
+    color: var(--c-ink); font-weight: 500;
+    letter-spacing: -0.005em;
+    margin: 0 0 var(--sp-2); min-height: 2.7em;
+  }
+
+  /* === Big number — tabular-nums + 14px amber icon === */
+  .entry-station__big {
+    display: flex; align-items: baseline; gap: var(--sp-2);
+    color: var(--c-ink); line-height: 1;
+  }
+  .entry-station__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--c-amber); flex-shrink: 0;
+    width: 14px; height: 14px; transform: translateY(2px);
+  }
+  .entry-station__num {
+    font-size: 1.95rem; font-weight: 500;
+    letter-spacing: -0.022em; color: var(--c-ink);
+  }
+  .entry-station__unit {
+    font-size: 0.5em; color: var(--c-ink-2);
+    font-weight: 400; letter-spacing: 0; margin-left: 0.05em;
+  }
+
+  /* === Caption — mono subtitle under the big number === */
+  .entry-station__caption {
+    font-size: 0.7rem; color: var(--c-ink-3);
+    letter-spacing: 0.04em; margin: 0 0 var(--sp-2);
+  }
+
+  /* === 3 supporting stats — key/value pairs (existing) === */
+  .entry-station__stats {
+    list-style: none; padding: 0; margin: 0 0 var(--sp-1);
+    display: flex; flex-wrap: wrap; gap: 0 var(--sp-3);
+    font-size: 0.7rem; letter-spacing: 0.02em; line-height: 1.6;
+  }
+  .entry-station__stats li {
+    display: inline-flex; align-items: baseline; gap: 0.3em;
+  }
+  .entry-station__stat-k {
+    color: var(--c-ink-3); text-transform: uppercase;
+    letter-spacing: 0.08em; font-size: 0.65rem;
+  }
+  .entry-station__stat-v { color: var(--c-ink); font-weight: 600; }
+
+  /* === 4th row — STATUS · DELTA · NEXT (NEW v6.6) ===
+     1px pipe-separated inline metric triplet. Sits directly below
+     the 3 dl stats, before the existing 48x24 trend. */
+  .entry-station__row {
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    gap: var(--sp-2);
+    font-size: 0.65rem; letter-spacing: 0.06em; line-height: 1.4;
+    color: var(--c-ink-2);
+    margin: 0 0 var(--sp-2);
+  }
+  .entry-station__row-cell {
+    display: inline-block; white-space: nowrap;
+  }
+  .entry-station__row-cell + .entry-station__row-cell {
+    padding-left: var(--sp-2);
+    border-left: 1px solid var(--c-rule);
+  }
+  .entry-station__row-cell:nth-child(2) {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+
+  /* === Trend strip (existing) — 48x24 right-aligned bars === */
+  .entry-station__trend {
+    align-self: flex-end; color: var(--c-amber);
+    margin-bottom: var(--sp-1);
+  }
+  .entry-station__trend svg { display: block; }
+
+  /* === Mini-trend (NEW v6.6) — 240x40, 60 bars, last-bar amber ===
+     Sits directly below the existing 48x24 trend. Fixed viewBox at
+     240x40; on tighter columns (mobile) SVG shrinks via its viewBox.
+     Inner bars styled by class for ink-3 default, amber-light highlight. */
+  .entry-station__minitrend {
+    display: block; width: 100%;
+    margin-bottom: var(--sp-2);
+  }
+  .entry-station__minitrend svg {
+    display: block; width: 100%; height: 40px;
+    max-width: 240px;
+  }
+  .entry-station__minitrend rect {
+    fill: var(--c-ink-3); opacity: 0.55;
+  }
+  .entry-station__minitrend rect.entry-station__bar--last {
+    fill: var(--c-amber-light); opacity: 0.9;
+  }
+
+  /* === Vertical mini-event-tape (NEW v6.6) — 24x96, 5 stacked 6x6 ticks ===
+     Absolute right at the station's right padding edge. Palette
+     colors selected inline via class names mapped in CSS below. */
+  .entry-station__tape {
+    position: absolute;
+    right: var(--sp-3);
+    top: var(--sp-4);
+    width: 24px; height: 96px;
+    pointer-events: none;
+  }
+  .entry-station__tape rect {
+    fill: var(--c-ink-3);
+  }
+  .entry-station__tape rect.entry-station__tape-tick--amber {
+    fill: var(--c-amber-light);
+  }
+  .entry-station__tape rect.entry-station__tape-tick--pass {
+    fill: var(--c-pass);
+  }
+  .entry-station__tape rect.entry-station__tape-tick--cyan {
+    fill: var(--c-accent-cyan);
+  }
+  .entry-station__tape rect.entry-station__tape-tick--fail {
+    fill: var(--c-fail);
+  }
+
+  /* === Flow arrow (NEW v6.6) — [ INPUT ] →→→ [ OUTPUT ] ===
+     Replaces the v6.5 3-pill status row at the bottom of the
+     station. Inline mono with 3 chevron <path>s. */
+  .entry-station__flow {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.7rem; letter-spacing: 0.04em; line-height: 1.4;
+    color: var(--c-ink-2);
+    margin-top: var(--sp-1);
+  }
+  .entry-station__flow-node {
+    display: inline-block; padding: 1px 6px;
+    border: 1px solid var(--c-rule); border-radius: 2px;
+    background: transparent; white-space: nowrap;
+    font-weight: 500;
+  }
+  .entry-station__flow-node--in {
+    color: var(--c-accent-cyan);
+    border-color: var(--c-accent-cyan);
+  }
+  .entry-station__flow-node--out {
+    color: var(--c-amber);
+    border-color: var(--c-amber);
+  }
+  .entry-station__flow-arrow {
+    display: inline-flex; align-items: center; gap: 2px;
+    color: var(--c-ink-3);
+  }
+  .entry-station__chevron { display: block; flex-shrink: 0; }
+
+  /* === Bottom rail — 1px hairline at the bottom of the column === */
+  .entry-station__rail {
+    display: block; position: absolute;
+    left: var(--sp-4); right: calc(var(--sp-4) + 28px); bottom: 0;
+    height: 1px; background: var(--c-rule);
+  }
+  .entry-station-wrap:last-child .entry-station__rail { display: none; }
+
+  /* === Hover affordance — only color shifts; no translate === */
+  .entry-station:hover .entry-station__id-bar,
+  .entry-station:focus-visible .entry-station__id-bar {
+    width: 28px;
+  }
+  .entry-station:hover .entry-station__flow-node--out,
+  .entry-station:focus-visible .entry-station__flow-node--out {
+    background: var(--c-amber);
+    color: var(--c-bg-2);
+  }
+
+  /* === Responsive — 2x2 tablet, 1x4 mobile === */
+  @media (max-width: 880px) {
+    .entry-stations__grid { grid-template-columns: 1fr 1fr; }
+    .entry-station-wrap + .entry-station-wrap { border-left: none; }
+    .entry-station-wrap:nth-child(odd) { border-left: 1px solid var(--c-rule); }
+    .entry-station-wrap:nth-child(-n+2) { border-bottom: 1px solid var(--c-rule); }
+    .entry-station-wrap:nth-child(n+3) { border-bottom: none; }
+    .entry-station__title { font-size: 1rem; min-height: 2.5em; }
+    .entry-station__num { font-size: 1.7rem; }
+  }
+
+  @media (max-width: 540px) {
+    .entry-stations__grid { grid-template-columns: 1fr; }
+    .entry-station-wrap,
+    .entry-station-wrap:nth-child(odd) { border-left: none; }
+    .entry-station-wrap { border-bottom: 1px solid var(--c-rule); }
+    .entry-station-wrap:last-child { border-bottom: none; }
+    .entry-stations__head { flex-direction: column; gap: var(--sp-2); align-items: flex-start; }
+    .entry-station__title { font-size: 1.0625rem; min-height: 0; }
+    .entry-station__num { font-size: 1.95rem; }
+  }
+
+  /* === Reduced motion — disable hover width-grow (no hover-translate used) === */
+  @media (prefers-reduced-motion: reduce) {
+    .entry-station,
+    .entry-station__id-bar {
+      transition: none !important;
+    }
+  }
+</style>

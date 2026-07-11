@@ -1,0 +1,390 @@
+---
+/**
+ * FactorTable.astro — strategy × factor decomposition grid for /research.
+ *
+ * Reads metrics from the frontmatter of each `src/content/projects/quant/*.mdx`
+ * and maps them into a Sharpe / PSR / DSR / PBO column grid. Rules:
+ *
+ *   - "Sharpe" / "Newey-West t" → Sharpe column
+ *   - "PSR" → PSR column
+ *   - "DSR" / "Deflated Sharpe" → DSR column
+ *   - "PBO" / "Probability of Backtest Overfitting" → PBO column
+ *   - Anything else → ignored from this table (rendered in the project card)
+ *   - Missing → em dash (—). Never fabricate.
+ *
+ * Per Standing Order: only report numbers that exist in frontmatter.
+ *
+ * Usage:
+ *   <FactorTable projects={quantProjects} />
+ */
+import { getCollection } from 'astro:content';
+
+interface MetricRow {
+  label: string;
+  value: string;
+  sub?: string;
+}
+
+interface ProjectLite {
+  id: string;
+  data: {
+    title: string;
+    order: number;
+    metrics: MetricRow[];
+  };
+}
+
+interface Props {
+  projects?: ProjectLite[];
+}
+
+const { projects: providedProjects } = Astro.props;
+
+// Default: pull all 9 quant projects and sort by order.
+const projects =
+  providedProjects ??
+  ((await getCollection('project'))
+    .filter((p) => p.data.role === 'quant')
+    .sort((a, b) => a.data.order - b.data.order)
+    .map((p) => ({
+      id: p.id,
+      data: {
+        title: p.data.title,
+        order: p.data.order,
+        metrics: p.data.metrics as MetricRow[],
+      },
+    })));
+
+interface Cell {
+  display: string; // primary line
+  sub?: string; // secondary line, smaller
+}
+
+// Map a frontmatter metric (label-first, value-second) into a column
+// when its label matches a known factor name. Otherwise return null and
+// the cell stays em-dash.
+function mapMetric(metrics: MetricRow[], matchers: RegExp[]): Cell | null {
+  for (const m of metrics) {
+    const label = m.label.toLowerCase();
+    for (const re of matchers) {
+      if (re.test(label)) {
+        return { display: m.value, sub: m.sub };
+      }
+    }
+  }
+  return null;
+}
+
+const empty: Cell = { display: '—' };
+
+const sharpeCols = projects.map((p) => mapMetric(p.data.metrics, [/sharpe/]));
+const psrCols = projects.map((p) => mapMetric(p.data.metrics, [/psr/, /probabilistic sharpe/]));
+const dsrCols = projects.map((p) =>
+  mapMetric(p.data.metrics, [/deflated sharpe/, /\bdsr\b/]),
+);
+const pboCols = projects.map((p) => mapMetric(p.data.metrics, [/pbo/, /probability of backtest/]));
+
+const filledCount = (cells: (Cell | null)[]) =>
+  cells.reduce((acc, c) => acc + (c ? 1 : 0), 0);
+
+// Honest accounting: how many cells are populated vs em-dash. The number
+// is itself a methodology statement — most strategies don't compute
+// every factor, and that's the point.
+const totalsFilled = {
+  sharpe: filledCount(sharpeCols),
+  psr: filledCount(psrCols),
+  dsr: filledCount(dsrCols),
+  pbo: filledCount(pboCols),
+};
+
+// Truncate a long title to fit on two lines in the first column.
+function shortTitle(t: string): string {
+  if (t.length <= 36) return t;
+  // Cut at a word boundary, fall back to a hyphen
+  const cut = t.slice(0, 33);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 18 ? cut.slice(0, lastSpace) : cut).trimEnd() + '…';
+}
+---
+
+<section class="factor" aria-labelledby="factor-heading">
+  <header class="factor__head">
+    <p class="factor__eyebrow mono">Strategy × Factor decomposition</p>
+    <h2 id="factor-heading" class="factor__title">
+      The four numbers that decide whether a strategy survives review.
+    </h2>
+    <p class="factor__sub">
+      Each strategy is scored against the four most-borrowed multiple-testing
+      diagnostics: raw Sharpe, Probabilistic Sharpe Ratio (PSR), Deflated
+      Sharpe Ratio (DSR), and Probability of Backtest Overfitting (PBO).
+      Empty cells report <span class="mono">—</span> — the metric was not
+      computed in the source notebook, not omitted to hide a bad number.
+    </p>
+  </header>
+
+  <div class="factor__tablewrap" role="region" aria-label="Factor decomposition table" tabindex="0">
+    <table class="factor__table">
+      <thead>
+        <tr>
+          <th class="factor__th factor__th--name" scope="col">Strategy</th>
+          <th class="factor__th mono" scope="col">Sharpe</th>
+          <th class="factor__th mono" scope="col">PSR</th>
+          <th class="factor__th mono" scope="col">DSR</th>
+          <th class="factor__th mono" scope="col">PBO</th>
+          <th class="factor__th factor__th--num mono" scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          projects.map((proj, i) => {
+            const sCell = sharpeCols[i] ?? empty;
+            const pCell = psrCols[i] ?? empty;
+            const dCell = dsrCols[i] ?? empty;
+            const bCell = pboCols[i] ?? empty;
+            const filled = [sCell, pCell, dCell, bCell].filter(
+              (c) => c.display !== '—',
+            ).length;
+            return (
+              <tr class="factor__row">
+                <th scope="row" class="factor__name">
+                  <a class="factor__link" href={`/projects/${proj.id}/`}>
+                    <span class="factor__order mono">{String(proj.data.order).padStart(2, '0')}</span>
+                    <span class="factor__name-text">{shortTitle(proj.data.title)}</span>
+                  </a>
+                </th>
+                {[sCell, pCell, dCell, bCell].map((cell) => (
+                  <td class:list={['factor__cell', 'mono', { 'factor__cell--empty': cell.display === '—' }]}>
+                    <span class="factor__cell-val">{cell.display}</span>
+                    {cell.sub && <span class="factor__cell-sub">{cell.sub}</span>}
+                  </td>
+                ))}
+                <td class="factor__notes mono">
+                  <span class="factor__filled">{filled}/4</span>
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="factor__legend">
+    <p class="factor__legend-line">
+      <span class="mono">—</span>
+      <span class="factor__legend-text">
+        metric not computed in source notebook. Cells are deliberately empty —
+        the discipline is reporting only what was actually measured, not what
+        would look balanced in a marketing table.
+      </span>
+    </p>
+    <p class="factor__legend-line factor__legend-line--totals mono">
+      <span>Populated: Sharpe {totalsFilled.sharpe}/9 · PSR {totalsFilled.psr}/9 · DSR {totalsFilled.dsr}/9 · PBO {totalsFilled.pbo}/9</span>
+    </p>
+  </footer>
+</section>
+
+<style>
+  .factor {
+    padding-block: var(--sp-9);
+    background: var(--c-bg);
+    border-block: var(--border-paper);
+  }
+  .factor__head {
+    max-width: 880px;
+    margin-inline: auto;
+    margin-bottom: var(--sp-7);
+    padding-inline: var(--sp-4);
+  }
+  .factor__eyebrow {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--c-primary-2);
+    margin-bottom: var(--sp-3);
+    font-weight: 600;
+  }
+  .factor__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin-bottom: var(--sp-3);
+    max-width: 22ch;
+  }
+  .factor__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: var(--lh-loose, 1.65);
+    max-width: 64ch;
+  }
+
+  .factor__tablewrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: var(--sp-4);
+    overflow-x: auto;
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    background: var(--c-tape-2);
+  }
+  .factor__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: var(--fs-sm);
+    min-width: 680px;
+  }
+
+  .factor__th {
+    text-align: left;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-tape-3);
+    color: var(--c-primary-2);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--fs-xs);
+    border-bottom: 1px solid var(--c-rule);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .factor__th--name {
+    text-align: left;
+    width: 38%;
+  }
+  .factor__th--num {
+    text-align: right;
+    width: 80px;
+  }
+
+  .factor__row + .factor__row .factor__name,
+  .factor__row + .factor__row .factor__cell {
+    border-top: 1px solid var(--c-rule);
+  }
+
+  .factor__name {
+    text-align: left;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-tape-3);
+    color: var(--c-ink);
+    font-weight: 600;
+    vertical-align: top;
+  }
+  .factor__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+    color: var(--c-ink);
+    text-decoration: none;
+    border-bottom: 1px dotted transparent;
+    transition: border-color var(--transition);
+  }
+  .factor__link:hover {
+    border-bottom-color: var(--c-amber);
+  }
+  .factor__order {
+    color: var(--c-primary-2);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .factor__name-text {
+    line-height: 1.25;
+  }
+
+  .factor__cell {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--c-ink);
+    vertical-align: top;
+    font-variant-numeric: tabular-nums;
+    min-width: 100px;
+  }
+  .factor__cell-val {
+    display: block;
+    font-weight: 700;
+    font-size: var(--fs-base);
+    line-height: 1.1;
+  }
+  .factor__cell-sub {
+    display: block;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    margin-top: var(--sp-1);
+    line-height: 1.25;
+  }
+  .factor__cell--empty {
+    color: var(--c-ink-3);
+    opacity: 0.7;
+  }
+  .factor__cell--empty .factor__cell-val {
+    font-weight: 400;
+  }
+
+  .factor__notes {
+    text-align: right;
+    padding: var(--sp-3) var(--sp-4);
+    vertical-align: top;
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+    white-space: nowrap;
+  }
+  .factor__filled {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--c-bg-3);
+    border: 1px solid var(--c-rule);
+    border-radius: 999px;
+    color: var(--c-primary-2);
+    font-weight: 700;
+  }
+
+  .factor__legend {
+    max-width: 880px;
+    margin-inline: auto;
+    margin-top: var(--sp-5);
+    padding-inline: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .factor__legend-line {
+    display: flex;
+    gap: var(--sp-3);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    line-height: 1.5;
+  }
+  .factor__legend-line--totals {
+    color: var(--c-ink-2);
+    font-size: var(--fs-xs);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+
+  @media (max-width: 720px) {
+    .factor__tablewrap {
+      margin-inline: 0;
+      border-radius: 0;
+      border-inline: none;
+    }
+    .factor__th--num {
+      display: none;
+    }
+    .factor__notes {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .factor__link,
+    .factor__link:hover {
+      transition: none;
+    }
+  }
+</style>

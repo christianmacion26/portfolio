@@ -1,0 +1,257 @@
+---
+/**
+ * MarketTape.astro — v6.1 "Bloomberg-terminal" scrolling equity tape.
+ *
+ * Server-rendered. Zero runtime JS. The track is duplicated so the
+ * 60s linear keyframes loop seamlessly without a snap. Color is driven
+ * by sign of `deltaPct` (pass/fail); volatility string is shown as a
+ * faint right-aligned glyph cluster.
+ *
+ * Usage:
+ *   <MarketTape />                                    // default 16 symbols seeded from BUILD_DATE
+ *   <MarketTape symbols={[{sym, px, deltaPct, vol}]} /> // per-page override
+ *
+ * `symbols` defaults to 16 deterministic entries: 9 of Christian's quant
+ * strategies (cross-linkable to /projects/<id>) + 7 headline indices
+ * (S&P, NDX, DJI, DXY, VIX, BTC-USD, GOLD). Numbers seeded from
+ * `buildSeed()` so re-rendering the same build gives byte-identical
+ * output and the next day's build shifts the series.
+ */
+import { seedFromString, walk, formatPx, formatPct, buildSeed } from '@utils/prng';
+
+interface Symbol {
+  sym: string;
+  px: number;
+  deltaPct: number;
+  vol?: string;
+}
+interface Props {
+  symbols?: Symbol[];
+  /** Seconds for one full track traversal. Default 60. */
+  durationSec?: number;
+  /** Stop label shown on right edge (e.g., "BUILD_DATE 2026-07-10"). */
+  trailing?: string;
+}
+const {
+  symbols,
+  durationSec = 60,
+  trailing = 'series seeded from BUILD_DATE for reproducibility',
+} = Astro.props;
+
+// === Default symbol set ===
+// Seed from BUILD_DATE so the same build → same numbers; next-day build
+// → fresh numbers. OrderBook/MiniSpark share the same seed string so the
+// whole page reads as a coherent deterministic session.
+const rng = seedFromString(buildSeed() + '::tape');
+
+// 9 quant strategies — IDs match the filenames under src/content/projects/quant/.
+// Each starts with a baseline price (educational units, notional); the
+// walk drifts it ±10% with a per-strategy volatility that reflects the
+// strategy's character (carry/cointegration low-vol, momentum higher-vol).
+const stratSeeds: { id: string; base: number; sigma: number }[] = [
+  { id: '01-deflated-sharpe',       base: 100, sigma: 1.6 },
+  { id: '02-cross-sectional-momentum', base: 100, sigma: 1.4 },
+  { id: '03-timeseries-momentum-voltarget', base: 100, sigma: 1.1 },
+  { id: '04-variance-risk-premium', base: 100, sigma: 1.7 },
+  { id: '05-pairs-cointegration',   base: 100, sigma: 0.7 },
+  { id: '06-funding-carry',         base: 100, sigma: 0.9 },
+  { id: '07-macro-regime-overlay',  base: 100, sigma: 1.3 },
+  { id: '08-backtest-engine-costs', base: 100, sigma: 1.5 },
+  { id: '09-lookahead-bias-audit',  base: 100, sigma: 0.4 },
+];
+
+// 7 headline market indicators — real instrument names, public-domain
+// data shape. Vol columns are illustrative (e.g., VIX in points,
+// BTC in %).
+const indexSeeds: { sym: string; base: number; sigma: number; decimals: number; volUnit: string }[] = [
+  { sym: 'SPX',     base: 5872, sigma: 8.0,  decimals: 2, volUnit: 'idx' },
+  { sym: 'NDX',     base: 20610, sigma: 28, decimals: 2, volUnit: 'idx' },
+  { sym: 'DJI',     base: 42340, sigma: 65, decimals: 2, volUnit: 'idx' },
+  { sym: 'DXY',     base: 104.21, sigma: 0.08, decimals: 2, volUnit: 'idx' },
+  { sym: 'VIX',     base: 14.6, sigma: 0.32, decimals: 2, volUnit: 'pts' },
+  { sym: 'BTC-USD', base: 96480, sigma: 320, decimals: 0, volUnit: '%' },
+  { sym: 'GOLD',    base: 3312, sigma: 4.8, decimals: 2, volUnit: 'oz' },
+];
+
+// Compose defaults: 9 strategies + 7 indices = 16 tape entries.
+const defaultSymbols: Symbol[] = [];
+
+// Strategies — 100 ticks each, last value is the tape "now" price;
+// delta is computed vs an in-sample baseline of 100.
+for (const s of stratSeeds) {
+  const series = walk(rng, s.base, s.sigma, 100);
+  const px = +series[series.length - 1].toFixed(2);
+  const deltaPct = +(((px - s.base) / s.base) * 100).toFixed(2);
+  defaultSymbols.push({ sym: s.id, px, deltaPct, vol: 'σ' + s.sigma.toFixed(1) });
+}
+for (const i of indexSeeds) {
+  const series = walk(rng, i.base, i.sigma, 80);
+  const px = +series[series.length - 1].toFixed(i.decimals);
+  // Deterministic delta pulled from the same series (last vs. mean).
+  const mean = series.reduce((a, b) => a + b, 0) / series.length;
+  const deltaPct = +(((px - mean) / mean) * 100).toFixed(2);
+  defaultSymbols.push({ sym: i.sym, px, deltaPct, vol: i.volUnit });
+}
+
+const items = (symbols ?? defaultSymbols).map((it) => ({
+  ...it,
+  // Render-time formatted strings. Mono numerics in CSS handle alignment.
+  pxStr: formatPx(it.px, it.px >= 1000 ? 2 : 2),
+  deltaStr: formatPct(it.deltaPct),
+  // Color class: pass/fail for sign of delta, muted for ~0.
+  colorClass:
+    Math.abs(it.deltaPct) < 0.005
+      ? 'muted'
+      : it.deltaPct > 0
+        ? 'pass'
+        : 'fail',
+}));
+
+// IDs we cross-link to /projects/<id>; everything else is a plain label.
+const linkable = new Set(stratSeeds.map((s) => s.id));
+
+// Trailing stop glyph + the in-DOM disclosure.
+const stop = trailing;
+---
+
+<div class="tape" role="region" aria-label="Live market tape (deterministic)">
+  <div class="tape__viewport">
+    <div class="tape__track" style={`--tape-dur: ${durationSec}s`}>
+      {
+        [...items, ...items].map((it) => (
+          <a
+            class:list={['tape__item', `tape__item--${it.colorClass}`]}
+            href={linkable.has(it.sym) ? `/projects/${it.sym}` : undefined}
+          >
+            <span class="tape__sym mono">{it.sym}</span>
+            <span class="tape__px mono">{it.pxStr}</span>
+            <span class="tape__delta mono">{it.deltaStr}</span>
+            {it.vol && <span class="tape__vol mono">{it.vol}</span>}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <div class="tape__stop mono" aria-hidden="true">{stop}</div>
+</div>
+
+<style>
+  .tape {
+    background: var(--c-tape);
+    color: var(--ink-on-tape);
+    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+  .tape__viewport {
+    overflow: hidden;
+    width: 100%;
+    /* v6.3 polish — viewport now 44 px tall so each tape__item has
+       ≥ 44 px tap-target height (was 19 px; audit flagged ~20
+       markers on /markets + /prediction). 8 px more vertical
+       breathing room reads as a tighter institutional banner, not
+       a layout shift. */
+    height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .tape__track {
+    display: inline-flex;
+    gap: var(--sp-6);
+    white-space: nowrap;
+    padding-inline: var(--sp-5);
+    /* 60s default; per-instance override via inline `--tape-dur` */
+    animation: tape-scroll var(--tape-dur, 60s) linear infinite;
+    will-change: transform;
+  }
+  .tape__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: inherit;
+    /* v6.3 polish — every tape anchor ≥ 44×44 tap target (was
+       32×~300 px). The viewport is 44 px so the item reaches
+       the full vertical hit area; horizontal hit is naturally
+       wider than 44 px because each item holds symbol+px+delta
+       +σ. */
+    min-height: 44px;
+    padding-inline: 0.5rem;
+  }
+  .tape__sym {
+    color: var(--c-ink-2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .tape__px {
+    color: var(--c-ink);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .tape__delta {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .tape__vol {
+    color: var(--c-ink-3);
+    font-size: 0.7em;
+    letter-spacing: 0.06em;
+    margin-left: 0.25em;
+  }
+  .tape__item--pass .tape__delta {
+    color: var(--c-pass);
+  }
+  .tape__item--fail .tape__delta {
+    color: var(--c-fail);
+  }
+  .tape__item--muted .tape__delta {
+    color: var(--c-ink-3);
+  }
+  /* Hover: pause the loop on the entire track so the visitor can read
+     a row they're inspecting. */
+  .tape:hover .tape__track {
+    animation-play-state: paused;
+  }
+
+  .tape__stop {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-inline: var(--sp-4);
+    color: var(--c-ink-3);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, transparent, var(--c-tape) 30%);
+    pointer-events: none;
+  }
+
+  @keyframes tape-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Reduced-motion: hold the track still at translateX(0). Visitors who
+     opted out of motion see the tape's first half, frozen — readable,
+     no scroll. The hover-pause rule above uses animation-play-state which
+     doesn't trigger this guard; the universal `* { animation: none }`
+     in tokens.css covers it too. */
+  @media (prefers-reduced-motion: reduce) {
+    .tape__track {
+      animation: none !important;
+    }
+  }
+</style>

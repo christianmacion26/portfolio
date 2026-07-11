@@ -1,66 +1,152 @@
 ---
 /**
- * Ticker.astro — scrolling marquee of "ticker symbols" that represent
- * Christian's headline numbers / pillars. Pure CSS animation.
+ * Ticker.astro — institutional depth-candle strip.
  *
- * Usage:
- *   <Ticker />                                // default site-wide items
- *   <Ticker items={[{sym,val,delta,color}]} /> // per-page override
+ * 24 candles per cycle, each 14×40 with a 1px wick + body rectangle.
+ * Body color drawn from the institutional data palette:
+ *   --c-amber-light      (highlight; ~10% of candles)
+ *   --c-data-positive    (close > open)
+ *   --c-data-negative    (close < open)
+ *   --c-data-neutral     (close ≈ open)
+ * Labels in 9px mono sit under every other candle (12 of 24 slots):
+ *   2y · 5y · 10y · 30y · 1m · 3m · 6m · 12m · BTC · ETH · SOL · DXY
  *
- * Items live in props; defaults match the canonical site-wide set.
- * `color` ∈ 'pass' | 'fail' | 'warn' | 'info' | 'muted'.
+ * Marquee animation: 60s linear infinite, pauses on hover, and
+ * honors `prefers-reduced-motion: reduce` (animation: none).
+ *
+ * All candle data is deterministic from
+ *   `seedFromString(buildSeed() + '::ticker')`
+ * so the same build always renders the same strip; the next build
+ * rolls a fresh candle sequence.
+ *
+ * Replaces the v6.x flat-row pips; same role on the page — a
+ * status bar between the trader desk and the world-event map.
  */
-export interface TickerItem {
-  sym: string;
-  val: string;
-  delta?: string;
-  color?: 'pass' | 'fail' | 'warn' | 'info' | 'muted';
+import { seedFromString, buildSeed } from '@utils/prng';
+
+interface Candle {
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+  label: string;
+  kind: 'amber' | 'up' | 'down' | 'flat';
 }
-interface Props {
-  items?: TickerItem[];
-}
-const { items = [
-  { sym: 'DSR', val: 'Bailey & López de Prado (2014)', delta: '·', color: 'muted' },
-  { sym: 'OOS', val: 'locked windows', delta: '✓', color: 'pass' },
-  { sym: 'PBO', val: 'CSCV-based', delta: '·', color: 'muted' },
-  { sym: 'SHARPE', val: 'deflated — not raw', delta: '·', color: 'muted' },
-  { sym: 'GATES', val: 'G1–G31 mechanical', delta: '✓', color: 'pass' },
-  { sym: 'NDA', val: 'clean — public data only', delta: '✓', color: 'pass' },
-  { sym: 'PROJ', val: '9 quant projects', delta: '✓', color: 'pass' },
-  { sym: 'CTA', val: 'Tier-1 STA', delta: '✓', color: 'pass' },
-  { sym: 'PIT', val: 'point-in-time enforced', delta: '✓', color: 'pass' },
-  { sym: 'UTC', val: '+8 PHT', delta: '·', color: 'muted' },
-] as TickerItem[] } = Astro.props;
+
+const rng = seedFromString(buildSeed() + '::ticker');
+
+// 12 institutional labels — yield tenors and macro tickers, generic
+// per the portfolio's NDA scope. Spread across the bottom of the
+// strip by assigning them to every other candle (positions 0,2,4…22).
+const LABELS = ['2y', '5y', '10y', '30y', '1m', '3m', '6m', '12m', 'BTC', 'ETH', 'SOL', 'DXY'];
+
+const CANDLE_W = 14;
+const CANDLE_H = 40;
+const BODY_W = 10;
+
+// 24 candles per cycle. Body geometry is computed in screen-space
+// (0 → top = high; 40 → bottom = low) so the SVG can render with
+// bare numbers — no per-candle min/max pass.
+const candles: Candle[] = (() => {
+  const arr: Candle[] = [];
+  // Mean-reverting random walk so the strip has direction without
+  // drifting off-canvas. Sigma ~4px per step in screen space.
+  let prev = 20;
+  for (let i = 0; i < 24; i++) {
+    prev = prev + (rng() - 0.5) * 6;
+    prev = Math.max(8, Math.min(32, prev));
+    const open = prev;
+    const close = +(open + (rng() - 0.5) * 12).toFixed(2);
+    const wickHi = Math.max(open, close) + rng() * 4;
+    const wickLo = Math.min(open, close) - rng() * 4;
+    const high = +Math.max(wickHi, open, close).toFixed(2);
+    const low = +Math.min(wickLo, open, close).toFixed(2);
+    // Label only on even positions (12 of 24 slots).
+    const label = i % 2 === 0 ? LABELS[(i / 2) % LABELS.length]! : '';
+    // 10% amber highlight, otherwise classify by close-vs-open sign.
+    const r = rng();
+    let kind: Candle['kind'];
+    if (r < 0.10) kind = 'amber';
+    else if (close > open + 0.4) kind = 'up';
+    else if (close < open - 0.4) kind = 'down';
+    else kind = 'flat';
+    arr.push({ open, close, high, low, label, kind });
+    prev = close;
+  }
+  return arr;
+})();
+
+// Map each candle's OHLC to screen-space y coordinates inside the
+// 14×40 SVG viewport. Pre-computed at build time so the markup is
+// just rect/line elements.
+const candleGeometry = candles.map((c) => {
+  const range = Math.max(c.high - c.low, 0.01);
+  const yOpen = ((c.high - c.open) / range) * CANDLE_H;
+  const yClose = ((c.high - c.close) / range) * CANDLE_H;
+  const bodyY = +Math.min(yOpen, yClose).toFixed(2);
+  const bodyH = +Math.max(Math.abs(yClose - yOpen), 1.5).toFixed(2);
+  return { bodyY, bodyH };
+});
+
+// Duplicate for seamless marquee loop (track translates 0 → -50%).
+const cycle = candles.map((c, i) => ({ candle: c, geom: candleGeometry[i]! }));
 ---
 
-<div class="ticker" role="marquee" aria-label="headline signals">
-  <div class="ticker__track">
-    {
-      [...items, ...items].map((it) => (
-        <span class:list={['ticker__item', `ticker__item--${it.color ?? 'muted'}`]}>
-          <span class="ticker__sym mono">{it.sym}</span>
-          <span class="ticker__val">{it.val}</span>
-          <span class="ticker__delta mono">{it.delta ?? ''}</span>
-        </span>
-      ))
-    }
+<div class="candle-tape" role="marquee" aria-label="depth-candle tape">
+  <div class="candle-tape__track ticker__track">
+    {[...cycle, ...cycle].map(({ candle, geom }, i) => (
+      <div class:list={['candle', `candle--${candle.kind}`]}>
+        <svg
+          class="candle__svg"
+          viewBox={`0 0 ${CANDLE_W} ${CANDLE_H + 12}`}
+          width={CANDLE_W}
+          height={CANDLE_H + 12}
+          aria-hidden="true"
+        >
+          <line
+            class="candle__wick"
+            x1={CANDLE_W / 2}
+            y1="0"
+            x2={CANDLE_W / 2}
+            y2={CANDLE_H}
+          />
+          <rect
+            class="candle__body"
+            x={(CANDLE_W - BODY_W) / 2}
+            y={geom.bodyY}
+            width={BODY_W}
+            height={geom.bodyH}
+          />
+        </svg>
+        {candle.label && (
+          <span class="candle__label mono">{candle.label}</span>
+        )}
+      </div>
+    ))}
   </div>
 </div>
 
 <style>
-  .ticker {
+  /* ============================================================
+     v6.5 — DEPTH-CANDLE STRIP
+     Replaces the flat pips with an institutional candlestick tape.
+     Container is full-bleed tape-dark; the 14×40 SVG + 9px mono
+     label below each candle total a 14×52 unit per slot. The
+     track is duplicated for seamless -50% translateX loop.
+     ============================================================ */
+  .candle-tape {
     overflow: hidden;
     background: var(--c-tape);
     color: var(--ink-on-tape);
     border-block: 1px solid rgba(255, 255, 255, 0.06);
     position: relative;
-    height: 32px;
+    height: 56px;
     display: flex;
     align-items: center;
     user-select: none;
   }
-  .ticker::before,
-  .ticker::after {
+  .candle-tape::before,
+  .candle-tape::after {
     content: '';
     position: absolute;
     top: 0;
@@ -69,64 +155,70 @@ const { items = [
     z-index: 2;
     pointer-events: none;
   }
-  .ticker::before {
+  .candle-tape::before {
     left: 0;
     background: linear-gradient(90deg, var(--c-tape), transparent);
   }
-  .ticker::after {
+  .candle-tape::after {
     right: 0;
     background: linear-gradient(-90deg, var(--c-tape), transparent);
   }
 
-  .ticker__track {
+  .candle-tape__track {
     display: flex;
-    gap: var(--sp-6);
+    align-items: flex-end;
+    gap: 6px;
+    padding-inline: 12px;
     white-space: nowrap;
-    /* Phase D-6: ticker easing clamp. Loop was 60s linear; v5.2 uses 45s
-       with cubic-bezier(0.4, 0, 0.2, 1) for a softer, more institutional
-       feel. Still ≤5s of motion at a time per PROPOSAL-v3.5 note. */
-    animation: ticker-scroll 45s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    /* v6.5 — institutional linear, 60s loop, hover-pause.
+       Pause is a CSS-only trick: animation-play-state pauses
+       while the cursor is over the strip. */
+    animation: candle-scroll 60s linear infinite;
     will-change: transform;
   }
+  .candle-tape:hover .candle-tape__track {
+    animation-play-state: paused;
+  }
 
-  .ticker__item {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--sp-2);
-    font-size: var(--fs-xs);
+  /* Each slot is a vertical stack: 14×40 SVG on top, 9px mono
+     label below. Centered horizontally. */
+  .candle {
+    flex: 0 0 auto;
+    width: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+  .candle__svg {
+    display: block;
+  }
+  .candle__wick {
+    stroke: var(--c-ink-3);
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
+  .candle__body {
+    /* Default to neutral; per-state colors override below. */
+    fill: var(--c-data-neutral);
+    shape-rendering: crispEdges;
+  }
+  .candle--up .candle__body { fill: var(--c-data-positive); }
+  .candle--down .candle__body { fill: var(--c-data-negative); }
+  .candle--flat .candle__body { fill: var(--c-data-neutral); }
+  .candle--amber .candle__body { fill: var(--c-amber-light); }
+
+  .candle__label {
+    font-size: 9px;
+    line-height: 1;
+    color: rgba(230, 237, 243, 0.55);
     letter-spacing: 0.04em;
-  }
-  .ticker__sym {
-    color: #8b949e;
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-  }
-  .ticker__val {
-    color: var(--ink-on-tape);
-    font-weight: 600;
-  }
-  .ticker__delta {
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    font-family: var(--ff-mono);
+    margin-top: 1px;
   }
 
-  .ticker__item--pass .ticker__delta {
-    color: #3fb950;
-  }
-  .ticker__item--fail .ticker__delta {
-    color: #f85149;
-  }
-  .ticker__item--warn .ticker__delta {
-    color: #d29922;
-  }
-  .ticker__item--info .ticker__delta {
-    color: #58a6ff;
-  }
-  .ticker__item--muted .ticker__delta {
-    color: #6e7681;
-  }
-
-  @keyframes ticker-scroll {
+  @keyframes candle-scroll {
     from {
       transform: translateX(0);
     }
@@ -134,8 +226,9 @@ const { items = [
       transform: translateX(-50%);
     }
   }
+
   @media (prefers-reduced-motion: reduce) {
-    .ticker__track {
+    .candle-tape__track {
       animation: none;
     }
   }

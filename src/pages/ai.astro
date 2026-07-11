@@ -1,0 +1,456 @@
+---
+/**
+ * ai.astro — the "/ai" page: 11-agent platform tour + 31-gate eval console.
+ *
+ * v6.1 Mission F. Composes:
+ *   - Stat row (11 agents · 31 gates · 6 projects · 76.5 k LOC Python)
+ *   - <AgentGraph /> — 11-node DAG, animated feedback loop, server SVG
+ *   - Loop engineering explainer — "Idea → Eval → Ship → Measure → Next"
+ *   - 6 AI project cards (collected from src/content/projects/ai/*.mdx)
+ *   - <EvalConsole /> — 31-gate result grid
+ *   - Disclosure: open-source on GitHub, 31 gates enforced by CI
+ *
+ * Determinism: no Math.random / Date.now / argless new Date() in any
+ * frontmatter path. Project order comes from each mdx's `order` field.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AgentGraph from '@components/AgentGraph.astro';
+import EvalConsole from '@components/EvalConsole.astro';
+import MiniSpark from '@components/MiniSpark.astro';
+import VoiceLine from '@components/VoiceLine.astro';
+import Stat from '@components/Stat.astro';
+import { getCollection } from 'astro:content';
+import { path } from '@utils/url';
+
+interface AIProject {
+  slug: string;
+  title: string;
+  summary: string;
+  metrics: { label: string; value: string; sub?: string }[];
+  date: string; // YYYY-MM (deterministic, from frontmatter `date`)
+  order: number;
+}
+
+// Pull the 6 AI projects directly from the existing content collection
+// (no separate file or schema). Order is the frontmatter `order` field;
+// this matches the source-of-truth used by /projects and /research.
+const allProjects = await getCollection('project');
+const aiProjects = allProjects
+  .filter((p) => p.data.role === 'ai')
+  .sort((a, b) => a.data.order - b.data.order)
+  .map<AIProject>((p) => ({
+    slug: p.id,
+    title: p.data.title,
+    summary: p.data.summary,
+    metrics: p.data.metrics,
+    date:
+      p.data.date instanceof Date
+        ? p.data.date.toISOString().slice(0, 7)
+        : String(p.data.date).slice(0, 7),
+    order: p.data.order,
+  }));
+
+// Deterministic sparklines per project, derived from the project slug.
+// Seed is the slug itself so the same project always renders the same
+// mini spark — never Math.random, never Date.now.
+function hashSlug(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+function miniSeries(seed: string, n: number): number[] {
+  let s = hashSlug(seed);
+  const out: number[] = [];
+  let v = 0.5;
+  for (let i = 0; i < n; i++) {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    const u = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    v += (u - 0.5) * 0.18;
+    v = Math.max(0.1, Math.min(0.9, v));
+    out.push(v);
+  }
+  return out;
+}
+
+const loopSteps = [
+  { num: '01', title: 'Idea',    desc: 'Draft the eval harness BEFORE writing the prompt.' },
+  { num: '02', title: 'Eval',    desc: 'Score against G1–G31. Evidence per gate, exit codes.' },
+  { num: '03', title: 'Ship',    desc: 'Tier-routed agents. Per-step budget. Cut-over only on pass.' },
+  { num: '04', title: 'Measure', desc: 'OTel traces · Cohen\'s κ · bootstrap CIs · DSR.' },
+  { num: '05', title: 'Next',    desc: 'Reflect → revise → loop. No-progress halt ships nothing.' },
+];
+---
+<BaseLayout
+  title="AI lane — 11 agents, 31 gates"
+  description="The 11-agent platform and the 31-gate eval console behind every AI artifact. Every LLM output passes the same statistical gate stack as a published systematic strategy."
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'AI', href: '/ai' },
+  ]}
+>
+  <header class="section section--hero ai-hero">
+    <div class="container">
+      <p class="section__eyebrow">AI lane</p>
+      <h1 class="section__title">
+        Eleven agents. One loop. <span class="hl">31 gates.</span>
+      </h1>
+      <VoiceLine size="md">
+        Every LLM output I ship passes the same statistical gate stack as a systematic
+        strategy. The harness is the artifact; the model is interchangeable.
+      </VoiceLine>
+      <div class="ai-hero__stats">
+        <Stat value="11" label="agents" sub="4 inputs · 3 middles · 3 outputs · 1 orchestrator" size="md" variant="primary" />
+        <Stat value="31" label="eval gates" sub="G1–G31 · 6 families · exit-0 contract" size="md" variant="primary" />
+        <Stat value="6" label="projects" sub="in-repo · reproducible" size="md" variant="primary" />
+        <Stat value="76.5k" label="LOC Python" sub="stdlib-heavy · LLM-free scoring" size="md" variant="primary" />
+      </div>
+    </div>
+  </header>
+
+  {/* === Section 1 — the 11-agent platform === */}
+  <section class="section section--alt" id="platform" data-toc-id="platform" data-toc-label="11-agent platform">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">The platform</p>
+        <h2 class="section__title">
+          11 agents. A directed-acyclic graph with one feedback edge.
+        </h2>
+        <p class="section__sub">
+          Four inputs feed the orchestrator. The orchestrator dispatches to
+          RAG-Recall, Eval-Gate, and Router. The middles publish to Artifact,
+          Metric, and Feedback. Feedback loops back to the orchestrator —
+          that loop is the entire system.
+        </p>
+      </header>
+
+      <AgentGraph />
+
+      <ul class="ai-cap-list mono">
+        <li><span class="ai-cap-list__k">inputs</span> <span class="ai-cap-list__v">doc corpus · eval set · build output · telemetry</span></li>
+        <li><span class="ai-cap-list__k">middles</span> <span class="ai-cap-list__v">RAG-Recall · Eval-Gate · Router</span></li>
+        <li><span class="ai-cap-list__k">outputs</span> <span class="ai-cap-list__v">Artifact · Metric · Feedback</span></li>
+        <li><span class="ai-cap-list__k">loop</span> <span class="ai-cap-list__v">Feedback → Orchestrator — this is the system</span></li>
+      </ul>
+    </div>
+  </section>
+
+  {/* === Section 2 — Loop engineering === */}
+  <section class="section" id="loop" data-toc-id="loop" data-toc-label="Loop engineering">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Loop engineering</p>
+        <h2 class="section__title">
+          Idea → Eval → Ship → Measure → Next.
+        </h2>
+        <p class="section__sub">
+          Loop engineering is what the AI lane is. The first step is the harness,
+          not the prompt. The last step is the gate, not the model's confidence.
+        </p>
+      </header>
+
+      <ol class="ai-loop" aria-label="Five-step loop engineering cycle">
+        {loopSteps.map((s) => (
+          <li class="ai-loop__step">
+            <span class="ai-loop__num mono">{s.num}</span>
+            <h3 class="ai-loop__title">{s.title}</h3>
+            <p class="ai-loop__desc">{s.desc}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* === Section 3 — 6 AI projects === */}
+  <section class="section section--alt" id="projects" data-toc-id="projects" data-toc-label="Projects">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">Projects · the surface evidence</p>
+        <h2 class="section__title">
+          Six artifacts. Each is a project, not a demo.
+        </h2>
+        <p class="section__sub">
+          Every project on this page ships with a reproducible harness, a labeled
+          eval set or scored output, and a CI-enforced gate stack. None depend
+          on a paid API at read time.
+        </p>
+      </header>
+
+      <div class="ai-projects">
+        {aiProjects.map((p) => (
+          <article class="ai-card" data-project-slug={p.slug}>
+            <header class="ai-card__head">
+              <span class="ai-card__date mono">{p.date}</span>
+              <h3 class="ai-card__title">
+                <a href={path(`/projects/${p.slug}`)}>{p.title}</a>
+              </h3>
+              <MiniSpark points={miniSeries(p.slug, 16)} stroke="var(--c-amber)" ariaLabel={`mini sparkline for ${p.title}`} />
+            </header>
+            <p class="ai-card__sum">{p.summary}</p>
+            <ul class="ai-card__metrics">
+              {p.metrics.map((m) => (
+                <li class="ai-card__metric">
+                  <span class="ai-card__mvalue mono">{m.value}</span>
+                  <span class="ai-card__mlabel mono">{m.label}</span>
+                  {m.sub && <span class="ai-card__msub mono">{m.sub}</span>}
+                </li>
+              ))}
+            </ul>
+            <a class="ai-card__more" href={path(`/projects/${p.slug}`)}>
+              Open artifact <span aria-hidden="true">→</span>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* === Section 4 — the eval console (31 gates) === */}
+  <section class="section" id="console" data-toc-id="console" data-toc-label="Eval console">
+    <div class="container">
+      <header class="section__head">
+        <p class="section__eyebrow">The eval console</p>
+        <h2 class="section__title">
+          31 gates. One row per gate. The full stack.
+        </h2>
+        <p class="section__sub">
+          Same 31 gates you'd run on a published systematic strategy. Mechanical
+          (exit-0 contract), not opinionated. A pass means the candidate is
+          allowed to surface; a fail means it isn't.
+        </p>
+      </header>
+
+      <EvalConsole />
+
+      <p class="ai-disclosure mono">
+        Open-source on GitHub · 31 gates enforced by CI · same gate stack as a
+        published systematic strategy · stdlib-only Python at the core · the
+        one FAIL on <span class="hl">G26</span> is real — slippage budget overrun
+        caught by the harness, not a model that guessed.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* === Hero === */
+  .ai-hero {
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .ai-hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-3);
+    margin-top: var(--sp-6);
+  }
+  @media (max-width: 760px) {
+    .ai-hero__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* === Caption list under agent graph === */
+  .ai-cap-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-2);
+    margin-top: var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    font-size: 11px;
+  }
+  .ai-cap-list__k {
+    color: var(--c-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: var(--sp-2);
+  }
+  .ai-cap-list__v {
+    color: var(--c-ink-2);
+  }
+  @media (max-width: 760px) {
+    .ai-cap-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* === Loop engineering === */
+  .ai-loop {
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--sp-3);
+    margin: 0;
+    padding: 0;
+  }
+  .ai-loop__step {
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-4);
+    position: relative;
+  }
+  .ai-loop__num {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--c-amber);
+    margin-bottom: var(--sp-2);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .ai-loop__title {
+    margin: 0 0 var(--sp-2) 0;
+    font-size: var(--fs-lg);
+    color: var(--c-primary);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .ai-loop__desc {
+    margin: 0;
+    font-size: 13px;
+    color: var(--c-ink-2);
+    line-height: 1.45;
+  }
+  @media (max-width: 980px) {
+    .ai-loop { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .ai-loop { grid-template-columns: 1fr; }
+  }
+
+  /* === Project cards === */
+  .ai-projects {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sp-4);
+  }
+  @media (max-width: 980px) {
+    .ai-projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .ai-projects { grid-template-columns: 1fr; }
+  }
+
+  .ai-card {
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .ai-card__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+  .ai-card__date {
+    font-size: 11px;
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .ai-card__title {
+    margin: 0;
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--c-primary);
+    letter-spacing: -0.01em;
+  }
+  .ai-card__title a {
+    color: inherit;
+  }
+  .ai-card__title a:hover {
+    color: var(--c-primary-2-light);
+  }
+  .ai-card__sum {
+    margin: 0;
+    font-size: 13px;
+    color: var(--c-ink-2);
+    line-height: 1.5;
+  }
+  .ai-card__metrics {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-2);
+    margin: 0;
+    padding: var(--sp-3);
+    background: var(--c-tape-2);
+    border: 1px solid var(--c-rule-soft);
+    border-radius: var(--radius);
+  }
+  .ai-card__metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.2;
+  }
+  .ai-card__mvalue {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    color: var(--c-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .ai-card__mlabel {
+    font-size: 10px;
+    color: var(--c-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .ai-card__msub {
+    font-size: 10px;
+    color: var(--c-ink-3);
+    margin-top: 2px;
+  }
+  .ai-card__more {
+    margin-top: auto;
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--c-amber);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .ai-card__more:hover {
+    color: var(--c-amber-light);
+  }
+
+  /* === Disclosure === */
+  .ai-disclosure {
+    margin-top: var(--sp-5);
+    padding: var(--sp-4);
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-amber);
+    border-radius: var(--radius);
+    font-size: 12px;
+    color: var(--c-ink-2);
+    line-height: 1.55;
+  }
+  .ai-disclosure .hl {
+    color: var(--c-fail);
+    font-weight: 700;
+    background: var(--c-fail-soft);
+    padding: 0 6px;
+    border-radius: 4px;
+  }
+
+  /* Print: simplify the page */
+  @media print {
+    .ai-hero__stats,
+    .ai-projects {
+      page-break-inside: avoid;
+    }
+  }
+</style>

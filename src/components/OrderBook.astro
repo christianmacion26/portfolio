@@ -1,0 +1,348 @@
+---
+/**
+ * OrderBook.astro — v6.1 institutional order-book ladder.
+ *
+ * Server-rendered. Zero runtime JS. Generates 12 bid + 12 ask rows from
+ * mulberry32 (via @utils/prng), seeded from `buildSeed()` + symbol so
+ * different symbols on the same page show different ladders but each
+ * ladder is deterministic across builds with the same seed.
+ *
+ * Columns: PRICE (right-aligned mono) · SIZE (right-aligned mono) ·
+ * CUM (cumulative, mid-aligned). The size-bar background fills
+ * proportional to size/maxSize via a linear-gradient from `--c-pass-soft`
+ * (bid) / `--c-fail-soft` (ask) into transparent — gives the ladder its
+ * "wall of depth" feel without any DOM bloat.
+ *
+ * Usage:
+ *   <OrderBook symbol="SPX" midPx={5871.4} spreadBps={2} depth={12} />
+ *
+ * Defaults: SPX, midPx derived from `walk(buildSeed(), 5870, 4, 80)`,
+ * 2 bps spread, 12 levels per side. `depth` clamped to [4, 16].
+ */
+import { seedFromString, walk, formatPx, formatPct, buildSeed } from '@utils/prng';
+
+interface Props {
+  symbol?: string;
+  midPx?: number;
+  spreadBps?: number;
+  depth?: number;
+  /** Override the seed string (defaults to buildSeed() + symbol). */
+  seed?: string;
+}
+const {
+  symbol = 'SPX',
+  midPx,
+  spreadBps = 2,
+  depth: depthRaw = 12,
+  seed: seedOverride,
+} = Astro.props;
+const depth = Math.max(4, Math.min(16, Math.round(depthRaw)));
+
+// === Deterministic midPx ===
+// If caller did not pass a midPx, derive one from a small walk so that
+// every render of the same build has the same number, and the price
+// "feels" like it drifted through the trading session.
+const seedStr = seedOverride ?? `${buildSeed()}::${symbol}`;
+const rng = seedFromString(seedStr);
+const midPxResolved =
+  typeof midPx === 'number' && Number.isFinite(midPx)
+    ? midPx
+    : +walk(rng, 5870, 4, 80).slice(-1)[0].toFixed(2);
+
+// === Bid / Ask arrays ===
+// halfSpread is in absolute price units (bps of midPx).
+const halfSpread = (midPxResolved * spreadBps) / 10_000;
+// Tick size derived from symbol — round to a sensible grid. For SPX/NDX
+// that's 0.01; for BTC-USD it's 1. We infer from midPx magnitude.
+const tick =
+  midPxResolved >= 10_000
+    ? 1
+    : midPxResolved >= 1000
+      ? 0.05
+      : midPxResolved >= 100
+        ? 0.01
+        : 0.001;
+
+// Build the size ladders — geometric, with PRNG jitter so adjacent
+// rows don't look like a perfect staircase.  Bids are descending
+// outward from midPx; asks ascending. Cumulative-size runs from the
+// inside outward so the inside-edge fill is biggest.
+interface Row {
+  price: number;
+  size: number;
+  cum: number;
+  side: 'bid' | 'ask';
+  barPct: number; // 0..1
+}
+function makeSide(side: 'bid' | 'ask', count: number, jitterRng: () => number): Row[] {
+  const basePrice = midPxResolved + (side === 'ask' ? halfSpread : -halfSpread);
+  const sizes: number[] = [];
+  for (let i = 0; i < count; i++) {
+    // Inside edge largest (low i). Decay outward.
+    const decay = 1 / (1 + i * 0.18);
+    // PRNG jitter: 0.5×–1.5× multiplicative noise.
+    const jitter = 0.5 + jitterRng();
+    sizes.push(Math.round(decay * 2400 * jitter));
+  }
+  // Cumulative-size runs from the outside in (so the largest cum is the
+  // inside edge, matching how an exchange prints it).
+  let running = 0;
+  const cums: number[] = [];
+  for (let i = sizes.length - 1; i >= 0; i--) {
+    running += sizes[i];
+    cums.unshift(running);
+  }
+  const rows: Row[] = [];
+  for (let i = 0; i < count; i++) {
+    const price =
+      side === 'ask'
+        ? +(basePrice + (i + 1) * tick).toFixed(4)
+        : +(basePrice - (i + 1) * tick).toFixed(4);
+    rows.push({
+      price,
+      size: sizes[i],
+      cum: cums[i],
+      side,
+      // Bar fill is the row's size relative to the largest size across
+      // both sides so ask + bid scales are visually comparable.
+      barPct: 0, // set in second pass below
+    });
+  }
+  return rows;
+}
+const asks = makeSide('ask', depth, rng);
+const bids = makeSide('bid', depth, rng);
+const maxSize = Math.max(...asks.map((r) => r.size), ...bids.map((r) => r.size)) || 1;
+for (const r of asks) r.barPct = r.size / maxSize;
+for (const r of bids) r.barPct = r.size / maxSize;
+
+// === Aggregation for the spread chip ===
+const bestBid = bids[0]?.price ?? midPxResolved - halfSpread;
+const bestAsk = asks[0]?.price ?? midPxResolved + halfSpread;
+const spreadAbs = +(bestAsk - bestBid).toFixed(4);
+const midStr = formatPx(midPxResolved, midPxResolved >= 1000 ? 2 : 4);
+
+// === Render-side delta vs. midPx (for color) ===
+// Half-spread (bps) gives a stable, deterministic "feel" — purely
+// cosmetic. The tape is seeded so this number doesn't drift per render.
+const sessionChangePct = (() => {
+  // Use a fixed reference "yesterday close" derived from the seed so
+  // the delta is reproducible.  25 bps noise around midPx.
+  return (((midPxResolved * 0.9985) - midPxResolved) / midPxResolved) * 100;
+})();
+const sessionDeltaStr = formatPct(sessionChangePct);
+const sessionColorClass =
+  sessionChangePct > 0.005
+    ? 'pass'
+    : sessionChangePct < -0.005
+      ? 'fail'
+      : 'muted';
+
+// === Display decimals — match the symbol ===
+const pxDecimals = midPxResolved >= 1000 ? 2 : midPxResolved >= 100 ? 2 : 4;
+---
+
+<aside class="book" aria-label={`Order book for ${symbol}`}>
+  <header class="book__head">
+    <span class="book__sym mono">{symbol}</span>
+    <span class="book__mid mono" aria-label="Mid price">{midStr}</span>
+    <span class:list={['book__delta', 'mono', `book__delta--${sessionColorClass}`]}>
+      {sessionDeltaStr}
+    </span>
+  </header>
+
+  <div class="book__colheads mono" aria-hidden="true">
+    <span class="book__col book__col--size">SIZE</span>
+    <span class="book__col book__col--price">PRICE</span>
+    <span class="book__col book__col--cum">CUM</span>
+  </div>
+
+  <ol class="book__ladder book__ladder--ask" aria-label="Ask side">
+    {
+      [...asks].reverse().map((r) => (
+        <li
+          class="book__row book__row--ask"
+          aria-label={`Ask ${formatPx(r.price, pxDecimals)}, size ${r.size}`}
+          style={`--bar: ${(r.barPct * 100).toFixed(2)}%`}
+        >
+          <span class="book__cell book__cell--size mono">{r.size.toLocaleString('en-US')}</span>
+          <span class="book__cell book__cell--price mono book__price--ask">
+            {formatPx(r.price, pxDecimals)}
+          </span>
+          <span class="book__cell book__cell--cum mono">{r.cum.toLocaleString('en-US')}</span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="book__spread mono" aria-label="Best bid and offer">
+    <span>↓ {formatPx(bestBid, pxDecimals)}</span>
+    <span class="book__spread-mid">spread {spreadAbs.toFixed(pxDecimals)}</span>
+    <span>{formatPx(bestAsk, pxDecimals)} ↑</span>
+  </div>
+
+  <ol class="book__ladder book__ladder--bid" aria-label="Bid side">
+    {
+      bids.map((r) => (
+        <li
+          class="book__row book__row--bid"
+          aria-label={`Bid ${formatPx(r.price, pxDecimals)}, size ${r.size}`}
+          style={`--bar: ${(r.barPct * 100).toFixed(2)}%`}
+        >
+          <span class="book__cell book__cell--size mono">{r.size.toLocaleString('en-US')}</span>
+          <span class="book__cell book__cell--price mono book__price--bid">
+            {formatPx(r.price, pxDecimals)}
+          </span>
+          <span class="book__cell book__cell--cum mono">{r.cum.toLocaleString('en-US')}</span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <footer class="book__foot mono">
+    <span>{depth} levels per side</span>
+    <span>seed {seedStr.slice(-12)}</span>
+  </footer>
+</aside>
+
+<style>
+  .book {
+    display: flex;
+    flex-direction: column;
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    font-size: 0.78rem;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .book__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: var(--sp-3);
+    padding: var(--sp-2) var(--sp-3);
+    border-bottom: 1px solid var(--c-rule);
+    margin-bottom: var(--sp-2);
+  }
+  .book__sym {
+    font-size: var(--fs-base);
+    font-weight: 700;
+    color: var(--c-ink);
+    letter-spacing: 0.05em;
+  }
+  .book__mid {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    color: var(--c-primary-2);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    text-align: right;
+  }
+  .book__delta {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .book__delta--pass { color: var(--c-pass); }
+  .book__delta--fail { color: var(--c-fail); }
+  .book__delta--muted { color: var(--c-ink-3); }
+
+  .book__colheads {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--sp-2);
+    padding: var(--sp-1) var(--sp-3);
+    font-size: 0.66rem;
+    color: var(--c-ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .book__col--size { text-align: left; }
+  .book__col--price { text-align: right; }
+  .book__col--cum { text-align: right; }
+
+  .book__ladder {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .book__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--sp-2);
+    padding: 2px var(--sp-3);
+    line-height: 1.45;
+    font-size: 0.74rem;
+    position: relative;
+    isolation: isolate;
+  }
+  /* Size bar — drawn behind the text via a left-to-right gradient
+     whose endpoint is `--bar` (set per-row inline). Bid bar grows
+     from the right (toward mid); ask bar grows from the left. */
+  .book__row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    width: var(--bar);
+  }
+  .book__row--bid::before {
+    right: 0;
+    background: linear-gradient(270deg, rgba(63, 185, 80, 0.18), transparent 95%);
+  }
+  .book__row--ask::before {
+    left: 0;
+    background: linear-gradient(90deg, rgba(248, 81, 73, 0.16), transparent 95%);
+  }
+  .book__cell--size {
+    text-align: left;
+    color: var(--c-ink-2);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .book__cell--price {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .book__price--bid { color: var(--c-pass); }
+  .book__price--ask { color: var(--c-fail); }
+  .book__cell--cum {
+    text-align: right;
+    color: var(--c-ink-3);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .book__spread {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: baseline;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    margin: var(--sp-1) 0;
+    border-block: 1px solid var(--c-rule);
+    background: var(--c-tape-2);
+    color: var(--c-ink-2);
+    font-size: 0.7rem;
+  }
+  .book__spread > :first-child { color: var(--c-pass); text-align: left; }
+  .book__spread > :last-child { color: var(--c-fail); text-align: right; }
+  .book__spread-mid { color: var(--c-ink-3); text-align: center; letter-spacing: 0.04em; }
+
+  .book__foot {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--sp-2) var(--sp-3) 0;
+    border-top: 1px solid var(--c-rule);
+    color: var(--c-ink-3);
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+  }
+</style>

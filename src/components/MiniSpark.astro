@@ -1,0 +1,67 @@
+---
+/**
+ * MiniSpark.astro — a compact 60x14 sparkline for stat-cell decoration.
+ *
+ * Smaller and stubbier than Sparkline.astro: no axis ticks, no
+ * end-marker dot, just a polyline. Use in stat strips where the goal
+ * is visual rhythm (a tiny line that suggests a series) and not a
+ * readable data chart.
+ *
+ * Usage:
+ *   <MiniSpark points={[1, 2, 3, 4, 5, 6, 4, 3, 5, 7]} />
+ *   <MiniSpark points={...} stroke="var(--c-pass)" />
+ */
+interface Props {
+  points: number[];
+  width?: number;
+  height?: number;
+  stroke?: string;
+  ariaLabel?: string;
+}
+const {
+  points,
+  width = 60,
+  height = 14,
+  stroke = 'var(--c-amber)',
+  ariaLabel = 'mini sparkline',
+} = Astro.props;
+
+const minY = Math.min(...points);
+const maxY = Math.max(...points);
+const rangeY = maxY - minY || 1;
+const pad = 1.5;
+const stepX = points.length > 1 ? (width - pad * 2) / (points.length - 1) : 0;
+const path = points
+  .map((p, i) => {
+    const x = pad + i * stepX;
+    const y = pad + (height - pad * 2) * (1 - (p - minY) / rangeY);
+    return `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
+  })
+  .join(' ');
+---
+<svg
+  class="mini-spark"
+  width={width}
+  height={height}
+  viewBox={`0 0 ${width} ${height}`}
+  role="img"
+  aria-label={ariaLabel}
+  preserveAspectRatio="none"
+>
+  <path
+    d={path}
+    fill="none"
+    stroke={stroke}
+    stroke-width="1.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
+
+<style>
+  .mini-spark {
+    display: inline-block;
+    vertical-align: middle;
+    opacity: 0.85;
+  }
+</style>

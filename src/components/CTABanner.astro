@@ -1,17 +1,53 @@
 ---
 /**
  * CTABanner.astro — terminal call-to-action strip.
+ *
+ * Two variants:
+ *   - 'standard' (default): the original gradient panel with title,
+ *     sub copy, primary + ghost buttons. Used by /solutions, /proof,
+ *     /for-recruiters, /research, /projects/[...slug]. Backward-compat.
+ *
+ *   - 'graphic': 80px-tall rail with "Ready when you are" serif on the
+ *     left and a 44px-tall amber CTA button on the right, plus a 14×4
+ *     availability matrix below. 48 of 56 cells render in
+ *     --c-amber-light at 0.4 fill-opacity (visual abundance); the
+ *     remaining 8 cells split across open green · booking-confirmed
+ *     amber-solid · blocked ink-3. Matrix is deterministically seeded
+ *     from `seedFromString(buildSeed() + '::availability')` so the
+ *     same build always renders the same grid (Standing Order §1.3).
+ *
+ * v6.0.x notes kept from the inline variant:
+ *   - Uses `path('/contact')` as the canonical CTA target.
+ *   - Honors amber-on-amber hover lift via existing brand tokens.
+ *
+ * v6.6.0 (Mission UI-X) — `variant="graphic"` for the home page:
+ *   Replaces wordy CTA copy with two graphic elements — 80px rail +
+ *   14×4 availability matrix. The 14-row×4-col grid matches "next 14
+ *   days × 4 time-slot columns". 48/56 amber-light cells convey
+ *   "lots of availability"; the 4 green / 2 amber-solid / 2 ink-3
+ *   cells are the legend by example.
+ *
+ * Usage:
+ *   <CTABanner title="..." sub="..." />
+ *   <CTABanner variant="graphic" />
  */
 import { path } from '@utils/url';
+import { seedFromString, buildSeed } from '@utils/prng';
 
 interface Props {
-  title: string;
+  title?: string;
   sub?: string;
   primaryHref?: string;
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
+  /**
+   * 'standard' (default): legacy panel.
+   * 'graphic': 80px rail + 14×4 availability matrix.
+   */
+  variant?: 'standard' | 'graphic';
 }
+
 const {
   title,
   sub,
@@ -19,75 +55,516 @@ const {
   primaryLabel = 'Download resume ↓',
   secondaryHref,
   secondaryLabel = 'Get in touch',
+  variant = 'standard',
 } = Astro.props;
+
 const primary = primaryHref ?? path('/resume');
 const secondary = secondaryHref ?? path('/contact');
+
+// === GRAPHIC variant data ===
+// 14 days × 4 time-slots = 56 cells. We pre-build a deterministic
+// status array: 48 cells at amber-light @ 0.4 (visual abundance), then
+// 4 green (truly open), 2 amber-solid (booking confirmed), 2 ink-3
+// (blocked). The 56 statuses are Fisher-Yates shuffled with a seeded
+// PRNG so the same build always produces the same grid.
+const COLS = 4;
+const ROWS = 14;
+const TOTAL = ROWS * COLS; // 56
+const STATUS_BAG = [
+  ...Array.from({ length: 48 }, () => 'amber-light' as const),
+  ...Array.from({ length: 4 }, () => 'open' as const),
+  ...Array.from({ length: 2 }, () => 'confirmed' as const),
+  ...Array.from({ length: 2 }, () => 'blocked' as const),
+];
+
+if (variant === 'graphic') {
+  const rng = seedFromString(buildSeed() + '::availability');
+  for (let i = STATUS_BAG.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    const tmp = STATUS_BAG[i];
+    STATUS_BAG[i] = STATUS_BAG[j];
+    STATUS_BAG[j] = tmp;
+  }
+}
+
+type CellStatus = 'amber-light' | 'open' | 'confirmed' | 'blocked';
+const grid: { day: string; weekday: string; status: CellStatus[] }[] = (() => {
+  if (variant !== 'graphic') return [];
+  const out: { day: string; weekday: string; status: CellStatus[] }[] = [];
+  // Use the build-time UTC+8 today as day 0. Determinism: buildSeed is
+  // a stable string, so this calendar is stable across rerenders for
+  // the same build.
+  const tzOffsetMin = 8 * 60; // UTC+8 (SG / MY / PH)
+  // Anchor: parse buildSeed which is an ISO date string ("YYYY-MM-DDTHH:MM:SSZ").
+  const seedIso = (() => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(buildSeed());
+    return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : Date.now();
+  })();
+  const startUtcMs = seedIso;
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const WKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  for (let r = 0; r < ROWS; r++) {
+    const localMs = startUtcMs + r * 86_400_000 + tzOffsetMin * 60_000;
+    const d = new Date(localMs);
+    const day = `${MONTHS[d.getUTCMonth()]} ${String(d.getUTCDate()).padStart(2, '0')}`;
+    const weekday = WKDAYS[d.getUTCDay()];
+    const status: CellStatus[] = [];
+    for (let c = 0; c < COLS; c++) {
+      status.push(STATUS_BAG[r * COLS + c]);
+    }
+    out.push({ day, weekday, status });
+  }
+  return out;
+})();
+
+const COL_LABELS = ['09:00', '12:00', '15:00', '18:00'];
+// Legend counts (sum check — must equal 56 and split 48/4/2/2).
+const LEGEND_COUNTS = {
+  'amber-light': STATUS_BAG.filter((s) => s === 'amber-light').length,
+  'open': STATUS_BAG.filter((s) => s === 'open').length,
+  'confirmed': STATUS_BAG.filter((s) => s === 'confirmed').length,
+  'blocked': STATUS_BAG.filter((s) => s === 'blocked').length,
+};
 ---
 
-<section class="cta">
-  <div class="container cta__inner">
-    <div>
-      <h2 class="cta__title">{title}</h2>
-      {sub && <p class="cta__sub">{sub}</p>}
+{variant === 'standard' ? (
+  <section class="cta cta--standard">
+    <div class="container cta__inner">
+      <div>
+        {title && <h2 class="cta__title">{title}</h2>}
+        {sub && <p class="cta__sub">{sub}</p>}
+      </div>
+      <div class="cta__actions">
+        <a class="btn btn--primary" href={primary}>{primaryLabel}</a>
+        <a class="btn btn--ghost" href={secondary}>{secondaryLabel}</a>
+      </div>
     </div>
-    <div class="cta__actions">
-      <a class="btn btn--primary" href={primary}>{primaryLabel}</a>
-      <a class="btn btn--ghost" href={secondary}>{secondaryLabel}</a>
+  </section>
+) : (
+  <section class="cta cta--graphic" aria-label="Schedule a conversation">
+    {/* === 80px CTA rail =============================================
+        Left: "Ready when you are" 24px serif italic in --c-ink.
+        Right: 44px-tall amber button — all-caps, tracked 0.08em, ink
+        text. Single-line layout, fully responsive below. */}
+    <div class="cta__rail container">
+      <p class="cta__rail-headline">Ready when you are.</p>
+      <a class="cta__rail-btn" href={path('/contact')}>
+        <span aria-hidden="true">[</span>
+        <span class="cta__rail-btn-label">CTA: Schedule a 30-min review →</span>
+        <span aria-hidden="true">]</span>
+      </a>
     </div>
-  </div>
-</section>
+
+    {/* === Availability matrix ========================================
+        14 rows (days) × 4 cols (time-slots). Each cell is a 1px-stroked
+        square. Status legend at right. Deterministically seeded. */}
+    <div class="container cta__matrix-wrap">
+      <header class="cta__matrix-head">
+        <p class="cta__matrix-eyebrow mono">Availability · next 14 days · UTC+8</p>
+        <p class="cta__matrix-sub">
+          30-min slots, 4 windows/day. Green = open, amber = confirmed, gray = blocked.
+        </p>
+      </header>
+
+      <div class="cta__matrix" role="table" aria-label="Availability matrix">
+        {/* Column headers */}
+        <div class="cta__row cta__row--head" role="row">
+          <div class="cta__cell cta__cell--corner" role="columnheader" aria-hidden="true"></div>
+          {COL_LABELS.map((label) => (
+            <div class="cta__cell cta__cell--colhead mono" role="columnheader">
+              {label}
+            </div>
+          ))}
+        </div>
+
+        {/* Day rows */}
+        {grid.map((row) => (
+          <div class="cta__row" role="row">
+            <div class="cta__cell cta__cell--rowhead" role="rowheader">
+              <span class="cta__day">{row.day}</span>
+              <span class="cta__weekday mono">{row.weekday}</span>
+            </div>
+            {row.status.map((status, ci) => {
+              const cellIdx = ci; // 0..3
+              return (
+                <div
+                  class:list={[
+                    'cta__cell',
+                    'cta__cell--slot',
+                    `cta__cell--${status}`,
+                  ]}
+                  role="cell"
+                  aria-label={`${row.day} ${row.weekday} ${COL_LABELS[cellIdx]} UTC+8 — ${status}`}
+                  data-status={status}
+                  data-row={row.day}
+                  data-col={COL_LABELS[cellIdx]}
+                >
+                  <span class="cta__cell-fill" aria-hidden="true"></span>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      {/* Legend */}
+      <ol class="cta__legend mono" aria-label="Status legend">
+        <li class="cta__legend-item cta__legend-item--open">
+          <span class="cta__legend-swatch" aria-hidden="true"></span>
+          <span class="cta__legend-label">Open</span>
+          <span class="cta__legend-count">{LEGEND_COUNTS.open}</span>
+        </li>
+        <li class="cta__legend-item cta__legend-item--confirmed">
+          <span class="cta__legend-swatch" aria-hidden="true"></span>
+          <span class="cta__legend-label">Confirmed</span>
+          <span class="cta__legend-count">{LEGEND_COUNTS.confirmed}</span>
+        </li>
+        <li class="cta__legend-item cta__legend-item--blocked">
+          <span class="cta__legend-swatch" aria-hidden="true"></span>
+          <span class="cta__legend-label">Blocked</span>
+          <span class="cta__legend-count">{LEGEND_COUNTS.blocked}</span>
+        </li>
+        <li class="cta__legend-item cta__legend-item--soft">
+          <span class="cta__legend-swatch" aria-hidden="true"></span>
+          <span class="cta__legend-label">Open · soft (48)</span>
+          <span class="cta__legend-count">{LEGEND_COUNTS['amber-light']}</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+)}
 
 <style>
-  .cta {
+  /* === STANDARD variant === */
+  .cta--standard {
     margin-block: var(--sp-7);
     background: linear-gradient(135deg, var(--c-tape) 0%, var(--c-tape-2) 100%);
     color: #fff;
     border-radius: var(--radius-lg);
     border: 1px solid var(--c-amber);
   }
-  .cta__inner {
+  .cta--standard .cta__inner {
     padding: var(--sp-7) var(--sp-5);
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: var(--sp-5);
   }
-  .cta__title {
+  .cta--standard .cta__title {
     color: #fff;
     font-size: var(--fs-2xl);
     margin: 0;
   }
-  .cta__sub {
+  .cta--standard .cta__sub {
     color: rgba(255, 255, 255, 0.85);
     font-size: var(--fs-base);
     margin-top: var(--sp-2);
     max-width: 56ch;
   }
-  .cta__actions {
+  .cta--standard .cta__actions {
     display: flex;
     gap: var(--sp-3);
     flex-wrap: wrap;
   }
-  .cta .btn--primary {
+  .cta--standard .btn--primary {
     background: var(--c-amber-deep);
     color: #fff;
     border: 1px solid var(--c-amber);
   }
-  .cta .btn--primary:hover {
+  .cta--standard .btn--primary:hover {
     background: var(--c-amber);
     color: #0a0d12;
   }
-  .cta .btn--ghost {
+  .cta--standard .btn--ghost {
     border-color: rgba(255, 255, 255, 0.4);
     color: #fff;
   }
-  .cta .btn--ghost:hover {
+  .cta--standard .btn--ghost:hover {
     border-color: #fff;
     background: rgba(255, 255, 255, 0.08);
   }
   @media (max-width: 720px) {
-    .cta__inner {
+    .cta--standard .cta__inner {
       grid-template-columns: 1fr;
     }
   }
+
+  /* === GRAPHIC variant (v6.6 home page) === */
+  .cta--graphic {
+    margin-block: var(--sp-7);
+    padding-block: var(--sp-6);
+    background: var(--c-bg);
+    border-top: 1px solid var(--c-rule-soft);
+    border-bottom: 1px solid var(--c-rule-soft);
+    color: var(--c-ink);
+  }
+
+  .cta__rail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-5);
+    min-height: 80px;
+    padding-block: var(--sp-3);
+  }
+
+  .cta__rail-headline {
+    margin: 0;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem); /* 20..24 */
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    color: var(--c-ink);
+    text-wrap: balance;
+  }
+
+  /* 44px-tall amber button — all-caps, tracked 0.08em, ink text.
+     Bracketed form keeps the institutional voice. */
+  .cta__rail-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5ch;
+    min-height: 44px;
+    padding-inline: var(--sp-5);
+    background: var(--c-amber);
+    color: var(--c-primary-deep);
+    border: 1px solid var(--c-amber-deep);
+    border-radius: var(--radius);
+    font-family: var(--ff-sans);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background var(--transition),
+      color var(--transition),
+      transform var(--transition);
+  }
+  .cta__rail-btn:hover,
+  .cta__rail-btn:focus-visible {
+    background: var(--c-amber-light);
+    color: var(--c-primary-deep);
+    transform: translateY(-1px);
+  }
+  .cta__rail-btn:focus-visible {
+    outline: 2px solid var(--c-amber-light);
+    outline-offset: 2px;
+  }
+  .cta__rail-btn-label {
+    /* The bracketed text reads as a single chunk; keep label tight. */
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .cta__rail {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--sp-4);
+    }
+    .cta__rail-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* === Availability matrix === */
+  .cta__matrix-wrap {
+    margin-top: var(--sp-6);
+  }
+  .cta__matrix-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+  }
+  .cta__matrix-eyebrow {
+    margin: 0;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-ink-2);
+    font-feature-settings: var(--tnum);
+  }
+  .cta__matrix-sub {
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--c-ink-3);
+    text-wrap: balance;
+  }
+
+  /* CSS-grid matrix. Each cell is a square 1px-stroked box. The
+     fixed-aspect column widths come from `aspect-ratio: 1` on the
+     cell; the matrix sets its own grid-template-columns for column
+     headers / row headers / 4 data columns. */
+  .cta__matrix {
+    --cell: 28px;
+    display: grid;
+    /* 1 row-head column + 4 data columns. Gap is 4px so adjacent
+       cells aren't visually overlapping the 1px stroke. */
+    grid-template-columns: 92px repeat(4, var(--cell));
+    gap: 4px;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .cta__row {
+    display: contents;
+  }
+
+  .cta__cell {
+    width: var(--cell);
+    height: var(--cell);
+    box-sizing: border-box;
+    position: relative;
+  }
+  .cta__cell--corner {
+    background: transparent;
+  }
+  .cta__cell--colhead {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    font-size: 10px;
+    color: var(--c-ink-2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .cta__cell--rowhead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    width: 92px;
+    height: var(--cell);
+    padding-right: var(--sp-3);
+    font-family: var(--serif-display);
+    color: var(--c-ink);
+  }
+  .cta__day {
+    font-size: var(--fs-sm);
+    line-height: 1;
+  }
+  .cta__weekday {
+    font-size: 9px;
+    color: var(--c-ink-3);
+    margin-top: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Slot cell — 1px square border. Filled with a swatch span that
+     sits centered inside the 1px box. */
+  .cta__cell--slot {
+    background: transparent;
+    border: 1px solid var(--c-rule);
+  }
+  .cta__cell-fill {
+    position: absolute;
+    inset: 3px; /* 3px inset so the 1px stroke reads as a hairline frame */
+    display: block;
+  }
+
+  /* Each status paints the inner fill (the 1px border is the
+     hairline frame on top of it). */
+  .cta__cell--amber-light .cta__cell-fill {
+    background: var(--c-amber-light);
+    fill-opacity: 0.4;
+    opacity: 0.4;
+  }
+  .cta__cell--open .cta__cell-fill {
+    background: var(--c-pass);
+    opacity: 1;
+  }
+  .cta__cell--confirmed .cta__cell-fill {
+    background: var(--c-amber);
+    opacity: 1;
+  }
+  .cta__cell--blocked .cta__cell-fill {
+    background: var(--c-ink-3);
+    opacity: 0.55;
+  }
+
+  /* Legend */
+  .cta__legend {
+    list-style: none;
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-4);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+  }
+  .cta__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--ff-mono);
+    font-feature-settings: var(--tnum);
+  }
+  .cta__legend-swatch {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    border: 1px solid var(--c-rule);
+  }
+  .cta__legend-item--open .cta__legend-swatch {
+    background: var(--c-pass);
+  }
+  .cta__legend-item--confirmed .cta__legend-swatch {
+    background: var(--c-amber);
+  }
+  .cta__legend-item--blocked .cta__legend-swatch {
+    background: var(--c-ink-3);
+    opacity: 0.55;
+  }
+  .cta__legend-item--soft .cta__legend-swatch {
+    background: var(--c-amber-light);
+    opacity: 0.4;
+  }
+  .cta__legend-count {
+    color: var(--c-ink-3);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta__rail-btn {
+      transition: none;
+    }
+    .cta__rail-btn:hover,
+    .cta__rail-btn:focus-visible {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .cta__matrix {
+      grid-template-columns: 72px repeat(4, 22px);
+      gap: 3px;
+    }
+    .cta__cell--rowhead {
+      width: 72px;
+      padding-right: var(--sp-2);
+    }
+    .cta__cell,
+    .cta__cell--slot {
+      --cell: 22px;
+    }
+  }
 </style>
+</content>
+</invoke>

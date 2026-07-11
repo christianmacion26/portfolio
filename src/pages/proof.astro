@@ -221,6 +221,32 @@ const paginate = (items: any[]) => {
         If it isn't reproducible from public data, it isn't here.
       </VoiceLine>
 
+      {/* v6.3 polish — headline stats moved ABOVE the carousel + motif
+         so all four numeric cells (22 / 9 / 6 / 10) are visible above
+         the 800 px desktop fold. The audit's density check needs ≥ 4
+         filled data cells; previously the stats sat below the fold
+         because the carousel + brand-motif + paragraph together push
+         ~700 px of decoration before the numbers arrive. Each stat
+         still gets data-counter so the odometer fires on scroll-in. */}
+      <ul class="proof-head__stats" aria-label="Proof-page at-a-glance counts">
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="22">22</span>
+          <span class="proof-head__stat-lbl mono">artifacts on this page</span>
+        </li>
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="9">9</span>
+          <span class="proof-head__stat-lbl mono">quant projects</span>
+        </li>
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="6">6</span>
+          <span class="proof-head__stat-lbl mono">AI projects</span>
+        </li>
+        <li class="proof-head__stat">
+          <span class="proof-head__stat-num tnum" data-counter="10">10</span>
+          <span class="proof-head__stat-lbl mono">case studies</span>
+        </li>
+      </ul>
+
       {/* === Proof discipline carousel — six core rules, rotating === */}
       <div class="proof-head__carousel">
         <StatementCarousel
@@ -249,30 +275,7 @@ const paginate = (items: any[]) => {
         Updated when something new ships; never deleted when something expires.
       </p>
 
-      {/* === Headline stats — demoted from oversized to inline strip.
-         v6.0.12 — Phase P polish: numbers arrive AFTER the identity
-         narrative, not before. Each gets a data-counter so the odometer
-         fires when scrolled into view. */}
-      <ul class="proof-head__stats" aria-label="Proof-page at-a-glance counts">
-        <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="22">22</span>
-          <span class="proof-head__stat-lbl mono">artifacts on this page</span>
-        </li>
-        <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="9">9</span>
-          <span class="proof-head__stat-lbl mono">quant projects</span>
-        </li>
-        <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="6">6</span>
-          <span class="proof-head__stat-lbl mono">AI projects</span>
-        </li>
-        <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="10">10</span>
-          <span class="proof-head__stat-lbl mono">case studies</span>
-        </li>
-      </ul>
-
-      <p class="proof-head__ver mono">v6.0.12 · 2026-07-10</p>
+      <p class="proof-head__ver mono">v6.1.0 · 2026-07-11</p>
     </div>
   </header>
 
@@ -291,6 +294,7 @@ const paginate = (items: any[]) => {
       { id: 'track', label: 'Track record' },
       { id: 'public-track', label: 'Public track record' },
       { id: 'disclosure', label: 'NDA disclosure' },
+      { href: path('/markets'), label: 'Live terminal', trailing: '→ /markets' },
     ]}
   />
 
@@ -851,6 +855,12 @@ const paginate = (items: any[]) => {
     text-decoration: underline;
     text-decoration-color: var(--c-rule-strong);
     text-underline-offset: 3px;
+    /* v6.3 polish — `/now` link inside the proof intro paragraph was
+       42×44 px on mobile (1 px short of WCAG 2.5.5 44×44 width).
+       Padding-inline:0.25rem adds 8 px of horizontal hit-target
+       without breaking the inline-flow of the sentence (the underline
+       stays exactly under the visible glyph; only the hit rect grows). */
+    padding-inline: 0.25rem;
   }
   .proof-head__sub a:hover {
     text-decoration-color: var(--c-primary-2-deep);
@@ -1072,6 +1082,11 @@ const paginate = (items: any[]) => {
     border: 1px solid var(--c-rule);
     border-radius: 999px;
     cursor: pointer;
+    /* v6.3 polish — audit flagged 9 chips at 41-101×30 px on mobile
+       (PI/QUANT/AI buttons at 30 px tall, AI narrower than 44 px).
+       min-height: 44 + min-width: 44 enforces WCAG 2.5.5. */
+    min-height: 44px;
+    min-width: 44px;
     transition:
       color var(--transition),
       border-color var(--transition),

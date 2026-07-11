@@ -89,7 +89,7 @@ if you are surfacing the candidate to a hiring manager:
 
 ## Build metadata
 
-- **Version:** v6.0.12 · built 2026-07-10.
+- **Version:** v6.1.0 · built 2026-07-10.
 
 - **Version:** v6.0.7d · built 2026-07-10.
 
@@ -113,4 +113,4 @@ Then **the same pattern was rolled out across the rest of the site** so the inst
 
 ---
 
-*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-10 · v6.0.12 (additive on v6.0.11 full-dark palette: fixed `StatementCarousel` JavaScript driver being silently dropped by Astro 7.0.7 — Astro's per-component `<script>` hoisting was not producing a JS chunk in `dist/_astro/`, so the carousel rendered as static HTML with no behavior. Moved driver to `src/scripts/carousel.ts` and imported it from BaseLayout's `<script>` block (alongside reveal-on-scroll, odometer, active-nav, copy-button, scroll-progress — the bundle that's been shipping reliably). Now `setInterval` (auto-advance), `aria-hidden`/`aria-pressed` toggle, and `prefers-reduced-motion` gate are all in the deployed bundle. Same fix needed for `DSRCalculator.astro` and `SectionTOC.astro` if they ever need to function. 9 NDA rules pass 0 violations across 93 dist files.)*
+*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-10 · v6.1.0.12 (additive on v6.0.11 full-dark palette: fixed `StatementCarousel` JavaScript driver being silently dropped by Astro 7.0.7 — Astro's per-component `<script>` hoisting was not producing a JS chunk in `dist/_astro/`, so the carousel rendered as static HTML with no behavior. Moved driver to `src/scripts/carousel.ts` and imported it from BaseLayout's `<script>` block (alongside reveal-on-scroll, odometer, active-nav, copy-button, scroll-progress — the bundle that's been shipping reliably). Now `setInterval` (auto-advance), `aria-hidden`/`aria-pressed` toggle, and `prefers-reduced-motion` gate are all in the deployed bundle. Same fix needed for `DSRCalculator.astro` and `SectionTOC.astro` if they ever need to function. 9 NDA rules pass 0 violations across 93 dist files.)*

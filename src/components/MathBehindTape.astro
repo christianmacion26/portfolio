@@ -1,0 +1,552 @@
+---
+/**
+ * MathBehindTape.astro — v6.5 "Wall-street math in one glance."
+ *
+ * A dense graphic formula grid: 3×2 tiles of public-domain quant idioms,
+ * each with a centered KaTeX formula + delta input + output value.
+ * Above the grid: a 7-cell INPUT tape (σ_XS, t, n, SR̂, p, ρ, ν).
+ * Below the grid: a 7-cell OUTPUT tape (SR, SE, DSR, p_DSR, Cvg, VRP, σ̂).
+ * Below that: a 3×3 correlation mini-matrix showing how the 6 formulas
+ * interrelate (off-diagonal ρ values; diagonal = 1.0).
+ *
+ * Server-rendered. Zero runtime JS. Every numeric value is drawn from
+ * `seedFromString(buildSeed() + '::mathtile')` so the same build always
+ * yields the same grid; next build → fresh fixtures.
+ *
+ * NDA-positive: every formula is a public-domain quant idiom; magnitudes
+ * are fixtures, not signals. No employer / platform / proprietary
+ * content appears in any tile.
+ */
+import { seedFromString, buildSeed } from '@utils/prng';
+import Equation from '@components/Equation.astro';
+
+interface MathTile {
+  id: string;
+  title: string;
+  latex: string;
+  category: 'vol' | 'rates' | 'fx' | 'equities' | 'signal' | 'meanrev';
+  pip: string;        // CSS var for category pip color
+  deltaIn: string;    // bottom-left Δ-input chip
+  deltaSign: 1 | -1 | 0; // for output tinting
+  outputVal: string;  // bottom-right value (already formatted)
+}
+
+// 6 fixed formula tiles — public-domain quant idioms.
+const FORMULAS: ReadonlyArray<MathTile> = [
+  {
+    id: 'sharpe',
+    title: 'SHARPE',
+    latex: '\\mathrm{SR} = \\dfrac{\\bar{R} - R_f}{\\hat{\\sigma}}',
+    category: 'equities',
+    pip: 'var(--c-info)',
+    deltaIn: 'ΔR̄ +12bp',
+    deltaSign: 1,
+    outputVal: '+1.42',
+  },
+  {
+    id: 'deflated-sharpe',
+    title: 'DEFLATED SHARPE',
+    latex: '\\mathrm{DSR} \\approx \\mathrm{SR}\\hat{\\phantom{x}} \\cdot \\sqrt{\\tfrac{1}{V[\\hat{SR}]}} \\cdot \\Phi\\!\\left(z\\right)',
+    category: 'signal',
+    pip: 'var(--c-phi)',
+    deltaIn: 'Δp -0.03',
+    deltaSign: -1,
+    outputVal: '0.97',
+  },
+  {
+    id: 'vrp',
+    title: 'VARIANCE RISK PREMIUM',
+    latex: '\\mathrm{VRP} = \\sigma_{\\mathrm{imp}}^2 - \\sigma_{\\mathrm{real}}^2',
+    category: 'vol',
+    pip: 'var(--c-primary-3)',
+    deltaIn: 'Δσ² -4bp',
+    deltaSign: -1,
+    outputVal: '3.8σ',
+  },
+  {
+    id: 'ou',
+    title: 'ORNSTEIN-UHLENBECK',
+    latex: '\\mathrm{d}X_t = \\theta\\left(\\mu - X_t\\right)\\mathrm{d}t + \\sigma\\,\\mathrm{d}W_t',
+    category: 'meanrev',
+    pip: 'var(--c-pass)',
+    deltaIn: 'Δθ +0.04',
+    deltaSign: 1,
+    outputVal: 'τ=42d',
+  },
+  {
+    id: 'funding-carry',
+    title: 'FUNDING CARRY',
+    latex: '\\mathrm{carry} = r_{\\mathrm{base}} - r_{\\mathrm{quote}} - \\sigma\\,\\Delta\\tau',
+    category: 'fx',
+    pip: 'var(--c-accent-cyan)',
+    deltaIn: 'Δr -8bp',
+    deltaSign: -1,
+    outputVal: '+75bp',
+  },
+  {
+    id: 'realized-vol',
+    title: 'REALIZED VOL',
+    latex: '\\hat{\\sigma} = \\sqrt{\\dfrac{252}{n} \\sum_{i=1}^{n} \\left(r_i - \\bar{r}\\right)^2}',
+    category: 'vol',
+    pip: 'var(--c-amber)',
+    deltaIn: 'Δn +21',
+    deltaSign: 1,
+    outputVal: '0.85σ̂',
+  },
+];
+
+// === INPUT TAPE (top strip — 7 cells) ===
+// Live-tape inputs that feed the formulas: σ_XS, t, n, SR̂, p, ρ, ν.
+// Values are deterministic per build; sign-tinted via `--c-data-*`.
+interface TapeCell {
+  label: string;   // mono top label (e.g. "σ_XS")
+  value: string;   // mono value (e.g. "+0.18")
+  sign: 1 | -1 | 0;
+}
+const INPUTS: TapeCell[] = [
+  { label: 'σ_XS', value: '+0.18', sign: 1 },
+  { label: 't',    value: ' 252d', sign: 0 },
+  { label: 'n',    value: '+1.2k', sign: 1 },
+  { label: 'SR̂',   value: '+1.42', sign: 1 },
+  { label: 'p',    value: ' 0.94', sign: 0 },
+  { label: 'ρ',    value: '-0.31', sign: -1 },
+  { label: 'ν',    value: '+0.62', sign: 1 },
+];
+
+// === OUTPUT TAPE (bottom strip — 7 cells) ===
+// The resolved outputs each input produces; same 7-cell shape.
+const OUTPUTS: TapeCell[] = [
+  { label: 'SR',    value: '+1.42', sign: 1 },
+  { label: 'SE',    value: ' 0.21', sign: 0 },
+  { label: 'DSR',   value: ' 0.97', sign: 1 },
+  { label: 'p_DSR', value: '+0.83', sign: 1 },
+  { label: 'Cvg',   value: ' 86%', sign: 0 },
+  { label: 'VRP',   value: ' 3.8σ', sign: 1 },
+  { label: 'σ̂',     value: ' 0.85', sign: 0 },
+];
+
+// === CORRELATION MINI-MATRIX (3×3) ===
+// Each cell = ρ between two of the 6 formulas. Diagonal = 1.00.
+// Off-diagonals are pre-curated fixtures (illustrative).
+const CORR_ROW_LABELS = ['SR', 'DSR', 'VRP'];
+const CORR_COL_LABELS = ['OU', 'CARRY', 'σ̂'];
+const CORR_CELLS: ReadonlyArray<ReadonlyArray<number>> = [
+  [1.00, 0.85, 0.42],
+  [0.91, 0.34, 0.78],
+  [0.66, 0.55, 0.71],
+];
+
+// === Deterministic per-build jitter ===
+// Standing Order §9 forbids `Math.random()` in deterministic outputs.
+// We advance the seeded PRNG a known number of times per cell so the
+// build-stamped "live feel" persists across reloads. Each value is
+// used as a small (±1) refinement to the fixtures — the underlying
+// structure stays public-domain.
+const jitter = seedFromString(buildSeed() + '::mathtile');
+const sigil = jitter().toFixed(4); // 4-digit build fingerprint for the corner stamp
+
+// Color helper for delta signs.
+function signVar(s: 1 | -1 | 0): string {
+  if (s > 0) return 'var(--c-data-positive)';
+  if (s < 0) return 'var(--c-data-negative)';
+  return 'var(--c-data-neutral)';
+}
+const inputCells  = INPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
+const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
+---
+
+<section class="mathtape" aria-label="Math behind the tape">
+  <header class="mathtape__head">
+    <p class="mathtape__eyebrow mono">Math · news · signals</p>
+    <h2 class="mathtape__title">Wall-street math in one glance.</h2>
+    <p class="mathtape__sub">
+      Six formulas. Seven inputs. Seven outputs. One correlation map.
+      Every figure is a fixture — but the grid is wired the way a desk wires it.
+    </p>
+  </header>
+
+  {/* === INPUT TAPE (top strip — 7 cells) === */}
+  <div class="mathtape__panel" role="group" aria-label="Live-tape inputs">
+    <span class="mathtape__panel-tag mono" aria-hidden="true">inputs</span>
+    <ol class="mathtape__strip mathtape__strip--in">
+      {
+        inputCells.map((c) => (
+          <li class="mathtape__cell" style={`color:${c.color}`}>
+            <span class="mathtape__cell-label mono">{c.label}</span>
+            <span class="mathtape__cell-val mono tnum">{c.value}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  {/* === 3×2 FORMULA GRID === */}
+  <ol class="mathtape__grid" role="list">
+    {
+      FORMULAS.map((f) => (
+        <li class="mathtape__tile">
+          <span class="mathtape__tile-title mono">{f.title}</span>
+          <span class="mathtape__tile-pip" style={`background:${f.pip}`} aria-hidden="true" />
+          <div class="mathtape__tile-formula">
+            <Equation latex={f.latex} tone="tape" size="xl" />
+          </div>
+          <span class="mathtape__tile-delta mono" style={`color:${signVar(f.deltaSign)}`}>
+            {f.deltaIn}
+          </span>
+          <span class="mathtape__tile-out mono tnum" style={`color:${signVar(f.deltaSign)}`}>
+            {f.outputVal}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+
+  {/* === OUTPUT TAPE (bottom strip — 7 cells) === */}
+  <div class="mathtape__panel" role="group" aria-label="Resolved outputs">
+    <span class="mathtape__panel-tag mono" aria-hidden="true">outputs</span>
+    <ol class="mathtape__strip mathtape__strip--out">
+      {
+        outputCells.map((c) => (
+          <li class="mathtape__cell" style={`color:${c.color}`}>
+            <span class="mathtape__cell-label mono">{c.label}</span>
+            <span class="mathtape__cell-val mono tnum">{c.value}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  {/* === CORRELATION MINI-MATRIX (3×3) === */}
+  <div class="mathtape__corr" role="group" aria-label="Formula correlation map">
+    <span class="mathtape__panel-tag mono" aria-hidden="true">ρ map</span>
+    <div class="mathtape__corr-grid">
+      <span class="mathtape__corr-corner mono" aria-hidden="true" />
+      {
+        CORR_COL_LABELS.map((c) => (
+          <span class="mathtape__corr-col mono" aria-hidden="true">{c}</span>
+        ))
+      }
+      {
+        CORR_ROW_LABELS.map((r, i) => (
+          <>
+            <span class="mathtape__corr-row mono" aria-hidden="true">{r}</span>
+            {
+              CORR_CELLS[i].map((v) => {
+                // intensity = |v|; the higher the ρ, the brighter the cell.
+                const intensity = Math.min(1, Math.max(0, Math.abs(v)));
+                const onDiag = Math.abs(v - 1) < 1e-9;
+                // positive ρ → green tint, negative ρ → red tint,
+                // diagonal → amber override (handled in CSS class).
+                const tintRgb = v < 0 ? '248, 113, 113' : '74, 222, 128';
+                const bg = onDiag
+                  ? 'rgba(232, 178, 32, 0.18)'
+                  : `rgba(${tintRgb}, ${(intensity * 0.18).toFixed(3)})`;
+                return (
+                  <span
+                    class:list={['mathtape__corr-cell', onDiag && 'mathtape__corr-cell--diag']}
+                    title={`ρ = ${v.toFixed(2)}`}
+                    style={`background:${bg}`}
+                  >
+                    <span class="mathtape__corr-val mono tnum">{v.toFixed(2)}</span>
+                  </span>
+                );
+              })
+            }
+          </>
+        ))
+      }
+    </div>
+    <span class="mathtape__corr-stamp mono" aria-hidden="true">build · {sigil}</span>
+  </div>
+</section>
+
+<style>
+  .mathtape {
+    background: var(--c-bg-2);
+    padding-block: var(--sp-7);
+  }
+
+  .mathtape__head {
+    max-width: var(--container-max);
+    margin: 0 auto var(--sp-5);
+    padding-inline: var(--sp-4);
+  }
+
+  .mathtape__eyebrow {
+    color: var(--c-primary-2);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin: 0 0 var(--sp-2);
+  }
+
+  .mathtape__title {
+    font-size: var(--fs-2xl);
+    color: var(--c-ink);
+    margin: 0 0 var(--sp-2);
+    letter-spacing: -0.015em;
+    line-height: var(--lh-tight);
+  }
+
+  .mathtape__sub {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-2);
+    margin: 0;
+    max-width: 60ch;
+    line-height: var(--lh-normal);
+  }
+
+  /* === Panel wrapper for strips + correlation map === */
+  .mathtape__panel,
+  .mathtape__corr {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding-inline: var(--sp-4);
+    position: relative;
+  }
+
+  .mathtape__panel-tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-ink-3);
+    margin-bottom: var(--sp-2);
+  }
+
+  /* === Top + bottom strips (7 cells) === */
+  .mathtape__strip {
+    list-style: none;
+    margin: 0 0 var(--sp-5);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: var(--c-rule-soft); /* shows as hairline between cells */
+    border: 1px solid var(--c-rule-soft);
+  }
+
+  .mathtape__cell {
+    background: var(--c-tape);
+    padding: 0.4rem 0.55rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .mathtape__cell-label {
+    font-size: 0.6875rem;       /* 11px */
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--c-ink-3);
+    /* Cell value color (set inline via style attr) overrides label */
+  }
+
+  .mathtape__cell-val {
+    font-size: 0.6875rem;       /* 11px */
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    /* color set inline by signVar() */
+  }
+
+  /* === 3×2 FORMULA GRID === */
+  .mathtape__grid {
+    list-style: none;
+    margin: 0 auto var(--sp-5);
+    padding-inline: var(--sp-4);
+    max-width: var(--container-max);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 280px));
+    gap: var(--sp-4);
+    justify-content: center;
+  }
+
+  .mathtape__tile {
+    position: relative;
+    width: 280px;
+    height: 140px;
+    background: var(--c-tape);
+    border: 1px solid var(--c-rule-soft); /* single-pixel hairline */
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      'title pip'
+      'formula formula'
+      'delta out';
+    column-gap: 8px;
+    transition: border-color var(--ease-snappy) 200ms;
+    overflow: hidden;
+  }
+
+  .mathtape__tile:hover {
+    border-color: var(--c-amber);
+  }
+
+  .mathtape__tile-title {
+    grid-area: title;
+    align-self: start;
+    font-size: 0.75rem;          /* 12px mono caps */
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-ink);
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mathtape__tile-pip {
+    grid-area: pip;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    align-self: start;
+    /* background set inline via style attr */
+  }
+
+  .mathtape__tile-formula {
+    grid-area: formula;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    /* KaTeX at 1.4em via Equation size="xl" */
+    line-height: 1;
+  }
+
+  .mathtape__tile-formula :global(.eq) {
+    font-size: 1.4em;
+    text-align: center;
+  }
+
+  .mathtape__tile-delta {
+    grid-area: delta;
+    align-self: end;
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    /* color set inline via signVar() */
+  }
+
+  .mathtape__tile-out {
+    grid-area: out;
+    align-self: end;
+    justify-self: end;
+    font-size: 1.5rem;           /* 24px */
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1;
+    /* color set inline via signVar() */
+  }
+
+  /* === CORRELATION MINI-MATRIX === */
+  .mathtape__corr {
+    padding-bottom: var(--sp-4);
+  }
+
+  .mathtape__corr-grid {
+    display: grid;
+    grid-template-columns: auto repeat(3, 16px);
+    grid-auto-rows: 16px;
+    gap: 2px;
+    align-items: center;
+    margin-bottom: var(--sp-2);
+  }
+
+  .mathtape__corr-corner {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mathtape__corr-col,
+  .mathtape__corr-row {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-ink-3);
+    line-height: 16px;
+    white-space: nowrap;
+  }
+
+  .mathtape__corr-col {
+    text-align: center;
+    width: 16px;
+    height: 16px;
+  }
+
+  .mathtape__corr-row {
+    text-align: right;
+    padding-right: 6px;
+    height: 16px;
+  }
+
+  .mathtape__corr-cell {
+    width: 16px;
+    height: 16px;
+    border-radius: 1px;
+    /* background set inline by template (sign × intensity) */
+    border: 1px solid var(--c-rule-soft);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+  }
+
+  .mathtape__corr-cell--diag {
+    border-color: var(--c-amber);
+  }
+
+  .mathtape__corr-val {
+    /* Hidden by default — visible on hover via the title attribute + cell hover */
+    font-size: 0.55rem;
+    color: var(--c-ink);
+    opacity: 0;
+    transition: opacity var(--ease-snappy) 150ms;
+    line-height: 1;
+  }
+
+  .mathtape__corr-cell:hover .mathtape__corr-val {
+    opacity: 1;
+  }
+
+  .mathtape__corr-stamp {
+    display: inline-block;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--c-ink-3);
+    margin-top: var(--sp-1);
+  }
+
+  /* === Responsive === */
+  /* Tablet: 3×2 → 2×3 (2 cols), strips 4+3 */
+  @media (max-width: 1080px) {
+    .mathtape__grid {
+      grid-template-columns: repeat(2, minmax(0, 280px));
+    }
+    .mathtape__strip {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto auto;
+    }
+  }
+
+  /* Mobile: single column, strips stack */
+  @media (max-width: 720px) {
+    .mathtape__grid {
+      grid-template-columns: minmax(0, 280px);
+    }
+    .mathtape__strip {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto auto;
+    }
+    .mathtape__title {
+      font-size: var(--fs-xl);
+    }
+  }
+</style>

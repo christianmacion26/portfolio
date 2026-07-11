@@ -139,7 +139,10 @@ const crumbsJsonLd = breadcrumbs ? breadcrumbJsonLd(breadcrumbs) : null;
     {/* === v6.1.0 · institutional motion bundle ===
         All scripts are pure-defer; total minified+gzipped < 4KB.
         They respect prefers-reduced-motion on their own.
-        theme-toggle removed; everything else preserved. */}
+        theme-toggle removed; everything else preserved.
+        v6.2 Mission Q — hero-video driver added: pauses the
+        <video> child of HeroVideo.astro when prefers-reduced-motion
+        is on. No-op on the SVG fallback path. */}
     <script>
       import '@scripts/reveal-on-scroll.ts';
       import '@scripts/odometer.ts';
@@ -147,6 +150,8 @@ const crumbsJsonLd = breadcrumbs ? breadcrumbJsonLd(breadcrumbs) : null;
       import '@scripts/copy-button.ts';
       import '@scripts/scroll-progress.ts';
       import '@scripts/carousel.ts';
+      import '@scripts/hero-video.ts';
+      import '@scripts/keyboard-shortcuts.ts';
     </script>
   </body>
 </html>

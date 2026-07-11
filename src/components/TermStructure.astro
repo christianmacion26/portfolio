@@ -1,0 +1,293 @@
+---
+/**
+ * TermStructure.astro — v6.1 institutional term-structure ladder.
+ *
+ * Server-rendered SVG (no JS, no client libs). Plots yields vs. tenor
+ * along an X-axis of tenor labels and a Y-axis of yield percentages.
+ * Reused for:
+ *   - yield curves (SOFR, OIS, treasury)
+ *   - prediction-market probability decay across tenors
+ *
+ * Visual conventions (notes/v61-patterns.md, Pattern 3):
+ *   - 1.5px stroke in `--c-primary-2` for the polyline
+ *   - 8% area fill (gradient 12% → 0%) below the curve
+ *   - 6% domain padding so the curve breathes
+ *   - 11px tabular-nums mono labels, color `--c-ink-2`
+ *   - Last-point hairline + close label (Bloomberg "current price" treatment)
+ *   - Optional spot line (dashed) drawn from left axis to the curve
+ *
+ * Usage:
+ *   <TermStructure points={[{tenor:'1M', yld:5.31}, ...]} spot={5.42} />
+ *   <TermStructure points={[...]}
+ *                   yLabel="probability"
+ *                   yFormat={(v) => v.toFixed(2)} />
+ */
+interface Point {
+  tenor: string;
+  yld: number;
+}
+interface Props {
+  points: Point[];
+  spot?: number;
+  height?: number;
+  width?: number;
+  yLabel?: string;
+  yFormat?: (v: number) => string;
+  caption?: string;
+  /** Domain override for Y axis (else auto from points ± 6% padding). */
+  yMin?: number;
+  yMax?: number;
+}
+const {
+  points,
+  spot,
+  height = 220,
+  width = 600,
+  yLabel = 'yield %',
+  yFormat = (v: number) => v.toFixed(2),
+  caption,
+  yMin,
+  yMax,
+} = Astro.props;
+
+// === Domain ===
+const ys = points.map((p) => p.yld);
+const dataMin = yMin ?? Math.min(...ys, ...(typeof spot === 'number' ? [spot] : []));
+const dataMax = yMax ?? Math.max(...ys, ...(typeof spot === 'number' ? [spot] : []));
+const pad = (dataMax - dataMin) * 0.06 || 0.05;
+const yLo = dataMin - pad;
+const yHi = dataMax + pad;
+const yRange = yHi - yLo || 1;
+
+// === Layout ===
+const padL = 44,
+  padR = 56, // right padding reserved for the "current" label
+  padT = 18,
+  padB = 28;
+const innerW = width - padL - padR;
+const innerH = height - padT - padB;
+
+const xFor = (i: number) =>
+  padL + (points.length === 1 ? innerW / 2 : (i / (points.length - 1)) * innerW);
+const yFor = (v: number) => padT + innerH - ((v - yLo) / yRange) * innerH;
+
+// === Path ===
+const linePath = points
+  .map((p, i) => `${i === 0 ? 'M' : 'L'} ${xFor(i).toFixed(2)} ${yFor(p.yld).toFixed(2)}`)
+  .join(' ');
+const areaPath =
+  linePath +
+  ` L ${(padL + innerW).toFixed(2)} ${(padT + innerH).toFixed(2)} L ${padL} ${(padT + innerH).toFixed(2)} Z`;
+
+// === Spot line (interpolated between bracketing points) ===
+const spotInterp = (() => {
+  if (typeof spot !== 'number') return null;
+  if (points.length < 2) return null;
+  // Linear interpolation by index.
+  const xs = points.map((_, i) => i);
+  // For a "spot vs curve at first tenor" anchor, project to x=0.
+  // Simpler: render the spot line at x=padL (left axis), extending to
+  // the first point at x=padL+(innerW/(n-1)).
+  const xAtFirst = xFor(0);
+  return { x0: padL, x1: xAtFirst, y: yFor(spot) };
+})();
+
+// === Y ticks (4 evenly spaced) ===
+const yTickCount = 4;
+const yTicks = Array.from(
+  { length: yTickCount + 1 },
+  (_, i) => yLo + (i / yTickCount) * yRange,
+);
+
+// === X-axis labels — every Nth ===
+const xStride = Math.max(1, Math.ceil(points.length / 8));
+
+// === Deterministic gradient id ===
+function hashSeed(s: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36).slice(0, 7);
+}
+const gradId = `ts-grad-${hashSeed(points.map((p) => p.tenor).join('|'))}`;
+
+const lastPoint = points[points.length - 1];
+const lastX = xFor(points.length - 1);
+const lastY = yFor(lastPoint.yld);
+---
+
+<figure class="term">
+  {caption && <figcaption class="term__caption">{caption}</figcaption>}
+  <svg
+    class="term__svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label={caption ?? `Term structure: ${yLabel} vs tenor`}
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <defs>
+      <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--c-primary-2)" stop-opacity="0.22"></stop>
+        <stop offset="100%" stop-color="var(--c-primary-2)" stop-opacity="0"></stop>
+      </linearGradient>
+    </defs>
+
+    {/* Y grid + ticks */}
+    {
+      yTicks.map((t) => {
+        const y = yFor(t);
+        return (
+          <g>
+            <line x1={padL} y1={y} x2={padL + innerW} y2={y} class="term__grid" />
+            <text x={padL - 6} y={y + 3} class="term__tick mono" text-anchor="end">
+              {yFormat(t)}
+            </text>
+          </g>
+        );
+      })
+    }
+
+    {/* X-axis line */}
+    <line
+      x1={padL}
+      y1={padT + innerH}
+      x2={padL + innerW}
+      y2={padT + innerH}
+      class="term__axis"
+    ></line>
+
+    {/* X-axis tenor labels (every xStride) */}
+    {
+      points.map((p, i) =>
+        i % xStride === 0 || i === points.length - 1 ? (
+          <text
+            x={xFor(i)}
+            y={padT + innerH + 14}
+            text-anchor="middle"
+            class="term__xtick mono"
+          >
+            {p.tenor}
+          </text>
+        ) : null,
+      )
+    }
+
+    {/* Spot reference line (dashed amber) */}
+    {
+      spotInterp && (
+        <line
+          x1={spotInterp.x0}
+          y1={spotInterp.y}
+          x2={spotInterp.x1}
+          y2={spotInterp.y}
+          class="term__spot"
+        />
+      )
+    }
+
+    {/* Area fill + line */}
+    <path d={areaPath} fill={`url(#${gradId})`}></path>
+    <path
+      d={linePath}
+      fill="none"
+      stroke="var(--c-primary-2)"
+      stroke-width="1.75"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    ></path>
+
+    {/* Per-point markers (faint) */}
+    {
+      points.map((p, i) => (
+        <circle cx={xFor(i)} cy={yFor(p.yld)} r="2" fill="var(--c-primary-2)" />
+      ))
+    }
+
+    {/* Last-point hairline + close label (Bloomberg treatment) */}
+    <line
+      x1={lastX}
+      y1={padT}
+      x2={lastX}
+      y2={padT + innerH}
+      class="term__hairline"
+    ></line>
+    <text
+      x={lastX + 6}
+      y={lastY - 6}
+      class="term__close mono"
+    >
+      {lastPoint.tenor} · {yFormat(lastPoint.yld)}
+    </text>
+  </svg>
+  {yLabel && <div class="term__yaxis mono" aria-hidden="true">{yLabel}</div>}
+</figure>
+
+<style>
+  .term {
+    margin: 0;
+    padding: var(--sp-3);
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    position: relative;
+  }
+  .term__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .term__grid {
+    stroke: var(--c-rule-soft);
+    stroke-width: 1;
+  }
+  .term__axis {
+    stroke: var(--c-rule);
+    stroke-width: 1;
+  }
+  .term__tick {
+    font-size: 10px;
+    fill: var(--c-ink-2);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .term__xtick {
+    font-size: 10px;
+    fill: var(--c-ink-2);
+    letter-spacing: 0.04em;
+  }
+  .term__spot {
+    stroke: var(--c-warn);
+    stroke-width: 1;
+    stroke-dasharray: 4, 3;
+    opacity: 0.85;
+  }
+  .term__hairline {
+    stroke: var(--c-primary-2-light);
+    stroke-width: 1;
+    opacity: 0.7;
+  }
+  .term__close {
+    font-size: 11px;
+    fill: var(--c-primary-2-light);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .term__caption {
+    font-size: var(--fs-xs);
+    color: var(--c-ink-2);
+    margin-bottom: var(--sp-2);
+    line-height: 1.5;
+  }
+  .term__yaxis {
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    font-size: 0.62rem;
+    color: var(--c-ink-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>

@@ -17,6 +17,13 @@
 interface TocItem {
   id: string;
   label: string;
+  // Optional external link — when set, renders an <a href={href}>
+  // that navigates off-page instead of jumping to a section anchor.
+  // Used for cross-page TOC entries like "Live terminal → /markets".
+  href?: string;
+  // Optional suffix glyph (e.g. "→") rendered after the label to
+  // distinguish external links from internal anchors.
+  trailing?: string;
 }
 
 interface Props {
@@ -41,8 +48,13 @@ const items = explicitItems ?? [];
           items.length > 0 ? (
             items.map((it) => (
               <li>
-                <a class="toc__link" href={`#${it.id}`} data-toc-href={`#${it.id}`}>
+                <a
+                  class:list={['toc__link', it.href && 'toc__link--ext']}
+                  href={it.href ?? `#${it.id}`}
+                  data-toc-href={it.href ? undefined : `#${it.id}`}
+                >
                   {it.label}
+                  {it.trailing && <span class="toc__trailing" aria-hidden="true">{it.trailing}</span>}
                 </a>
               </li>
             ))
@@ -139,6 +151,25 @@ const items = explicitItems ?? [];
     color: var(--c-primary-2-deep);
     background: var(--c-warn-soft);
     font-weight: 600;
+  }
+  /* v6.1 — external TOC entries (cross-page links like
+     "Live terminal → /markets"). Visually distinguished from
+     in-page anchors by the trailing glyph + amber underline. */
+  .toc__link--ext {
+    color: var(--c-primary-2);
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-underline-offset: 3px;
+    font-weight: 600;
+  }
+  .toc__link--ext:hover {
+    color: var(--c-primary-2-deep);
+    text-decoration-color: var(--c-primary-2-deep);
+    background: var(--c-warn-soft);
+  }
+  .toc__trailing {
+    margin-left: 0.25em;
+    opacity: 0.7;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) .toc__link--active {
