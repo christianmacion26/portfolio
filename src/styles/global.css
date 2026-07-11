@@ -517,15 +517,20 @@ li {
   color: #8a6506;
   border-color: rgba(212, 160, 23, 0.25);
 }
+/* F24 — institutional: pass/warn chrome pills → monochrome ink-3.
+     The pass-green / warn-amber backgrounds were AI-vibe. Pills with
+     status semantics (PASS/WARN) should remain monochrome with the
+     label carrying the meaning, not the background. (Numeric data
+     values can still be pass-green, but pill chrome cannot.) */
 .pill--pass {
-  background: var(--c-pass-soft);
-  color: var(--c-pass);
-  border-color: rgba(21, 128, 61, 0.3);
+  background: transparent;
+  color: var(--c-ink-2);
+  border: 1px solid var(--c-rule);
 }
 .pill--warn {
-  background: var(--c-warn-soft);
-  color: var(--c-warn);
-  border-color: rgba(140, 111, 42, 0.3);
+  background: transparent;
+  color: var(--c-ink-2);
+  border: 1px solid var(--c-primary-2);   /* outline amber to convey warning */
 }
 .pill--purple {
   background: rgba(107, 74, 143, 0.1);

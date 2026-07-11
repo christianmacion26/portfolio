@@ -26,7 +26,7 @@ Christian T. Macion, CTA®·Open to remote roles · UTC+8
 I build research systems, and I ship the evals that prove they work.
 
 Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk·remote-first, async-friendly
-[CONTACT≤ 24 h reply](/contact)[RESUME3 × 3 variants · formats↓](/resume)[PROOF5 trades · 2 certs · 1 paper](/proof) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s+8.44 BP·DXY103.55·VIX11.07·BRENT86.71·AS OF 16:49 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
+[CONTACT≤ 24 h reply](/contact)[RESUME3 × 3 variants · formats↓](/resume)[PROOF5 trades · 2 certs · 1 paper](/proof) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s-8.15 BP·DXY99.61·VIX15.22·BRENT80.19·AS OF 13:23 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
 
 World wire — 4 channels, 80 fixtures
 
@@ -763,32 +763,32 @@ Entry points · stations grid
 [Station 01 · Markets
 
 ### Where is rate-of-change concentrated?
-+0.02 bp
++0.54 bp
 
 2s10s spread · UST
 
-DXY104.5
+DXY106.2
 
-VIX15.6
+VIX14
 
-BRENT81.6
+BRENT78.4
 
-OBS-0.0704:01 UTC+8[ UST ][ spread ]](/markets/)
+LIVE+0.0100:49 UTC+8[ UST ][ spread ]](/markets/)
 
 [Station 02 · Prediction
 
 ### What does the market price next?
-0.59
+0.67
 
 median implied probability
 
-events6
+events9
 
-edge ±0.33
+edge ±0.35
 
 tenor2027-Q4
 
-OPEN+0.0610:22 UTC+8[ odds ][ edge ]](/prediction-markets/)
+OPEN-0.0617:14 UTC+8[ odds ][ edge ]](/prediction-markets/)
 
 [Station 03 · Research
 
@@ -801,14 +801,14 @@ gates31
 
 categories4
 
-pass81%
+pass79%
 
-OPEN+0.0207:36 UTC+8[ ideas ][ G1-31 ]](/research/)
+LIVE+0.0718:34 UTC+8[ ideas ][ G1-31 ]](/research/)
 
 [Station 04 · AI
 
 ### How do evals ship?
-96%
+95%
 
 eval pass rate · 31 gates
 
@@ -818,7 +818,7 @@ datasets7
 
 harnesses3
 
-LIVE+0.0205:41 UTC+8[ models ][ evals ]](/methodology/)
+OPEN-0.0707:58 UTC+8[ models ][ evals ]](/methodology/)
 
 Entry points
 
@@ -835,28 +835,28 @@ Data ingestion
 ## Pipeline live.▍
 
 Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single deterministic PRNG.
-throughput · events / s3.8k2.6k2.2k3.6k4.2kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE34%NORMALIZE77%ENRICH38%INDEX83%STREAM60%
+throughput · events / s2.7k2.0k3.7k2.0k2.7kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE20%NORMALIZE36%ENRICH35%INDEX36%STREAM25%
 
 Trader desk
 
 ## P&L · order flow · risk · signalslive
-φ 0.553ms
+φ 0.134ms
 
 Book equity · 60 bars · today
 
--13.95%60d
+-6.80%60d
 
--4.12Sharpe-17.37%Max DD-3.90%Book skew
+-1.69Sharpe-12.20%Max DD-14.00%Book skew
 
 Order flow · 8 × 4 heat
 
-+2,231/−2,412
-B96B167B19B92A107A54A283A221B59B236B35B96A171A242A123A121B268B272B150B112A190A113A29A45B288B130B55B156A158A225A170A160
++2,486/−3,296
+B262B254B157B90A252A251A258A125B170B173B177B231A220A221A189A287B62B97B201B117A171A163A193A257B51B245B132B67A136A110A178A285
 
 Risk · 1-day VaR
 
 NAV-normalized
-025507510071.7% NAV
+025507510027.6% NAV
 
 Signals · 4 × 4 sparklines
 
@@ -867,15 +867,15 @@ Positions
 
 5
 
-net −$530
+net −$258
 
-top · RATES-12
+top · EQUITY-7
 
 Orders
 
 5
 
-+3·2·1·0
++1·1·3·0
 
 open · partial · ack · rej
 
@@ -883,7 +883,7 @@ Calendar
 
 3
 
-next +6h
+next +1h
 
 impact LOW
 
@@ -891,7 +891,7 @@ Alerts
 
 3
 
-2·0·1
+2·2·0
 
 crit · warn · info
 2y5y10y30y1m3m6m12mBTCETHSOLDXY2y5y10y30y1m3m6m12mBTCETHSOLDXY
@@ -905,7 +905,7 @@ Earth mission control · world event map
 ## Sixteen cities. Thirty-six events. The news behind the math.
 
 A rate decision in London is a half-life in Manila. We map the half-life.
-Earth-scale quant intelligence140 countries · 16 cities · 6 active events · 6 routes · Orthographic · rotatingEarth-scale event globe — cities, routes, and active events — rotatingOrthographic globe projection centered on (lat 20°, lon 80°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, 16 cities, 6 trade routes, 6 active events, region rollups (APAC 4 / EMEA 2 / Americas 4), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.DigosDigosSingaporeSingaporeTokyoTokyoHong KongHong KongShanghaiShanghaiSeoulSeoulManilaManilaMumbaiMumbaiDubaiDubaiSydneySydneyFrankfurtFrankfurtZurichZurichLondonLondonLondon GBRLondon · GBRParis FRAParis · FRABerlin DEUBerlin · DEURome ITARome · ITAMadrid ESPMadrid · ESPBrussels BELBrussels · BELAmsterdam NLDAmsterdam · NLDStockholm SWEStockholm · SWEVienna AUTVienna · AUTTokyo JPNTokyo · JPNCanberra AUSCanberra · AUSCentral bank press conference — FrankfurtΔy = ±2.8·σ_pp · cov(b,1y) ≈ +1.2σCentral bank policy decision — TokyoΔy = ±4.3·σ_pp · cov(b,1y) ≈ +1.1σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.2σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.5; DVO1 spikes 17.3%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 1.6σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.3× pre; vol regime shift: low → midMISSION CONTROL · BUILD 2026-07-12 00:25 UTC+8 · 16 HUBS · 14 CAPITALS · 10 EVENTS · 5 CRITICALCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km00:25:40 UTC+822° / -66°APAC4 evEMEA6 evAmericas4 ev
+Earth-scale quant intelligence140 countries · 16 cities · 6 active events · 6 routes · Orthographic · rotatingEarth-scale event globe — cities, routes, and active events — rotatingOrthographic globe projection centered on (lat 20°, lon 80°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, 16 cities, 6 trade routes, 6 active events, region rollups (APAC 4 / EMEA 2 / Americas 4), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.DigosDigosSingaporeSingaporeTokyoTokyoHong KongHong KongShanghaiShanghaiSeoulSeoulManilaManilaMumbaiMumbaiDubaiDubaiSydneySydneyFrankfurtFrankfurtZurichZurichLondonLondonLondon GBRLondon · GBRParis FRAParis · FRABerlin DEUBerlin · DEURome ITARome · ITAMadrid ESPMadrid · ESPBrussels BELBrussels · BELAmsterdam NLDAmsterdam · NLDStockholm SWEStockholm · SWEVienna AUTVienna · AUTTokyo JPNTokyo · JPNCanberra AUSCanberra · AUSCentral bank press conference — FrankfurtΔy = ±3.6·σ_pp · cov(b,1y) ≈ +0.9σCentral bank policy decision — TokyoΔy = ±6.5·σ_pp · cov(b,1y) ≈ +1.1σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.5σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.7; DVO1 spikes 16.4%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 2.3σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.2× pre; vol regime shift: low → midMISSION CONTROL · BUILD 2026-07-12 00:28 UTC+8 · 16 HUBS · 14 CAPITALS · 10 EVENTS · 5 CRITICALCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km00:28:00 UTC+822° / -67°APAC4 evEMEA6 evAmericas4 ev
 
 Sun (subsolar)
 
@@ -1065,7 +1065,7 @@ news/36 events · last 24h
 
 Digos· desk action1
 
-central-bankbook fades FX carry into the fix
+central-bankbook rolls down 5y into the auction
 
 ---
 
@@ -1120,26 +1120,26 @@ VRP 3.8σ
 
 σ̂ 0.85
 
-ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.8940
+ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.6839
 
 What I do
 
 ## Four things, one discipline.
 
 A senior quant and an AI engineer can share a desk only if both write the eval harness. That's the only output that survives the next data drift, the next regime shift, the next model swap.
-10 projectsRRESEARCH
+11 projectsRRESEARCH
 
 Multi-testing-aware systematic strategies on public data.
-13 eventsAARTIFICIAL INTELLIGENCE
+10 eventsAARTIFICIAL INTELLIGENCE
 
 Multi-agent LLM systems with explicit eval harness and MCP contracts.
 17 hubsMMARKETS
 
 Sixteen financial hubs. Thirty-six monitored events. Live tape.
-13 capitalsCCOVERAGE
+12 capitalsCCOVERAGE
 
 NDA-clean coverage. Past contracts disclosed, dates closed.
-TIME-SERIEREFLECT-RETHE-VARIANCRYPTO-FUNRAG-RECALLLOOK-AHEADMCP-EVALNDA-CLNMACRO-/-VOG1–G31LLM-AS-JUDMCP-EVALCROSS-SECTDEF-SHARPEPBO-CSCVDSR-CALCPAIRS-TRADBACKTEST-ETOOL-CALL-SLOP-SCANTIME-SERIEREFLECT-RETHE-VARIANCRYPTO-FUNRAG-RECALLLOOK-AHEADMCP-EVALNDA-CLNMACRO-/-VOG1–G31LLM-AS-JUDMCP-EVALCROSS-SECTDEF-SHARPEPBO-CSCVDSR-CALCPAIRS-TRADBACKTEST-ETOOL-CALL-SLOP-SCAN
+LLM-AS-JUDDEF-SHARPENDA-CLNDSR-CALCCROSS-SECTTIME-SERIEMCP-EVALCRYPTO-FUNPAIRS-TRADMCP-EVALPBO-CSCVREFLECT-RELOOK-AHEADMACRO-/-VOG1–G31BACKTEST-ESLOP-SCANTOOL-CALL-THE-VARIANRAG-RECALLLLM-AS-JUDDEF-SHARPENDA-CLNDSR-CALCCROSS-SECTTIME-SERIEMCP-EVALCRYPTO-FUNPAIRS-TRADMCP-EVALPBO-CSCVREFLECT-RELOOK-AHEADMACRO-/-VOG1–G31BACKTEST-ESLOP-SCANTOOL-CALL-THE-VARIANRAG-RECALL
 
 Selected work
 
@@ -1148,34 +1148,34 @@ Selected work
 [2025 · Q4QUANT
 
 ### Cross-Sectional Momentum (18 coins)
-18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.91→-0.04OOS Sharpe0.93→-0.03CI Straddle0.06→0.17](/projects/quant/02-cross-sectional-momentum)
+18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.91→-0.03OOS Sharpe0.89→-0.03CI Straddle0.04→0.14](/projects/quant/02-cross-sectional-momentum)
 
 [2025 · Q4QUANT
 
 ### Time-Series Momentum + Vol Targeting
-20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.28→0.40Max DD63%→30%Win Rate41%→51%](/projects/quant/03-timeseries-momentum-voltarget)
+20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.26→0.39Max DD60%→29%Win Rate40%→49%](/projects/quant/03-timeseries-momentum-voltarget)
 
 [2026 · Q1AI
 
 ### Slop Scanner
-13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index80.00→3.00Hedge Density0.20→0.06N-gram Rep0.34→0.07](/projects/ai/06-slop-scanner)
+13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index81.00→3.00Hedge Density0.20→0.05N-gram Rep0.34→0.08](/projects/ai/06-slop-scanner)
 
 [2026 · Q2QUANT
 
 ### Macro / Volatility-Regime Overlay
-VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.65→0.67Max DD57%→43%Calmar0.28→0.70](/projects/quant/07-macro-regime-overlay)
+VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.62→0.68Max DD58%→41%Calmar0.32→0.70](/projects/quant/07-macro-regime-overlay)
 
 [2026 · Q2QUANT
 
 ### Look-Ahead Bias Audit (the shift test)
-ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.62Leaked Sharpe0.59→5.12Phantom %2%→89%](/projects/quant/09-lookahead-bias-audit)
+ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.61Leaked Sharpe0.60→5.13Phantom %0%→88%](/projects/quant/09-lookahead-bias-audit)
 
 [→ ALL PROJECTS15 projects · 9 quant · 4 markets · 2 prediction→](/projects)
 
 The numbers
 
 ## What eleven months of build looks like.
-PAGES BUILT84+0.9%AUDIT100%+1.1%AFK LOOP6H−2.2%EVAL GATES31−1%STRATEGIES9−0.4%AI AGENTS11STABLECERTS102STABLEMONTHS11STABLE
+PAGES BUILT84+1.87AUDIT100%STABLEAFK LOOP6H−1.7%EVAL GATES31+2.49STRATEGIES9+3.05AI AGENTS11+0.74CERTS102STABLEMONTHS11+1.51
 
 STRATEGY NOTE01·CONDENSED
 iCard 1 of 3
