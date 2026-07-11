@@ -970,7 +970,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
 
       <div class="section__foot">
         <a href={path('/projects')} class="projects-cta">
-          <span class="projects-cta__eyebrow mono">→ ALL PROJECTS</span>
+          <span class="projects-cta__eyebrow mono">ALL PROJECTS</span>
           <span class="projects-cta__main">15 projects · 9 quant · 4 markets · 2 prediction</span>
           <span class="projects-cta__arrow" aria-hidden="true">→</span>
         </a>
@@ -1142,10 +1142,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
        Replaces wordy headline + sub + dual buttons with:
          1. 80px-tall rail: "Ready when you are" (serif italic, ink)
             on the left, an amber 44px-tall button on the right
-            (`[ CTA: Schedule a 30-min review → ]`, all-caps tracked).
+            (CTA: Schedule a 30-min review, all-caps tracked).
          2. 14×4 availability matrix (14 days × 4 time-slots) =
             56 cells. 48 cells in --c-amber-light at 0.4 fill-opacity
-            (visual abundance); remaining 8 split 4 green / 2 amber-
+            (visual abundance); remaining 8 split 4 amber-0.7 / 2 amber-
             solid / 2 ink-3 by status legend. Deterministically
             seeded from `seedFromString(buildSeed() + '::availability')`.
        ============================================================ */}
@@ -1492,8 +1492,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
       text-decoration-color var(--transition);
   }
   .hero__link:hover {
-    color: #f5b94a;
-    text-decoration-color: #f5b94a;
+    color: var(--c-amber-light);
+    text-decoration-color: var(--c-amber-light);
   }
 
   /* ============================================================
@@ -1723,12 +1723,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: var(--c-ink);
     text-decoration: none;
     transition:
-      border-color var(--transition),
-      transform var(--transition);
+      border-color var(--transition);
   }
   .work-card:hover {
     border-color: var(--c-primary);
-    transform: translateY(-2px);
   }
   /* F14 — institutional: monochrome work-card tag (no per-variant color). */
   .work-card__tag {
@@ -2171,7 +2169,6 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .projects-cta:hover {
     background: rgba(232, 178, 32, 0.10);
     border-color: rgba(232, 178, 32, 0.55);
-    transform: translateY(-1px);
   }
   .projects-cta__eyebrow {
     font-size: 9px;

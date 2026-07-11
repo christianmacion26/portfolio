@@ -432,10 +432,14 @@ const eduSolutions = solutions.filter(
     position: relative;
   }
   .sol-card__evidence li::before {
-    content: '✓';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--c-pass);
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-amber);
     font-family: var(--ff-mono);
     font-weight: 700;
   }
@@ -454,10 +458,14 @@ const eduSolutions = solutions.filter(
     position: relative;
   }
   .sol-card__proof li::before {
-    content: '↗';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--c-primary-2-deep);
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-amber);
     font-family: var(--ff-mono);
     font-weight: 700;
   }

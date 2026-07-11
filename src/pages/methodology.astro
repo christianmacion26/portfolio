@@ -562,12 +562,14 @@ const charter = [
     font-size: var(--fs-base);
   }
   .neg li::before {
-    content: '✕';
+    content: '';
     position: absolute;
     left: 0;
-    top: 0;
-    color: var(--c-fail);
-    font-weight: 600;
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-ink-3);
     font-family: var(--ff-mono);
   }
   .neg strong {

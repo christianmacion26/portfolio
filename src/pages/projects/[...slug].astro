@@ -318,10 +318,14 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
     position: relative;
   }
   .proj__stack li::before {
-    content: '▸';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--c-primary-2-deep);
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-amber);
   }
   .proj__tags {
     display: flex;

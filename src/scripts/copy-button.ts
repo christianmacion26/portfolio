@@ -76,8 +76,8 @@ function attach(pre: HTMLElement): void {
     try {
       await navigator.clipboard.writeText(text);
       btn.textContent = 'Copied';
-      btn.style.color = 'var(--c-pass, #15803d)';
-      btn.style.borderColor = 'var(--c-pass, #15803d)';
+      btn.style.color = 'var(--c-pass, #3fb950)';
+      btn.style.borderColor = 'var(--c-pass, #3fb950)';
       window.setTimeout(() => {
         btn.textContent = 'Copy';
         btn.style.color = 'var(--c-ink-2, #5a6473)';

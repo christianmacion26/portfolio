@@ -446,12 +446,14 @@ const proofStrip = (await getCollection('solution'))
     position: relative;
   }
   .proof-card__list li::before {
-    content: '✓';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--c-pass);
-    font-family: var(--ff-mono);
-    font-weight: 700;
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-amber);
   }
   .proof-card__row-body {
     font-size: var(--fs-sm);

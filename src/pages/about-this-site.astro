@@ -339,16 +339,21 @@ const repos = [
     font-size: var(--fs-xs);
     font-weight: 700;
   }
+  /* F14 institutional: chip pattern instead of disc bullets */
   .bullet {
-    list-style: disc;
-    padding-left: 1.5rem;
+    list-style: none;
+    padding: 0;
     margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
   }
   .bullet li {
-    font-size: var(--fs-sm);
+    font-size: var(--fs-xs);
     color: var(--c-ink-2);
-    line-height: var(--lh-loose);
-    margin-bottom: var(--sp-1);
+    padding: var(--sp-1) var(--sp-3);
+    border: 1px solid var(--c-rule);
+    letter-spacing: 0.04em;
   }
   .bullet code {
     background: var(--c-bg-2);

@@ -263,8 +263,14 @@ const updatedHuman = '10 July 2026';---
     text-decoration-color: var(--c-primary-2-deep);
   }
   .now-list--not li::before {
-    content: '✕';
-    color: var(--c-fail);
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-ink-3);
   }
 
   .now-foot {
