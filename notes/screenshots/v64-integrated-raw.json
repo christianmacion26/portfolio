@@ -1,0 +1,1232 @@
+[
+  {
+    "name": "home",
+    "kind": "desktop",
+    "url": "http://localhost:8767/",
+    "http": 200,
+    "emoji": {
+      "count": 12,
+      "samples": [
+        "✓",
+        "✓",
+        "✓",
+        "✓",
+        "✓"
+      ]
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 274,
+      "filled": 62,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8",
+        "CHRISTIAN T. MACION, CTA®",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness.",
+        "I build research systems, and I ship the evals that prove th"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 41,
+      "tabularCount": 10,
+      "monospaceCount": 3,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container hero__inner",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "hero__top",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 278,
+      "undersized": 5,
+      "samples": [
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 30,
+          "h": 44,
+          "label": "Now"
+        },
+        {
+          "w": 105,
+          "h": 37,
+          "label": "Resources"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "earthChrome": {
+      "svgPresent": true,
+      "chromePresent": true,
+      "subElements": {
+        ".eg__legend-svg": {
+          "found": true,
+          "width": 180.4,
+          "height": 78,
+          "nonZero": true,
+          "tag": "g"
+        },
+        ".eg__scale": {
+          "found": true,
+          "width": 138,
+          "height": 27.5,
+          "nonZero": true,
+          "tag": "g"
+        },
+        ".eg__north": {
+          "found": true,
+          "width": 38.4,
+          "height": 26,
+          "nonZero": true,
+          "tag": "g"
+        },
+        ".eg__scrubber": {
+          "found": true,
+          "width": 607.2,
+          "height": 24.7,
+          "nonZero": true,
+          "tag": "g"
+        }
+      },
+      "pass": true
+    },
+    "earthDrawer": {
+      "drawerPresent": true,
+      "panelCount": 36,
+      "formulaPresent": true,
+      "formulaText": "|ε| ≈ 1.1σ\nCopy",
+      "drawerTransform": "matrix(1, 0, 0, 1, 360, 0)",
+      "drawerVisible": true,
+      "formulaHasContent": true,
+      "pass": true
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-home-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-home-full.png",
+    "fullBytes": 1794412,
+    "viewBytes": 275249,
+    "assetFails": [],
+    "totalRequests": 19,
+    "ok": true
+  },
+  {
+    "name": "home",
+    "kind": "mobile",
+    "url": "http://localhost:8767/",
+    "http": 200,
+    "emoji": {
+      "count": 12,
+      "samples": [
+        "✓",
+        "✓",
+        "✓",
+        "✓",
+        "✓"
+      ]
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 214,
+      "filled": 55,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8",
+        "CHRISTIAN T. MACION, CTA®",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness.",
+        "I build research systems, and I ship the evals that prove th"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 35,
+      "tabularCount": 10,
+      "monospaceCount": 3,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container hero__inner",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "hero__top",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 278,
+      "undersized": 0,
+      "samples": []
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "earthChrome": {
+      "svgPresent": true,
+      "chromePresent": true,
+      "subElements": {
+        ".eg__legend-svg": {
+          "found": true,
+          "width": 46,
+          "height": 22.7,
+          "nonZero": true,
+          "tag": "g"
+        },
+        ".eg__scale": {
+          "found": true,
+          "width": 42.3,
+          "height": 8.2,
+          "nonZero": true,
+          "tag": "g"
+        },
+        ".eg__north": {
+          "found": true,
+          "width": 11.7,
+          "height": 8,
+          "nonZero": true,
+          "tag": "g"
+        },
+        ".eg__scrubber": {
+          "found": true,
+          "width": 185.9,
+          "height": 7.3,
+          "nonZero": true,
+          "tag": "g"
+        }
+      },
+      "pass": true
+    },
+    "earthDrawer": {
+      "drawerPresent": true,
+      "panelCount": 36,
+      "formulaPresent": true,
+      "formulaText": "|ε| ≈ 1.1σ\nCopy",
+      "drawerTransform": "matrix(1, 0, 0, 1, 390, 0)",
+      "drawerVisible": true,
+      "formulaHasContent": true,
+      "pass": true
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-home-mobile.png",
+    "viewBytes": 433857,
+    "assetFails": [],
+    "totalRequests": 19,
+    "ok": true
+  },
+  {
+    "name": "markets",
+    "kind": "desktop",
+    "url": "http://localhost:8767/markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 189,
+      "filled": 166,
+      "samples": [
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$115.35",
+        "+15.35%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 147,
+      "tabularCount": 147,
+      "monospaceCount": 100,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--pass",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 101,
+      "undersized": 5,
+      "samples": [
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 30,
+          "h": 44,
+          "label": "Now"
+        },
+        {
+          "w": 105,
+          "h": 37,
+          "label": "Resources"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-markets-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-markets-full.png",
+    "fullBytes": 660255,
+    "viewBytes": 125684,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "markets",
+    "kind": "mobile",
+    "url": "http://localhost:8767/markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 180,
+      "filled": 160,
+      "samples": [
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$115.35",
+        "+15.35%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 143,
+      "tabularCount": 143,
+      "monospaceCount": 100,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--pass",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 101,
+      "undersized": 0,
+      "samples": []
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-markets-mobile.png",
+    "viewBytes": 173818,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "prediction",
+    "kind": "desktop",
+    "url": "http://localhost:8767/prediction-markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 201,
+      "filled": 173,
+      "samples": [
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$115.35",
+        "+15.35%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 158,
+      "tabularCount": 158,
+      "monospaceCount": 109,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--pass",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 98,
+      "undersized": 5,
+      "samples": [
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 30,
+          "h": 44,
+          "label": "Now"
+        },
+        {
+          "w": 105,
+          "h": 37,
+          "label": "Resources"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-prediction-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-prediction-full.png",
+    "fullBytes": 840995,
+    "viewBytes": 133929,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "prediction",
+    "kind": "mobile",
+    "url": "http://localhost:8767/prediction-markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 198,
+      "filled": 172,
+      "samples": [
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6 02-CROSS-SECTIONAL-M",
+        "01-DEFLATED-SHARPE $115.35 +15.35% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$115.35",
+        "+15.35%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 157,
+      "tabularCount": 157,
+      "monospaceCount": 109,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--pass",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 98,
+      "undersized": 0,
+      "samples": []
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-prediction-mobile.png",
+    "viewBytes": 186539,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "research",
+    "kind": "desktop",
+    "url": "http://localhost:8767/research/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 205,
+      "filled": 170,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "Nine strategies. Four factors. Twelve sources.",
+        "A market-data view of the research book. No narrative — the ",
+        "Statistics that survive discipline are statistics that didn'",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 31",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 31",
+        "QUANT STRATEGIES 9 → all open-source on GitHub"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 152,
+      "tabularCount": 152,
+      "monospaceCount": 104,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "r-stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container r-stats__grid",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--mono stat--trend-flat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 161,
+      "undersized": 5,
+      "samples": [
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 30,
+          "h": 44,
+          "label": "Now"
+        },
+        {
+          "w": 105,
+          "h": 37,
+          "label": "Resources"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-research-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-research-full.png",
+    "fullBytes": 1197417,
+    "viewBytes": 160227,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "research",
+    "kind": "mobile",
+    "url": "http://localhost:8767/research/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 19,
+      "filled": 12,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "Nine strategies. Four factors. Twelve sources.",
+        "A market-data view of the research book. No narrative — the ",
+        "Statistics that survive discipline are statistics that didn'",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 0 ",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 0 ",
+        "QUANT STRATEGIES 9 → all open-source on GitHub"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 6,
+      "tabularCount": 6,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "r-stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container r-stats__grid",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--mono stat--trend-flat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 161,
+      "undersized": 0,
+      "samples": []
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-research-mobile.png",
+    "viewBytes": 235076,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "ai",
+    "kind": "desktop",
+    "url": "http://localhost:8767/ai/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 30,
+      "filled": 19,
+      "samples": [
+        "AI LANE Eleven agents. One loop. 31 gates. Every LLM output ",
+        "Every LLM output I ship passes the same statistical gate sta",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator ",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "11",
+        "11",
+        "4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "EVAL GATES 31 G1–G31 · 6 families · exit-0 contract"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 16,
+      "tabularCount": 16,
+      "monospaceCount": 4,
+      "samples": [
+        {
+          "tag": "HEADER",
+          "cls": "section section--hero ai-hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "ai-hero__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--primary",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 76,
+      "undersized": 5,
+      "samples": [
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 30,
+          "h": 44,
+          "label": "Now"
+        },
+        {
+          "w": 105,
+          "h": 37,
+          "label": "Resources"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-ai-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-ai-full.png",
+    "fullBytes": 773753,
+    "viewBytes": 77890,
+    "assetFails": [],
+    "totalRequests": 16,
+    "ok": true
+  },
+  {
+    "name": "ai",
+    "kind": "mobile",
+    "url": "http://localhost:8767/ai/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 29,
+      "filled": 19,
+      "samples": [
+        "AI LANE Eleven agents. One loop. 31 gates. Every LLM output ",
+        "Every LLM output I ship passes the same statistical gate sta",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator ",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "11",
+        "11",
+        "4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "EVAL GATES 31 G1–G31 · 6 families · exit-0 contract"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 16,
+      "tabularCount": 16,
+      "monospaceCount": 4,
+      "samples": [
+        {
+          "tag": "HEADER",
+          "cls": "section section--hero ai-hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "ai-hero__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--primary",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 76,
+      "undersized": 0,
+      "samples": []
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-ai-mobile.png",
+    "viewBytes": 125627,
+    "assetFails": [],
+    "totalRequests": 16,
+    "ok": true
+  },
+  {
+    "name": "proof",
+    "kind": "desktop",
+    "url": "http://localhost:8767/proof/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 51,
+      "filled": 11,
+      "samples": [
+        "PROOF/ · SHOW YOUR WORK Proof. Public or self-owned only. If",
+        "If it isn't reproducible from public data, it isn't here.",
+        "22 ARTIFACTS ON THIS PAGE 9 QUANT PROJECTS 6 AI PROJECTS 10 ",
+        "22 ARTIFACTS ON THIS PAGE",
+        "22",
+        "9 QUANT PROJECTS",
+        "9",
+        "6 AI PROJECTS"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 10,
+      "tabularCount": 10,
+      "monospaceCount": 0,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "container container-narrow",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "UL",
+          "cls": "proof-head__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "LI",
+          "cls": "proof-head__stat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "proof-head__stat-num tnum",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 148,
+      "undersized": 5,
+      "samples": [
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 30,
+          "h": 44,
+          "label": "Now"
+        },
+        {
+          "w": 105,
+          "h": 37,
+          "label": "Resources"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-proof-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-proof-full.png",
+    "fullBytes": 2187513,
+    "viewBytes": 136410,
+    "assetFails": [],
+    "totalRequests": 23,
+    "ok": true
+  },
+  {
+    "name": "proof",
+    "kind": "mobile",
+    "url": "http://localhost:8767/proof/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 50,
+      "filled": 11,
+      "samples": [
+        "PROOF/ · SHOW YOUR WORK Proof. Public or self-owned only. If",
+        "If it isn't reproducible from public data, it isn't here.",
+        "22 ARTIFACTS ON THIS PAGE 9 QUANT PROJECTS 6 AI PROJECTS 10 ",
+        "22 ARTIFACTS ON THIS PAGE",
+        "22",
+        "9 QUANT PROJECTS",
+        "9",
+        "6 AI PROJECTS"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 10,
+      "tabularCount": 10,
+      "monospaceCount": 0,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "container container-narrow",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "UL",
+          "cls": "proof-head__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "LI",
+          "cls": "proof-head__stat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "proof-head__stat-num tnum",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 148,
+      "undersized": 0,
+      "samples": []
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v64-proof-mobile.png",
+    "viewBytes": 214747,
+    "assetFails": [],
+    "totalRequests": 22,
+    "ok": true
+  }
+]

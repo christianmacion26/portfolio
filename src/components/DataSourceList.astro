@@ -277,13 +277,17 @@ const sources: Source[] = [
     color: var(--c-ink-2);
     background: var(--c-bg-3);
   }
-  .datasrc__pill--macro { color: var(--c-primary-2); border-color: rgba(201, 138, 22, 0.4); }
-  .datasrc__pill--equity-deriv { color: #58a6ff; border-color: rgba(88, 166, 255, 0.4); }
-  .datasrc__pill--crypto-onchain { color: var(--c-amber-light, var(--c-primary-2-light)); border-color: rgba(232, 178, 32, 0.4); }
-  .datasrc__pill--funding { color: var(--c-pass); border-color: rgba(63, 185, 80, 0.4); }
-  .datasrc__pill--rates { color: #d2a8ff; border-color: rgba(210, 168, 255, 0.4); }
-  .datasrc__pill--commodities { color: #ffa657; border-color: rgba(255, 166, 87, 0.4); }
-  .datasrc__pill--fx { color: #ff7b72; border-color: rgba(255, 123, 114, 0.4); }
+  /* F16 — institutional: collapse 7 colored pills → monochrome ink-3.
+     Only the macro category keeps amber (the primary work surface).
+     All others (equity/crypto/funding/rates/commodities/fx/cftc) read
+     as ink-3 hairline-bordered labels — no rainbow. */
+  .datasrc__pill--macro { color: var(--c-primary-2); border-color: rgba(232, 178, 32, 0.4); }
+  .datasrc__pill--equity-deriv { color: var(--c-ink-3); border-color: var(--c-rule); }
+  .datasrc__pill--crypto-onchain { color: var(--c-ink-3); border-color: var(--c-rule); }
+  .datasrc__pill--funding { color: var(--c-ink-3); border-color: var(--c-rule); }
+  .datasrc__pill--rates { color: var(--c-ink-3); border-color: var(--c-rule); }
+  .datasrc__pill--commodities { color: var(--c-ink-3); border-color: var(--c-rule); }
+  .datasrc__pill--fx { color: var(--c-ink-3); border-color: var(--c-rule); }
   .datasrc__pill--cftc { color: var(--c-ink-2); border-color: var(--c-rule); }
 
   .datasrc__url {

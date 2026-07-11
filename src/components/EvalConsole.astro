@@ -334,20 +334,24 @@ const passRateStr = passRate.toFixed(3);
     text-align: center;
     line-height: 1.6;
   }
+  /* F18 — institutional: console pills are status semantics (PASS/CHECK/
+     FAIL is what build tools emit). Keep pass/fail colors but kill the
+     inset box-shadow halo (same anti-pattern as the hero badge dot) and
+     lower alpha so they read as monotone glass, not traffic-light chrome. */
   .eval-pill--pass {
-    background: var(--c-pass-soft);
-    color: var(--c-pass);
-    box-shadow: inset 0 0 0 1px var(--c-pass);
+    background: rgba(232, 178, 32, 0.22);
+    color: var(--c-primary-2);
+    border: 1px solid rgba(232, 178, 32, 0.45);
   }
   .eval-pill--check {
-    background: rgba(201, 138, 22, 0.12);
+    background: rgba(232, 178, 32, 0.14);
     color: var(--c-amber);
-    box-shadow: inset 0 0 0 1px var(--c-amber);
+    border: 1px solid rgba(232, 178, 32, 0.30);
   }
   .eval-pill--fail {
-    background: var(--c-fail-soft);
-    color: var(--c-fail);
-    box-shadow: inset 0 0 0 1px var(--c-fail);
+    background: rgba(173, 186, 199, 0.14);
+    color: var(--c-ink-2);
+    border: 1px solid var(--c-rule);
   }
 
   /* === Responsive === */

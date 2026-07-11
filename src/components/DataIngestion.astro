@@ -515,9 +515,13 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     transition: width 320ms ease;
     border-radius: 4px;
   }
-  .ingest__lag-cell--green .ingest__lag-fill { background: var(--c-pass); }
-  .ingest__lag-cell--amber .ingest__lag-fill { background: var(--c-amber); }
-  .ingest__lag-cell--red   .ingest__lag-fill { background: var(--c-fail); }
+  /* F18 — institutional: pipeline lag bars are status indicators, but
+     we remove the bright pass-green / fail-red. Status becomes a single
+     amber channel: 3 alpha steps (full = on-time, half = amber, low =
+     faint ink). Reads as "pipeline health" without the traffic light. */
+  .ingest__lag-cell--green .ingest__lag-fill { background: rgba(232, 178, 32, 0.85); }
+  .ingest__lag-cell--amber .ingest__lag-fill { background: rgba(232, 178, 32, 0.55); }
+  .ingest__lag-cell--red   .ingest__lag-fill { background: rgba(232, 178, 32, 0.25); }
   .ingest__lag-pct {
     font-size: 11px;
     color: var(--ink-on-tape);

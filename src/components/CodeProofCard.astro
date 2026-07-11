@@ -125,12 +125,13 @@ const {
     color: var(--c-ink);
     font-weight: 500;
   }
+  /* F15 — institutional: kill the box-shadow halo (same anti-pattern
+     as the hero badge dot). Solid dot, no glow. */
   .code-card__metric-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: var(--c-pass);
-    box-shadow: 0 0 0 3px var(--c-pass-soft);
   }
   .code-card__preview {
     margin: 0;

@@ -98,10 +98,13 @@ const { title, group, blurb, src, alt, caption, href, aspect = '3/2', flagship =
     color: var(--c-primary-2-deep);
     font-weight: 700;
   }
+  /* F22 — institutional: "Tier-1" is the most-emphasized tier, so amber
+     (single accent) — not pass-green which is reserved for ticker data. */
   .flagship__badge {
     font-size: var(--fs-xs);
-    color: var(--c-pass);
-    background: var(--c-pass-soft);
+    color: var(--c-primary-2);
+    background: rgba(232, 178, 32, 0.12);
+    border: 1px solid rgba(232, 178, 32, 0.40);
     padding: 0.125rem var(--sp-2);
     border-radius: 999px;
     font-weight: 700;

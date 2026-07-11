@@ -246,7 +246,15 @@
   color: var(--ink-on-tape);
 }
 
-/* === Reusable status dot === */
+/* === Reusable status dot ===
+   F21 — institutional: kill every `box-shadow: 0 0 0 3px var(--*-soft)` halo.
+   That "lightbulb" pattern is the AI-vibe anti-pattern Owner flagged on the
+   hero badge. Status is conveyed by color, not by a glow ring around the dot.
+   - dot--pass / dot--fail / dot--warn / dot--info remain colored but unhaloed
+     (these are ticker values, not chrome — still allowed for status semantics)
+   - dot--amber replaces dot--pass for chrome-only contexts (availability dots)
+   - dot--muted stays
+*/
 .dot {
   display: inline-block;
   width: 8px;
@@ -254,10 +262,11 @@
   border-radius: 50%;
   vertical-align: middle;
 }
-.dot--pass  { background: var(--c-pass);  box-shadow: 0 0 0 3px var(--c-pass-soft); }
-.dot--fail  { background: var(--c-fail);  box-shadow: 0 0 0 3px var(--c-fail-soft); }
-.dot--warn  { background: var(--c-warn);  box-shadow: 0 0 0 3px var(--c-warn-soft); }
-.dot--info  { background: var(--c-info);  box-shadow: 0 0 0 3px var(--c-info-soft); }
+.dot--pass  { background: var(--c-pass); }
+.dot--fail  { background: var(--c-fail); }
+.dot--warn  { background: var(--c-warn); }
+.dot--info  { background: var(--c-info); }
+.dot--amber { background: var(--c-primary-2); }
 .dot--muted { background: var(--c-ink-3); }
 
 /* === Highlight (asymptotic-equality underline) === */

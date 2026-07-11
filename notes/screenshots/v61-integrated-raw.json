@@ -1,0 +1,1177 @@
+[
+  {
+    "name": "home",
+    "kind": "desktop",
+    "url": "http://localhost:8765/",
+    "http": 200,
+    "emoji": {
+      "count": 12,
+      "samples": [
+        "✓",
+        "✓",
+        "✓",
+        "✓",
+        "✓"
+      ]
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 87,
+      "filled": 33,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8",
+        "CHRISTIAN T. MACION, CTA®",
+        "I build research systems, and I ship the evals that prove th",
+        "DSR Bailey & López de Prado (2014) · OOS locked windows ✓ PB",
+        "DSR Bailey & López de Prado (2014) · OOS locked windows ✓ PB",
+        "DSR Bailey & López de Prado (2014) ·",
+        "Bailey & López de Prado (2014)",
+        "PBO CSCV-based ·"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 23,
+      "tabularCount": 0,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "ticker",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "ticker__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "ticker__item ticker__item--muted",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 107,
+      "undersized": 80,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 39,
+          "label": "Home"
+        },
+        {
+          "w": 90,
+          "h": 39,
+          "label": "For recruiters"
+        },
+        {
+          "w": 36,
+          "h": 39,
+          "label": "Proof"
+        },
+        {
+          "w": 55,
+          "h": 39,
+          "label": "Projects"
+        },
+        {
+          "w": 62,
+          "h": 39,
+          "label": "Solutions"
+        },
+        {
+          "w": 51,
+          "h": 39,
+          "label": "Method"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-home-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-home-full.png",
+    "fullBytes": 775365,
+    "viewBytes": 288377,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "home",
+    "kind": "mobile",
+    "url": "http://localhost:8765/",
+    "http": 200,
+    "emoji": {
+      "count": 12,
+      "samples": [
+        "✓",
+        "✓",
+        "✓",
+        "✓",
+        "✓"
+      ]
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 5,
+      "filled": 3,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8",
+        "CHRISTIAN T. MACION, CTA®",
+        "I build research systems, and I ship the evals that prove th"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 1,
+      "tabularCount": 0,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 107,
+      "undersized": 68,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Search the site"
+        },
+        {
+          "w": 109,
+          "h": 24,
+          "label": "Selected work"
+        },
+        {
+          "w": 172,
+          "h": 24,
+          "label": "Methodology (G1–G31)"
+        },
+        {
+          "w": 79,
+          "h": 24,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 125,
+          "h": 24,
+          "label": "All 15 projects →"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-home-mobile.png",
+    "viewBytes": 433505,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "markets",
+    "kind": "desktop",
+    "url": "http://localhost:8765/markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 60,
+      "filled": 55,
+      "samples": [
+        "-14.97%",
+        "+4.08%",
+        "+5.28%",
+        "-14.00%",
+        "-11.32%",
+        "-0.42%",
+        "-14.68%",
+        "-4.31%"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 52,
+      "tabularCount": 36,
+      "monospaceCount": 36,
+      "samples": [
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 125,
+      "undersized": 111,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 39,
+          "label": "Home"
+        },
+        {
+          "w": 90,
+          "h": 39,
+          "label": "For recruiters"
+        },
+        {
+          "w": 36,
+          "h": 39,
+          "label": "Proof"
+        },
+        {
+          "w": 55,
+          "h": 39,
+          "label": "Projects"
+        },
+        {
+          "w": 62,
+          "h": 39,
+          "label": "Solutions"
+        },
+        {
+          "w": 51,
+          "h": 39,
+          "label": "Method"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-markets-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-markets-full.png",
+    "fullBytes": 663925,
+    "viewBytes": 130575,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "markets",
+    "kind": "mobile",
+    "url": "http://localhost:8765/markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 48,
+      "filled": 45,
+      "samples": [
+        "-14.97%",
+        "+4.08%",
+        "+5.28%",
+        "-14.00%",
+        "-11.32%",
+        "-0.42%",
+        "-14.68%",
+        "-4.31%"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 44,
+      "tabularCount": 34,
+      "monospaceCount": 34,
+      "samples": [
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "tape__delta mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 125,
+      "undersized": 93,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Search the site"
+        },
+        {
+          "w": 318,
+          "h": 19,
+          "label": "01-DEFLATED-SHARPE\n$85.03\n-14.97%\nσ1.6"
+        },
+        {
+          "w": 394,
+          "h": 19,
+          "label": "02-CROSS-SECTIONAL-MOMENTUM\n$104.08\n+4.0"
+        },
+        {
+          "w": 437,
+          "h": 19,
+          "label": "03-TIMESERIES-MOMENTUM-VOLTARGET\n$105.28"
+        },
+        {
+          "w": 369,
+          "h": 19,
+          "label": "04-VARIANCE-RISK-PREMIUM\n$86.00\n-14.00%\n"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-markets-mobile.png",
+    "viewBytes": 181472,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "prediction",
+    "kind": "desktop",
+    "url": "http://localhost:8765/prediction-markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 4,
+      "filled": 3,
+      "samples": [
+        "V6.1 · BINARY EVENT MARKETS",
+        "Every metric on this page is a public-data probability, deri",
+        "EVENT CONTRACTS Implied, fair, edge. Each card is one binary"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 2,
+      "tabularCount": 0,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "normal"
+        },
+        {
+          "tag": "SECTION",
+          "cls": "section grid-section",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 89,
+      "undersized": 75,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 39,
+          "label": "Home"
+        },
+        {
+          "w": 90,
+          "h": 39,
+          "label": "For recruiters"
+        },
+        {
+          "w": 36,
+          "h": 39,
+          "label": "Proof"
+        },
+        {
+          "w": 55,
+          "h": 39,
+          "label": "Projects"
+        },
+        {
+          "w": 62,
+          "h": 39,
+          "label": "Solutions"
+        },
+        {
+          "w": 51,
+          "h": 39,
+          "label": "Method"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-prediction-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-prediction-full.png",
+    "fullBytes": 726261,
+    "viewBytes": 127546,
+    "assetFails": [],
+    "totalRequests": 13,
+    "ok": true
+  },
+  {
+    "name": "prediction",
+    "kind": "mobile",
+    "url": "http://localhost:8765/prediction-markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 4,
+      "filled": 3,
+      "samples": [
+        "V6.1 · BINARY EVENT MARKETS",
+        "Every metric on this page is a public-data probability, deri",
+        "EVENT CONTRACTS Implied, fair, edge. Each card is one binary"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 2,
+      "tabularCount": 0,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "normal"
+        },
+        {
+          "tag": "SECTION",
+          "cls": "section grid-section",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 89,
+      "undersized": 57,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Search the site"
+        },
+        {
+          "w": 164,
+          "h": 43,
+          "label": "Read methodology"
+        },
+        {
+          "w": 204,
+          "h": 43,
+          "label": "See the markets terminal"
+        },
+        {
+          "w": 3,
+          "h": 3,
+          "label": "G1–G5: Mechanical validity. Link to /met"
+        },
+        {
+          "w": 3,
+          "h": 3,
+          "label": "G1–G5: Mechanical validity. Link to /met"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-prediction-mobile.png",
+    "viewBytes": 194310,
+    "assetFails": [],
+    "totalRequests": 13,
+    "ok": true
+  },
+  {
+    "name": "research",
+    "kind": "desktop",
+    "url": "http://localhost:8765/research/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 68,
+      "filled": 52,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "Statistics that survive discipline are statistics that didn'",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 31",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 31",
+        "QUANT STRATEGIES 9 → all open-source on GitHub",
+        "9 →",
+        "9",
+        "all open-source on GitHub"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 49,
+      "tabularCount": 36,
+      "monospaceCount": 36,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "r-stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container r-stats__grid",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--mono stat--trend-flat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 175,
+      "undersized": 154,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 39,
+          "label": "Home"
+        },
+        {
+          "w": 90,
+          "h": 39,
+          "label": "For recruiters"
+        },
+        {
+          "w": 36,
+          "h": 39,
+          "label": "Proof"
+        },
+        {
+          "w": 55,
+          "h": 39,
+          "label": "Projects"
+        },
+        {
+          "w": 62,
+          "h": 39,
+          "label": "Solutions"
+        },
+        {
+          "w": 51,
+          "h": 39,
+          "label": "Method"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-research-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-research-full.png",
+    "fullBytes": 1172842,
+    "viewBytes": 157682,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "research",
+    "kind": "mobile",
+    "url": "http://localhost:8765/research/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 15,
+      "filled": 9,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "Statistics that survive discipline are statistics that didn'",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 0 ",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 0 ",
+        "QUANT STRATEGIES 9 → all open-source on GitHub",
+        "9 →",
+        "9",
+        "all open-source on GitHub"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 6,
+      "tabularCount": 1,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "r-stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container r-stats__grid",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--mono stat--trend-flat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 175,
+      "undersized": 119,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Search the site"
+        },
+        {
+          "w": 318,
+          "h": 19,
+          "label": "01-DEFLATED-SHARPE\n$85.03\n-14.97%\nσ1.6"
+        },
+        {
+          "w": 394,
+          "h": 19,
+          "label": "02-CROSS-SECTIONAL-MOMENTUM\n$104.08\n+4.0"
+        },
+        {
+          "w": 437,
+          "h": 19,
+          "label": "03-TIMESERIES-MOMENTUM-VOLTARGET\n$105.28"
+        },
+        {
+          "w": 369,
+          "h": 19,
+          "label": "04-VARIANCE-RISK-PREMIUM\n$86.00\n-14.00%\n"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-research-mobile.png",
+    "viewBytes": 235430,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "ai",
+    "kind": "desktop",
+    "url": "http://localhost:8765/ai/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 28,
+      "filled": 18,
+      "samples": [
+        "Every LLM output I ship passes the same statistical gate sta",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator ",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "11",
+        "11",
+        "4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "EVAL GATES 31 G1–G31 · 6 families · exit-0 contract",
+        "31"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 15,
+      "tabularCount": 4,
+      "monospaceCount": 4,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "ai-hero__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--primary",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "stat__value mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 99,
+      "undersized": 85,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 39,
+          "label": "Home"
+        },
+        {
+          "w": 90,
+          "h": 39,
+          "label": "For recruiters"
+        },
+        {
+          "w": 36,
+          "h": 39,
+          "label": "Proof"
+        },
+        {
+          "w": 55,
+          "h": 39,
+          "label": "Projects"
+        },
+        {
+          "w": 62,
+          "h": 39,
+          "label": "Solutions"
+        },
+        {
+          "w": 51,
+          "h": 39,
+          "label": "Method"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-ai-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-ai-full.png",
+    "fullBytes": 765235,
+    "viewBytes": 74967,
+    "assetFails": [],
+    "totalRequests": 16,
+    "ok": true
+  },
+  {
+    "name": "ai",
+    "kind": "mobile",
+    "url": "http://localhost:8765/ai/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 28,
+      "filled": 18,
+      "samples": [
+        "Every LLM output I ship passes the same statistical gate sta",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator ",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "11",
+        "11",
+        "4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "EVAL GATES 31 G1–G31 · 6 families · exit-0 contract",
+        "31"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 15,
+      "tabularCount": 4,
+      "monospaceCount": 4,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "ai-hero__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--primary",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "stat__value mono",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 99,
+      "undersized": 67,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Search the site"
+        },
+        {
+          "w": 119,
+          "h": 20,
+          "label": "RAG Recall Eval"
+        },
+        {
+          "w": 332,
+          "h": 18,
+          "label": "Open artifact →"
+        },
+        {
+          "w": 119,
+          "h": 20,
+          "label": "Tool-Call Agent"
+        },
+        {
+          "w": 332,
+          "h": 18,
+          "label": "Open artifact →"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-integrated-ai-mobile.png",
+    "viewBytes": 125796,
+    "assetFails": [],
+    "totalRequests": 16,
+    "ok": true
+  }
+]

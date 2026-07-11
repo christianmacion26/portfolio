@@ -1,0 +1,1437 @@
+[
+  {
+    "name": "home",
+    "kind": "desktop",
+    "url": "http://localhost:8765/",
+    "http": 200,
+    "emoji": {
+      "count": 12,
+      "samples": [
+        "✓",
+        "✓",
+        "✓",
+        "✓",
+        "✓"
+      ]
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 29,
+      "filled": 13,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8",
+        "CHRISTIAN T. MACION, CTA®",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness.",
+        "I build research systems, and I ship the evals that prove th"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 10,
+      "tabularCount": 0,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container hero__inner",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "hero__top",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 118,
+      "undersized": 79,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/prediction-markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/research"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-home-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-home-full.png",
+    "fullBytes": 1174286,
+    "viewBytes": 275481,
+    "assetFails": [],
+    "totalRequests": 17,
+    "ok": true
+  },
+  {
+    "name": "home",
+    "kind": "mobile",
+    "url": "http://localhost:8765/",
+    "http": 200,
+    "emoji": {
+      "count": 12,
+      "samples": [
+        "✓",
+        "✓",
+        "✓",
+        "✓",
+        "✓"
+      ]
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 19,
+      "filled": 13,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8 Quant",
+        "CHRISTIAN T. MACION, CTA®·OPEN TO REMOTE ROLES · UTC+8",
+        "CHRISTIAN T. MACION, CTA®",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness. I bu",
+        "Quantitative researcher. AI engineer. One eval harness.",
+        "I build research systems, and I ship the evals that prove th"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 10,
+      "tabularCount": 0,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container hero__inner",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "P",
+          "cls": "hero__eyebrow",
+          "fn": "\"JetBrains Mono\", ui-monospace, \"SF Mono",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "hero__top",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 118,
+      "undersized": 67,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 109,
+          "h": 24,
+          "label": "Selected work"
+        },
+        {
+          "w": 172,
+          "h": 24,
+          "label": "Methodology (G1–G31)"
+        },
+        {
+          "w": 79,
+          "h": 24,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 125,
+          "h": 24,
+          "label": "All 15 projects →"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 1"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-home-mobile.png",
+    "viewBytes": 433505,
+    "assetFails": [],
+    "totalRequests": 17,
+    "ok": true
+  },
+  {
+    "name": "markets",
+    "kind": "desktop",
+    "url": "http://localhost:8765/markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 197,
+      "filled": 174,
+      "samples": [
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$85.70",
+        "-14.30%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 155,
+      "tabularCount": 104,
+      "monospaceCount": 104,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--fail",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 132,
+      "undersized": 110,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/prediction-markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/research"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-markets-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-markets-full.png",
+    "fullBytes": 666217,
+    "viewBytes": 131585,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "markets",
+    "kind": "mobile",
+    "url": "http://localhost:8765/markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 184,
+      "filled": 164,
+      "samples": [
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$85.70",
+        "-14.30%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 147,
+      "tabularCount": 102,
+      "monospaceCount": 102,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--fail",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 132,
+      "undersized": 92,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 318,
+          "h": 19,
+          "label": "01-DEFLATED-SHARPE\n$85.70\n-14.30%\nσ1.6"
+        },
+        {
+          "w": 394,
+          "h": 19,
+          "label": "02-CROSS-SECTIONAL-MOMENTUM\n$84.61\n-15.3"
+        },
+        {
+          "w": 437,
+          "h": 19,
+          "label": "03-TIMESERIES-MOMENTUM-VOLTARGET\n$104.77"
+        },
+        {
+          "w": 377,
+          "h": 19,
+          "label": "04-VARIANCE-RISK-PREMIUM\n$120.47\n+20.47%"
+        },
+        {
+          "w": 352,
+          "h": 19,
+          "label": "05-PAIRS-COINTEGRATION\n$103.60\n+3.60%\nσ0"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-markets-mobile.png",
+    "viewBytes": 182337,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "prediction",
+    "kind": "desktop",
+    "url": "http://localhost:8765/prediction-markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 202,
+      "filled": 174,
+      "samples": [
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$85.70",
+        "-14.30%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 159,
+      "tabularCount": 109,
+      "monospaceCount": 109,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--fail",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 128,
+      "undersized": 106,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/prediction-markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/research"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-prediction-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-prediction-full.png",
+    "fullBytes": 841912,
+    "viewBytes": 134319,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "prediction",
+    "kind": "mobile",
+    "url": "http://localhost:8765/prediction-markets/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 200,
+      "filled": 173,
+      "samples": [
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $85.70 -14.30% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$85.70",
+        "-14.30%",
+        "σ1.6"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 158,
+      "tabularCount": 109,
+      "monospaceCount": 109,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "tape",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__viewport",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "tape__track",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "A",
+          "cls": "tape__item tape__item--fail",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 128,
+      "undersized": 88,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 318,
+          "h": 19,
+          "label": "01-DEFLATED-SHARPE\n$85.70\n-14.30%\nσ1.6"
+        },
+        {
+          "w": 394,
+          "h": 19,
+          "label": "02-CROSS-SECTIONAL-MOMENTUM\n$84.61\n-15.3"
+        },
+        {
+          "w": 437,
+          "h": 19,
+          "label": "03-TIMESERIES-MOMENTUM-VOLTARGET\n$104.77"
+        },
+        {
+          "w": 377,
+          "h": 19,
+          "label": "04-VARIANCE-RISK-PREMIUM\n$120.47\n+20.47%"
+        },
+        {
+          "w": 352,
+          "h": 19,
+          "label": "05-PAIRS-COINTEGRATION\n$103.60\n+3.60%\nσ0"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-prediction-mobile.png",
+    "viewBytes": 185452,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "research",
+    "kind": "desktop",
+    "url": "http://localhost:8765/research/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 205,
+      "filled": 170,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "Nine strategies. Four factors. Twelve sources.",
+        "A market-data view of the research book. No narrative — the ",
+        "Statistics that survive discipline are statistics that didn'",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 31",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 31",
+        "QUANT STRATEGIES 9 → all open-source on GitHub"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 152,
+      "tabularCount": 117,
+      "monospaceCount": 104,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "r-stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container r-stats__grid",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--mono stat--trend-flat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 191,
+      "undersized": 153,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/prediction-markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/research"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-research-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-research-full.png",
+    "fullBytes": 1260098,
+    "viewBytes": 159325,
+    "assetFails": [],
+    "totalRequests": 17,
+    "ok": true
+  },
+  {
+    "name": "research",
+    "kind": "mobile",
+    "url": "http://localhost:8765/research/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 19,
+      "filled": 12,
+      "samples": [
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "CHRISTIAN T. MACION, CTA® · RESEARCH WAREHOUSE · PUBLIC DATA",
+        "Nine strategies. Four factors. Twelve sources.",
+        "A market-data view of the research book. No narrative — the ",
+        "Statistics that survive discipline are statistics that didn'",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 0 ",
+        "QUANT STRATEGIES 9 → all open-source on GitHub EVAL GATES 0 ",
+        "QUANT STRATEGIES 9 → all open-source on GitHub"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 6,
+      "tabularCount": 6,
+      "monospaceCount": 1,
+      "samples": [
+        {
+          "tag": "SECTION",
+          "cls": "r-stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "container r-stats__grid",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--mono stat--trend-flat",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 191,
+      "undersized": 118,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 318,
+          "h": 19,
+          "label": "01-DEFLATED-SHARPE\n$85.70\n-14.30%\nσ1.6"
+        },
+        {
+          "w": 394,
+          "h": 19,
+          "label": "02-CROSS-SECTIONAL-MOMENTUM\n$84.61\n-15.3"
+        },
+        {
+          "w": 437,
+          "h": 19,
+          "label": "03-TIMESERIES-MOMENTUM-VOLTARGET\n$104.77"
+        },
+        {
+          "w": 377,
+          "h": 19,
+          "label": "04-VARIANCE-RISK-PREMIUM\n$120.47\n+20.47%"
+        },
+        {
+          "w": 352,
+          "h": 19,
+          "label": "05-PAIRS-COINTEGRATION\n$103.60\n+3.60%\nσ0"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-research-mobile.png",
+    "viewBytes": 235131,
+    "assetFails": [],
+    "totalRequests": 14,
+    "ok": true
+  },
+  {
+    "name": "ai",
+    "kind": "desktop",
+    "url": "http://localhost:8765/ai/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 30,
+      "filled": 19,
+      "samples": [
+        "AI LANE Eleven agents. One loop. 31 gates. Every LLM output ",
+        "Every LLM output I ship passes the same statistical gate sta",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator ",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "11",
+        "11",
+        "4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "EVAL GATES 31 G1–G31 · 6 families · exit-0 contract"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 16,
+      "tabularCount": 15,
+      "monospaceCount": 4,
+      "samples": [
+        {
+          "tag": "HEADER",
+          "cls": "section section--hero ai-hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "ai-hero__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--primary",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 106,
+      "undersized": 84,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/prediction-markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/research"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-ai-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-ai-full.png",
+    "fullBytes": 766768,
+    "viewBytes": 76431,
+    "assetFails": [],
+    "totalRequests": 16,
+    "ok": true
+  },
+  {
+    "name": "ai",
+    "kind": "mobile",
+    "url": "http://localhost:8765/ai/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 29,
+      "filled": 19,
+      "samples": [
+        "AI LANE Eleven agents. One loop. 31 gates. Every LLM output ",
+        "Every LLM output I ship passes the same statistical gate sta",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator ",
+        "AGENTS 11 4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "11",
+        "11",
+        "4 inputs · 3 middles · 3 outputs · 1 orchestrator",
+        "EVAL GATES 31 G1–G31 · 6 families · exit-0 contract"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 16,
+      "tabularCount": 15,
+      "monospaceCount": 4,
+      "samples": [
+        {
+          "tag": "HEADER",
+          "cls": "section section--hero ai-hero",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "DIV",
+          "cls": "ai-hero__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat stat--md stat--primary",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        },
+        {
+          "tag": "DIV",
+          "cls": "stat__value-row",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "tabular-nums"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 106,
+      "undersized": 66,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 119,
+          "h": 20,
+          "label": "RAG Recall Eval"
+        },
+        {
+          "w": 332,
+          "h": 18,
+          "label": "Open artifact →"
+        },
+        {
+          "w": 119,
+          "h": 20,
+          "label": "Tool-Call Agent"
+        },
+        {
+          "w": 332,
+          "h": 18,
+          "label": "Open artifact →"
+        },
+        {
+          "w": 180,
+          "h": 20,
+          "label": "LLM-as-Judge Harness"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-ai-mobile.png",
+    "viewBytes": 126182,
+    "assetFails": [],
+    "totalRequests": 16,
+    "ok": true
+  },
+  {
+    "name": "proof",
+    "kind": "desktop",
+    "url": "http://localhost:8765/proof/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 39,
+      "filled": 3,
+      "samples": [
+        "PROOF/ · SHOW YOUR WORK Proof. Public or self-owned only. If",
+        "If it isn't reproducible from public data, it isn't here.",
+        "0 ARTIFACTS ON THIS PAGE 0 QUANT PROJECTS 0 AI PROJECTS 0 CA"
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 2,
+      "tabularCount": 0,
+      "monospaceCount": 0,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "container container-narrow",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        },
+        {
+          "tag": "UL",
+          "cls": "proof-head__stats",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 208,
+      "undersized": 155,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 232,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®\nQuant Research"
+        },
+        {
+          "w": 40,
+          "h": 44,
+          "label": "Home"
+        },
+        {
+          "w": 36,
+          "h": 44,
+          "label": "Proof"
+        },
+        {
+          "w": 88,
+          "h": 37,
+          "label": "Markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/prediction-markets"
+        },
+        {
+          "w": 185,
+          "h": 41,
+          "label": "/research"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 1280,
+      "h": 800
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-proof-desktop.png",
+    "fullFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-proof-full.png",
+    "fullBytes": 2162067,
+    "viewBytes": 165492,
+    "assetFails": [],
+    "totalRequests": 23,
+    "ok": true
+  },
+  {
+    "name": "proof",
+    "kind": "mobile",
+    "url": "http://localhost:8765/proof/",
+    "http": 200,
+    "emoji": {
+      "count": 0,
+      "samples": []
+    },
+    "palette": {
+      "bodyBg": "rgb(13, 17, 23)",
+      "primary": "#e6edf3",
+      "primary2": "#c98a16",
+      "bgVar": "#0d1117"
+    },
+    "density": {
+      "inFold": 37,
+      "filled": 2,
+      "samples": [
+        "PROOF/ · SHOW YOUR WORK Proof. Public or self-owned only. If",
+        "If it isn't reproducible from public data, it isn't here."
+      ]
+    },
+    "monoNumerics": {
+      "totalNumeric": 1,
+      "tabularCount": 0,
+      "monospaceCount": 0,
+      "samples": [
+        {
+          "tag": "DIV",
+          "cls": "container container-narrow",
+          "fn": "Inter, \"Helvetica Neue\", system-ui, -app",
+          "fvn": "normal"
+        }
+      ]
+    },
+    "touchTargets": {
+      "total": 208,
+      "undersized": 143,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 1"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 2"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 3"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 4"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 5"
+        }
+      ]
+    },
+    "hScroll": {
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflows": false
+    },
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "viewFile": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v62-final-proof-mobile.png",
+    "viewBytes": 251365,
+    "assetFails": [],
+    "totalRequests": 22,
+    "ok": true
+  }
+]

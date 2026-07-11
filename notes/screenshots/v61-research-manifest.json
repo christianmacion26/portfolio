@@ -1,0 +1,16 @@
+[
+  {
+    "kind": "desktop",
+    "url": "http://localhost:8765/research/index.html",
+    "file": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-research-desktop.png",
+    "http": 200,
+    "ok": true
+  },
+  {
+    "kind": "mobile",
+    "url": "http://localhost:8765/research/index.html",
+    "file": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-research-mobile.png",
+    "http": 200,
+    "ok": true
+  }
+]

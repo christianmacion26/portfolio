@@ -32,13 +32,16 @@ interface MathTile {
 }
 
 // 6 fixed formula tiles — public-domain quant idioms.
+// F19 — institutional: all formula pips are monochrome ink-3 except the
+// flagship (deflated-sharpe) which keeps amber as the "active/published"
+// indicator. Removes the rainbow of 5 chrome colors that read as AI-vibe.
 const FORMULAS: ReadonlyArray<MathTile> = [
   {
     id: 'sharpe',
     title: 'SHARPE',
     latex: '\\mathrm{SR} = \\dfrac{\\bar{R} - R_f}{\\hat{\\sigma}}',
     category: 'equities',
-    pip: 'var(--c-info)',
+    pip: 'var(--c-ink-3)',
     deltaIn: 'ΔR̄ +12bp',
     deltaSign: 1,
     outputVal: '+1.42',
@@ -48,7 +51,7 @@ const FORMULAS: ReadonlyArray<MathTile> = [
     title: 'DEFLATED SHARPE',
     latex: '\\mathrm{DSR} \\approx \\mathrm{SR}\\hat{\\phantom{x}} \\cdot \\sqrt{\\tfrac{1}{V[\\hat{SR}]}} \\cdot \\Phi\\!\\left(z\\right)',
     category: 'signal',
-    pip: 'var(--c-phi)',
+    pip: 'var(--c-primary-2)',   /* flagship published research — keeps amber */
     deltaIn: 'Δp -0.03',
     deltaSign: -1,
     outputVal: '0.97',
@@ -58,7 +61,7 @@ const FORMULAS: ReadonlyArray<MathTile> = [
     title: 'VARIANCE RISK PREMIUM',
     latex: '\\mathrm{VRP} = \\sigma_{\\mathrm{imp}}^2 - \\sigma_{\\mathrm{real}}^2',
     category: 'vol',
-    pip: 'var(--c-primary-3)',
+    pip: 'var(--c-ink-3)',
     deltaIn: 'Δσ² -4bp',
     deltaSign: -1,
     outputVal: '3.8σ',
@@ -68,7 +71,7 @@ const FORMULAS: ReadonlyArray<MathTile> = [
     title: 'ORNSTEIN-UHLENBECK',
     latex: '\\mathrm{d}X_t = \\theta\\left(\\mu - X_t\\right)\\mathrm{d}t + \\sigma\\,\\mathrm{d}W_t',
     category: 'meanrev',
-    pip: 'var(--c-pass)',
+    pip: 'var(--c-ink-3)',
     deltaIn: 'Δθ +0.04',
     deltaSign: 1,
     outputVal: 'τ=42d',
@@ -78,7 +81,7 @@ const FORMULAS: ReadonlyArray<MathTile> = [
     title: 'FUNDING CARRY',
     latex: '\\mathrm{carry} = r_{\\mathrm{base}} - r_{\\mathrm{quote}} - \\sigma\\,\\Delta\\tau',
     category: 'fx',
-    pip: 'var(--c-accent-cyan)',
+    pip: 'var(--c-ink-3)',
     deltaIn: 'Δr -8bp',
     deltaSign: -1,
     outputVal: '+75bp',
@@ -88,7 +91,7 @@ const FORMULAS: ReadonlyArray<MathTile> = [
     title: 'REALIZED VOL',
     latex: '\\hat{\\sigma} = \\sqrt{\\dfrac{252}{n} \\sum_{i=1}^{n} \\left(r_i - \\bar{r}\\right)^2}',
     category: 'vol',
-    pip: 'var(--c-amber)',
+    pip: 'var(--c-ink-3)',
     deltaIn: 'Δn +21',
     deltaSign: 1,
     outputVal: '0.85σ̂',

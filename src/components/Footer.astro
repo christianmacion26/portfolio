@@ -26,8 +26,10 @@ const deployedStamp = buildStampUtc8();
           <div class="footer__name">{profile.fullName}</div>
           <div class="footer__role">{profile.titles.primary}</div>
           <div class="footer__loc mono">{profile.location.display}</div>
+          {/* F21 — institutional: dot for "online/available" should be amber,
+              not bright pass-green. Single accent = institutional. */}
           <div class="footer__hours mono">
-            <span class="dot dot--pass"></span>
+            <span class="dot dot--amber" aria-hidden="true"></span>
             {profile.availability.mode} · {profile.availability.hours}
           </div>
         </div>

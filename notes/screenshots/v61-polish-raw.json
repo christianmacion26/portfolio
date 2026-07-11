@@ -1,0 +1,123 @@
+[
+  {
+    "name": "prediction-desktop",
+    "url": "http://localhost:8765/prediction-markets/",
+    "http": 200,
+    "out": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-polish-prediction-desktop.png",
+    "bytes": 134539,
+    "kind": "density",
+    "density": {
+      "inFold": 194,
+      "filled": 169,
+      "tapeItems": 32,
+      "samples": [
+        "01-DEFLATED-SHARPE $76.95 -23.05% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $76.95 -23.05% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $76.95 -23.05% σ1.6 02-CROSS-SECTIONAL-MO",
+        "01-DEFLATED-SHARPE $76.95 -23.05% σ1.6",
+        "01-DEFLATED-SHARPE",
+        "$76.95"
+      ]
+    }
+  },
+  {
+    "name": "home-mobile",
+    "url": "http://localhost:8765/",
+    "http": 200,
+    "out": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-polish-home-mobile.png",
+    "bytes": 433505,
+    "kind": "touch",
+    "touch": {
+      "total": 118,
+      "undersized": 68,
+      "navLinks": 9,
+      "navTiny": 0,
+      "samples": [
+        {
+          "w": 114,
+          "h": 24,
+          "label": "Skip to content",
+          "tag": "A",
+          "cls": "skip-link"
+        },
+        {
+          "w": 184,
+          "h": 36,
+          "label": "Christian T. Macion, CTA®",
+          "tag": "A",
+          "cls": "nav__brand"
+        },
+        {
+          "w": 88,
+          "h": 33,
+          "label": "Resume ↓",
+          "tag": "A",
+          "cls": "btn btn--primary btn--sm nav__cta nav__cta--mobile"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Search the site",
+          "tag": "A",
+          "cls": "nav-search"
+        },
+        {
+          "w": 109,
+          "h": 24,
+          "label": "Selected work",
+          "tag": "A",
+          "cls": "hero__link"
+        },
+        {
+          "w": 172,
+          "h": 24,
+          "label": "Methodology (G1–G31)",
+          "tag": "A",
+          "cls": "hero__link"
+        },
+        {
+          "w": 79,
+          "h": 24,
+          "label": "Resume ↓",
+          "tag": "A",
+          "cls": "hero__link"
+        },
+        {
+          "w": 125,
+          "h": 24,
+          "label": "All 15 projects →",
+          "tag": "A",
+          "cls": "hero__link"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 1",
+          "tag": "BUTTON",
+          "cls": "stmt-carousel__dot is-active"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 2",
+          "tag": "BUTTON",
+          "cls": "stmt-carousel__dot"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 3",
+          "tag": "BUTTON",
+          "cls": "stmt-carousel__dot"
+        },
+        {
+          "w": 32,
+          "h": 32,
+          "label": "Show statement 4",
+          "tag": "BUTTON",
+          "cls": "stmt-carousel__dot"
+        }
+      ]
+    }
+  }
+]

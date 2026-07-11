@@ -2448,16 +2448,14 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     padding-bottom: 4px;
     border-bottom: 1px solid var(--c-rule);
   }
-  /* Cells: monochrome amber gradient by stage, no traffic-light rainbow.
-     F14 — institutional pattern (AQR/Renaissance data viz aesthetic):
-     single color, 6 alpha steps. The "stage" modulates fill intensity
-     along a single channel — same hue, different opacity — exactly how
-     institutional research prints heatmaps. */
+  /* F20 — institutional: ink-3 base + amber alpha. On dark workspace
+     bg, alpha-only cells render invisible. Solid ink-3 + amber wash is
+     the institutional heatmap pattern (Bloomberg / Refinitiv style). */
   .velocity-cell {
     position: relative;
     aspect-ratio: 3 / 2;
     min-height: 38px;
-    background: rgba(232, 178, 32, 0.18);   /* default = mid intensity */
+    background: var(--c-ink-3);
     border: 1px solid var(--c-rule);
     display: flex;
     align-items: center;
@@ -2490,13 +2488,14 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     background: rgba(232, 178, 32, 0.55);
     pointer-events: none;
   }
-  /* Per-stage alpha — single amber, 6 steps. Letter is always ink-2. */
-  .velocity-cell--w { background: rgba(232, 178, 32, 0.62); }   /* Wrote — top */
-  .velocity-cell--p { background: rgba(232, 178, 32, 0.48); }   /* Paper */
-  .velocity-cell--h { background: rgba(232, 178, 32, 0.36); }   /* Hypothesis */
-  .velocity-cell--f { background: rgba(232, 178, 32, 0.24); }   /* Frozen-spec */
-  .velocity-cell--m { background: rgba(232, 178, 32, 0.14); }   /* Model */
-  .velocity-cell--r { background: rgba(232, 178, 32, 0.06); border-color: rgba(232, 178, 32, 0.40); }   /* Released — barely there, hairline border */
+  /* F20 — Per-stage amber wash over ink-3 base. Five-step gradient:
+     bright amber → faint amber → empty cell with amber ring (released). */
+  .velocity-cell--w { background: rgba(232, 178, 32, 0.95); color: var(--c-bg); }   /* Wrote — brightest, ink-bg text */
+  .velocity-cell--p { background: rgba(232, 178, 32, 0.72); color: var(--c-bg); }   /* Paper */
+  .velocity-cell--h { background: rgba(232, 178, 32, 0.48); color: var(--c-ink); }   /* Hypothesis */
+  .velocity-cell--f { background: rgba(232, 178, 32, 0.28); color: var(--c-ink); }   /* Frozen-spec */
+  .velocity-cell--m { background: rgba(232, 178, 32, 0.14); color: var(--c-ink-2); }   /* Model — barely there */
+  .velocity-cell--r { background: var(--c-ink-3); color: var(--c-primary-2); border-color: var(--c-primary-2); }   /* Released — empty bg, amber ink + amber border = "shipped" mark */
 
   /* F13.1 legend — full stage label + count */
   .velocity-legend {
@@ -2532,13 +2531,13 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     height: 10px;
     border: 1px solid var(--c-rule);
   }
-  /* F14 — single amber channel, 6 alpha steps matching cells above. */
-  .velocity-legend__swatch--w { background: rgba(232, 178, 32, 0.62); }
-  .velocity-legend__swatch--p { background: rgba(232, 178, 32, 0.48); }
-  .velocity-legend__swatch--h { background: rgba(232, 178, 32, 0.36); }
-  .velocity-legend__swatch--f { background: rgba(232, 178, 32, 0.24); }
+  /* F20 — single amber channel, 5 filled steps + 1 empty/amber-ring. */
+  .velocity-legend__swatch--w { background: rgba(232, 178, 32, 0.95); }
+  .velocity-legend__swatch--p { background: rgba(232, 178, 32, 0.72); }
+  .velocity-legend__swatch--h { background: rgba(232, 178, 32, 0.48); }
+  .velocity-legend__swatch--f { background: rgba(232, 178, 32, 0.28); }
   .velocity-legend__swatch--m { background: rgba(232, 178, 32, 0.14); }
-  .velocity-legend__swatch--r { background: rgba(232, 178, 32, 0.06); border-color: rgba(232, 178, 32, 0.40); }
+  .velocity-legend__swatch--r { background: var(--c-ink-3); border-color: var(--c-primary-2); }
 
   @media (max-width: 720px) {
     .workspace__ambient {

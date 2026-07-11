@@ -1,0 +1,16 @@
+{
+  "_comment": "Workspace-level Claude Code settings for portfolio site. NOT to be confused with ~/.claude/settings.json (auth-locked, NEVER write). This file is per-project and wires the Commander SessionStart hook so `commander on` works from this workspace.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/christianmacion/.local/bin/commander_sessionstart_hook"
+          }
+        ]
+      }
+    ]
+  }
+}

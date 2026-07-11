@@ -1,0 +1,16 @@
+[
+  {
+    "kind": "desktop",
+    "url": "file:///Users/christianmacion/Contingency/christianmacion.github.io/dist/ai/index.html",
+    "file": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-ai-desktop.png",
+    "http": 200,
+    "ok": true
+  },
+  {
+    "kind": "mobile",
+    "url": "file:///Users/christianmacion/Contingency/christianmacion.github.io/dist/ai/index.html",
+    "file": "/Users/christianmacion/Contingency/christianmacion.github.io/notes/screenshots/v61-ai-mobile.png",
+    "http": 200,
+    "ok": true
+  }
+]
