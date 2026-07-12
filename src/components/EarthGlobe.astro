@@ -701,11 +701,13 @@ const headerLabel =
 
       {/* v6.5 — background star field (drawn FIRST so it sits behind
           the ocean disc and atmosphere). 120 deterministic dots from
-          `seedFromString(buildSeed())` in 3 size/opacity tiers. */}
+          `seedFromString(buildSeed())` in 3 size/opacity tiers.
+          v6.10.27 — fill hoisted from 120 inline attrs to .eg__stars circle
+          CSS rule (saves ~3.5KB on home: 120 × `fill="#e6edf3"` ≈ 29B). */}
       <g class="eg__stars" aria-hidden="true">
         {starField.map((s) => (
           <circle cx={s.x.toFixed(1)} cy={s.y.toFixed(1)} r={s.r.toFixed(2)}
-                  fill="#e6edf3" fill-opacity={s.o.toFixed(2)}
+                  fill-opacity={s.o.toFixed(2)}
                   class={`eg__star eg__star--t${s.tier}`} />
         ))}
       </g>
@@ -1490,6 +1492,8 @@ const headerLabel =
      no decorative glows on background elements). */
   .eg__stars circle {
     pointer-events: none;
+    /* v6.10.27 — fill hoisted from inline attr. token (off-white ink). */
+    fill: var(--c-ink);
   }
   .eg__star--t3 {
     /* No halo — pure circle. Anchor stars already tier-3 sized for visual punch. */
