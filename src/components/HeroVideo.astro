@@ -211,14 +211,15 @@ for (let c = 0; c <= gridCols; c++) {
 
           {/* === pulsing city markers (8) ===
               Reads as a coverage map at low density. Staggered
-              delays so the band "breathes". */}
-          <g class="hero-video__cities">
+              delays so the band "breathes".
+              v6.10.30 — hoist fill to <g> (SVG presentation attr
+              inheritance): 8 inline fill="rgba(...)" → 1 parent fill. */}
+          <g class="hero-video__cities" fill="rgba(63, 185, 80, 0.55)">
             {cityDots.map((c) => (
               <circle
                 cx={c.cx}
                 cy={c.cy}
                 r={c.r}
-                fill="rgba(63, 185, 80, 0.55)"
                 style={`--pulse-delay: ${c.delay}s;`}
               />
             ))}
