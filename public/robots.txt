@@ -30,8 +30,8 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-# Sitemap
-Sitemap: https://christianmacion26.github.io/portfolio/sitemap-index.xml
+# Sitemap — primary CF Pages mirror (GH-Pages is fallback)
+Sitemap: https://christianmacion-portfolio.pages.dev/sitemap-index.xml
 
 # AI-agent surface
 # llms.txt — Markdown index per llmstxt.org
