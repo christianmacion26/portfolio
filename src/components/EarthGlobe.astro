@@ -165,6 +165,10 @@ interface GridLonSeg { d: string; visible: boolean; }
 function buildLatGrid(la: number): GridLatSeg {
   // A parallel at `la` projects to an ellipse-like curve. We sample it
   // every 5° and keep runs where the points fall on the visible disc.
+  // v6.10.31 — minified: drop space after command letter + drop inter-
+  // segment separator (SVG path parsers distinguish commands by letter,
+  // not by whitespace). Same pattern as `scripts/build-earth-110m.mjs`
+  // applied to continent paths in v6.10.28.
   const pts: { x: number; y: number; rho: number }[] = [];
   for (let lo = -180; lo <= 180; lo += 5) pts.push({ ...project(la, lo) });
   let segs: string[] = [];
@@ -173,18 +177,19 @@ function buildLatGrid(la: number): GridLatSeg {
   for (const p of pts) {
     const vis = p.rho > 0;
     if (vis) {
-      segs.push(`${first ? 'M' : prevVis ? 'L' : 'M'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`);
+      segs.push(`${first ? 'M' : prevVis ? 'L' : 'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`);
       first = false;
     } else if (prevVis && !first) {
-      segs.push(' M');
+      segs.push('M');
     }
     prevVis = vis;
   }
-  return { d: segs.join(' '), visible: pts.some((p) => p.rho > 0) };
+  return { d: segs.join(''), visible: pts.some((p) => p.rho > 0) };
 }
 
 function buildLonGrid(lo: number): GridLonSeg {
   // A meridian at `lo` projects to a vertical-ish arc. Sample every 5° lat.
+  // v6.10.31 — minified (same lever as buildLatGrid above).
   const pts: { x: number; y: number; rho: number }[] = [];
   for (let la = -80; la <= 80; la += 5) pts.push({ ...project(la, lo) });
   let segs: string[] = [];
@@ -193,14 +198,14 @@ function buildLonGrid(lo: number): GridLonSeg {
   for (const p of pts) {
     const vis = p.rho > 0;
     if (vis) {
-      segs.push(`${first ? 'M' : prevVis ? 'L' : 'M'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`);
+      segs.push(`${first ? 'M' : prevVis ? 'L' : 'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`);
       first = false;
     } else if (prevVis && !first) {
-      segs.push(' M');
+      segs.push('M');
     }
     prevVis = vis;
   }
-  return { d: segs.join(' '), visible: pts.some((p) => p.rho > 0) };
+  return { d: segs.join(''), visible: pts.some((p) => p.rho > 0) };
 }
 
 const latGridSegs = gridLat.map((la) => ({ la, ...buildLatGrid(la) }));

@@ -28,7 +28,7 @@ const typeScale = [
 // === (b) Color palette — 4 swatches ========================================
 const palette = [
   { name: '--c-primary', hex: '#e6edf3', role: 'off-white · primary text on dark' },
-  { name: '--c-amber', hex: '#e8b220', role: 'institutional amber · accent + lift' },
+  { name: '--c-amber', hex: '#c98a16', role: 'institutional amber · accent + lift' },
   { name: '--c-tape', hex: '#0d1117', role: 'institutional-tape · page background' },
   { name: '--c-pass', hex: '#3fb950', role: 'verified signal · pass only' },
 ];
@@ -57,7 +57,7 @@ const contrastPairs = [
   { fg: '--c-ink', bg: '--c-bg', ratio: '17.1:1', level: 'AAA' },
   { fg: '--c-ink-2', bg: '--c-bg', ratio: '6.4:1', level: 'AA' },
   { fg: '--c-primary-2-deep', bg: '--c-bg', ratio: '5.0:1', level: 'AA' },
-  { fg: '--c-amber', bg: '--c-bg', ratio: '3.4:1', level: 'AA Large (≥18px only)' },
+  { fg: '--c-amber', bg: '--c-bg', ratio: '6.4:1', level: 'AA' },
   { fg: '--c-primary', bg: '--c-bg', ratio: '19.2:1', level: 'AAA' },
 ];---
 
@@ -239,8 +239,9 @@ const contrastPairs = [
         <p class="section__eyebrow">(e) · Accessibility</p>
         <h2 class="section__title">WCAG AA contrast, skip-nav, focus-visible.</h2>
         <p class="section__sub">
-          All foreground/background pairs in the body of the site meet WCAG AA. The
-          decorative amber tokens are reserved for ≥18px / non-text use.
+          All foreground/background pairs in the body of the site meet WCAG AA at
+          body sizes; the <code class="mono">--c-amber-light</code> hover variant is reserved
+          for ≥18px / non-text use on cream surfaces (it drops to 1.7:1 there).
         </p>
       </header>
 
