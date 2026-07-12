@@ -39,14 +39,14 @@ interface Props {
   width?: number;
   /** ViewBox height (default 360 — Equirectangular 2:1). */
   height?: number;
-  /** Spacing in degrees between background landmass dots (default 8). */
+  /** Spacing in degrees between background landmass dots (default 20). */
   bgStep?: number;
 }
 const {
   points,
   width = 720,
   height = 360,
-  bgStep = 10,
+  bgStep = 20,
 } = Astro.props;
 
 // === Default cities ===
