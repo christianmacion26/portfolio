@@ -146,8 +146,9 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
 <style>
   .proj__head {
     padding-block: var(--sp-8) var(--sp-6);
-    background:
-      radial-gradient(800px 400px at 80% 0%, rgba(212, 160, 23, 0.1), transparent 60%), var(--c-bg);
+    /* v6.10.29 — institutional: drop decorative amber radial-gradient hero
+       chrome (chrome≠data rule). Border + token bg only. */
+    background: var(--c-bg);
     border-bottom: var(--border);
   }
   .proj__crumb {

@@ -29,6 +29,7 @@ import VoiceLine from '@components/VoiceLine.astro';
 const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
 const aiProjects = projects.filter((p) => p.data.role === 'ai');
 const quantProjects = projects.filter((p) => p.data.role === 'quant');
+const ossProjects = projects.filter((p) => p.data.sourceLink);
 
 const itemListJsonLd = projectListJsonLd(
   projects.map((p) => ({
@@ -74,7 +75,7 @@ const itemListJsonLd = projectListJsonLd(
           <span class="page-head__stat-lbl">quant research projects</span>
         </div>
         <div class="page-head__stat">
-          <span class="page-head__stat-num tnum">15</span>
+          <span class="page-head__stat-num tnum">{ossProjects.length}</span>
           <span class="page-head__stat-lbl">open-source repos</span>
         </div>
       </div>
@@ -169,7 +170,7 @@ const itemListJsonLd = projectListJsonLd(
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Combined-book analysis · cross-project</p>
-        <h2 class="section__title">What 9 projects tell you about a research book</h2>
+        <h2 class="section__title">What {quantProjects.length} projects tell you about a research book</h2>
         <p class="section__sub">
           None of these projects stand alone. The signal, cost, regime, and bias-control layers are
           designed to compose — a single vol-targeted carry trade (03 + 06) carries different risk
@@ -269,8 +270,7 @@ const itemListJsonLd = projectListJsonLd(
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-6);
-    background:
-      radial-gradient(800px 400px at 80% 0%, rgba(212, 160, 23, 0.1), transparent 60%), var(--c-bg);
+    background: var(--c-bg);
     border-bottom: var(--border);
   }
   .page-head__title {
