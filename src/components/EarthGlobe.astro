@@ -1485,12 +1485,14 @@ const headerLabel =
   }
 
   /* v6.5 — star field. 3 tiers; tier 3 (large anchor stars) gets a
-     faint white halo for visual punch against the dark tape. */
+     faint white halo for visual punch against the dark tape.
+     v6.9.15 — killed filter: drop-shadow halo (institutional chrome rule:
+     no decorative glows on background elements). */
   .eg__stars circle {
     pointer-events: none;
   }
   .eg__star--t3 {
-    filter: drop-shadow(0 0 1px rgba(230, 237, 243, 0.4));
+    /* No halo — pure circle. Anchor stars already tier-3 sized for visual punch. */
   }
   /* v6.5 — secondary outer atmosphere ring */
   .eg__atmosphere-2 {

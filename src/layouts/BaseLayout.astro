@@ -2,12 +2,15 @@
 /**
  * BaseLayout.astro — wraps every page; owns head, nav, footer.
  */
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
-import '@fontsource/jetbrains-mono/400.css';
-import '@fontsource/jetbrains-mono/500.css';
+/* v6.9.15 — latin-only Inter subsets (was all 5: Latin / Latin-Ext /
+   Cyrillic / Greek / Vietnamese). Site is English-only; saves ~470 KB
+   across the 4 weights on first paint. Plus dropped unused JetBrains-Mono
+   imports entirely (--ff-mono falls back to system mono; 0 source uses
+   the family). Total saved: ~720 KB across weights 400/500/600/700. */
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/inter/latin-700.css';
 import '@styles/tokens.css';
 import '@styles/global.css';
 import '@styles/print.css';
@@ -93,7 +96,9 @@ const crumbsJsonLd = breadcrumbs ? breadcrumbJsonLd(breadcrumbs) : null;
          inherits from the user-agent's icon color rule); amber variant is the
          primary brand mark used in nav, og:image, and About hero. -->
     <link rel="icon" type="image/svg+xml" href={path('/cm-mark.svg')} />
-    <link rel="apple-touch-icon" href={path('/cm-mark-amber.svg')} />
+    {/* v6.9.15 — iOS Safari ignores SVG apple-touch-icon (no support
+       per WebKit spec). Point to the 180×180 PNG Apple actually renders. */}
+    <link rel="apple-touch-icon" sizes="180x180" href={path('/apple-touch-icon-180x180.png')} />
     <link rel="mask-icon" href={path('/cm-mark.svg')} color="#0a0e14" />
     <link rel="sitemap" href={path('/sitemap-index.xml')} />
     <link

@@ -71,13 +71,12 @@ if (existsSync(proofDir)) {
 }
 
 // ── Required favicon set (post-favicons-generator) ──────────────────────────
+// v6.9.15 — modern browsers use the SVG <link rel="icon"> (cm-mark.svg)
+// so the legacy 32×32 / 192×192 / 512×512 PNGs + .ico + maskable dup
+// were dead weight. Apple iOS requires the 180×180 PNG (SVG is ignored
+// per WebKit spec) so that one stays. Net: 5 files removed (~32 KB).
 const requiredFavicons = [
-  'favicon.ico',
-  'favicon-32x32.png',
-  'favicon-192x192.png',
-  'favicon-512x512.png',
   'apple-touch-icon-180x180.png',
-  'maskable-icon-512x512.png',
 ];
 for (const f of requiredFavicons) {
   const full = join(publicDir, f);

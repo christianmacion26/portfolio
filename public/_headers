@@ -1,0 +1,24 @@
+# Cloudflare Pages _headers — cache control for hashed assets.
+#
+# v6.9.15 — _astro/* filenames contain content hashes (Astro emits them)
+# so they're safe to cache immutably for 1 year. Without this, Cloudflare
+# sends `cache-control: public, max-age=0, must-revalidate` on every file,
+# forcing a conditional revalidation round-trip on every repeat visit
+# (~50-100 ms TTFB penalty).
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Page HTML — short cache, must revalidate so deploys propagate fast.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Sitemap + feeds — also short so crawlers see updates.
+/sitemap*.xml
+  Cache-Control: public, max-age=3600
+/feed*.xml
+  Cache-Control: public, max-age=3600
+
+# LLM-friendly markdown alternates — moderate cache.
+/llms*.txt
+  Cache-Control: public, max-age=86400
