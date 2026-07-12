@@ -408,6 +408,23 @@ const countryFills: CountryFill[] = continentPaths.map((c) => {
   return { d: c.d, name: c.name, fill: latToRampFill(lat) };
 });
 
+// === v6.10.28 — group countries by lat-band fill ================
+// Saves ~5.7KB on home: 240 paths × `fill="rgb(...)" ` (≈24B) → hoisted
+// to 4 parent <g fill="rgb(...)"> groups. Children inherit; per-child
+// fill removed.
+interface CountryBand {
+  fill: string;
+  countries: CountryFill[];
+}
+const countryByBand: CountryBand[] = LAT_RAMP.map((band) => ({
+  fill: `rgb(${band.rgb[0]}, ${band.rgb[1]}, ${band.rgb[2]})`,
+  countries: [],
+}));
+for (const c of countryFills) {
+  const band = countryByBand.find((b) => b.fill === c.fill);
+  if (band) band.countries.push(c);
+}
+
 // === Cities (16 default — Digos + 15 global hubs) ================
 const cities = citiesOverride ?? [
   { city: 'Digos',      lat: 6.74,  lon: 125.36 },
@@ -811,8 +828,16 @@ const headerLabel =
               uniform `var(--c-ink-3)` fill with per-country relief. */}
           <g class="eg__continents" fill-opacity="0.55"
              filter="url(#eg-hillshade)">
-            {countryFills.map((c) => (
-              <path d={c.d} fill={c.fill} aria-hidden="true" />
+            {/* v6.10.28 — group countries by lat-band fill so the
+                `fill="rgb(...)"` attr hoists to each <g> parent. */}
+            {countryByBand.map((band) => (
+              band.countries.length > 0 && (
+                <g fill={band.fill}>
+                  {band.countries.map((c) => (
+                    <path d={c.d} aria-hidden="true" />
+                  ))}
+                </g>
+              )
             ))}
           </g>
 

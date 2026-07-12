@@ -144,42 +144,5 @@ export function buildSeed(): string {
   return (fromMeta || fromProc || '2026-07-10T00:00:00Z') as string;
 }
 
-/**
- * Walk a scalar with Gaussian noise around a baseline. Each call advances
- * the series by one step and returns the new value. Useful for
- * probability-surfaces and price walks where the *direction* matters
- * more than the precise distribution.
- *
- *   const r = seedFromString('series-1');
- *   let p = 0.18;
- *   const series: number[] = [p];
- *   for (let i = 0; i < 30; i++) {
- *     p = driftWalk(r, p, 0.02, 0.012, 0.05, 0.95);
- *     series.push(p);
- *   }
- *
- * @param rand     PRNG closure from `seedFromString`
- * @param prev     previous value
- * @param mean     long-run drift target (mean-reversion anchor)
- * @param sigma    standard deviation per step
- * @param floor    lower clamp
- * @param ceil     upper clamp
- */
-export function driftWalk(
-  rand: () => number,
-  prev: number,
-  mean: number,
-  sigma: number,
-  floor: number,
-  ceil: number,
-): number {
-  // Mean-reverting drift toward `mean`, plus Gaussian noise.
-  const z = gauss(rand);
-  const nextVal = prev + (mean - prev) * 0.05 + z * sigma;
-  // Clamp into [floor, ceil]; if the walk hits a boundary, reflect by
-  // re-sampling once (rare; keeps the series visually natural at the
-  // extreme edges of a probability chart).
-  if (nextVal < floor) return mean + (mean - prev) * 0.05 + Math.abs(z) * sigma;
-  if (nextVal > ceil) return mean + (mean - prev) * 0.05 - Math.abs(z) * sigma;
-  return Math.min(ceil, Math.max(floor, nextVal));
-}
+// v6.10.28 — `driftWalk` removed (knip reported unused; only referenced
+// in this file's doc comment).

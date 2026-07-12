@@ -58,13 +58,4 @@ export function buildYear(): number {
   return shifted.getUTCFullYear();
 }
 
-/**
- * Returns the full ISO timestamp in UTC+8 (no timezone suffix on the
- * date portion; useful for Atom feed `<updated>` elements which need
- * an instant).
- */
-export function buildStampUtc8Iso(): string {
-  const d = readBuildDate();
-  const shifted = new Date(d.getTime() + TZ_OFFSET_HOURS * 3600 * 1000);
-  return shifted.toISOString();
-}
+// v6.10.28 — `buildStampUtc8Iso` removed (knip reported unused).

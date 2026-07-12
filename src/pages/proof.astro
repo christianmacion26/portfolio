@@ -123,11 +123,20 @@ const codeArtifacts = [
   },
 ];
 
-// === Data: 9 quant + 6 AI projects + 10 solutions, surfaced as compact rows ===
+// === Data: projects + solutions, surfaced as compact rows ===
 const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
 const quantProjects = projects.filter((p) => p.data.role === 'quant');
 const aiProjects = projects.filter((p) => p.data.role === 'ai');
 const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
+
+// v6.10.27 — derive hero stat counts from the actual collections, not
+// hand-written literals. Previously "22 artifacts" was hardcoded but the
+// actual proof-list__name count is quantProjects + aiProjects + solutions
+// = N. The hero numbers now stay in lockstep with the data.
+const heroArtifactCount = quantProjects.length + aiProjects.length + solutions.length;
+const heroQuantCount = quantProjects.length;
+const heroAiCount = aiProjects.length;
+const heroSolutionCount = solutions.length;
 
 const formatProjectMetric = (p: typeof projects[number]) => {
   if (!p.data.metrics?.length) return null;
@@ -225,27 +234,33 @@ const paginate = (items: any[]) => {
       </VoiceLine>
 
       {/* v6.3 polish — headline stats moved ABOVE the carousel + motif
-         so all four numeric cells (22 / 9 / 6 / 10) are visible above
-         the 800 px desktop fold. The audit's density check needs ≥ 4
-         filled data cells; previously the stats sat below the fold
-         because the carousel + brand-motif + paragraph together push
-         ~700 px of decoration before the numbers arrive. Each stat
-         still gets data-counter so the odometer fires on scroll-in. */}
+         so all four numeric cells are visible above the 800 px desktop
+         fold. The audit's density check needs ≥ 4 filled data cells;
+         previously the stats sat below the fold because the carousel +
+         brand-motif + paragraph together push ~700 px of decoration
+         before the numbers arrive. Each stat still gets data-counter so
+         the odometer fires on scroll-in.
+
+         v6.10.27 — counts are now derived from the actual collections
+         (heroArtifactCount = quantProjects + aiProjects + solutions)
+         rather than hand-written literals. Previously "22" was hardcoded
+         but the real count is 25 (9 quant + 6 AI + 10 solutions). The
+         numbers now stay in lockstep with the data. */}
       <ul class="proof-head__stats" aria-label="Proof-page at-a-glance counts">
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="22">22</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroArtifactCount)}>{heroArtifactCount}</span>
           <span class="proof-head__stat-lbl mono">artifacts on this page</span>
         </li>
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="9">9</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroQuantCount)}>{heroQuantCount}</span>
           <span class="proof-head__stat-lbl mono">quant projects</span>
         </li>
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="6">6</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroAiCount)}>{heroAiCount}</span>
           <span class="proof-head__stat-lbl mono">AI projects</span>
         </li>
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter="10">10</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroSolutionCount)}>{heroSolutionCount}</span>
           <span class="proof-head__stat-lbl mono">case studies</span>
         </li>
       </ul>
@@ -440,7 +455,8 @@ const paginate = (items: any[]) => {
       </div>
 
       {/* Quant projects */}
-      <h3 class="proof-list__heading">Quant projects — 9</h3>
+      {/* v6.10.27 — counts derived from the actual collection, not hand-written */}
+      <h3 class="proof-list__heading">Quant projects — {heroQuantCount}</h3>
       <ol
         class="proof-list proof-list--paged"
         aria-label="Quant research projects"
@@ -505,7 +521,7 @@ const paginate = (items: any[]) => {
       <nav class="proof-pager" aria-label="Quant projects pagination" data-pager hidden></nav>
 
       {/* AI projects */}
-      <h3 class="proof-list__heading">AI projects — 6</h3>
+      <h3 class="proof-list__heading">AI projects — {heroAiCount}</h3>
       <ol
         class="proof-list proof-list--paged"
         aria-label="AI engineering projects"
@@ -570,7 +586,7 @@ const paginate = (items: any[]) => {
       <nav class="proof-pager" aria-label="AI projects pagination" data-pager hidden></nav>
 
       {/* Solutions */}
-      <h3 class="proof-list__heading">Solutions — 10 case studies</h3>
+      <h3 class="proof-list__heading">Solutions — {heroSolutionCount} case studies</h3>
       <ol
         class="proof-list proof-list--paged"
         aria-label="Solution case studies"
