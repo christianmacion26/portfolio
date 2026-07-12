@@ -129,7 +129,7 @@ function buildSvg({ width, height, headshotBox, monogramSize }) {
       Multiple-testing-aware systematic strategies &amp; multi-agent LLM systems.
     </text>
     <text x="${s(120)}" y="${s(820)}" font-size="${s(20)}" letter-spacing="${s(2)}" fill="#5a6473" font-family="ui-monospace, Menlo, monospace">
-      christianmacion26.github.io/portfolio
+      christianmacion-portfolio.pages.dev
     </text>
   </g>
 

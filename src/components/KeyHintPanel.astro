@@ -81,18 +81,20 @@ for (const s of shortcuts) {
               stroke-width="1"
               stroke-opacity="0.85"
             />
-            {Array.from({ length: 5 }).map((_, row) =>
-              Array.from({ length: 4 }).map((__, col) => (
-                <rect
-                  x={20 + col * 4}
-                  y={4 + row * 4}
-                  width="3"
-                  height="3"
-                  fill="var(--c-amber)"
-                  fill-opacity="0.32"
-                />
-              )),
-            )}
+            {/* v6.10.17 — hoist fill/fill-opacity to <g> (was on each of
+                20 rects × 6 shortcuts = 120 attrs ≈ 3KB). */}
+            <g fill="var(--c-amber)" fill-opacity="0.32">
+              {Array.from({ length: 5 }).map((_, row) =>
+                Array.from({ length: 4 }).map((__, col) => (
+                  <rect
+                    x={20 + col * 4}
+                    y={4 + row * 4}
+                    width="3"
+                    height="3"
+                  />
+                )),
+              )}
+            </g>
             <text
               x="28"
               y="17.5"
