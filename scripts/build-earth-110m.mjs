@@ -111,21 +111,21 @@ function ringToPath(ring) {
     const x = +p.x.toFixed(COORD_PRECISION);
     const y = +p.y.toFixed(COORD_PRECISION);
     if (first) {
-      segs.push(`M ${x} ${y}`);
+      segs.push(`M${x} ${y}`);
       prevX = x;
       prevY = y;
       first = false;
     } else {
       const dx = +(x - prevX).toFixed(COORD_PRECISION);
       const dy = +(y - prevY).toFixed(COORD_PRECISION);
-      segs.push(`l ${dx} ${dy}`);
+      segs.push(`l${dx} ${dy}`);
       prevX = x;
       prevY = y;
     }
   }
   // If the ring is fully back-hemisphere, return empty.
   if (first) return '';
-  return segs.join(' ') + ' Z';
+  return segs.join('') + 'Z';
 }
 
 /**
@@ -142,7 +142,7 @@ function geometryToPath(geom) {
       if (p) parts.push(p);
     }
   }
-  return parts.join(' ');
+  return parts.join('');
 }
 
 /**
@@ -255,7 +255,7 @@ function main() {
   }
 
   // Single meshed border path — renders as one stroke layer.
-  const borderD = bordersParts.join(' ');
+  const borderD = bordersParts.join('');
 
   console.log(
     `[build-earth-110m] ${countries.length} countries visible (${hidden} hidden on far hemisphere)`,
