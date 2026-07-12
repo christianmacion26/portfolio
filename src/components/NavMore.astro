@@ -45,6 +45,10 @@ const groupActive = items.some((it) => isActive(it.href));
 
 {
   mode === 'dropdown' ? (
+    /* v6.10.17 — a11y: drop role="menu"/role="menuitem" (anti-pattern
+       outside true menu widgets; forces "application mode" in AT and
+       bypasses virtual cursor link-list navigation). <details>/<ul>
+       semantics are enough. */
     <details class:list={['nav-more', className]} data-active={groupActive ? 'true' : undefined}>
       <summary class="nav-more__summary" aria-label={`${label} navigation links`}>
         <span>{label}</span>
@@ -63,12 +67,11 @@ const groupActive = items.some((it) => isActive(it.href));
           <path d="M2 3.5l3 3 3-3" />
         </svg>
       </summary>
-      <ul class="nav-more__menu" role="menu">
+      <ul class="nav-more__menu">
         {items.map(({ href, label }) => (
-          <li role="none">
+          <li>
             <a
               href={href}
-              role="menuitem"
               class:list={['nav-more__link', { 'nav-more__link--active': isActive(href) }]}
             >
               {label}

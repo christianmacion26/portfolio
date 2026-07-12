@@ -182,8 +182,6 @@ const jsonLd = {
   .hero {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
-      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
       var(--c-paper);
     border-bottom: var(--border);
   }
@@ -250,7 +248,7 @@ const jsonLd = {
   .kv a {
     color: var(--c-primary);
     text-decoration: underline;
-    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-decoration-color: var(--c-amber-decor);
     text-underline-offset: 3px;
   }
 
@@ -319,9 +317,12 @@ const jsonLd = {
     font-weight: 400;
     transition: transform var(--transition);
   }
+  /* v6.9.16 — drop the translateY(-2px) decorative shift. Used line-height
+     + 1.5rem font for natural glyph centering instead. */
   .faq__item details[open] summary::after {
     content: '−';
-    transform: translateY(-2px);
+    line-height: 0.85;
+    display: inline-block;
   }
   .faq__num {
     color: var(--c-primary-2-deep);

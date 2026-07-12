@@ -516,13 +516,15 @@ const events: DrawerEvent[] = [
 ];
 
 function signalPillColor(sig: string): string {
+  // v6.9.16 — return values match the renamed CSS classes above.
+  // Old: 'fail' / 'cyan' — both misleading (see comment block).
   switch (sig) {
     case 'long-vol':
-      return 'fail';
+      return 'amber-bordered';
     case 'short-vol':
       return 'pass';
     case 'flatten':
-      return 'cyan';
+      return 'neutral';
     case 'steepen':
       return 'amber';
     case 'carry':
@@ -760,12 +762,16 @@ function signalPillColor(sig: string): string {
      a status dashboard. All variants collapse to ink-3 hairline-bordered
      (pass/cyan/amber) or amber ink (amber). Fail pill renders as ink-3
      with a thin amber border to indicate severity. */
-  .pill--fail    { background: transparent; color: var(--c-ink-2); border: 1px solid var(--c-primary-2); }
+  /* v6.9.16 — class-name hygiene: --cyan was misleading (ink-3 hairline,
+     not cyan); rename to --neutral (matches rendering). --fail with
+     amber border is also misleading → --amber-bordered (describes CSS,
+     not signal semantics). All five collapse to hairline-bordered ink
+     variants matching the global .pill system. */
+  .pill--amber-bordered { background: transparent; color: var(--c-ink-2); border: 1px solid var(--c-primary-2); }
   .pill--pass    { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }
-  .pill--cyan    { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }
+  .pill--neutral { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }
   .pill--amber   { background: transparent; color: var(--c-primary-2); border: 1px solid rgba(232, 178, 32, 0.4); }
   .pill--tag  { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }
-  .pill--neutral { background: transparent; color: var(--c-ink-2); border: 1px solid var(--c-rule); }
 
   @media (max-width: 720px) {
     .earth-drawer {

@@ -311,15 +311,16 @@ for (let c = 0; c <= gridCols; c++) {
     animation: hero-video-pulse 4.8s var(--ease-out) infinite;
     animation-delay: var(--pulse-delay, 0s);
   }
+  /* v6.9.16 — drop the decorative scale(1.18) pulse. Opacity 0.55→0.9
+     keeps the "data-marker alive" signal; scale-change reads as Tron
+     lab chrome. */
   @keyframes hero-video-pulse {
     0%,
     100% {
       opacity: 0.55;
-      transform: scale(1);
     }
     50% {
       opacity: 0.9;
-      transform: scale(1.18);
     }
   }
 

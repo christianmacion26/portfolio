@@ -179,14 +179,17 @@ if (formula) {
     color: rgba(230, 237, 243, 0.65);
   }
   .stat--primary .stat__value {
-    color: #fff;
+    color: var(--c-primary);
   }
   .stat--primary .stat__sub {
     color: rgba(230, 237, 243, 0.6);
   }
 
+  /* v6.9.16 — institutional: drop the amber linear-gradient background.
+     Variant reads as "tape panel" not "amber panel" — opacity hierarchy
+     via --c-bg-2 + amber-deep border is enough. */
   .stat--accent {
-    background: linear-gradient(180deg, rgba(212, 160, 23, 0.06), var(--c-bg));
+    background: var(--c-bg-2);
     border-color: var(--c-amber-deep);
   }
 

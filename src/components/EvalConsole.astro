@@ -334,14 +334,15 @@ const passRateStr = passRate.toFixed(3);
     text-align: center;
     line-height: 1.6;
   }
-  /* F18 — institutional: console pills are status semantics (PASS/CHECK/
-     FAIL is what build tools emit). Keep pass/fail colors but kill the
-     inset box-shadow halo (same anti-pattern as the hero badge dot) and
-     lower alpha so they read as monotone glass, not traffic-light chrome. */
+  /* v6.9.16 — PASS/FAIL are data semantics (build-tool emitted signals
+     what green/red conventionally means to a quant reader). The previous
+     --pass variant was amber ("misleading class name" pattern from the
+     chrome audit) — corrected to actual pass-green. CHECK stays amber
+     as a third pre-flight state. FAIL stays gray (passive absence). */
   .eval-pill--pass {
-    background: rgba(232, 178, 32, 0.22);
-    color: var(--c-primary-2);
-    border: 1px solid rgba(232, 178, 32, 0.45);
+    background: rgba(63, 185, 80, 0.18);
+    color: #3fb950;
+    border: 1px solid rgba(63, 185, 80, 0.40);
   }
   .eval-pill--check {
     background: rgba(232, 178, 32, 0.14);

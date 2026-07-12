@@ -187,6 +187,7 @@ const loopSteps = [
             <header class="ai-card__head">
               <span class="ai-card__date mono">{p.date}</span>
               <h3 class="ai-card__title">
+                {/* v6.10.11 — lane prefix needed. /ai/ projects all live here. */}
                 <a href={path(`/projects/${p.slug}`)}>{p.title}</a>
               </h3>
               <MiniSpark points={miniSeries(p.slug, 16)} stroke="var(--c-amber)" ariaLabel={`mini sparkline for ${p.title}`} />

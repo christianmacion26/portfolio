@@ -48,6 +48,7 @@ const isoDate = typeof rawDate === 'string'
     ? rawDate.toISOString().slice(0, 10)
     : String(rawDate);
 const citeKey = `macion${year}${project.id.replace(/[^a-z0-9]/gi, '')}`;
+/* v6.10.11 — URL needs lane prefix */
 const canonicalUrl = `https://christianmacion-portfolio.pages.dev/projects/${project.id}/`;
 const bibtex = `@techreport{${citeKey},
   author       = {Macion, Christian T.},
@@ -201,10 +202,9 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
 <style>
   .hero {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
-      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
-      var(--c-paper);
+    /* v6.10.18 — institutional: drop both decorative hero amber radial-gradients (chrome≠data).
+       Man/AQR/Renaissance hero panels read as paper + grid, not atmosphere. Keep only the solid --c-paper. */
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .eyebrow {
@@ -301,7 +301,7 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
     top: var(--sp-3);
     right: var(--sp-3);
     background: var(--c-amber-deep);
-    color: #fff;
+    color: var(--c-primary);
     border: 1px solid var(--c-amber);
     padding: 0.4rem 0.75rem;
     border-radius: var(--radius-sm);
@@ -312,7 +312,7 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
   }
   .cite-copy:hover {
     background: var(--c-amber);
-    color: #0a0d12;
+    color: var(--c-primary-deep);
   }
   .cite-copy__label {
     color: inherit;

@@ -167,42 +167,41 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   description="Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe."
   breadcrumbs={[{ name: "Home", href: "/" }, { name: "Publications", href: "/publications" }]}
 >
-  {/* === CSS-only topic filter (no JS) === */}
+  {/* === CSS-only topic filter (no JS) ===
+      v6.10.17 — a11y: drop aria-hidden="true" so screen readers
+      can announce the filter state (was previously masked, defeating
+      the purpose of the radio group). Visual hide is via .topic-input
+      CSS below. */}
   <input
     type="radio"
     name="topic"
     id="topic-all"
     class="topic-input topic-input--all"
     checked
-    aria-hidden="true"
   />
   <input
     type="radio"
     name="topic"
     id="topic-papers"
     class="topic-input topic-input--papers"
-    aria-hidden="true"
   />
   <input
     type="radio"
     name="topic"
     id="topic-oss"
     class="topic-input topic-input--oss"
-    aria-hidden="true"
   />
   <input
     type="radio"
     name="topic"
     id="topic-workbooks"
     class="topic-input topic-input--workbooks"
-    aria-hidden="true"
   />
   <input
     type="radio"
     name="topic"
     id="topic-press"
     class="topic-input topic-input--press"
-    aria-hidden="true"
   />
   <header class="pub-head">
     <div class="container">
@@ -562,7 +561,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   .pub-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(1200px 600px at 80% 0%, rgba(212, 160, 23, 0.08), transparent 60%), var(--c-bg);
+      var(--c-bg);
     border-bottom: var(--border);
   }
   .pub-head__title {

@@ -132,6 +132,11 @@ const crumbsJsonLd = breadcrumbs ? breadcrumbJsonLd(breadcrumbs) : null;
     <script type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
     {crumbsJsonLd && <script type="application/ld+json" set:html={JSON.stringify(crumbsJsonLd)} />}
     {extraJsonLd && <script type="application/ld+json" set:html={JSON.stringify(extraJsonLd)} />}
+
+    {/* v6.10.20 — SEO: named "head" slot lets pages inject extra <meta>
+        tags (e.g. <meta name="robots" content="noindex"> on the 404 page)
+        without an explicit prop dance. Falls back to nothing if unused. */}
+    <slot name="head" />
   </head>
   <body class={className}>
     <a href="#main" class="skip-link">Skip to content</a>

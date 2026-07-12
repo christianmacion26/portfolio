@@ -237,8 +237,6 @@ const shelf: Book[] = [
   .papers-head {
     padding-block: var(--sp-9) var(--sp-7);
     background:
-      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
-      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
       var(--c-paper);
     border-bottom: var(--border);
   }
@@ -265,7 +263,7 @@ const shelf: Book[] = [
   .papers-head__sub a {
     color: var(--c-primary-2-deep);
     text-decoration: underline;
-    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-decoration-color: var(--c-amber-decor);
     text-underline-offset: 3px;
   }
 
@@ -366,7 +364,7 @@ const shelf: Book[] = [
   }
   .shelf__title a {
     text-decoration: underline;
-    text-decoration-color: rgba(140, 111, 42, 0.4);
+    text-decoration-color: var(--c-amber-deep-decor);
     text-underline-offset: 3px;
   }
   .shelf__author {

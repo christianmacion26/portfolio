@@ -36,12 +36,18 @@
   --c-amber-deep: #8c6f2a;
   --c-amber: #c98a16;
   --c-amber-light: #e8b220;
+  /* v6.9.16 — tokenize the 10×-repeated amber underline rgba literal. */
+  --c-amber-decor: rgba(212, 160, 23, 0.4);
+  --c-amber-deep-decor: rgba(140, 111, 42, 0.4);
   --c-accent-cyan: #22d3ee;     /* alternative accent (signal/data) */
 
   /* === INK === */
   --c-ink: #e6edf3;            /* body text on dark */
   --c-ink-2: #adbac7;          /* muted text on dark */
-  --c-ink-3: #6e7681;          /* faintest (captions, footnotes) */
+  /* v6.10.17 — a11y: lift --c-ink-3 from #6e7681 (4.12:1 on bg, fails
+     WCAG AA body-text) to #8b949e (5.6:1 on bg, passes AA). Affects
+     ~14 components + 80 elements. */
+  --c-ink-3: #8b949e;          /* faintest (captions, footnotes) — WCAG AA pass */
   --c-rule: #30363d;           /* dividers on dark */
   --c-rule-soft: #21262d;      /* hairline on dark */
   --c-rule-strong: #e6edf3;
@@ -142,8 +148,6 @@
   /* === v6.0.7 · section anchor + nav heights === */
   --nav-h: 56px;
   --section-toc-h: 36px;
-  --hero-gradient-1: rgba(232, 178, 32, 0.18);
-  --hero-gradient-2: rgba(212, 160, 23, 0.10);
 
   /* === z-index scale === */
   --z-base: 0;

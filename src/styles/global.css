@@ -447,12 +447,12 @@ li {
 
 .btn--primary {
   background: var(--c-amber-deep);
-  color: #fff;
+  color: var(--c-primary);
   border-color: var(--c-amber);
 }
 .btn--primary:hover {
   background: var(--c-amber);
-  color: #0a0d12;
+  color: var(--c-primary-deep);
 }
 
 .btn--ghost {
@@ -500,10 +500,12 @@ li {
   border: 1px solid var(--c-rule-soft);
   white-space: nowrap;
 }
+/* v6.9.16 — was 8%-opacity black on #0d1117 = invisible. Match the
+   monochrome hairline pattern of --pass / --tag / --mute. */
 .pill--brand {
-  background: rgba(10, 14, 20, 0.08);
-  color: var(--c-primary);
-  border-color: rgba(10, 14, 20, 0.2);
+  background: transparent;
+  color: var(--c-ink-3);
+  border-color: var(--c-rule);
 }
 .pill--accent {
   background: rgba(212, 160, 23, 0.1);

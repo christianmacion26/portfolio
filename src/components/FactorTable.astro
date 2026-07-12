@@ -147,6 +147,9 @@ function shortTitle(t: string): string {
             return (
               <tr class="factor__row">
                 <th scope="row" class="factor__name">
+                  {/* v6.10.11 — content collection `id` already includes the
+                     lane prefix (e.g., "quant/01-deflated-sharpe"), so we just
+                     append it. All entries are quant (filtered on line 47). */}
                   <a class="factor__link" href={`/projects/${proj.id}/`}>
                     <span class="factor__order mono">{String(proj.data.order).padStart(2, '0')}</span>
                     <span class="factor__name-text">{shortTitle(proj.data.title)}</span>

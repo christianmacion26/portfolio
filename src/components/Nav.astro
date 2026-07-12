@@ -147,7 +147,7 @@ const secondary = [
     align-items: center;
     gap: var(--sp-3);
     text-decoration: none;
-    color: #fff;        /* v6.1.0 — always tape nav, light text */
+    color: var(--c-primary);        /* v6.1.0 — always tape nav, light text */
     flex-shrink: 0;
     /* v6.3 polish — enforce ≥ 44 px tap target on the brand link.
        The audit flagged "Christian T. Macion, CTA®" at 184×36 px.
@@ -258,12 +258,12 @@ const secondary = [
      dark mode → invisible against the dark navbar. Always amber. */
   .nav__cta {
     background: var(--c-amber-deep);
-    color: #ffffff;
+    color: var(--c-primary);
     border: 1px solid var(--c-amber);
   }
   .nav__cta:hover {
     background: var(--c-amber);
-    color: #0a0d12;
+    color: var(--c-primary-deep);
   }
 
   /* === v6.1.0 — theme toggle CSS removed (the button is gone) === */

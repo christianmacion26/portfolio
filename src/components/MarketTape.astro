@@ -121,7 +121,11 @@ const stop = trailing;
         [...items, ...items].map((it) => (
           <a
             class:list={['tape__item', `tape__item--${it.colorClass}`]}
-            href={linkable.has(it.sym) ? `/projects/${it.sym}` : undefined}
+            {/* v6.10.11 — URL needs lane prefix. Linkable symbols are
+               always quant strategies (sourced from stratSeeds); hardcode
+               the lane. If AI strategies ever become linkable, look up the
+               lane from getCollection('project') at build time. */}
+            href={linkable.has(it.sym) ? `/projects/quant/${it.sym}` : undefined}
           >
             <span class="tape__sym mono">{it.sym}</span>
             <span class="tape__px mono">{it.pxStr}</span>

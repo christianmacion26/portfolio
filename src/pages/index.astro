@@ -1248,9 +1248,13 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .hero__glow {
     position: absolute;
     inset: 0;
+    /* v6.9.16 — institutional: kill the dual amber radial-gradient orbs.
+       Man Group / AQR hero backgrounds read as paper + grid, not glow.
+       Grid pattern lives below in .hero__grid; keep only that. */
     background:
-      radial-gradient(900px 600px at 88% 8%, rgba(232, 178, 32, 0.18), transparent 65%),
-      radial-gradient(700px 500px at 8% 95%, rgba(212, 160, 23, 0.10), transparent 65%);
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 80px 80px;
     pointer-events: none;
     z-index: 0;
   }
@@ -1466,7 +1470,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .hero__link {
     color: var(--c-primary-2);
     text-decoration: underline;
-    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-decoration-color: var(--c-amber-decor);
     text-underline-offset: 4px;
     font-weight: 500;
     font-size: var(--fs-base);
@@ -2751,7 +2755,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-size: var(--fs-xs);
     color: var(--c-primary-2);
     text-decoration: underline;
-    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-decoration-color: var(--c-amber-decor);
     text-underline-offset: 3px;
     padding: 0.25rem 0.4rem;
     min-height: 44px;

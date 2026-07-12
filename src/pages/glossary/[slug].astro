@@ -114,10 +114,9 @@ const categoryColor = term.category === 'Quant' ? 'pill--accent' : 'pill--brand'
 <style>
   .hero {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      radial-gradient(900px 500px at 80% -50px, var(--hero-gradient-1), transparent 60%),
-      radial-gradient(700px 400px at 0% 0%, var(--hero-gradient-2), transparent 60%),
-      var(--c-paper);
+    /* v6.10.18 — institutional: drop both decorative hero amber radial-gradients (chrome≠data).
+       Man/AQR/Renaissance hero panels read as paper + grid, not atmosphere. Keep only the solid --c-paper. */
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .eyebrow {
