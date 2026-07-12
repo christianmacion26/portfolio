@@ -369,7 +369,7 @@ li {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--c-primary-2-deep);
+  color: var(--c-amber);
   margin-bottom: var(--sp-3);
 }
 

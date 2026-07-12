@@ -25,15 +25,17 @@
   --c-primary-deep: #0a0e14;   /* near-black — preserved for code blocks / deep backgrounds */
   --c-ink-dark: #0a0e14;       /* alias kept for old code that wants near-black */
 
-  /* WCAG-AA amber tokens — kept from v6.0:
-   *   --c-primary-2-deep: #8C6F2A → 5.0:1 on white  (body text)
-   *   --c-primary-2:      #c98a16 → 3.4:1 on cream (headlines, links, decorative)
-   */
-  --c-primary-2-deep: #8c6f2a;
+  /* v6.10.12 — WCAG AA bump. Was #8c6f2a (3.64:1 on c-tape FAIL small
+   * text). The previous claim "5.0:1 on white" was for cream/light
+   * backgrounds which the dark theme no longer uses. New value
+   * #b8801e clears 5.0:1 on all dark surfaces while remaining
+   * visually distinct from --c-amber (#c98a16) — i.e. a "deeper
+   * amber" hierarchy preserved. */
+  --c-primary-2-deep: #b8801e;
   --c-primary-2:      #c98a16;
   --c-primary-2-light: #e8b220; /* hover/lift for cream backgrounds */
   --c-gold: #c98a16;
-  --c-amber-deep: #8c6f2a;
+  --c-amber-deep: #b8801e;
   --c-amber: #c98a16;
   --c-amber-light: #e8b220;
   /* v6.9.16 — tokenize the 10×-repeated amber underline rgba literal. */
