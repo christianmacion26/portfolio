@@ -155,17 +155,20 @@ for (let c = 0; c <= gridCols; c++) {
             ))}
           </g>
 
-          {/* === dot lattice (50x30 grid) ===
+          {/* === dot lattice (was 50×30, v6.10.14 → 25×15) ===
               Sparse amber dots anchored to the foreground band. Gives
               the panel a "data plane" texture without competing with
-              the price-line. */}
+              the price-line. Density cut 4× to ship ~30KB less HTML
+              per render; visually identical at the 1600×800 viewBox
+              scale the panel uses.
+           */}
           <g class="hero-video__dots" fill="rgba(201, 138, 22, 0.22)">
-            {Array.from({ length: 50 * 30 }, (_, i) => {
-              const col = i % 50;
-              const row = Math.floor(i / 50);
-              const x = 30 + col * 31 + ((row % 2) * 4);
-              const y = 600 + row * 7;
-              return <circle cx={x} cy={y} r="1" />;
+            {Array.from({ length: 25 * 15 }, (_, i) => {
+              const col = i % 25;
+              const row = Math.floor(i / 25);
+              const x = 30 + col * 62 + ((row % 2) * 8);
+              const y = 600 + row * 14;
+              return <circle cx={x} cy={y} r="1.4" />;
             })}
           </g>
 
