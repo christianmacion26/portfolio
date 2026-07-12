@@ -457,7 +457,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
        Ticker has been demoted from first-pixel to below-hero.
        ============================================================ */}
   <section class="hero">
-    <div class="hero__glow" aria-hidden="true"></div>
+    {/* v6.10.25 — killed duplicate .hero__glow div. It was rendering the
+        same grid (linear-gradient × 2, 80×80, white 0.025) as .hero__grid
+        below. Pure duplication: 2 DOM nodes + 2 CSS rules for zero visual
+        delta. Keep only .hero__grid. */}
     <div class="hero__grid" aria-hidden="true"></div>
     <div class="container hero__inner">
       {/* v6.5 — institutional Q3 2026 badge. Amber-on-tape pill above
@@ -1242,22 +1245,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     overflow: hidden;
     min-width: 0;
   }
-  /* v6.1.0 — Atmospheric dark hero. Soft amber glow + cool counter-glow +
-     subtle grid. The two decorative divs are positioned absolutely so
-     they never break the layout. */
-  .hero__glow {
-    position: absolute;
-    inset: 0;
-    /* v6.9.16 — institutional: kill the dual amber radial-gradient orbs.
-       Man Group / AQR hero backgrounds read as paper + grid, not glow.
-       Grid pattern lives below in .hero__grid; keep only that. */
-    background:
-      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-    background-size: 80px 80px;
-    pointer-events: none;
-    z-index: 0;
-  }
+  /* v6.10.25 — killed .hero__glow CSS rule entirely. It was the same
+     grid pattern as .hero__grid below (linear-gradient × 2, 80×80,
+     white 0.025). The JSX for it was removed earlier in this commit.
+     Keep only .hero__grid. */
   .hero__grid {
     position: absolute;
     inset: 0;

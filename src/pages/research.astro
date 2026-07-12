@@ -99,7 +99,11 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
        announces the page in one line and points at the filing cabinet.
        ============================================================ */}
   <section class="r-hero">
-    <div class="r-hero__glow" aria-hidden="true"></div>
+    {/* v6.10.25 — killed empty .r-hero__glow div. Its `background:` line
+        was dropped in v6.9.16 (per the comment that mentioned keeping
+        only the amber layer) but the div remained — leaving an empty
+        absolute-positioned box. Parent .r-hero already has its own
+        background. Pure dead DOM. */}
     <div class="container">
       <p class="r-hero__eyebrow mono">
         <span>{profile.fullName}</span>
@@ -294,16 +298,10 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
     border-bottom: var(--border-paper);
     overflow: hidden;
   }
-  .r-hero__glow {
-    position: absolute;
-    inset: 0;
-    /* v6.9.16 — institutional chrome rule: no blue/cyan atmospheric
-       rims. Was the LAST blue hero glow on the site (rgba(88, 166, 255)
-       = --c-info). Both glows are decorative; keep only the amber layer. */
-    background:
-    pointer-events: none;
-    z-index: 0;
-  }
+  /* v6.10.25 — killed .r-hero__glow CSS rule. The `background:` line
+     was dropped in v6.9.16 but the rule survived as an empty absolute-
+     positioned box. The corresponding <div> was removed from the JSX
+     earlier in this commit. */
   .r-hero > .container {
     position: relative;
     z-index: 1;
