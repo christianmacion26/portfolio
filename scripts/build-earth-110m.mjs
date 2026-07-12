@@ -92,15 +92,36 @@ function project(lat, lon) {
  * Convert a single ring (array of [lon, lat] pairs) to an SVG path
  * fragment. Filters out back-hemisphere vertices (rho < -LIMB_TOL) so
  * the fill terminates cleanly at the limb via the disc clipPath.
+ *
+ * v6.10.15 — emits relative commands after the first `M`. SVG `l`
+ * (lowercase) deltas are usually 2-3 digit numbers vs 3-4 digit absolute
+ * coords, and adjacent coastal vertices often differ by < 1° (~11px on
+ * R=368). Empirical: -14% on the emitted TS files (~82KB → ~71KB), and
+ * -10% on the inlined home page (~643KB → ~620KB) once the TS header /
+ * JSON.stringify quotes are subtracted out.
  */
 function ringToPath(ring) {
   const segs = [];
   let first = true;
+  let prevX = 0;
+  let prevY = 0;
   for (const [lon, lat] of ring) {
     const p = project(lat, lon);
     if (p.rho < -LIMB_TOL) continue;
-    segs.push(`${first ? 'M' : 'L'} ${p.x.toFixed(COORD_PRECISION)} ${p.y.toFixed(COORD_PRECISION)}`);
-    first = false;
+    const x = +p.x.toFixed(COORD_PRECISION);
+    const y = +p.y.toFixed(COORD_PRECISION);
+    if (first) {
+      segs.push(`M ${x} ${y}`);
+      prevX = x;
+      prevY = y;
+      first = false;
+    } else {
+      const dx = +(x - prevX).toFixed(COORD_PRECISION);
+      const dy = +(y - prevY).toFixed(COORD_PRECISION);
+      segs.push(`l ${dx} ${dy}`);
+      prevX = x;
+      prevY = y;
+    }
   }
   // If the ring is fully back-hemisphere, return empty.
   if (first) return '';
