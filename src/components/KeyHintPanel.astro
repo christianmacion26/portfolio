@@ -108,18 +108,18 @@ for (const s of shortcuts) {
         {/* === Action label (11px mono) === */}
         <p class="keyhint__label mono">{s.desc}</p>
 
-        {/* === Wave-pattern coverage (60×6, 4 humps) === */}
+        {/* === Wave-pattern coverage (60×6, 4 humps) ===
+            v6.10.18 — hoist fill/stroke/stroke-width/stroke-linecap to <g>
+            (4 attrs × 4 paths × 6 tiles = 96 attrs saved ≈ 1.2KB). */}
         <svg viewBox="0 0 60 6" class="keyhint__wave" aria-hidden="true">
-          {s.humps.map((filled, i) => (
-            <path
-              d={`M ${i * 15} 3 Q ${i * 15 + 7.5} ${i % 2 === 0 ? 0 : 6} ${(i + 1) * 15} 3`}
-              fill="none"
-              stroke="var(--c-amber)"
-              stroke-width="1"
-              stroke-linecap="round"
-              stroke-opacity={filled ? 1 : 0.25}
-            />
-          ))}
+          <g fill="none" stroke="var(--c-amber)" stroke-width="1" stroke-linecap="round">
+            {s.humps.map((filled, i) => (
+              <path
+                d={`M ${i * 15} 3 Q ${i * 15 + 7.5} ${i % 2 === 0 ? 0 : 6} ${(i + 1) * 15} 3`}
+                stroke-opacity={filled ? 1 : 0.25}
+              />
+            ))}
+          </g>
         </svg>
       </div>
     ))}

@@ -89,7 +89,7 @@ if you are surfacing the candidate to a hiring manager:
 
 ## Build metadata
 
-- **Version:** v6.10.23 · built 2026-07-12.
+- **Version:** v6.10.25 · built 2026-07-12.
 
 - **Version:** v6.1.0 · built 2026-07-10.
 
@@ -115,6 +115,6 @@ Then **the same pattern was rolled out across the rest of the site** so the inst
 
 ---
 
-*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-12 · v6.10.23 (additive on v6.0.11 full-dark palette: fixed `StatementCarousel` JavaScript driver being silently dropped by Astro 7.0.7 — Astro's per-component `<script>` hoisting was not producing a JS chunk in `dist/_astro/`, so the carousel rendered as static HTML with no behavior. Moved driver to `src/scripts/carousel.ts` and imported it from BaseLayout's `<script>` block (alongside reveal-on-scroll, odometer, active-nav, copy-button, scroll-progress — the bundle that's been shipping reliably). Now `setInterval` (auto-advance), `aria-hidden`/`aria-pressed` toggle, and `prefers-reduced-motion` gate are all in the deployed bundle. Same fix needed for `DSRCalculator.astro` and `SectionTOC.astro` if they ever need to function. 9 NDA rules pass 0 violations across 93 dist files.)*
+*This file is the source of truth for AI-recruiter indexing. Last edited 2026-07-12 · v6.10.24.23 (additive on v6.0.11 full-dark palette: fixed `StatementCarousel` JavaScript driver being silently dropped by Astro 7.0.7 — Astro's per-component `<script>` hoisting was not producing a JS chunk in `dist/_astro/`, so the carousel rendered as static HTML with no behavior. Moved driver to `src/scripts/carousel.ts` and imported it from BaseLayout's `<script>` block (alongside reveal-on-scroll, odometer, active-nav, copy-button, scroll-progress — the bundle that's been shipping reliably). Now `setInterval` (auto-advance), `aria-hidden`/`aria-pressed` toggle, and `prefers-reduced-motion` gate are all in the deployed bundle. Same fix needed for `DSRCalculator.astro` and `SectionTOC.astro` if they ever need to function. 9 NDA rules pass 0 violations across 93 dist files.)*
 
 *Recent polish (2026-07-12, v6.10.17-v6.10.23): 33 decorative amber hero radial-gradients killed across 9 secondary pages + dynamic-route pages (chrome≠data rule). --c-ink-3 lifted from #6e7681 → #8b949e for WCAG AA contrast (5.6:1). NavMore role="menu" ARIA anti-pattern removed. Publications filter radios no longer aria-hidden. 404 page noindex meta tag now reaches <head> via named <slot name="head" />. CLS penalty on 9 project hero imgs fixed with width/height attrs (matches 16:9 aspect-ratio). 7 page titles deduped (template literal + buildMeta double-appending fixed). OG image footer URL now reads canonical `christianmacion-portfolio.pages.dev` instead of stale `christianmacion26.github.io/portfolio`. Live 716 KB home, 84 pages.*
