@@ -604,7 +604,12 @@ const velocityRows: { stage: string; intensity: number }[][] = [
       <p class="hero__eyebrow">
         <span class="hero__eyebrow-name">{profile.fullName}</span>
         <span class="hero__eyebrow-sep" aria-hidden="true">·</span>
-        <span>Open to remote roles · {profile.location.timezone}</span>
+        {/* v6.11.9 — was "Open to remote roles · UTC+8". The "Open to
+           remote roles" phrase duplicated the badge above. Trimmed to
+           just the timezone so the eyebrow doesn't overflow on mobile
+           and the two lines carry distinct signals (badge = availability,
+           eyebrow = identity + time zone). */}
+        <span>{profile.location.timezone}</span>
       </p>
 
       <div class="hero__top">
@@ -921,7 +926,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
-    <span>SECTION 03 OF 17 · ENTRY STATIONS</span>
+    <span>SECTION 03 · ENTRY STATIONS</span>
   </p>
 
   {
@@ -986,7 +991,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
-    <span>SECTION 08 OF 17 · GLOBAL EVENT MONITOR</span>
+    <span>SECTION 08 · GLOBAL EVENT MONITOR</span>
   </p>
 
   {
@@ -1027,7 +1032,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
-    <span>SECTION 09 OF 17 · MATH BEHIND THE TAPE</span>
+    <span>SECTION 09 · MATH BEHIND THE TAPE</span>
   </p>
 
   {
@@ -1406,7 +1411,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
-    <span>SECTION 16 OF 17 · COLLABORATORS</span>
+    <span>SECTION 16 · COLLABORATORS</span>
   </p>
 
   {
@@ -1537,6 +1542,11 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   .hero__top-text {
     min-width: 0;
+    /* v6.11.9 — overflow:hidden ensures any rogue H1/voice text that
+       exceeds the grid column doesn't push the whole viewport wider
+       and trigger horizontal scroll. The text-wrap balance above
+       handles clean wrapping; this is the safety net. */
+    overflow: hidden;
   }
   .hero__id {
     margin: 0;
@@ -1552,7 +1562,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     margin: 0;
     padding: 0;
     background: var(--c-tape-2);
-    border: 1px solid color-mix(in oklab, var(--c-amber) 0.45%, transparent);
+    /* v6.11.9 — was 0.45% (functionally invisible). 40% gives a clean
+       amber-soft frame so the institutional portrait anchors the hero
+       instead of floating on the dark canvas. */
+    border: 1px solid color-mix(in oklab, var(--c-amber) 40%, transparent);
     border-radius: var(--radius);
     overflow: hidden;
     position: relative;
@@ -1572,6 +1585,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: 0.16em;
     color: var(--c-amber);
     font-weight: 600;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
   .hero__id-caption {
     display: block;
@@ -1580,16 +1595,33 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-size: 11px;
     color: var(--c-ink-soft);
     line-height: 1.4;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
   .hero__eyebrow {
-    display: inline-block;
+    display: block;
+    max-width: 100%;
+    width: 100%;
     font-family: var(--ff-mono);
     font-size: var(--fs-xs);
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.06em;
     color: var(--c-primary-2);
     font-weight: 600;
     margin-bottom: var(--sp-5);
+    /* v6.11.9 — wrap long roles text on mobile instead of clipping.
+       Reduced letter-spacing from 0.12em → 0.06em at base so the
+       string "CHRISTIAN T. MACION, CTA® · OPEN TO REMOTE ROLES · UTC+8"
+       fits more comfortably; overflow-wrap:break-word (not anywhere)
+       so words break at spaces, not mid-token like "ROLES" → "RO" / "LES". */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  @media (max-width: 600px) {
+    .hero__eyebrow {
+      letter-spacing: 0.04em;
+      font-size: 0.7rem;
+    }
   }
   .hero__eyebrow-name {
     color: var(--c-primary);
@@ -1629,6 +1661,11 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: -0.005em;
 
     min-width: 0;
+    /* v6.11.9 — wrap voice line cleanly on narrow viewports. The
+       italic quote runs 50+ chars and at 1.05rem / 1.5rem on mobile
+       would overflow without this. */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 
   /* F10.2 — replaced v6.6 ribbon + v6.7.1 rail-cell with a compact
@@ -2579,13 +2616,28 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   @media (max-width: 600px) {
     .hero__title {
-      font-size: clamp(1.65rem, 8.5vw, 2.1rem);
+      /* v6.11.9 — was clamp(1.45rem, 7.4vw, 1.85rem) which at 375px
+         resolves to 27.75px. "Quantitative researcher." at 600 weight
+         with -0.02em letter-spacing needs ~333px — over the 327px
+         available width. Bumped font down to 7vw and tightened
+         letter-spacing to -0.025em so "Quantitative researcher." fits
+         on one line at 375px. */
+      font-size: clamp(1.4rem, 7vw, 1.75rem);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      text-wrap: pretty;
     }
     .hero__voice {
       font-size: 1.05rem;
     }
     .hero__sub {
       font-size: var(--fs-xs);
+      /* v6.11.9 — wrap sub-line cleanly on narrow viewports so the
+         string "Based in Digos City, Davao del Sur, Philippines (UTC+8) ·
+         30 hrs/wk · remote-first, async-friendly" doesn't overflow. */
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .hero__sep {
       display: inline;
@@ -2996,11 +3048,15 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     display: inline-flex;
     align-items: center;
     gap: 0;
+    max-width: 100%;
     margin-bottom: var(--sp-4);
     line-height: 1;
     font-size: var(--fs-xs);
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    /* v6.11.9 — wrap long badge text on mobile instead of clipping. */
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   .hero__badge-link {
     color: var(--c-ink-2);
@@ -3058,11 +3114,15 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: 0.02em;
     /* universal tabular-nums via the global rule */
   }
+  /* v6.11.9 — F14 amber-only. Live tape up/down was --c-pass / --c-fail
+     (green/red traffic-light). Now: up = amber, down = ink-2 (so the
+     sign reads but without sentiment). --c-warn stays for the VIX
+     over-threshold class. */
   .live-tape__val.is-up {
-    color: var(--c-pass);
+    color: var(--c-amber);
   }
   .live-tape__val.is-down {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
   .live-tape__val.is-warn {
     color: var(--c-warn);

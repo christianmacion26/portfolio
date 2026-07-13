@@ -530,9 +530,11 @@ const activeLength = activeEdges.reduce((acc, e) => acc + dist(e.x1, e.y1, e.x2,
   }
 
   .ag-legend-text {
-    fill: var(--c-ink-3);
+    /* v6.11.9 — was ink-3 at 10px. Bumped to ink-2 + 11px so legend
+       chrome survives at smaller viewports and reads on first scan. */
+    fill: var(--c-ink-2);
     font-family: var(--ff-mono);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.02em;
   }
 

@@ -658,11 +658,15 @@ const rotateBtnX = cx + 0.92 * R;
 const rotateBtnY = cy - 0.85 * R;
 
 // v6.5 — header bar (top-left) and roster (top-right) positions.
+// v6.11.9 — headerW bumped 240→320 to comfortably fit the
+// "MISSION CONTROL · 2026-07-14 00:31 UTC+8 · LIVE 50 · 16:26Z"
+// chrome without glyph overlap at 9px mono. The roster shrinks
+// proportionally so the right-edge anchor stays at width-rosterW-4.
 const headerX = 4;
 const headerY = 4;
-const headerW = 240;
+const headerW = 320;
 const headerH = 16;
-const rosterW = 126;
+const rosterW = 110;
 const rosterX = width - rosterW - 4;
 const rosterY = 4;
 
@@ -742,7 +746,11 @@ const liveBadge =
     ? ` · LIVE ${liveCount} · ${gdeltFetchedAtIso().slice(11, 16)}Z`
     : '';
 
-const headerLabel = `MISSION CONTROL · BUILD ${headerDateLabel} · ${cities.length} HUBS · ${capitals.length} CAPITALS · ${events.length} EVENTS · ${criticalCount} HIGH-IMPACT${liveBadge}`;
+// v6.11.9 — header chrome was 105+ chars crammed into a 240px rect,
+// producing unreadable glyph overlap. Two-line approach: line 1 = label
+// + live badge (short), line 2 = the count rollups. The live badge
+// stays on line 1 so a recruiter sees "is the feed alive" at a glance.
+const headerLabel = `MISSION CONTROL · ${headerDateLabel}${liveBadge}`;
 ---
 
 <figure class="eg">

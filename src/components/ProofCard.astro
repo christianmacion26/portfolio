@@ -115,6 +115,13 @@ const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect}; --proof
     font-size: var(--fs-sm);
     color: var(--c-ink-2);
     line-height: var(--lh-snug);
+    /* v6.11.9 — wrap long credit strings on narrow viewports (e.g.
+       "Society of Technical Analysts · Jan 2026" at 320px card width
+       on mobile). Without this the credit can overflow the card
+       horizontally. */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    min-width: 0;
   }
   .proof-card--tape .proof-card__cap {
     color: var(--c-ink-soft);
@@ -128,6 +135,13 @@ const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect}; --proof
   }
   .proof-card--tape .proof-card__credit {
     color: var(--c-ink-ghost);
+  }
+  .proof-card__caption,
+  .proof-card__credit {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    min-width: 0;
+    max-width: 100%;
   }
   .proof-card__link:hover .proof-card__img {
     transform: scale(1.01);

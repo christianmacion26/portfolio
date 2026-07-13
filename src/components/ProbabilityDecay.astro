@@ -399,13 +399,16 @@ function linePath(pts: { x: number; y: number }[]): string {
     border-radius: 1px;
     vertical-align: middle;
   }
+  /* v6.11.9 — F14 amber-only. Was --c-pass / --c-fail traffic-light.
+     Now amber for positive edge, ink-2 for negative edge. Sign carries
+     via the value's own glyph (+/-) — the color is no longer a crutch. */
   .edge--pos {
-    color: var(--c-pass);
-    font-weight: 600;
+    color: var(--c-amber);
+    font-weight: 500;
   }
   .edge--neg {
-    color: var(--c-fail);
-    font-weight: 600;
+    color: var(--c-ink-2);
+    font-weight: 500;
   }
   .faint {
     color: var(--c-ink-2);

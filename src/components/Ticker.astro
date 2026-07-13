@@ -170,7 +170,8 @@ const cycle = candles.map((c, i) => ({ candle: c, geom: candleGeometry[i]! }));
     animation: candle-scroll 60s linear infinite;
     will-change: transform;
   }
-  .candle-tape:hover .candle-tape__track {
+  .candle-tape:hover .candle-tape__track,
+  .candle-tape:focus-within .candle-tape__track {
     animation-play-state: paused;
   }
 
@@ -193,18 +194,24 @@ const cycle = candles.map((c, i) => ({ candle: c, geom: candleGeometry[i]! }));
     shape-rendering: crispEdges;
   }
   .candle__body {
-    /* Default to neutral; per-state colors override below. */
-    fill: var(--c-data-neutral);
+    /* Default to ink; per-state colors override below. */
+    fill: var(--c-ink-2);
     shape-rendering: crispEdges;
   }
+  /* v6.11.9 — F14 amber-only. Up/down candles used data-positive (green)
+     and data-negative (red), which violates the institutional monochrome
+     rule. Now: up = amber-soft (slightly brighter), down = ink-3 (slightly
+     dimmer), flat = ink-2, amber = unchanged. The directional signal is
+     still encoded (up is visibly lighter than down) without traffic-light
+     hue. */
   .candle--up .candle__body {
-    fill: var(--c-data-positive);
+    fill: var(--c-amberl-soft);
   }
   .candle--down .candle__body {
-    fill: var(--c-data-negative);
+    fill: var(--c-ink-3);
   }
   .candle--flat .candle__body {
-    fill: var(--c-data-neutral);
+    fill: var(--c-ink-2);
   }
   .candle--amber .candle__body {
     fill: var(--c-amber-light);

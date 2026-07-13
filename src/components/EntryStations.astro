@@ -805,6 +805,13 @@ const stations = [
     .entry-station__num {
       font-size: 1.95rem;
     }
+    /* v6.11.9 — release the 28px right-pad reserved for the absolute tape
+       on mobile (was set at desktop in the card padding). Without this,
+       labels that wrap to 2-3 lines on narrow viewports get hugged by
+       the tape strip and feel cramped. */
+    .entry-station {
+      padding: var(--sp-4) var(--sp-4) var(--sp-3);
+    }
   }
 
   /* === Reduced motion — disable hover width-grow (no hover-translate used) === */

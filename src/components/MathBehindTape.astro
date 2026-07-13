@@ -1,6 +1,6 @@
 ---
 /**
- * MathBehindTape.astro — v6.5 "Wall-street math in one glance."
+ * MathBehindTape.astro — v6.5 "Wall Street math in one glance."
  *
  * A dense graphic formula grid: 3×2 tiles of public-domain quant idioms,
  * each with a centered KaTeX formula + delta input + output value.
@@ -151,11 +151,14 @@ const CORR_CELLS: ReadonlyArray<ReadonlyArray<number>> = [
 const jitter = seedFromString(buildSeed() + '::mathtile');
 const sigil = jitter().toFixed(4); // 4-digit build fingerprint for the corner stamp
 
-// Color helper for delta signs.
-function signVar(s: 1 | -1 | 0): string {
-  if (s > 0) return 'var(--c-data-positive)';
-  if (s < 0) return 'var(--c-data-negative)';
-  return 'var(--c-data-neutral)';
+// v6.11.9 — F14 institutional rule: no traffic-light colors. Sign-tinting
+// was redundant: the numeric value already carries the sign (e.g. -1.4% is
+// visibly negative). We drop the inline color and rely on amber for inputs
+// + outputs uniformly. The `.mathtape__tile-delta` chip keeps its sign via
+// the chip's own opacity scale (lighter = positive, darker = negative)
+// which lives in the stylesheet, not inline.
+function signVar(_s: 1 | -1 | 0): string {
+  return 'var(--c-amber)';
 }
 const inputCells = INPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
 const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
@@ -210,10 +213,10 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
               style={`left:${f.deltaSign >= 0 ? '72%' : '28%'}`}
             />
           </div>
-          <span class="mathtape__tile-delta mono" style={`color:${signVar(f.deltaSign)}`}>
+          <span class={`mathtape__tile-delta mono mathtape__tile-delta--${f.deltaSign > 0 ? 'pos' : 'neg'}`}>
             {f.deltaIn}
           </span>
-          <span class="mathtape__tile-out mono tnum" style={`color:${signVar(f.deltaSign)}`}>
+          <span class="mathtape__tile-out mono tnum">
             {f.outputVal}
           </span>
         </li>
@@ -447,10 +450,16 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
     box-shadow: 0 0 0 2px rgba(10, 14, 20, 1);
   }
   .mathtape__tile-scale-marker--pos {
-    background: var(--c-data-positive);
+    /* v6.11.9 — was --c-data-positive (green). F14: amber-only.
+       Pos marker uses amber-soft alpha so it still reads distinct from
+       the neutral amber but in the institutional palette. */
+    background: var(--c-amber-light);
   }
   .mathtape__tile-scale-marker--neg {
-    background: var(--c-data-negative);
+    /* v6.11.9 — was --c-data-negative (red). F14: amber-only.
+       Neg marker uses --c-amber-deep (deeper amber) so the sign is
+       conveyed by intensity, not hue. */
+    background: var(--c-amber-deep);
   }
 
   .mathtape__tile:hover {

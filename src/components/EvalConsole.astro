@@ -337,9 +337,11 @@ const passRateStr = passRate.toFixed(3);
     font-weight: 600;
   }
 
-  /* Row tinting on FAIL rows for at-a-glance scanning */
+  /* v6.11.9 — FAIL row tint was raw rgba(248,81,73,0.08). Mapped to ink-2
+     alpha at 6% so FAIL rows still scan as "look here" but in amber/ink
+     monochrome per F14 institutional rule. */
   .eval-row--fail {
-    background: rgba(248, 81, 73, 0.08);
+    background: color-mix(in oklab, var(--c-ink-2) 6%, transparent);
   }
   /* v6.10.41 — check-row amber tint now derives from --c-amber.
      Was rgba(201,138,22,0.04). */
@@ -360,15 +362,16 @@ const passRateStr = passRate.toFixed(3);
     text-align: center;
     line-height: 1.6;
   }
-  /* v6.9.16 — PASS/FAIL are data semantics (build-tool emitted signals
-     what green/red conventionally means to a quant reader). The previous
-     --pass variant was amber ("misleading class name" pattern from the
-     chrome audit) — corrected to actual pass-green. CHECK stays amber
-     as a third pre-flight state. FAIL stays gray (passive absence). */
+  /* v6.11.9 — F14 institutional rule: amber-only chrome, no traffic-light
+     semantics. PASS = amber-soft (lighter alpha than CHECK), CHECK = amber
+     mid alpha (the pre-flight state, distinct from a confirmed pass),
+     FAIL = ink-2 (passive absence, doesn't shout). The numeric count of
+     pass/fail rows already lives in the badge above — pills are only the
+     per-row tag, and they read as data, not as sentiment. */
   .eval-pill--pass {
-    background: rgba(63, 185, 80, 0.18);
-    color: #3fb950;
-    border: 1px solid rgba(63, 185, 80, 0.4);
+    background: color-mix(in oklab, var(--c-amber) 8%, transparent);
+    color: var(--c-amber);
+    border: 1px solid color-mix(in oklab, var(--c-amber) 30%, transparent);
   }
   .eval-pill--check {
     background: var(--c-amberl-mist);
@@ -376,7 +379,7 @@ const passRateStr = passRate.toFixed(3);
     border: 1px solid var(--c-amberl-decor);
   }
   .eval-pill--fail {
-    background: rgba(173, 186, 199, 0.14);
+    background: color-mix(in oklab, var(--c-ink-2) 14%, transparent);
     color: var(--c-ink-2);
     border: 1px solid var(--c-rule);
   }
