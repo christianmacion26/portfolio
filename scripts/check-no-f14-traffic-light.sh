@@ -41,7 +41,9 @@ for arg in "$@"; do
 done
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DIST="$ROOT/dist/_astro"
+# DIST may be overridden for testing (e.g. scripts/__tests__/no-f14.test.sh).
+# In production usage, leave DIST unset and the gate scans $ROOT/dist/_astro.
+DIST="${DIST:-$ROOT/dist/_astro}"
 
 if [ ! -d "$DIST" ]; then
   echo "ℹ️  No dist/_astro/ directory yet (run \`npm run build\` first)."
