@@ -8,5 +8,6 @@ city: Paris
 source: multilateral policy statement
 order: 8
 ---
+
 Producer-nation framework statement. The brent prompt-month re-markets
 through the headline language; cross-asset books overlay the rate curve.

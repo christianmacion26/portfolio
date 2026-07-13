@@ -13,12 +13,12 @@
  * The tooltips expose the project slug so a visitor can verify the mapping
  * by clicking through.
  */
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 interface CellContent {
-  label: string;          // display label (short strategy name)
-  slug: string;           // project id, links to /projects/{slug}/
-  note?: string;          // optional sub-line
+  label: string; // display label (short strategy name)
+  slug: string; // project id, links to /projects/{slug}/
+  note?: string; // optional sub-line
 }
 
 interface Props {
@@ -27,15 +27,16 @@ interface Props {
 
 const { projects: providedProjects } = Astro.props;
 
-const projects =
+const allProjects: CollectionEntry<'project'>[] = await getCollection('project');
+const projects: { id: string; data: { title: string; order: number } }[] =
   providedProjects ??
-  ((await getCollection('project'))
+  allProjects
     .filter((p) => p.data.role === 'quant')
     .sort((a, b) => a.data.order - b.data.order)
     .map((p) => ({
       id: p.id,
       data: { title: p.data.title, order: p.data.order },
-    })));
+    }));
 
 function find(partial: string): CellContent | null {
   for (const p of projects) {
@@ -52,11 +53,16 @@ const ROWS = [
     label: 'Equities',
     cell: (regime: string): CellContent[] => {
       switch (regime) {
-        case 'bull': return [find('cross-sectional-momentum')!].filter(Boolean);
-        case 'bear': return [find('lookahead-bias')!].filter(Boolean);
-        case 'range': return [find('pairs-cointegration')!].filter(Boolean);
-        case 'crash': return [find('variance-risk-premium')!].filter(Boolean);
-        default: return [];
+        case 'bull':
+          return [find('cross-sectional-momentum')!].filter(Boolean);
+        case 'bear':
+          return [find('lookahead-bias')!].filter(Boolean);
+        case 'range':
+          return [find('pairs-cointegration')!].filter(Boolean);
+        case 'crash':
+          return [find('variance-risk-premium')!].filter(Boolean);
+        default:
+          return [];
       }
     },
   },
@@ -64,11 +70,18 @@ const ROWS = [
     label: 'Crypto',
     cell: (regime: string): CellContent[] => {
       switch (regime) {
-        case 'bull': return [find('timeseries-momentum')!].filter(Boolean);
-        case 'bear': return [find('funding-carry')!].filter(Boolean);
-        case 'range': return [find('cross-sectional-momentum')!, find('pairs-cointegration')!].filter(Boolean) as CellContent[];
-        case 'crash': return [find('macro-regime')!].filter(Boolean);
-        default: return [];
+        case 'bull':
+          return [find('timeseries-momentum')!].filter(Boolean);
+        case 'bear':
+          return [find('funding-carry')!].filter(Boolean);
+        case 'range':
+          return [find('cross-sectional-momentum')!, find('pairs-cointegration')!].filter(
+            Boolean,
+          ) as CellContent[];
+        case 'crash':
+          return [find('macro-regime')!].filter(Boolean);
+        default:
+          return [];
       }
     },
   },
@@ -76,11 +89,16 @@ const ROWS = [
     label: 'Commodities',
     cell: (regime: string): CellContent[] => {
       switch (regime) {
-        case 'bull': return [find('macro-regime')!].filter(Boolean);
-        case 'bear': return [find('macro-regime')!].filter(Boolean);
-        case 'range': return [];
-        case 'crash': return [];
-        default: return [];
+        case 'bull':
+          return [find('macro-regime')!].filter(Boolean);
+        case 'bear':
+          return [find('macro-regime')!].filter(Boolean);
+        case 'range':
+          return [];
+        case 'crash':
+          return [];
+        default:
+          return [];
       }
     },
   },
@@ -88,36 +106,40 @@ const ROWS = [
     label: 'Rates / Vol',
     cell: (regime: string): CellContent[] => {
       switch (regime) {
-        case 'bull': return [find('variance-risk-premium')!].filter(Boolean);
-        case 'bear': return [find('variance-risk-premium')!].filter(Boolean);
-        case 'range': return [find('macro-regime')!].filter(Boolean);
-        case 'crash': return [find('variance-risk-premium')!, find('macro-regime')!].filter(Boolean) as CellContent[];
-        default: return [];
+        case 'bull':
+          return [find('variance-risk-premium')!].filter(Boolean);
+        case 'bear':
+          return [find('variance-risk-premium')!].filter(Boolean);
+        case 'range':
+          return [find('macro-regime')!].filter(Boolean);
+        case 'crash':
+          return [find('variance-risk-premium')!, find('macro-regime')!].filter(
+            Boolean,
+          ) as CellContent[];
+        default:
+          return [];
       }
     },
   },
 ];
 
 const COLS = ['bull', 'bear', 'range', 'crash'] as const;
-const COL_LABEL: Record<typeof COLS[number], { title: string; sub: string }> = {
-  bull:   { title: 'Bull',   sub: 'directional up, low vol' },
-  bear:   { title: 'Bear',   sub: 'directional down, rising vol' },
-  range:  { title: 'Range',  sub: 'mean-reverting, low vol' },
-  crash:  { title: 'Crash',  sub: 'tail event, vol expands' },
+const COL_LABEL: Record<(typeof COLS)[number], { title: string; sub: string }> = {
+  bull: { title: 'Bull', sub: 'directional up, low vol' },
+  bear: { title: 'Bear', sub: 'directional down, rising vol' },
+  range: { title: 'Range', sub: 'mean-reverting, low vol' },
+  crash: { title: 'Crash', sub: 'tail event, vol expands' },
 };
 ---
 
 <section class="acm" aria-labelledby="acm-heading">
   <header class="acm__head">
     <p class="acm__eyebrow mono">Asset class × regime coverage</p>
-    <h2 id="acm-heading" class="acm__title">
-      Where each strategy works, and where it doesn't.
-    </h2>
+    <h2 id="acm-heading" class="acm__title">Where each strategy works, and where it doesn't.</h2>
     <p class="acm__sub">
-      Four asset classes × four regime states. Each cell lists the strategy
-      (or two) that has a defensible claim on that intersection — drawn from
-      the 9 quant projects on this page. Empty cells are intentional: a
-      honest book has regimes it doesn't claim.
+      Four asset classes × four regime states. Each cell lists the strategy (or two) that has a
+      defensible claim on that intersection — drawn from the 9 quant projects on this page. Empty
+      cells are intentional: a honest book has regimes it doesn't claim.
     </p>
   </header>
 
@@ -142,9 +164,14 @@ const COL_LABEL: Record<typeof COLS[number], { title: string; sub: string }> = {
           {COLS.map((c) => {
             const items = row.cell(c);
             return (
-              <div class:list={['acm__cell', { 'acm__cell--empty': items.length === 0 }]} role="cell">
+              <div
+                class:list={['acm__cell', { 'acm__cell--empty': items.length === 0 }]}
+                role="cell"
+              >
                 {items.length === 0 ? (
-                  <span class="acm__dash" aria-label="no strategy claimed">—</span>
+                  <span class="acm__dash" aria-label="no strategy claimed">
+                    —
+                  </span>
                 ) : (
                   <ul class="acm__list">
                     {items.map((it, idx) => (
@@ -153,7 +180,11 @@ const COL_LABEL: Record<typeof COLS[number], { title: string; sub: string }> = {
                            which already includes the lane prefix (e.g.,
                            "quant/01-deflated-sharpe"). All entries are
                            quant (filtered on line 33). */}
-                        <a class="acm__link" href={`/projects/${it.slug}/`} title={`Strategy: ${it.slug}`}>
+                        <a
+                          class="acm__link"
+                          href={`/projects/${it.slug}/`}
+                          title={`Strategy: ${it.slug}`}
+                        >
                           <span class="acm__link-num mono">{String(idx + 1).padStart(2, '0')}</span>
                           <span class="acm__link-label">{it.label}</span>
                         </a>
@@ -173,8 +204,8 @@ const COL_LABEL: Record<typeof COLS[number], { title: string; sub: string }> = {
     <p class="acm__footer-line">
       <span class="mono">—</span>
       <span class="acm__footer-text">
-        honest gap: not every (asset, regime) pair has a claimed strategy
-        because not every claim is supported by the source data.
+        honest gap: not every (asset, regime) pair has a claimed strategy because not every claim is
+        supported by the source data.
       </span>
     </p>
   </footer>
@@ -203,7 +234,7 @@ const COL_LABEL: Record<typeof COLS[number], { title: string; sub: string }> = {
   .acm__title {
     font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.01em;
     line-height: 1.15;
     margin-bottom: var(--sp-3);

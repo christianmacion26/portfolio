@@ -28,8 +28,10 @@ const deployedStamp = buildStampUtc8();
           <div class="footer__name">{profile.fullName}</div>
           <div class="footer__role">{profile.titles.primary}</div>
           <div class="footer__loc mono">{profile.location.display}</div>
-          {/* F21 — institutional: dot for "online/available" should be amber,
-              not bright pass-green. Single accent = institutional. */}
+          {
+            /* F21 — institutional: dot for "online/available" should be amber,
+              not bright pass-green. Single accent = institutional. */
+          }
           <div class="footer__hours mono">
             <span class="dot dot--amber" aria-hidden="true"></span>
             {profile.availability.mode} · {profile.availability.hours}
@@ -72,7 +74,11 @@ const deployedStamp = buildStampUtc8();
         <h4>Method</h4>
         <ul class="mono">
           <li><a href={path('/methodology')}>eval-first discipline</a></li>
-          <li><a href={path('/methodology')}><strong>G1–G31 gate stack</strong> ↗</a></li>
+          <li>
+            <a href={path('/methodology')}
+              ><strong>G1–G{profile.stats.evalGates} gate stack</strong> ↗</a
+            >
+          </li>
           <li>block-bootstrap CIs</li>
           <li>deflated Sharpe</li>
           <li>CSCV-based PBO</li>
@@ -84,7 +90,7 @@ const deployedStamp = buildStampUtc8();
       <div class="footer__col">
         <h4>Availability</h4>
         <ul>
-          <li>Remote · 30 hrs/wk</li>
+          <li>Remote · {profile.availability.hours}</li>
           <li class="mono">UTC+8 · Philippines</li>
           <li>Open to QR / AI eng roles</li>
         </ul>
@@ -105,8 +111,7 @@ const deployedStamp = buildStampUtc8();
           <a href={path('/humans.md')}>humans.md</a> · AI-agent identity document
         </small>
         <small class="mono">
-          portfolio.os · {portfolioVersion} · last deployed {deployedStamp} · built
-          with Astro
+          portfolio.os · {portfolioVersion} · last deployed {deployedStamp} · built with Astro
         </small>
       </div>
     </div>
@@ -117,8 +122,8 @@ const deployedStamp = buildStampUtc8();
   .footer {
     margin-top: var(--sp-9);
     background: var(--c-tape);
-    color: rgba(230, 237, 243, 0.7);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--c-ink-mute);
+    border-top: 1px solid var(--c-white-mist);
   }
   .footer__inner {
     padding-block: var(--sp-7);
@@ -157,12 +162,12 @@ const deployedStamp = buildStampUtc8();
     margin-top: 0.25rem;
   }
   .footer__loc {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--c-white-faint);
     font-size: var(--fs-sm);
     margin-top: 0.25rem;
   }
   .footer__hours {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--c-white-faint);
     font-size: var(--fs-xs);
     margin-top: var(--sp-2);
     display: flex;
@@ -180,7 +185,7 @@ const deployedStamp = buildStampUtc8();
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--c-white-ghost);
     margin-bottom: var(--sp-3);
   }
   .footer__col ul {
@@ -192,7 +197,7 @@ const deployedStamp = buildStampUtc8();
     font-size: var(--fs-sm);
   }
   .footer__col a {
-    color: rgba(230, 237, 243, 0.7);
+    color: var(--c-ink-mute);
     /* v6.3 polish — every footer link gets ≥ 44×44 tap target.
        The audit flagged column links at 33-141×17-20 px on mobile
        (Proof, Skills, Uses, About, humans.md). min-height:44 +
@@ -209,7 +214,7 @@ const deployedStamp = buildStampUtc8();
   }
 
   .footer__base {
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid var(--c-white-mist);
     padding-block: var(--sp-4);
   }
   .footer__base-inner {
@@ -221,7 +226,7 @@ const deployedStamp = buildStampUtc8();
   }
   .footer__base-inner small {
     font-size: var(--fs-xs);
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--c-white-fade);
   }
   .footer__base-meta {
     display: flex;
@@ -243,7 +248,7 @@ const deployedStamp = buildStampUtc8();
     padding: 0.25rem 0.5rem;
   }
   .footer__base-meta a:hover {
-    color: var(--c-primary-2-deep);
+    color: var(--c-primary-2-light);
     text-decoration-color: var(--c-amber);
   }
 

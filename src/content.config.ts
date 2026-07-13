@@ -2,8 +2,9 @@
  * content.config.ts — Astro 5 content collection schemas (Zod).
  * All collections are loaded by the Slug routing in src/pages/projects/[slug].astro.
  */
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const headlineMetric = z.object({
   label: z.string(),
@@ -174,4 +175,12 @@ const worldEvent = defineCollection({
   }),
 });
 
-export const collections = { project, experience, skillGroup, certGroup, solution, predictionEvent, worldEvent };
+export const collections = {
+  project,
+  experience,
+  skillGroup,
+  certGroup,
+  solution,
+  predictionEvent,
+  worldEvent,
+};

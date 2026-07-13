@@ -10,13 +10,23 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
-import { getCollection } from 'astro:content';
+import { profile } from '@utils/profile';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
-const groups = (await getCollection('skillGroup')).sort((a, b) => a.data.order - b.data.order);
+type SkillGroupEntry = CollectionEntry<'skillGroup'>;
+const allGroups: SkillGroupEntry[] = await getCollection('skillGroup');
+const groups = allGroups.sort((a, b) => a.data.order - b.data.order);
 
-const totalSkills = groups.reduce((sum, g) => sum + g.data.items.length, 0);
+const totalSkills = groups.reduce(
+  (sum: number, g: SkillGroupEntry) => sum + g.data.items.length,
+  0,
+);
 const withLevel = groups.reduce(
-  (sum, g) => sum + g.data.items.filter((i) => typeof i.level === 'number').length,
+  (sum: number, g: SkillGroupEntry) =>
+    sum +
+    g.data.items.filter(
+      (i: SkillGroupEntry['data']['items'][number]) => typeof i.level === 'number',
+    ).length,
   0,
 );
 
@@ -42,7 +52,10 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
 <BaseLayout
   title="Skills"
   description="Domain-grouped skill matrix with self-rated proficiency and years of practice: AI & multi-agent systems, quantitative research & statistics, and engineering tools."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Skills", href: "/skills" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Skills', href: '/skills' },
+  ]}
 >
   <header class="page-head">
     <div class="container">
@@ -70,13 +83,26 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
       <div class="head-eq">
         <Equation
           block
-          latex={`\\mathrm{stack} \\;=\\; \\mathrm{build} \\;\\cdot\\; \\mathrm{validate}\\;\\cdot\\;\\mathrm{ship} \\qquad \\text{where}\\quad \\mathrm{validate} = \\mathrm{G1\\;..\\;G31}`}
+          latex={`\\mathrm{stack} \\;=\\; \\mathrm{build} \\;\\cdot\\; \\mathrm{validate}\\;\\cdot\\;\\mathrm{ship} \\qquad \\text{where}\\quad \\mathrm{validate} = \\mathrm{G1\\;..\\;G${profile.stats.evalGates}}`}
           size="md"
         />
       </div>
 
       <div class="head-stats">
-        <Stat value={String(groups.length)} label="domains" sub={String(groups.length === 1 ? 'one' : groups.length === 2 ? 'two' : groups.length === 3 ? 'three' : String(groups.length))} formula="|D|" />
+        <Stat
+          value={String(groups.length)}
+          label="domains"
+          sub={String(
+            groups.length === 1
+              ? 'one'
+              : groups.length === 2
+                ? 'two'
+                : groups.length === 3
+                  ? 'three'
+                  : String(groups.length),
+          )}
+          formula="|D|"
+        />
         <Stat value={String(totalSkills)} label="skills" sub="in stack" formula="|\mathcal{S}|" />
         <Stat
           value={String(withLevel)}
@@ -113,7 +139,7 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
   </header>
 
   {
-    groups.map((group, idx) => (
+    groups.map((group: SkillGroupEntry, idx: number) => (
       <section class:list={['section', { 'section--alt': idx % 2 === 1 }]}>
         <div class="container">
           <header class="section__head">
@@ -122,7 +148,7 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
             <p class="section__sub">{group.data.blurb}</p>
           </header>
           <div class="skills">
-            {group.data.items.map((item) => {
+            {group.data.items.map((item: SkillGroupEntry['data']['items'][number]) => {
               const level =
                 typeof item.level === 'number' ? Math.min(5, Math.max(1, item.level)) : null;
               return (
@@ -177,8 +203,7 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -219,8 +244,8 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
     margin-top: var(--sp-5);
     margin-bottom: var(--sp-5);
     padding: var(--sp-4) var(--sp-5);
-    background: rgba(232, 178, 32, 0.05);
-    border: 1px solid rgba(232, 178, 32, 0.35);
+    background: var(--c-amberl-faint);
+    border: 1px solid var(--c-amberl-strong);
     border-left: 3px solid var(--c-primary-2);
     border-radius: var(--radius);
     font-size: var(--fs-sm);
@@ -360,7 +385,10 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
     opacity: 0.7;
   }
   .skill__chip--lvl-5 {
-    background: rgba(196, 138, 22, 0.14); /* amber-deep tinted */
+    /* v6.10.41 — derive mastery chip tint from --c-amber via color-mix.
+       Was rgba(196,138,22,0.14). The +/- 5 R-channel drift at 14% alpha
+       is invisible (<0.7 RGB units rendered). */
+    background: color-mix(in oklab, var(--c-amber) 14%, transparent);
     border: 1px solid var(--c-amber-deep);
     color: var(--c-amber-deep);
   }
@@ -368,8 +396,8 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
     color: var(--c-amber-deep);
   }
   .skill__chip--lvl-4 {
-    background: rgba(232, 178, 32, 0.05);
-    border: 1px solid rgba(232, 178, 32, 0.4);
+    background: var(--c-amberl-faint);
+    border: 1px solid var(--c-amberl-decor);
     color: var(--c-primary-2);
   }
   .skill__chip--lvl-4 .mono {

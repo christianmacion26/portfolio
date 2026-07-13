@@ -11,15 +11,26 @@ import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
+import { buildStampUtc8 } from '@utils/build-stamp';
 
-// Last-updated stamp: 2026-07-10 (the page is updated ~monthly)
-const updated = '2026-07-10';
-const updatedHuman = '10 July 2026';---
+// Last-updated stamp derives from BUILD_DATE so it never goes stale.
+// The /now page itself is hand-edited ~monthly; this stamp only reflects
+// the last build that re-rendered it.
+const updated = buildStampUtc8();
+const updatedHuman = new Date(updated).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
 
 <BaseLayout
   title="Now"
   description={`What Christian is shipping this month (${updatedHuman}). Open-to / not-open-to / where / how to reach me.`}
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Now", href: "/now" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Now', href: '/now' },
+  ]}
 >
   <header class="now-head">
     <div class="container container-narrow">
@@ -109,9 +120,11 @@ const updatedHuman = '10 July 2026';---
       <ul class="now-list now-list--not">
         <li>Unpaid trial tasks or take-homes longer than 4 hours.</li>
         <li>
-          Relocation outside {profile.location.display}, or roles requiring proprietary data I cannot
-          disclose post-engagement. See <a href={path('/for-recruiters')}>/for-recruiters</a> for the
-          full 60-second skim; the reply-with-JD protocol is on <a href={path('/contact')}>/contact</a>.
+          Relocation outside {profile.location.display}, or roles requiring proprietary data I
+          cannot disclose post-engagement. See <a href={path('/for-recruiters')}>/for-recruiters</a> for
+          the full 60-second skim; the reply-with-JD protocol is on <a href={path('/contact')}
+            >/contact</a
+          >.
         </li>
       </ul>
 
@@ -173,8 +186,7 @@ const updatedHuman = '10 July 2026';---
 <style>
   .now-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-bg);
+    background: var(--c-bg);
     border-bottom: var(--border);
   }
   .now-head__title {
@@ -187,7 +199,7 @@ const updatedHuman = '10 July 2026';---
   .now-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .now-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

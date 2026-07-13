@@ -62,7 +62,9 @@ if (formula) {
   <div class="stat__value-row">
     {
       counterTarget !== null ? (
-        <span class="stat__value mono" data-counter={counterTarget}>{value}</span>
+        <span class="stat__value mono" data-counter={counterTarget}>
+          {value}
+        </span>
       ) : (
         <span class="stat__value mono">{value}</span>
       )
@@ -127,7 +129,7 @@ if (formula) {
     gap: var(--sp-3);
   }
   .stat__value {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-primary);
     line-height: 1.05;
     letter-spacing: -0.02em;
@@ -148,7 +150,7 @@ if (formula) {
   }
   .stat__trend {
     font-family: var(--ff-mono);
-    font-weight: 700;
+    font-weight: 600;
     font-size: var(--fs-lg);
   }
   .stat--trend-up .stat__trend {
@@ -176,13 +178,13 @@ if (formula) {
     border-color: var(--c-amber-deep);
   }
   .stat--primary .stat__label {
-    color: rgba(230, 237, 243, 0.65);
+    color: var(--c-ink-faint);
   }
   .stat--primary .stat__value {
     color: var(--c-primary);
   }
   .stat--primary .stat__sub {
-    color: rgba(230, 237, 243, 0.6);
+    color: var(--c-ink-mist);
   }
 
   /* v6.9.16 — institutional: drop the amber linear-gradient background.
@@ -198,13 +200,13 @@ if (formula) {
     border-color: var(--c-tape-2);
   }
   .stat--mono .stat__label {
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--c-white-ghost);
   }
   .stat--mono .stat__value {
     color: #3fb950;
   }
   .stat--mono .stat__sub {
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--c-white-ghost);
   }
   .stat--mono .stat__formula {
     color: var(--c-warn);

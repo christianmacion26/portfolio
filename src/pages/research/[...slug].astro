@@ -15,38 +15,36 @@
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('project');
-  return projects.map((p) => ({
+  const projects: CollectionEntry<'project'>[] = await getCollection('project');
+  return projects.map((p: CollectionEntry<'project'>) => ({
     params: { slug: p.id },
     props: { project: p },
   }));
 }
 
-interface Props {
-  project: Awaited<ReturnType<typeof getCollection<'project'>>>[number];
-}
-
-const { project } = Astro.props;
+const { project } = Astro.props as { project: CollectionEntry<'project'> };
 const data = project.data;
 
 // Build a cite-able author/year key for the BibTeX entry.
 // Christian T. Macion is the sole author on every project; year comes from `date`.
 // `date` may be a YAML string ("YYYY-MM-DD") or a Date object; handle both.
 const rawDate = data.date as unknown;
-const year = typeof rawDate === 'string'
-  ? rawDate.slice(0, 4)
-  : rawDate instanceof Date
-    ? String(rawDate.getFullYear())
-    : String(rawDate).slice(0, 4);
-const isoDate = typeof rawDate === 'string'
-  ? rawDate
-  : rawDate instanceof Date
-    ? rawDate.toISOString().slice(0, 10)
-    : String(rawDate);
+const year =
+  typeof rawDate === 'string'
+    ? rawDate.slice(0, 4)
+    : rawDate instanceof Date
+      ? String(rawDate.getFullYear())
+      : String(rawDate).slice(0, 4);
+const isoDate =
+  typeof rawDate === 'string'
+    ? rawDate
+    : rawDate instanceof Date
+      ? rawDate.toISOString().slice(0, 10)
+      : String(rawDate);
 const citeKey = `macion${year}${project.id.replace(/[^a-z0-9]/gi, '')}`;
 /* v6.10.11 — URL needs lane prefix */
 const canonicalUrl = `https://christianmacion-portfolio.pages.dev/projects/${project.id}/`;
@@ -59,7 +57,8 @@ const bibtex = `@techreport{${citeKey},
   note         = {Public-data reproducible. Canonical long-form: ${canonicalUrl}},
   url          = {${canonicalUrl}}
 }`;
-const topicLabel = data.role === 'ai' ? 'AI Engineering Research Note' : 'Quantitative Research Note';
+const topicLabel =
+  data.role === 'ai' ? 'AI Engineering Research Note' : 'Quantitative Research Note';
 const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
 ---
 
@@ -85,7 +84,9 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
       <h1 class="hero__title">{data.title}</h1>
       <p class="hero__sub">{data.summary}</p>
       <p class="hero__meta">
-        <span class:list={['pill', laneClass]}>{data.role === 'ai' ? 'AI Engineering' : 'Quantitative Research'}</span>
+        <span class:list={['pill', laneClass]}
+          >{data.role === 'ai' ? 'AI Engineering' : 'Quantitative Research'}</span
+        >
         <span class="hero__date mono">Published {data.date}</span>
       </p>
     </div>
@@ -96,15 +97,20 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
       <header class="section__head">
         <h2 class="section__title">Cite this research note</h2>
         <p class="section__sub">
-          A copy-pasteable BibTeX entry. The canonical long-form with figures, code,
-          and full methodology lives at the URL in the entry — please link there, not
-          here, when citing in a paper or a thread.
+          A copy-pasteable BibTeX entry. The canonical long-form with figures, code, and full
+          methodology lives at the URL in the entry — please link there, not here, when citing in a
+          paper or a thread.
         </p>
       </header>
 
       <div class="cite-card">
         <pre class="cite-bib mono"><code>{bibtex}</code></pre>
-        <button type="button" class="cite-copy" data-copy-target={citeKey} aria-label="Copy BibTeX entry">
+        <button
+          type="button"
+          class="cite-copy"
+          data-copy-target={citeKey}
+          aria-label="Copy BibTeX entry"
+        >
           <span class="cite-copy__label">Copy BibTeX</span>
         </button>
       </div>
@@ -116,8 +122,8 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
       <header class="section__head">
         <h2 class="section__title">Canonical surface</h2>
         <p class="section__sub">
-          The full research note — methodology, code, gates run, and reproduced
-          metrics — lives on the projects index.
+          The full research note — methodology, code, gates run, and reproduced metrics — lives on
+          the projects index.
         </p>
       </header>
       <ul class="canon">
@@ -132,7 +138,7 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
             <li class="canon__row">
               <span class="canon__label">Headline metric(s)</span>
               <ul class="canon__metrics">
-                {data.metrics.map((m) => (
+                {data.metrics.map((m: CollectionEntry<'project'>['data']['metrics'][number]) => (
                   <li>
                     <span class="canon__metric-value mono">{m.value}</span>
                     <span class="canon__metric-label">{m.label}</span>
@@ -147,7 +153,11 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
             <li class="canon__row">
               <span class="canon__label">Tags</span>
               <ul class="canon__tags">
-                {data.tags.map((t) => <li><span class="canon__tag">{t}</span></li>)}
+                {data.tags.map((t: string) => (
+                  <li>
+                    <span class="canon__tag">{t}</span>
+                  </li>
+                ))}
               </ul>
             </li>
           )
@@ -187,7 +197,11 @@ const laneClass = data.role === 'ai' ? 'pill--brand' : 'pill--accent';
         document.body.appendChild(ta);
         ta.select();
         try {
-          document.execCommand('copy');
+          // execCommand('copy') is deprecated but is the only path that
+          // works in non-secure contexts (file://, http://). Kept on
+          // purpose; the TS lib flags it with ts(6387) but the runtime
+          // API is still there. Cast via unknown to silence the hint.
+          (document as unknown as { execCommand: (cmd: string) => boolean }).execCommand('copy');
           setLabel('Copied ✓');
         } catch {
           setLabel('Press ⌘C');

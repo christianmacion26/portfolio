@@ -17,17 +17,23 @@ import MarketTape from '@components/MarketTape.astro';
 import FactorTable from '@components/FactorTable.astro';
 import AssetClassMatrix from '@components/AssetClassMatrix.astro';
 import DataSourceList from '@components/DataSourceList.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 import { seedFromString, buildSeed, walk } from '@utils/prng';
 
+// Gate-count chrome: derives from profile.stats.evalGates. Used in
+// voice-line sub lines and CTA primary labels.
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
+const NGATE = `${profile.stats.evalGates}-gate`;
+
 // --- Quant content: sorted by `order` (1..9 in frontmatter).
-const allProjects = await getCollection('project');
-const quantProjects = allProjects
+type ProjectEntry = CollectionEntry<'project'>;
+const allProjects: ProjectEntry[] = await getCollection('project');
+const quantProjects: ProjectEntry[] = allProjects
   .filter((p) => p.data.role === 'quant')
   .sort((a, b) => a.data.order - b.data.order);
-const aiProjects = allProjects
+const aiProjects: ProjectEntry[] = allProjects
   .filter((p) => p.data.role === 'ai')
   .sort((a, b) => a.data.order - b.data.order);
 
@@ -51,7 +57,7 @@ const statsRow: Array<{
   {
     value: profile.stats.evalGates,
     label: 'eval gates',
-    sub: 'G1–G31 mechanical harness',
+    sub: `${GATE_RANGE} mechanical harness`,
     trend: 'up',
     variant: 'mono',
   },
@@ -94,16 +100,20 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
     { name: 'Research', href: '/research' },
   ]}
 >
-  {/* ============================================================
+  {
+    /* ============================================================
        HERO — identity-first, terse. The page IS the data; the hero
        announces the page in one line and points at the filing cabinet.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="r-hero">
-    {/* v6.10.25 — killed empty .r-hero__glow div. Its `background:` line
+    {
+      /* v6.10.25 — killed empty .r-hero__glow div. Its `background:` line
         was dropped in v6.9.16 (per the comment that mentioned keeping
         only the amber layer) but the div remained — leaving an empty
         absolute-positioned box. Parent .r-hero already has its own
-        background. Pure dead DOM. */}
+        background. Pure dead DOM. */
+    }
     <div class="container">
       <p class="r-hero__eyebrow mono">
         <span>{profile.fullName}</span>
@@ -116,9 +126,8 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
         {`${quantProjects.length} strategies. Four factors. Twelve sources.`}
       </h1>
       <p class="r-hero__sub">
-        A market-data view of the research book. No narrative — the table
-        is the narrative. Every number on this page traces back to a
-        public dataset and a reproducible notebook.
+        A market-data view of the research book. No narrative — the table is the narrative. Every
+        number on this page traces back to a public dataset and a reproducible notebook.
       </p>
       <VoiceLine class="r-hero__voice" ruled={false} size="md">
         Statistics that survive discipline are statistics that didn't need to lie.
@@ -126,9 +135,11 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        STATS ROW — 4 mono numerics. The headline count, deterministic.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="r-stats" aria-label="Research warehouse summary">
     <div class="container r-stats__grid">
       {
@@ -146,31 +157,37 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        TAPE — institutional mini-tape strip below the stats row.
        Reuses Mission B's MarketTape primitive. A faster (36s) loop
        feels like a "mini" status bar without needing a separate
        variant prop.
-       ============================================================ */}
+       ============================================================ */
+  }
   <MarketTape durationSec={36} />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        ASSET CLASS × REGIME MATRIX — the warehouse floor plan.
-       ============================================================ */}
+       ============================================================ */
+  }
   <AssetClassMatrix />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        9-STRATEGY GRID — every quant project card. Metric tile +
        summary + canonical link.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="r-grid" aria-labelledby="r-grid-heading">
     <div class="container">
       <header class="r-grid__head">
         <p class="r-grid__eyebrow mono">{`All ${quantProjects.length} strategies`}</p>
         <h2 id="r-grid-heading" class="r-grid__title">The book, card by card.</h2>
         <p class="r-grid__sub">
-          One card per quant project. Headline metric, one-line summary,
-          and a canonical link to the long-form note on
+          One card per quant project. Headline metric, one-line summary, and a canonical link to the
+          long-form note on
           <span class="mono">/projects/{'{slug}'}</span>.
         </p>
       </header>
@@ -186,7 +203,11 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
                 <article class="r-card__inner">
                   {d.hero?.src && (
                     /* v6.10.11 — URL needs lane prefix (/quant/ or /ai/) */
-                    <a class="r-card__figure" href={path(`/projects/${proj.id}`)} aria-label={`Open ${d.title}`}>
+                    <a
+                      class="r-card__figure"
+                      href={path(`/projects/${proj.id}`)}
+                      aria-label={`Open ${d.title}`}
+                    >
                       <img
                         class="r-card__img"
                         src={d.hero.src}
@@ -226,7 +247,7 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
                     )}
                     {d.tags && d.tags.length > 0 && (
                       <ul class="r-card__tags">
-                        {d.tags.slice(0, 3).map((t) => (
+                        {d.tags.slice(0, 3).map((t: string) => (
                           <li class="r-card__tag mono">{t}</li>
                         ))}
                       </ul>
@@ -241,47 +262,51 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        FACTOR DECOMPOSITION — Sharpe / PSR / DSR / PBO per strategy.
        v6.4 — wrapped in a section anchor so the home page's
        `FIND PATTERN` entry-point chip can deep-link here via
        `/research/#math-corpus`. The math-corpus anchor names the
        26-pair headline→formula corpus (v6.4 content audit), which
        lives across the strategy grid + factor table below.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section id="math-corpus" aria-label="Math corpus">
     <FactorTable />
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        DATA SOURCE REGISTRY — 12 public-domain data sources (curated list in
        src/components/DataSourceList.astro; update the prose if the array grows).
-       ============================================================ */}
+       ============================================================ */
+  }
   <DataSourceList />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        DISCLOSURE + CTA — the NDA-clean by construction line.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="r-disclose" aria-labelledby="r-disclose-heading">
     <div class="container r-disclose__inner">
       <h2 id="r-disclose-heading" class="r-disclose__title">
         Public data only. NDA-clean by construction.
       </h2>
       <p class="r-disclose__sub">
-        Every dataset on this page is enumerated in the registry above. No
-        employer-internal feeds. No scraped proprietary sources. No client
-        data. A hiring manager at a regulated shop can audit the data
-        lineage with <span class="mono">curl</span> and arrive at exactly
-        the same numbers. The repository contains the notebooks that
-        produced every figure shown here.
+        Every dataset on this page is enumerated in the registry above. No employer-internal feeds.
+        No scraped proprietary sources. No client data. A hiring manager at a regulated shop can
+        audit the data lineage with <span class="mono">curl</span> and arrive at exactly the same numbers.
+        The repository contains the notebooks that produced every figure shown here.
       </p>
     </div>
   </section>
 
   <CTABanner
     title="Want the methodology behind the table?"
-    sub="The 31-gate evaluation harness (G1–G31) on /methodology explains how each strategy got its gate verdicts, and why most of the cells in the factor table are filled with an em-dash."
-    primaryLabel="Read the G1–G31 harness"
+    sub={`The ${NGATE} evaluation harness (${GATE_RANGE}) on /methodology explains how each strategy got its gate verdicts, and why most of the cells in the factor table are filled with an em-dash.`}
+    primaryLabel={`Read the ${GATE_RANGE} harness`}
     primaryHref={path('/methodology')}
     secondaryLabel="Open positions"
     secondaryHref={path('/positions')}
@@ -433,7 +458,9 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
     border: 1px solid var(--c-rule);
     border-radius: var(--radius);
     overflow: hidden;
-    transition: border-color var(--transition), box-shadow var(--transition);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
   }
   .r-card:hover {
     border-color: var(--c-amber);
@@ -459,7 +486,9 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
     height: auto;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    transition: transform 240ms ease, filter 240ms ease;
+    transition:
+      transform 240ms ease,
+      filter 240ms ease;
   }
   .r-card:hover .r-card__img {
     transform: scale(1.02);

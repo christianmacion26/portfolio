@@ -31,12 +31,7 @@ import { deskActionFor } from '@utils/desk-actions';
 interface RawWorldEvent {
   data: {
     title: string;
-    category:
-      | 'central-bank'
-      | 'earnings'
-      | 'geopolitical'
-      | 'data-release'
-      | 'fx';
+    category: 'central-bank' | 'earnings' | 'geopolitical' | 'data-release' | 'fx';
     severity: 'mild' | 'moderate' | 'critical';
     lat: number;
     lon: number;
@@ -60,9 +55,7 @@ const { city, buildDateIso, maxRows = 3 } = Astro.props;
 const allEvents = await getCollection('worldEvent');
 const cityEvents = allEvents
   .filter((e: RawWorldEvent) => e.data.city === city)
-  .sort(
-    (a: RawWorldEvent, b: RawWorldEvent) => a.data.order - b.data.order,
-  );
+  .sort((a: RawWorldEvent, b: RawWorldEvent) => a.data.order - b.data.order);
 
 // Fallback: if the city has zero fixture events, render the first event
 // of the collection so the sheet always has at least one row to show.
@@ -81,10 +74,7 @@ const rows: ActionRow[] = slice.slice(0, maxRows).map((e: RawWorldEvent) => ({
 }));
 ---
 
-<section
-  class="earth-action-sheet"
-  aria-label={`What a desk does in ${city}`}
->
+<section class="earth-action-sheet" aria-label={`What a desk does in ${city}`}>
   <header class="earth-action-sheet__head">
     <span class="earth-action-sheet__city">{city}</span>
     <span class="earth-action-sheet__label">· desk action</span>

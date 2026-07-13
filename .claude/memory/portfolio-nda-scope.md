@@ -5,7 +5,7 @@
 **Complements:** `~/.claude/projects/-Users-christianmacion/memory/twentyv-conflict.md`,
 `portfolio-positioning-level.md`, `baseline-truths.md` (user-level globals).
 
-This file pins three typed rules that any artifact generated for *this*
+This file pins three typed rules that any artifact generated for _this_
 workspace must satisfy before it leaves the repo. Every rule is lintable
 in principle; review each one before shipping copy, screenshots, or
 generated JSON.
@@ -64,7 +64,7 @@ The Macion Capital skills (`ph-funds-legal-review`, `ph-securities-claims-review
 artifacts under the `Macion Capital/` workspace. Those artifacts — contracts,
 IC memos, LP data, securities-claims reviews, tax-compliance opinions,
 institutional pitch audits — MUST NOT be referenced, quoted, summarized, or
-linked from anything generated for *this* portfolio workspace.
+linked from anything generated for _this_ portfolio workspace.
 
 Concretely forbidden surfaces:
 
@@ -87,20 +87,20 @@ you find a leak, add it to `nda-audit.ts` before merging).
 
 ## How these rules surface in the built tools
 
-| Tool                                            | Rule 1 | Rule 2 | Rule 3 |
-| ----------------------------------------------- | :----: | :----: | :----: |
-| `tools/check_no_hard_paths.sh`                  |   —    |   —    |   —    |
-| `tools/scorecard_aggregator.py`                 |   —    |   —    |   —    |
-| `tools/live_vs_offline.py`                      |   —    |   —    |   —    |
-| `src/utils/nda-audit.ts` (CI)                   |   X    |  partial |   X    |
-| Operator copy review (manual)                   |   X    |   X    |   X    |
-| Pre-deploy `wrangler pages deploy` checklist    |   X    |   X    |   X    |
+| Tool                                         | Rule 1 | Rule 2  | Rule 3 |
+| -------------------------------------------- | :----: | :-----: | :----: |
+| `tools/check_no_hard_paths.sh`               |   —    |    —    |   —    |
+| `tools/scorecard_aggregator.py`              |   —    |    —    |   —    |
+| `tools/live_vs_offline.py`                   |   —    |    —    |   —    |
+| `src/utils/nda-audit.ts` (CI)                |   X    | partial |   X    |
+| Operator copy review (manual)                |   X    |    X    |   X    |
+| Pre-deploy `wrangler pages deploy` checklist |   X    |    X    |   X    |
 
-The three tools above are *content-shaping* utilities — they move bytes
+The three tools above are _content-shaping_ utilities — they move bytes
 but do not, on their own, enforce the three typed rules. The rule
 enforcement is upstream (writer / aggregator input) and downstream
 (`nda-audit.ts` + manual review).
 
 ---
 
-*End of portfolio-nda-scope.md.*
+_End of portfolio-nda-scope.md._

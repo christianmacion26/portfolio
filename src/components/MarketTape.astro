@@ -49,28 +49,34 @@ const rng = seedFromString(buildSeed() + '::tape');
 // walk drifts it ±10% with a per-strategy volatility that reflects the
 // strategy's character (carry/cointegration low-vol, momentum higher-vol).
 const stratSeeds: { id: string; base: number; sigma: number }[] = [
-  { id: '01-deflated-sharpe',       base: 100, sigma: 1.6 },
+  { id: '01-deflated-sharpe', base: 100, sigma: 1.6 },
   { id: '02-cross-sectional-momentum', base: 100, sigma: 1.4 },
   { id: '03-timeseries-momentum-voltarget', base: 100, sigma: 1.1 },
   { id: '04-variance-risk-premium', base: 100, sigma: 1.7 },
-  { id: '05-pairs-cointegration',   base: 100, sigma: 0.7 },
-  { id: '06-funding-carry',         base: 100, sigma: 0.9 },
-  { id: '07-macro-regime-overlay',  base: 100, sigma: 1.3 },
+  { id: '05-pairs-cointegration', base: 100, sigma: 0.7 },
+  { id: '06-funding-carry', base: 100, sigma: 0.9 },
+  { id: '07-macro-regime-overlay', base: 100, sigma: 1.3 },
   { id: '08-backtest-engine-costs', base: 100, sigma: 1.5 },
-  { id: '09-lookahead-bias-audit',  base: 100, sigma: 0.4 },
+  { id: '09-lookahead-bias-audit', base: 100, sigma: 0.4 },
 ];
 
 // 7 headline market indicators — real instrument names, public-domain
 // data shape. Vol columns are illustrative (e.g., VIX in points,
 // BTC in %).
-const indexSeeds: { sym: string; base: number; sigma: number; decimals: number; volUnit: string }[] = [
-  { sym: 'SPX',     base: 5872, sigma: 8.0,  decimals: 2, volUnit: 'idx' },
-  { sym: 'NDX',     base: 20610, sigma: 28, decimals: 2, volUnit: 'idx' },
-  { sym: 'DJI',     base: 42340, sigma: 65, decimals: 2, volUnit: 'idx' },
-  { sym: 'DXY',     base: 104.21, sigma: 0.08, decimals: 2, volUnit: 'idx' },
-  { sym: 'VIX',     base: 14.6, sigma: 0.32, decimals: 2, volUnit: 'pts' },
+const indexSeeds: {
+  sym: string;
+  base: number;
+  sigma: number;
+  decimals: number;
+  volUnit: string;
+}[] = [
+  { sym: 'SPX', base: 5872, sigma: 8.0, decimals: 2, volUnit: 'idx' },
+  { sym: 'NDX', base: 20610, sigma: 28, decimals: 2, volUnit: 'idx' },
+  { sym: 'DJI', base: 42340, sigma: 65, decimals: 2, volUnit: 'idx' },
+  { sym: 'DXY', base: 104.21, sigma: 0.08, decimals: 2, volUnit: 'idx' },
+  { sym: 'VIX', base: 14.6, sigma: 0.32, decimals: 2, volUnit: 'pts' },
   { sym: 'BTC-USD', base: 96480, sigma: 320, decimals: 0, volUnit: '%' },
-  { sym: 'GOLD',    base: 3312, sigma: 4.8, decimals: 2, volUnit: 'oz' },
+  { sym: 'GOLD', base: 3312, sigma: 4.8, decimals: 2, volUnit: 'oz' },
 ];
 
 // Compose defaults: 9 strategies + 7 indices = 16 tape entries.
@@ -99,12 +105,7 @@ const items = (symbols ?? defaultSymbols).map((it) => ({
   pxStr: formatPx(it.px, it.px >= 1000 ? 2 : 2),
   deltaStr: formatPct(it.deltaPct),
   // Color class: pass/fail for sign of delta, muted for ~0.
-  colorClass:
-    Math.abs(it.deltaPct) < 0.005
-      ? 'muted'
-      : it.deltaPct > 0
-        ? 'pass'
-        : 'fail',
+  colorClass: Math.abs(it.deltaPct) < 0.005 ? 'muted' : it.deltaPct > 0 ? 'pass' : 'fail',
 }));
 
 // IDs we cross-link to /projects/<id>; everything else is a plain label.
@@ -118,13 +119,13 @@ const stop = trailing;
   <div class="tape__viewport">
     <div class="tape__track" style={`--tape-dur: ${durationSec}s`}>
       {
+        // v6.10.11 — linkable symbols are always quant strategies
+        // (sourced from stratSeeds); the lane is hardcoded. If AI
+        // strategies ever become linkable, look up the lane from
+        // getCollection('project') at build time.
         [...items, ...items].map((it) => (
           <a
             class:list={['tape__item', `tape__item--${it.colorClass}`]}
-            {/* v6.10.11 — URL needs lane prefix. Linkable symbols are
-               always quant strategies (sourced from stratSeeds); hardcode
-               the lane. If AI strategies ever become linkable, look up the
-               lane from getCollection('project') at build time. */}
             href={linkable.has(it.sym) ? `/projects/quant/${it.sym}` : undefined}
           >
             <span class="tape__sym mono">{it.sym}</span>
@@ -143,7 +144,7 @@ const stop = trailing;
   .tape {
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
     position: relative;
     overflow: hidden;
     user-select: none;
@@ -198,7 +199,7 @@ const stop = trailing;
     font-feature-settings: 'tnum' 1;
   }
   .tape__delta {
-    font-weight: 700;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
   }

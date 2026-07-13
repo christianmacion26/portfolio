@@ -8,6 +8,7 @@
  * the configured `base` (`/portfolio` on GH Pages).
  */
 import { BASE } from './url';
+import { profile } from './profile';
 
 export interface SEO {
   title: string;
@@ -17,7 +18,7 @@ export interface SEO {
   pathname?: string;
 }
 
-const SITE_NAME = 'Christian T. Macion';
+const SITE_NAME = profile.fullName;
 // `SITE_URL` is the deployment root (no base path). Default is the canonical
 // GH Pages site; override at build time with PUBLIC_SITE_URL when building the
 // Cloudflare Pages mirror. Astro strips this from client bundles when prefixed
@@ -79,9 +80,9 @@ export interface PersonInfo {
     github: string;
     medium?: string;
   };
-  knowsAbout?: string[];
-  alumniOf?: string[];
-  awards?: string[];
+  knowsAbout?: readonly string[];
+  alumniOf?: readonly string[];
+  awards?: readonly string[];
 }
 
 export function personJsonLd(p: PersonInfo) {
@@ -119,7 +120,7 @@ export function websiteJsonLd() {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: SITE_URL,
-    description: 'Portfolio of Christian T. Macion — Quant Researcher · AI Engineer.',
+    description: `Portfolio of ${profile.fullName} — ${profile.titles.primary}.`,
     inLanguage: 'en',
     potentialAction: {
       '@type': 'SearchAction',
@@ -161,6 +162,9 @@ export function breadcrumbJsonLd(crumbs: Crumb[]) {
 /**
  * ItemList JSON-LD for a list of CreativeWork (projects). Helps Google render
  * rich project carousels if the page qualifies for one.
+ *
+ * @alias imported via `@utils/seo` alias from projects/index.astro:26
+ * — knip's tsconfig-path resolver doesn't follow the alias reliably.
  */
 export function projectListJsonLd(
   projects: Array<{

@@ -34,41 +34,41 @@ const STAGES: Stage[] = [
   {
     name: 'SOURCE',
     nodes: [
-      { label: 'NYSE',    tps: '1.2k' },
-      { label: 'NASDAQ',  tps: '2.4k' },
-      { label: 'CME',     tps: '0.8k' },
+      { label: 'NYSE', tps: '1.2k' },
+      { label: 'NASDAQ', tps: '2.4k' },
+      { label: 'CME', tps: '0.8k' },
       { label: 'BINANCE', tps: '4.1k' },
     ],
   },
   {
     name: 'NORMALIZE',
     nodes: [
-      { label: 'DEDUP',     tps: '8.5k' },
+      { label: 'DEDUP', tps: '8.5k' },
       { label: 'TIMESTAMP', tps: '8.5k' },
-      { label: 'CLEAN',     tps: '8.4k' },
+      { label: 'CLEAN', tps: '8.4k' },
     ],
   },
   {
     name: 'ENRICH',
     nodes: [
-      { label: 'TAG',      tps: '8.3k' },
-      { label: 'FX-CONV',  tps: '8.2k' },
-      { label: 'HOLIDAY',  tps: '8.2k' },
+      { label: 'TAG', tps: '8.3k' },
+      { label: 'FX-CONV', tps: '8.2k' },
+      { label: 'HOLIDAY', tps: '8.2k' },
     ],
   },
   {
     name: 'INDEX',
     nodes: [
-      { label: 'COLUMNAR',   tps: '8.0k' },
+      { label: 'COLUMNAR', tps: '8.0k' },
       { label: 'PARTITIONS', tps: '8.0k' },
-      { label: 'SNAPSHOT',   tps: '0.5k' },
+      { label: 'SNAPSHOT', tps: '0.5k' },
     ],
   },
   {
     name: 'STREAM',
     nodes: [
       { label: 'ZERO-COPY', tps: '8.0k' },
-      { label: 'ZMQ-SUB',   tps: '8.0k' },
+      { label: 'ZMQ-SUB', tps: '8.0k' },
       { label: 'KAFKA-PUB', tps: '7.9k' },
     ],
   },
@@ -87,8 +87,7 @@ const venueBars = VENUES.map((venue) => {
 type LagCell = { name: string; pct: number; state: 'green' | 'amber' | 'red' };
 const lagCells: LagCell[] = STAGES.map((stage) => {
   const pct = Math.round(20 + lagRand() * 70); // 20..90
-  const state: LagCell['state'] =
-    pct < 50 ? 'green' : pct < 75 ? 'amber' : 'red';
+  const state: LagCell['state'] = pct < 50 ? 'green' : pct < 75 ? 'amber' : 'red';
   return { name: stage.name, pct, state };
 });
 
@@ -147,7 +146,8 @@ for (let s = 0; s < STAGES.length - 1; s++) {
           <span class="ingest__cursor" aria-hidden="true">▍</span>
         </h2>
         <p class="ingest__caption">
-          Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single deterministic PRNG.
+          Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single
+          deterministic PRNG.
         </p>
       </div>
       <div class="ingest__head-right" aria-label="Per-venue throughput (events / sec)">
@@ -160,39 +160,32 @@ for (let s = 0; s < STAGES.length - 1; s++) {
           preserveAspectRatio="xMidYMid meet"
         >
           {/* 5 vertical bars + numeric labels in 11px mono tabular-nums */}
-          {venueBars.map((bar, i) => {
-            const slot = 180 / 5;        // 36px per slot
-            const barW = 22;
-            const x = i * slot + (slot - barW) / 2;
-            const h = Math.max(3, bar.ratio * 26);
-            const y = 38 - h;
-            const labelY = Math.max(y - 2, 9);
-            return (
-              <g class="ingest__chart-bar">
-                <rect
-                  class="ingest__chart-rect"
-                  x={x}
-                  y={y}
-                  width={barW}
-                  height={h}
-                  rx="1"
-                />
-                <text
-                  class="ingest__chart-num mono tnum"
-                  x={x + barW / 2}
-                  y={labelY}
-                  text-anchor="middle"
-                >
-                  {bar.tps}
-                </text>
-              </g>
-            );
-          })}
+          {
+            venueBars.map((bar, i) => {
+              const slot = 180 / 5; // 36px per slot
+              const barW = 22;
+              const x = i * slot + (slot - barW) / 2;
+              const h = Math.max(3, bar.ratio * 26);
+              const y = 38 - h;
+              const labelY = Math.max(y - 2, 9);
+              return (
+                <g class="ingest__chart-bar">
+                  <rect class="ingest__chart-rect" x={x} y={y} width={barW} height={h} rx="1" />
+                  <text
+                    class="ingest__chart-num mono tnum"
+                    x={x + barW / 2}
+                    y={labelY}
+                    text-anchor="middle"
+                  >
+                    {bar.tps}
+                  </text>
+                </g>
+              );
+            })
+          }
         </svg>
         <div class="ingest__chart-axis mono" aria-hidden="true">
-          {venueBars.map((bar) => (
-            <span class="ingest__chart-tick">{bar.venue.slice(0, 3)}</span>
-          ))}
+          {venueBars.map((bar) => <span class="ingest__chart-tick">{bar.venue.slice(0, 3)}</span>)}
         </div>
       </div>
     </header>
@@ -220,99 +213,75 @@ for (let s = 0; s < STAGES.length - 1; s++) {
             orient="auto-start-reverse"
             markerUnits="userSpaceOnUse"
           >
-            <path d="M0,0 L10,5 L0,10 Z" class="ing-arrow-head" />
+            <path d="M0,0 L10,5 L0,10 Z" class="ing-arrow-head"></path>
           </marker>
         </defs>
 
         {/* stage column labels */}
-        {STAGES.map((stage, sIdx) => (
-          <g class="ingest__stage-header">
-            <text
-              x={STAGE_X[sIdx]}
-              y="22"
-              text-anchor="middle"
-              class="ingest__stage-name mono"
-            >
-              {stage.name}
-            </text>
-            <line
-              class="ingest__stage-rule"
-              x1={STAGE_X[sIdx] - 50}
-              y1="32"
-              x2={STAGE_X[sIdx] + 50}
-              y2="32"
-            />
-          </g>
-        ))}
+        {
+          STAGES.map((stage, sIdx) => (
+            <g class="ingest__stage-header">
+              <text x={STAGE_X[sIdx]} y="22" text-anchor="middle" class="ingest__stage-name mono">
+                {stage.name}
+              </text>
+              <line
+                class="ingest__stage-rule"
+                x1={STAGE_X[sIdx] - 50}
+                y1="32"
+                x2={STAGE_X[sIdx] + 50}
+                y2="32"
+              />
+            </g>
+          ))
+        }
 
         {/* edges (drawn before nodes so squares overlay arrowheads cleanly) */}
-        {edges.map((e) => (
-          <path
-            class="ingest__edge"
-            d={e.d}
-            stroke-width="1"
-            fill="none"
-            marker-end="url(#ing-arrow)"
-          />
-        ))}
+        {
+          edges.map((e) => (
+            <path
+              class="ingest__edge"
+              d={e.d}
+              stroke-width="1"
+              fill="none"
+              marker-end="url(#ing-arrow)"
+            />
+          ))
+        }
 
         {/* nodes */}
-        {stageNodes.map((nodes) => (
-          <g class="ingest__stage-group">
-            {nodes.map((node) => (
-              <g
-                class="ingest__node"
-                transform={`translate(${node.x} ${node.y})`}
-              >
-                <rect
-                  class="ingest__node-sq"
-                  x="-6"
-                  y="-6"
-                  width="12"
-                  height="12"
-                  rx="1"
-                />
-                <text
-                  class="ingest__node-label mono"
-                  x="0"
-                  y="22"
-                  text-anchor="middle"
-                >
-                  {node.label}
-                </text>
-                <text
-                  class="ingest__node-tps mono tnum"
-                  x="0"
-                  y="36"
-                  text-anchor="middle"
-                >
-                  {node.tps}
-                </text>
-              </g>
-            ))}
-          </g>
-        ))}
+        {
+          stageNodes.map((nodes) => (
+            <g class="ingest__stage-group">
+              {nodes.map((node) => (
+                <g class="ingest__node" transform={`translate(${node.x} ${node.y})`}>
+                  <rect class="ingest__node-sq" x="-6" y="-6" width="12" height="12" rx="1" />
+                  <text class="ingest__node-label mono" x="0" y="22" text-anchor="middle">
+                    {node.label}
+                  </text>
+                  <text class="ingest__node-tps mono tnum" x="0" y="36" text-anchor="middle">
+                    {node.tps}
+                  </text>
+                </g>
+              ))}
+            </g>
+          ))
+        }
       </svg>
     </div>
 
     {/* --- Lag strip: 5 cells × %-of-budget --- */}
-    <div
-      class="ingest__lag-strip"
-      role="group"
-      aria-label="Per-stage lag as percent of budget"
-    >
-      {lagCells.map((cell) => (
-        <div class:list={['ingest__lag-cell', `ingest__lag-cell--${cell.state}`]}>
-          <span class="ingest__lag-name mono">{cell.name}</span>
-          <div class="ingest__lag-bar" aria-hidden="true">
-            <div
-              class="ingest__lag-fill"
-              style={`--pct:${cell.pct}%`}
-            ></div>
+    <div class="ingest__lag-strip" role="group" aria-label="Per-stage lag as percent of budget">
+      {
+        lagCells.map((cell) => (
+          <div class:list={['ingest__lag-cell', `ingest__lag-cell--${cell.state}`]}>
+            <span class="ingest__lag-name mono">{cell.name}</span>
+            <div class="ingest__lag-bar" aria-hidden="true">
+              <div class="ingest__lag-fill" style={`--pct:${cell.pct}%`} />
+            </div>
+            <span class="ingest__lag-pct mono tnum">{cell.pct}%</span>
           </div>
-          <span class="ingest__lag-pct mono tnum">{cell.pct}%</span>
-        </div>
-      ))}
+        ))
+      }
     </div>
   </div>
 </section>
@@ -321,7 +290,7 @@ for (let s = 0; s < STAGES.length - 1; s++) {
   .ingest {
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
     padding-block: var(--sp-6);
   }
   .ingest__container {
@@ -365,7 +334,9 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     margin: 0.4rem 0 0.5rem;
     line-height: 1.2;
   }
-  .ingest__title-em { color: var(--c-amber-light); }
+  .ingest__title-em {
+    color: var(--c-amber-light);
+  }
   .ingest__cursor {
     display: inline-block;
     color: var(--c-amber-light);
@@ -373,8 +344,14 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     animation: ingest-blink 1.05s steps(2, jump-none) infinite;
   }
   @keyframes ingest-blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
   }
   .ingest__caption {
     color: rgba(250, 250, 250, 0.62);
@@ -425,7 +402,7 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     margin-block: var(--sp-4);
     background: var(--c-bg-2);
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--c-white-mist);
     padding: var(--sp-3);
   }
   .ingest__svg {
@@ -455,7 +432,9 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     fill: var(--c-amber);
     stroke: var(--c-amber-light);
     stroke-width: 0.5;
-    transition: filter 240ms ease, transform 240ms ease;
+    transition:
+      filter 240ms ease,
+      transform 240ms ease;
   }
   .ingest__node:hover .ingest__node-sq {
     filter: brightness(1.3);
@@ -478,7 +457,7 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     margin-top: var(--sp-4);
     padding: var(--sp-3);
     background: var(--c-bg-2);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--c-white-mist);
     border-radius: var(--radius-md);
   }
   .ingest__lag-cell {
@@ -491,9 +470,15 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     background: var(--c-tape-2);
     border-left: 3px solid transparent;
   }
-  .ingest__lag-cell--green { border-left-color: var(--c-data-positive); }
-  .ingest__lag-cell--amber { border-left-color: var(--c-amber); }
-  .ingest__lag-cell--red   { border-left-color: var(--c-data-negative); }
+  .ingest__lag-cell--green {
+    border-left-color: var(--c-data-positive);
+  }
+  .ingest__lag-cell--amber {
+    border-left-color: var(--c-amber);
+  }
+  .ingest__lag-cell--red {
+    border-left-color: var(--c-data-negative);
+  }
 
   .ingest__lag-name {
     font-size: 9px;
@@ -519,32 +504,52 @@ for (let s = 0; s < STAGES.length - 1; s++) {
      we remove the bright pass-green / fail-red. Status becomes a single
      amber channel: 3 alpha steps (full = on-time, half = amber, low =
      faint ink). Reads as "pipeline health" without the traffic light. */
-  .ingest__lag-cell--green .ingest__lag-fill { background: rgba(232, 178, 32, 0.85); }
-  .ingest__lag-cell--amber .ingest__lag-fill { background: rgba(232, 178, 32, 0.55); }
-  .ingest__lag-cell--red   .ingest__lag-fill { background: rgba(232, 178, 32, 0.25); }
+  .ingest__lag-cell--green .ingest__lag-fill {
+    background: var(--c-amberl-mid);
+  }
+  .ingest__lag-cell--amber .ingest__lag-fill {
+    background: var(--c-amberl-mid);
+  }
+  .ingest__lag-cell--red .ingest__lag-fill {
+    background: var(--c-amberl-soft);
+  }
   .ingest__lag-pct {
     font-size: 11px;
     color: var(--ink-on-tape);
-    font-weight: 700;
+    font-weight: 600;
     min-width: 32px;
     text-align: right;
   }
 
   /* --- Reduced motion --- */
   @media (prefers-reduced-motion: reduce) {
-    .ingest__cursor { animation: none; opacity: 1; }
+    .ingest__cursor {
+      animation: none;
+      opacity: 1;
+    }
     .ingest__lag-fill,
     .ingest__node-sq,
-    .ingest__chart-rect { transition: none; }
+    .ingest__chart-rect {
+      transition: none;
+    }
   }
 
   /* --- Responsive --- */
   @media (max-width: 760px) {
-    .ingest__head { flex-direction: column; align-items: flex-start; }
-    .ingest__head-right { align-items: flex-start; }
-    .ingest__lag-strip { grid-template-columns: 1fr 1fr; }
+    .ingest__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .ingest__head-right {
+      align-items: flex-start;
+    }
+    .ingest__lag-strip {
+      grid-template-columns: 1fr 1fr;
+    }
   }
   @media (max-width: 460px) {
-    .ingest__lag-strip { grid-template-columns: 1fr; }
+    .ingest__lag-strip {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

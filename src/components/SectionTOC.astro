@@ -54,7 +54,11 @@ const items = explicitItems ?? [];
                   data-toc-href={it.href ? undefined : `#${it.id}`}
                 >
                   {it.label}
-                  {it.trailing && <span class="toc__trailing" aria-hidden="true">{it.trailing}</span>}
+                  {it.trailing && (
+                    <span class="toc__trailing" aria-hidden="true">
+                      {it.trailing}
+                    </span>
+                  )}
                 </a>
               </li>
             ))
@@ -91,7 +95,7 @@ const items = explicitItems ?? [];
   .toc {
     position: sticky;
     top: var(--nav-h);
-    z-index: 30;
+    z-index: var(--z-sticky);
     background: var(--c-tape);
     border-bottom: var(--border);
   }
@@ -140,8 +144,11 @@ const items = explicitItems ?? [];
     background: var(--c-bg-2);
   }
   .toc__link--active {
-    color: var(--c-primary-2-deep);
-    background: var(--c-warn-soft);
+    /* v6.11.6 — was var(--c-warn-soft), a signal token. Now uses the
+       dedicated --c-active-surface so real warning chips elsewhere
+       carry unique semantics. */
+    color: var(--c-active-ink);
+    background: var(--c-active-surface);
     font-weight: 600;
   }
   /* v6.1 — external TOC entries (cross-page links like
@@ -163,16 +170,9 @@ const items = explicitItems ?? [];
     margin-left: 0.25em;
     opacity: 0.7;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .toc__link--active {
-      color: var(--c-amber);
-      background: var(--c-warn-soft);
-    }
-  }
-  :root[data-theme='dark'] .toc__link--active {
-    color: var(--c-amber);
-    background: var(--c-warn-soft);
-  }
+  /* v6.11.6 — removed dead prefers-color-scheme + [data-theme='dark']
+     selectors. The site is one consistent palette (single tape bg);
+     these rules were aspirational CSS bloat. */
   .toc__skeleton {
     color: var(--c-ink-3);
     font-size: var(--fs-xs);

@@ -45,10 +45,10 @@ const groupActive = items.some((it) => isActive(it.href));
 
 {
   mode === 'dropdown' ? (
-    /* v6.10.17 — a11y: drop role="menu"/role="menuitem" (anti-pattern
-       outside true menu widgets; forces "application mode" in AT and
-       bypasses virtual cursor link-list navigation). <details>/<ul>
-       semantics are enough. */
+    // v6.10.17 — a11y: drop role="menu"/role="menuitem" (anti-pattern
+    //  outside true menu widgets; forces "application mode" in AT and
+    //  bypasses virtual cursor link-list navigation). details + ul
+    //  semantics are enough.
     <details class:list={['nav-more', className]} data-active={groupActive ? 'true' : undefined}>
       <summary class="nav-more__summary" aria-label={`${label} navigation links`}>
         <span>{label}</span>
@@ -82,9 +82,7 @@ const groupActive = items.some((it) => isActive(it.href));
     </details>
   ) : (
     <div class:list={['nav-more__flat', className]} role="group" aria-label={label}>
-      {showLabelInline && (
-        <div class="nav-more__flat-head mono">{label}</div>
-      )}
+      {showLabelInline && <div class="nav-more__flat-head mono">{label}</div>}
       <ul role="list">
         {items.map(({ href, label }) => (
           <li>
@@ -102,7 +100,7 @@ const groupActive = items.some((it) => isActive(it.href));
 }
 
 <style>
-  /* === DESKTOP DROPDOWN === */
+  /* DESKTOP DROPDOWN */
   .nav-more {
     position: relative;
     display: inline-flex;
@@ -154,7 +152,7 @@ const groupActive = items.some((it) => isActive(it.href));
     border: var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-lg);
-    z-index: 60;
+    z-index: var(--z-nav-more);
     display: flex;
     flex-direction: column;
     gap: 1px;
@@ -210,9 +208,9 @@ const groupActive = items.some((it) => isActive(it.href));
     letter-spacing: 0.12em;
     color: var(--c-amber);
     font-weight: 600;
-    padding: 0.5rem 0 0.4rem;  /* v6.10.12 WCAG AA bump */
+    padding: 0.5rem 0 0.4rem; /* v6.10.12 WCAG AA bump */
     margin-top: 0.4rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--c-white-haze);
   }
   .nav-more__flat .nav-more__link {
     padding: 0.625rem 0;
@@ -236,5 +234,3 @@ const groupActive = items.some((it) => isActive(it.href));
     }
   }
 </style>
-</content>
-</invoke>

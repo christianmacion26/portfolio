@@ -35,59 +35,305 @@ interface NewsBurstEvent {
   title: string;
   formula: string;
   signal:
-    | 'long-vol'
-    | 'short-vol'
-    | 'flatten'
-    | 'steepen'
-    | 'carry'
-    | 'breakeven-watch'
-    | 'regime-shift';
+    'long-vol' | 'short-vol' | 'flatten' | 'steepen' | 'carry' | 'breakeven-watch' | 'regime-shift';
 }
 
 const events: NewsBurstEvent[] = [
   // Digos — home base, 4 events.
-  { slug: 'digos-ph-inflation',     city: 'Digos',     category: 'macro',     title: 'PH inflation print, in-line with consensus', formula: '|ε| ≈ 1.1σ',                 signal: 'breakeven-watch' },
-  { slug: 'digos-psei-rebalance',   city: 'Digos',     category: 'equities',  title: 'PSEi index rebalance, semi-annual review',  formula: 'Δweight ≈ 0.18%',           signal: 'flatten' },
-  { slug: 'digos-php-cross',        city: 'Digos',     category: 'fx',        title: 'PHP crosses 58/USD, central-bank fix window', formula: 'ΔUSD/PHP ≈ 0.4%',          signal: 'carry' },
-  { slug: 'digos-ph10y-auction',    city: 'Digos',     category: 'rates',     title: 'PH 10Y auction, bid-cover 3.1×',            formula: 'tail = 1.2 bp',             signal: 'carry' },
+  {
+    slug: 'digos-ph-inflation',
+    city: 'Digos',
+    category: 'macro',
+    title: 'PH inflation print, in-line with consensus',
+    formula: '|ε| ≈ 1.1σ',
+    signal: 'breakeven-watch',
+  },
+  {
+    slug: 'digos-psei-rebalance',
+    city: 'Digos',
+    category: 'equities',
+    title: 'PSEi index rebalance, semi-annual review',
+    formula: 'Δweight ≈ 0.18%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'digos-php-cross',
+    city: 'Digos',
+    category: 'fx',
+    title: 'PHP crosses 58/USD, central-bank fix window',
+    formula: 'ΔUSD/PHP ≈ 0.4%',
+    signal: 'carry',
+  },
+  {
+    slug: 'digos-ph10y-auction',
+    city: 'Digos',
+    category: 'rates',
+    title: 'PH 10Y auction, bid-cover 3.1×',
+    formula: 'tail = 1.2 bp',
+    signal: 'carry',
+  },
 
   // APAC — 6 cities × 2 events.
-  { slug: 'sgd-neer-anchor',        city: 'Singapore', category: 'fx',        title: 'SGD NEER policy-band re-anchoring',         formula: 'ΔNEER ≈ −0.6%',             signal: 'carry' },
-  { slug: 'sg-nodx-monthly',        city: 'Singapore', category: 'data',      title: 'Non-oil domestic exports, monthly',         formula: 'ΔNODX ≈ 4.2% MoM',          signal: 'flatten' },
-  { slug: 'boj-policy-hold',        city: 'Tokyo',     category: 'rates',     title: 'BoJ policy decision, hold unanimous',       formula: 'p(hold) ≈ 0.78',            signal: 'steepen' },
-  { slug: 'jpy-intervention',       city: 'Tokyo',     category: 'fx',        title: 'Yen crosses 152/USD, verbal intervention',  formula: '|z| ≈ 1.4σ',                signal: 'short-vol' },
-  { slug: 'hibor-1m-fix',          city: 'Hong Kong', category: 'equities',  title: 'HIBOR fixing, 1m at 4.85%',                  formula: 'ΔHIBOR ≈ +12 bp',           signal: 'carry' },
-  { slug: 'hk-mega-ipo',            city: 'Hong Kong', category: 'ipo',       title: 'Mega-IPO bookbuild, demand-cover 4.2×',     formula: 'pricing 4 bp inside range', signal: 'long-vol' },
-  { slug: 'cn-trade-balance',      city: 'Shanghai',  category: 'data',      title: 'Trade-balance release, surplus $68 B',      formula: 'Δcopper ≈ 0.6%/$B',        signal: 'flatten' },
-  { slug: 'pboc-mlf-1y',           city: 'Shanghai',  category: 'rates',     title: 'PBoC MLF, 1Y rate unchanged',                formula: 'ΔMLF ≈ 0 bp',               signal: 'carry' },
-  { slug: 'kospi-earnings-tech',   city: 'Seoul',     category: 'equities',  title: 'KOSPI earnings bellwether, tech print',     formula: '|z_post| ≈ 1.5×',           signal: 'long-vol' },
-  { slug: 'krw-exporter-bid',      city: 'Seoul',     category: 'fx',        title: 'KRW crosses 1380/USD, exporter bid',         formula: 'Δcarry ≈ −18 bp',           signal: 'carry' },
-  { slug: 'em-sov-coupon-10y',     city: 'Mumbai',    category: 'credit',    title: 'EM sovereign coupon, 10Y external',         formula: 'roll-down ≈ 18 bp',         signal: 'carry' },
-  { slug: 'nifty-rebalance',       city: 'Mumbai',    category: 'equities',  title: 'Nifty 50 rebalance, weight shift',           formula: 'Δweight ≈ 0.22%',          signal: 'flatten' },
-  { slug: 'iron-ore-weekly',       city: 'Sydney',    category: 'commod',    title: 'Iron-ore export, weekly port data',          formula: 'Δiron ≈ ±1.4%',             signal: 'flatten' },
-  { slug: 'rba-minutes-hawk',      city: 'Sydney',    category: 'rates',     title: 'RBA minutes, hawkish tilt',                  formula: 'Δy_2y ≈ +6 bp',             signal: 'steepen' },
-  { slug: 'ph-gdp-q2',             city: 'Manila',    category: 'data',      title: 'PH GDP Q2 advance estimate, +6.0% YoY',       formula: 'surprise ≈ +0.3%',          signal: 'flatten' },
-  { slug: 'bsp-policy-hold',       city: 'Manila',    category: 'rates',     title: 'BSP overnight rate decision, hold',         formula: 'p(hold) ≈ 0.86',            signal: 'carry' },
+  {
+    slug: 'sgd-neer-anchor',
+    city: 'Singapore',
+    category: 'fx',
+    title: 'SGD NEER policy-band re-anchoring',
+    formula: 'ΔNEER ≈ −0.6%',
+    signal: 'carry',
+  },
+  {
+    slug: 'sg-nodx-monthly',
+    city: 'Singapore',
+    category: 'data',
+    title: 'Non-oil domestic exports, monthly',
+    formula: 'ΔNODX ≈ 4.2% MoM',
+    signal: 'flatten',
+  },
+  {
+    slug: 'boj-policy-hold',
+    city: 'Tokyo',
+    category: 'rates',
+    title: 'BoJ policy decision, hold unanimous',
+    formula: 'p(hold) ≈ 0.78',
+    signal: 'steepen',
+  },
+  {
+    slug: 'jpy-intervention',
+    city: 'Tokyo',
+    category: 'fx',
+    title: 'Yen crosses 152/USD, verbal intervention',
+    formula: '|z| ≈ 1.4σ',
+    signal: 'short-vol',
+  },
+  {
+    slug: 'hibor-1m-fix',
+    city: 'Hong Kong',
+    category: 'equities',
+    title: 'HIBOR fixing, 1m at 4.85%',
+    formula: 'ΔHIBOR ≈ +12 bp',
+    signal: 'carry',
+  },
+  {
+    slug: 'hk-mega-ipo',
+    city: 'Hong Kong',
+    category: 'ipo',
+    title: 'Mega-IPO bookbuild, demand-cover 4.2×',
+    formula: 'pricing 4 bp inside range',
+    signal: 'long-vol',
+  },
+  {
+    slug: 'cn-trade-balance',
+    city: 'Shanghai',
+    category: 'data',
+    title: 'Trade-balance release, surplus $68 B',
+    formula: 'Δcopper ≈ 0.6%/$B',
+    signal: 'flatten',
+  },
+  {
+    slug: 'pboc-mlf-1y',
+    city: 'Shanghai',
+    category: 'rates',
+    title: 'PBoC MLF, 1Y rate unchanged',
+    formula: 'ΔMLF ≈ 0 bp',
+    signal: 'carry',
+  },
+  {
+    slug: 'kospi-earnings-tech',
+    city: 'Seoul',
+    category: 'equities',
+    title: 'KOSPI earnings bellwether, tech print',
+    formula: '|z_post| ≈ 1.5×',
+    signal: 'long-vol',
+  },
+  {
+    slug: 'krw-exporter-bid',
+    city: 'Seoul',
+    category: 'fx',
+    title: 'KRW crosses 1380/USD, exporter bid',
+    formula: 'Δcarry ≈ −18 bp',
+    signal: 'carry',
+  },
+  {
+    slug: 'em-sov-coupon-10y',
+    city: 'Mumbai',
+    category: 'credit',
+    title: 'EM sovereign coupon, 10Y external',
+    formula: 'roll-down ≈ 18 bp',
+    signal: 'carry',
+  },
+  {
+    slug: 'nifty-rebalance',
+    city: 'Mumbai',
+    category: 'equities',
+    title: 'Nifty 50 rebalance, weight shift',
+    formula: 'Δweight ≈ 0.22%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'iron-ore-weekly',
+    city: 'Sydney',
+    category: 'commod',
+    title: 'Iron-ore export, weekly port data',
+    formula: 'Δiron ≈ ±1.4%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'rba-minutes-hawk',
+    city: 'Sydney',
+    category: 'rates',
+    title: 'RBA minutes, hawkish tilt',
+    formula: 'Δy_2y ≈ +6 bp',
+    signal: 'steepen',
+  },
+  {
+    slug: 'ph-gdp-q2',
+    city: 'Manila',
+    category: 'data',
+    title: 'PH GDP Q2 advance estimate, +6.0% YoY',
+    formula: 'surprise ≈ +0.3%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'bsp-policy-hold',
+    city: 'Manila',
+    category: 'rates',
+    title: 'BSP overnight rate decision, hold',
+    formula: 'p(hold) ≈ 0.86',
+    signal: 'carry',
+  },
 
   // EMEA — 4 cities × 2 events.
-  { slug: 'ecb-press-conference',  city: 'Frankfurt', category: 'rates',     title: 'ECB press conference, verbal forward-guidance', formula: 'dσ/dword ≈ 1.4 bp',      signal: 'long-vol' },
-  { slug: 'bund-10y-weak-cover',   city: 'Frankfurt', category: 'credit',    title: 'Bunds 10Y auction, weak bid-cover',         formula: 'tail = 1.8 bp',             signal: 'flatten' },
-  { slug: 'smi-rebalance',         city: 'Zurich',    category: 'macro',     title: 'SMI index rebalance, defensive tilt',       formula: 'Δweight ≈ 0.15%',          signal: 'flatten' },
-  { slug: 'sx5e-vov-gap',          city: 'Zurich',    category: 'vol',       title: 'SX5E vol-of-vol, gap-widening',             formula: 'VRP ≈ 4σ',                  signal: 'short-vol' },
-  { slug: 'gilts-10y-strong',      city: 'London',    category: 'rates',     title: 'Gilts 10Y auction, strong cover',           formula: 'tail = 0.6 bp',             signal: 'steepen' },
-  { slug: 'brent-84-framework',    city: 'London',    category: 'commod',    title: 'Brent settles at $84, framework talks',     formula: 'Δbrent ≈ ±1.1%',           signal: 'long-vol' },
-  { slug: 'dxb-energy-framework',  city: 'Dubai',     category: 'commodities', title: 'Energy-export framework talks, headline tone', formula: 'β ≈ 0.62',              signal: 'long-vol' },
-  { slug: 'aed-peg-review',        city: 'Dubai',     category: 'rates',     title: 'UAE dirham peg, USD-anchored review',       formula: 'ΔUSD/AED ≈ 0 bp',          signal: 'carry' },
+  {
+    slug: 'ecb-press-conference',
+    city: 'Frankfurt',
+    category: 'rates',
+    title: 'ECB press conference, verbal forward-guidance',
+    formula: 'dσ/dword ≈ 1.4 bp',
+    signal: 'long-vol',
+  },
+  {
+    slug: 'bund-10y-weak-cover',
+    city: 'Frankfurt',
+    category: 'credit',
+    title: 'Bunds 10Y auction, weak bid-cover',
+    formula: 'tail = 1.8 bp',
+    signal: 'flatten',
+  },
+  {
+    slug: 'smi-rebalance',
+    city: 'Zurich',
+    category: 'macro',
+    title: 'SMI index rebalance, defensive tilt',
+    formula: 'Δweight ≈ 0.15%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'sx5e-vov-gap',
+    city: 'Zurich',
+    category: 'vol',
+    title: 'SX5E vol-of-vol, gap-widening',
+    formula: 'VRP ≈ 4σ',
+    signal: 'short-vol',
+  },
+  {
+    slug: 'gilts-10y-strong',
+    city: 'London',
+    category: 'rates',
+    title: 'Gilts 10Y auction, strong cover',
+    formula: 'tail = 0.6 bp',
+    signal: 'steepen',
+  },
+  {
+    slug: 'brent-84-framework',
+    city: 'London',
+    category: 'commod',
+    title: 'Brent settles at $84, framework talks',
+    formula: 'Δbrent ≈ ±1.1%',
+    signal: 'long-vol',
+  },
+  {
+    slug: 'dxb-energy-framework',
+    city: 'Dubai',
+    category: 'commodities',
+    title: 'Energy-export framework talks, headline tone',
+    formula: 'β ≈ 0.62',
+    signal: 'long-vol',
+  },
+  {
+    slug: 'aed-peg-review',
+    city: 'Dubai',
+    category: 'rates',
+    title: 'UAE dirham peg, USD-anchored review',
+    formula: 'ΔUSD/AED ≈ 0 bp',
+    signal: 'carry',
+  },
 
   // Americas — 4 cities × 2 events (× 3 events in New York).
-  { slug: 'cpi-headline-print',    city: 'New York',  category: 'data',      title: 'Headline CPI release, +0.2% MoM',            formula: '|ε| ≈ 1.4σ',                signal: 'long-vol' },
-  { slug: 'mega-cap-tech-earnings',city: 'New York',  category: 'equities',  title: 'Mega-cap tech earnings, post-print drift',  formula: '|z_post| ≈ 1.5×',           signal: 'long-vol' },
-  { slug: 'cad-employment-surprise',city: 'Toronto',   category: 'data',      title: 'CAD employment, surprise +25k',             formula: 'ΔP(recession) ≈ ±18%',      signal: 'flatten' },
-  { slug: 'tsx-rebalance-energy',  city: 'Toronto',   category: 'equities',  title: 'TSX index rebalance, energy weight up',    formula: 'Δweight ≈ 0.20%',          signal: 'flatten' },
-  { slug: 'bcb-selic-cut-50',      city: 'Sao Paulo', category: 'rates',     title: 'BCB Selic decision, cut 50 bp',             formula: 'ΔSelic ≈ −50 bp',           signal: 'steepen' },
-  { slug: 'brl-fiscal-risk',       city: 'Sao Paulo', category: 'fx',        title: 'BRL crosses 5.10/USD, fiscal-headline risk', formula: 'Δcarry ≈ −24 bp',          signal: 'flatten' },
-  { slug: 'ny-mna-deal',           city: 'New York',  category: 'm&a',       title: 'All-stock deal announced, $42 B EV',        formula: 'arb-spread ≈ 1.8%',         signal: 'flatten' },
-  { slug: 'ny-tech-ipo-launch',    city: 'New York',  category: 'ipo',       title: 'Tech IPO launch, range $34-38',             formula: 'demand-cover ≈ 4.2×',       signal: 'long-vol' },
+  {
+    slug: 'cpi-headline-print',
+    city: 'New York',
+    category: 'data',
+    title: 'Headline CPI release, +0.2% MoM',
+    formula: '|ε| ≈ 1.4σ',
+    signal: 'long-vol',
+  },
+  {
+    slug: 'mega-cap-tech-earnings',
+    city: 'New York',
+    category: 'equities',
+    title: 'Mega-cap tech earnings, post-print drift',
+    formula: '|z_post| ≈ 1.5×',
+    signal: 'long-vol',
+  },
+  {
+    slug: 'cad-employment-surprise',
+    city: 'Toronto',
+    category: 'data',
+    title: 'CAD employment, surprise +25k',
+    formula: 'ΔP(recession) ≈ ±18%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'tsx-rebalance-energy',
+    city: 'Toronto',
+    category: 'equities',
+    title: 'TSX index rebalance, energy weight up',
+    formula: 'Δweight ≈ 0.20%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'bcb-selic-cut-50',
+    city: 'Sao Paulo',
+    category: 'rates',
+    title: 'BCB Selic decision, cut 50 bp',
+    formula: 'ΔSelic ≈ −50 bp',
+    signal: 'steepen',
+  },
+  {
+    slug: 'brl-fiscal-risk',
+    city: 'Sao Paulo',
+    category: 'fx',
+    title: 'BRL crosses 5.10/USD, fiscal-headline risk',
+    formula: 'Δcarry ≈ −24 bp',
+    signal: 'flatten',
+  },
+  {
+    slug: 'ny-mna-deal',
+    city: 'New York',
+    category: 'm&a',
+    title: 'All-stock deal announced, $42 B EV',
+    formula: 'arb-spread ≈ 1.8%',
+    signal: 'flatten',
+  },
+  {
+    slug: 'ny-tech-ipo-launch',
+    city: 'New York',
+    category: 'ipo',
+    title: 'Tech IPO launch, range $34-38',
+    formula: 'demand-cover ≈ 4.2×',
+    signal: 'long-vol',
+  },
 ];
 ---
 
@@ -104,12 +350,7 @@ const events: NewsBurstEvent[] = [
             <a href={`/research#event-${e.slug}`}>
               <span class="earth-feed__city">{e.city} ·</span>
               <span class="earth-feed__head-text">{e.title}</span>
-              <span
-                class:list={[
-                  'earth-feed__signal',
-                  `earth-feed__signal--${e.signal}`,
-                ]}
-              >
+              <span class:list={['earth-feed__signal', `earth-feed__signal--${e.signal}`]}>
                 {e.signal}
               </span>
             </a>
@@ -213,11 +454,11 @@ const events: NewsBurstEvent[] = [
     color: var(--c-accent-cyan);
   }
   .earth-feed__signal--steepen {
-    background: rgba(232, 178, 32, 0.12);
+    background: var(--c-amberl-mist);
     color: var(--c-amber-light);
   }
   .earth-feed__signal--carry {
-    background: rgba(232, 178, 32, 0.10);
+    background: var(--c-amberl-soft);
     color: var(--c-amber-light);
   }
   .earth-feed__signal--breakeven-watch,

@@ -35,7 +35,7 @@ interface Props {
   event: Event;
   buildDate?: string;
 }
-const { event, buildDate = '2026-07-10' } = Astro.props;
+const { event } = Astro.props;
 const e = event.data;
 const impliedCents = Math.round(e.impliedPx * 100);
 const fairCents = Math.round((e.impliedPx + e.edge) * 100);
@@ -129,26 +129,24 @@ const gradId = `card-grad-${event.id.replace(/[^a-z0-9]/gi, '')}`;
   >
     <defs>
       <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="var(--c-primary-2)" stop-opacity="0.30" />
-        <stop offset="100%" stop-color="var(--c-primary-2)" stop-opacity="0" />
+        <stop offset="0%" stop-color="var(--c-primary-2)" stop-opacity="0.30"></stop>
+        <stop offset="100%" stop-color="var(--c-primary-2)" stop-opacity="0"></stop>
       </linearGradient>
     </defs>
-    <path d={areaD} fill={`url(#${gradId})`} />
+    <path d={areaD} fill={`url(#${gradId})`}></path>
     <path
       d={pathD}
       fill="none"
       stroke="var(--c-primary-2)"
       stroke-width="1.4"
       stroke-linejoin="round"
-      stroke-linecap="round"
-    />
+      stroke-linecap="round"></path>
     {/* terminal fair-value anchor */}
     <circle
       cx={PADL + innerW}
       cy={PADT + innerH * (1 - (target - yLow) / range)}
       r="2.4"
-      fill="var(--c-primary-2-light)"
-    />
+      fill="var(--c-primary-2-light)"></circle>
   </svg>
 
   <p class="card__evidence">{e.evidence}</p>
@@ -238,7 +236,7 @@ const gradId = `card-grad-${event.id.replace(/[^a-z0-9]/gi, '')}`;
   }
   .card__cents {
     font-size: 1.7rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1;
     color: var(--c-ink);
     font-variant-numeric: tabular-nums;
@@ -259,7 +257,7 @@ const gradId = `card-grad-${event.id.replace(/[^a-z0-9]/gi, '')}`;
   }
   .card__edge {
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 600;
     padding: 4px 8px;
     border-radius: 3px;
     white-space: nowrap;

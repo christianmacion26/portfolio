@@ -9,6 +9,8 @@
  * All three render via the same renderFeed() with different filters.
  */
 import { getCollection } from 'astro:content';
+import { profile } from '@utils/profile';
+import { buildYear } from '@utils/build-stamp';
 
 export type FeedKind = 'project' | 'solution';
 export type FeedStream = 'all' | 'project' | 'solution';
@@ -26,7 +28,9 @@ export interface FeedItem {
 // tag: URI per RFC 4151 — stable, persistent, unique.
 // Format: tag:<authority>,<date>:<specific>.
 // Use the deployment host (PUBLIC_SITE_URL on mirror builds, GH Pages default
-// otherwise) so feed `<id>` stays consistent with `<link rel="self">`.
+// otherwise) so feed `<id>` stays consistent with `<link rel="self">`. The
+// year comes from `buildYear()` (BUILD_DATE env var, fixed fallback) per
+// Standing Order §9 — `new Date().getFullYear()` would be non-deterministic.
 const _host = (() => {
   try {
     return new URL(import.meta.env.PUBLIC_SITE_URL ?? 'https://christianmacion26.github.io').host;
@@ -34,7 +38,7 @@ const _host = (() => {
     return 'christianmacion26.github.io';
   }
 })();
-export const PORTFOLIO_TAG_AUTHORITY = `${_host},${new Date().getFullYear()}`;
+export const PORTFOLIO_TAG_AUTHORITY = `${_host},${buildYear()}`;
 
 function toIsoDate(d: Date | string | undefined, fallback: string): string {
   if (!d) return fallback;
@@ -110,10 +114,10 @@ export function renderFeed(opts: RenderOpts): string {
     <link href="${it.url}" rel="alternate" type="text/html" />
     <updated>${it.updated}</updated>
     <summary type="text">${escapeXml(it.summary)}</summary>${
-        it.tags.length
-          ? `\n    ${it.tags.map((t) => `<category term="${escapeXml(t)}" />`).join('\n    ')}`
-          : ''
-      }
+      it.tags.length
+        ? `\n    ${it.tags.map((t) => `<category term="${escapeXml(t)}" />`).join('\n    ')}`
+        : ''
+    }
   </entry>`,
     )
     .join('\n');
@@ -127,8 +131,8 @@ export function renderFeed(opts: RenderOpts): string {
   <link href="${baseUrl}/" rel="alternate" type="text/html" />
   <updated>${now}</updated>
   <author>
-    <name>Christian T. Macion</name>
-    <email>christianmacion26@gmail.com</email>
+    <name>${escapeXml(profile.fullName)}</name>
+    <email>${escapeXml(profile.contact.email)}</email>
     <uri>${baseUrl}/</uri>
   </author>
 ${entries}

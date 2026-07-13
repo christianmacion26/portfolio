@@ -4,14 +4,33 @@
  * schema.org JSON-LD, and the resume download link.
  */
 
+// Stats are the canonical source for site-wide numerics. titles.secondary
+// derives its 4 chrome figures (aiAgentCount / evalGates / locPython /
+// certCount) from these values — so flipping any stat propagates to the
+// default <meta description> + JSON-LD description + OG/Twitter card
+// description simultaneously. No developer grep required.
+const stats = {
+  certCount: '102',
+  ageMonths: '11', // 102 certs in 11 months
+  aiAgentCount: '11', // orchestrator + workers
+  locPython: '76.5k', // ~76,500 LOC
+  evalGates: '31', // 31-gate evaluation harness
+  pagesBuilt: '84', // built pages — update on route add/remove
+} as const;
+
 export const profile = {
   fullName: 'Christian T. Macion, CTA®',
   shortName: 'Christian Macion',
   initials: 'CM',
   titles: {
     primary: 'Quantitative Researcher · AI Engineer',
-    secondary:
-      'Christian T. Macion, CTA® — Quant Researcher and AI Engineer. 11-agent research platform, 31-gate statistical eval harness, 76.5k LOC Python, 102 professional certifications. NDA-safe by construction.',
+    // v6.10.47 — compact form for the Nav brand slot (36px logo). Uses
+    // 'Quant' (not 'Quantitative') so the word fits the available width
+    // without ellipsis at the smallest desktop breakpoint. Kept distinct
+    // from `primary` so the visual hierarchy at H1 size still reads
+    // 'Quantitative Researcher' in full.
+    short: 'Quant Researcher · AI Engineer',
+    secondary: `Christian T. Macion, CTA® — Quant Researcher and AI Engineer. ${stats.aiAgentCount}-agent research platform, ${stats.evalGates}-gate statistical eval harness, ${stats.locPython} LOC Python, ${stats.certCount} professional certifications. NDA-safe by construction.`,
     tagline: 'I do solutions. Eval-first. NDA-clean.',
   },
   headshot: {
@@ -60,7 +79,7 @@ export const profile = {
     'University of Southeastern Philippines (USeP) — units',
   ],
   awards: [
-    '102 certificates (2024-12 → 2026-05)',
+    `${stats.certCount} certificates (2024-12 → 2026-05)`,
     'CTA® (Certified Technical Analyst, Society of Technical Analysts · cert #260197 · Jan 2026)',
     'Galactic Problem Solver · NASA Space Apps Challenge 2024 (Zurich cohort)',
     'AI for the Modern Workforce · Ateneo de Davao + US Embassy · Nov 8 2025',
@@ -71,12 +90,5 @@ export const profile = {
     hours: '30 hrs/wk',
     mode: 'remote',
   },
-  stats: {
-    certCount: '102',
-    ageMonths: '11', // 102 certs in 11 months
-    aiAgentCount: '11', // orchestrator + workers
-    locPython: '76.5k', // ~76,500 LOC
-    evalGates: '31', // 31-gate evaluation harness
-    pagesBuilt: '84', // built pages — update on route add/remove
-  },
+  stats,
 } as const;

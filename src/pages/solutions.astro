@@ -11,22 +11,28 @@ import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
 import SectionTOC from '@components/SectionTOC.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 import { profile } from '@utils/profile';
 import VoiceLine from '@components/VoiceLine.astro';
 
-const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
-const aiSolutions = solutions.filter((s) => s.data.lane === 'ai');
-const quantSolutions = solutions.filter((s) => s.data.lane === 'quant');
-const eduSolutions = solutions.filter(
+type SolutionEntry = CollectionEntry<'solution'>;
+const allSolutions: SolutionEntry[] = await getCollection('solution');
+const solutions = allSolutions.sort((a, b) => a.data.order - b.data.order);
+const aiSolutions: SolutionEntry[] = solutions.filter((s) => s.data.lane === 'ai');
+const quantSolutions: SolutionEntry[] = solutions.filter((s) => s.data.lane === 'quant');
+const eduSolutions: SolutionEntry[] = solutions.filter(
   (s) => s.data.lane === 'education' || s.data.lane === 'systems',
-);---
+);
+---
 
 <BaseLayout
   title="Solutions"
   description="Selected case studies. Problem → approach → evidence → outcome → proof. NDA-safe, public-data reproducible."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Solutions", href: "/solutions" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Solutions', href: '/solutions' },
+  ]}
 >
   <header class="solutions-head">
     <div class="container">
@@ -74,14 +80,24 @@ const eduSolutions = solutions.filter(
 
       <div class="solutions-head__stats">
         <Stat value={String(solutions.length)} label="solutions shipped" size="md" />
-        <Stat value={profile.stats.certCount} label="professional certs" sub="11-month arc" size="md" />
+        <Stat
+          value={profile.stats.certCount}
+          label="professional certs"
+          sub={`${profile.stats.ageMonths}-month arc`}
+          size="md"
+        />
         <Stat
           value={profile.stats.locPython}
           label="LOC light-dep Python"
           sub="numpy/pandas/boto3"
           size="md"
         />
-        <Stat value={profile.stats.evalGates} label="eval gates" sub="G1–G31 statistical" size="md" />
+        <Stat
+          value={profile.stats.evalGates}
+          label="eval gates"
+          sub="G1–G31 statistical"
+          size="md"
+        />
       </div>
     </div>
   </header>
@@ -89,7 +105,7 @@ const eduSolutions = solutions.filter(
   <TrustStrip variant="tape" />
 
   <div class="container">
-    <ReadMeta minutes={9} updatedIso="2026-07-09" href={path('/proof')} />
+    <ReadMeta minutes={9} href={path('/proof')} />
   </div>
 
   <SectionTOC
@@ -129,7 +145,7 @@ const eduSolutions = solutions.filter(
               <div class="sol-card__row">
                 <div class="sol-card__row-label">Evidence</div>
                 <ul class="sol-card__evidence mono">
-                  {s.data.evidence.map((e) => (
+                  {s.data.evidence.map((e: string) => (
                     <li>{e}</li>
                   ))}
                 </ul>
@@ -141,14 +157,14 @@ const eduSolutions = solutions.filter(
               <div class="sol-card__row">
                 <div class="sol-card__row-label">Proof</div>
                 <ul class="sol-card__proof">
-                  {s.data.proof.map((p) => (
+                  {s.data.proof.map((p: string) => (
                     <li>{p}</li>
                   ))}
                 </ul>
               </div>
               {s.data.tags.length > 0 && (
                 <footer class="sol-card__tags">
-                  {s.data.tags.map((t) => (
+                  {s.data.tags.map((t: string) => (
                     <span class="pill">{t}</span>
                   ))}
                 </footer>
@@ -188,7 +204,7 @@ const eduSolutions = solutions.filter(
               <div class="sol-card__row">
                 <div class="sol-card__row-label">Evidence</div>
                 <ul class="sol-card__evidence mono">
-                  {s.data.evidence.map((e) => (
+                  {s.data.evidence.map((e: string) => (
                     <li>{e}</li>
                   ))}
                 </ul>
@@ -200,14 +216,14 @@ const eduSolutions = solutions.filter(
               <div class="sol-card__row">
                 <div class="sol-card__row-label">Proof</div>
                 <ul class="sol-card__proof">
-                  {s.data.proof.map((p) => (
+                  {s.data.proof.map((p: string) => (
                     <li>{p}</li>
                   ))}
                 </ul>
               </div>
               {s.data.tags.length > 0 && (
                 <footer class="sol-card__tags">
-                  {s.data.tags.map((t) => (
+                  {s.data.tags.map((t: string) => (
                     <span class="pill">{t}</span>
                   ))}
                 </footer>
@@ -225,7 +241,9 @@ const eduSolutions = solutions.filter(
         <div class="container">
           <header class="section__head">
             <p class="section__eyebrow">Lane · Education & Outreach</p>
-            <h2 class="section__title" id="edu">Public-facing work.</h2>
+            <h2 class="section__title" id="edu">
+              Public-facing work.
+            </h2>
           </header>
           <div class="sol-grid">
             {eduSolutions.map((s) => (
@@ -247,7 +265,7 @@ const eduSolutions = solutions.filter(
                 <div class="sol-card__row">
                   <div class="sol-card__row-label">Evidence</div>
                   <ul class="sol-card__evidence mono">
-                    {s.data.evidence.map((e) => (
+                    {s.data.evidence.map((e: string) => (
                       <li>{e}</li>
                     ))}
                   </ul>
@@ -259,7 +277,7 @@ const eduSolutions = solutions.filter(
                 <div class="sol-card__row">
                   <div class="sol-card__row-label">Proof</div>
                   <ul class="sol-card__proof">
-                    {s.data.proof.map((p) => (
+                    {s.data.proof.map((p: string) => (
                       <li>{p}</li>
                     ))}
                   </ul>
@@ -283,8 +301,7 @@ const eduSolutions = solutions.filter(
 <style>
   .solutions-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .solutions-head__title {
@@ -296,7 +313,7 @@ const eduSolutions = solutions.filter(
   .solutions-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .solutions-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
@@ -439,8 +456,6 @@ const eduSolutions = solutions.filter(
     height: 5px;
     border-radius: 50%;
     background: var(--c-amber);
-    font-family: var(--ff-mono);
-    font-weight: 700;
   }
   .sol-card__proof {
     list-style: none;
@@ -465,8 +480,6 @@ const eduSolutions = solutions.filter(
     height: 5px;
     border-radius: 50%;
     background: var(--c-amber);
-    font-family: var(--ff-mono);
-    font-weight: 700;
   }
   .sol-card__tags {
     display: flex;

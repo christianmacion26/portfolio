@@ -8,5 +8,6 @@ city: Frankfurt
 source: central-bank press release
 order: 3
 ---
+
 Press conference minutes after the rate decision. Verbal forward-guidance
 clothing tends to move the EUR curve more than the rate change itself.

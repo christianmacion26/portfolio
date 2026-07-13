@@ -12,18 +12,28 @@
 import ProofCard from '@components/ProofCard.astro';
 
 interface Props {
-  title: string;       // e.g. "Finance, Trading & Economics"
-  group: string;       // e.g. "Finance · Trading · Economics"
-  blurb: string;       // 1-line blurb
-  src: string;         // path to flagship image
-  alt: string;         // alt text for the image
-  caption: string;     // shown below the image
-  href: string;        // e.g. /proof/
+  title: string; // e.g. "Finance, Trading & Economics"
+  group: string; // e.g. "Finance · Trading · Economics"
+  blurb: string; // 1-line blurb
+  src: string; // path to flagship image
+  alt: string; // alt text for the image
+  caption: string; // shown below the image
+  href: string; // e.g. /proof/
   aspect?: '3/2' | '4/3' | '16/9' | 'auto';
-  flagship?: boolean;  // default true; visual badge for "Tier-1"
+  flagship?: boolean; // default true; visual badge for "Tier-1"
 }
 
-const { title, group, blurb, src, alt, caption, href, aspect = '3/2', flagship = true } = Astro.props;
+const {
+  title,
+  group,
+  blurb,
+  src,
+  alt,
+  caption,
+  href,
+  aspect = '3/2',
+  flagship = true,
+} = Astro.props;
 ---
 
 <article class="flagship">
@@ -43,7 +53,9 @@ const { title, group, blurb, src, alt, caption, href, aspect = '3/2', flagship =
     class="flagship__link mono"
     href={href}
     target={href.startsWith('http') ? '_blank' : undefined}
-    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>{href.startsWith('http') ? 'Verify with issuer ↗' : 'Open credential →'}</a>
+    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+    >{href.startsWith('http') ? 'Verify with issuer ↗' : 'Open credential →'}</a
+  >
 </article>
 
 <style>
@@ -85,8 +97,8 @@ const { title, group, blurb, src, alt, caption, href, aspect = '3/2', flagship =
   .flagship__badge {
     font-size: var(--fs-xs);
     color: var(--c-primary-2);
-    background: rgba(232, 178, 32, 0.12);
-    border: 1px solid rgba(232, 178, 32, 0.40);
+    background: var(--c-amberl-mist);
+    border: 1px solid var(--c-amberl-decor);
     padding: 0.125rem var(--sp-2);
     border-radius: var(--radius-sm);
     font-weight: 600;

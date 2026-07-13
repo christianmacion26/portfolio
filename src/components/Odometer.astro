@@ -39,12 +39,11 @@ const displayStr = format ? format(value) : rawStr;
 const counterAttr = Number.isFinite(value) ? rawStr : null;
 const dataDuration = typeof duration === 'number' ? String(duration) : undefined;
 ---
+
 <div class:list={['odometer', className]}>
-  <span
-    class="odometer__value mono tnum"
-    data-counter={counterAttr}
-    data-duration={dataDuration}
-  >{displayStr}</span>
+  <span class="odometer__value mono tnum" data-counter={counterAttr} data-duration={dataDuration}
+    >{displayStr}</span
+  >
   {label && <span class="odometer__label">{label}</span>}
 </div>
 

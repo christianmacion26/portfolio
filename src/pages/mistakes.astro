@@ -2,7 +2,7 @@
 /**
  * mistakes.astro — "What I got wrong" page. Postmortems of the failed/wrong calls.
  *
- * Why this page exists: a quant book that ships nine winners and hides the
+ * Why this page exists: a quant book that ships {quantProjectCount} winners and hides the
  * failure modes is a book primed for selection bias. A researcher's failures
  * are more diagnostic than their wins — they reveal what the discipline is
  * actually catching. This is the page that says "here is what my gates
@@ -17,6 +17,14 @@ import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
+import { profile } from '@utils/profile';
+import { countProjectsByRole } from '@utils/project-helpers';
+
+// v6.10.42 — derive "n projects" claim from the canonical quant project count.
+const quantProjectCount = await countProjectsByRole('quant');
+
+// v6.10.47 — derive gate-count chrome from profile.stats.evalGates.
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
 
 const mistakes = [
   {
@@ -95,12 +103,16 @@ const mistakes = [
     formula:
       '\\mathrm{DSR} = \\frac{\\widehat{\\mathrm{SR}} - \\mathrm{SR}_0}{\\sigma_{\\hat{SR}} \\sqrt{1 - \\gamma_3 \\cdot \\widehat{\\mathrm{SR}} + \\gamma_4 \\cdot \\frac{\\widehat{\\mathrm{SR}}^2 - 1}{4}}}',
   },
-];---
+];
+---
 
 <BaseLayout
   title="What I got wrong"
   description="Postmortems of failed strategies, broken gates, and pipeline bugs. A researcher's failures are more diagnostic than their wins."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Mistakes", href: "/mistakes" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Mistakes', href: '/mistakes' },
+  ]}
 >
   <header class="mistakes-head">
     <div class="container">
@@ -109,11 +121,11 @@ const mistakes = [
         What I <span class="hl">got wrong</span>.
       </h1>
       <VoiceLine class="mistakes-head__voice">
-        A book of nine winners with no postmortems is a book primed for selection bias.
+        A book of {quantProjectCount} winners with no postmortems is a book primed for selection bias.
       </VoiceLine>
       <p class="mistakes-head__sub">
-        A research book that ships nine winners and hides the failure modes is a book primed for
-        selection bias. Below are five real failures from the quant pipeline — what was wrong, which
+        A research book that ships {quantProjectCount} winners and hides the failure modes is a book primed
+        for selection bias. Below are five real failures from the quant pipeline — what was wrong, which
         gate caught it, what I repaired, and what the discipline is for. NDA-safe. Public data.
       </p>
 
@@ -197,8 +209,8 @@ const mistakes = [
           exist to prevent.
         </li>
         <li>
-          I am not claiming the gate stack catches everything — there are 31 gates and they fail
-          closed on the obvious ones; the subtle ones come later.
+          I am not claiming the gate stack catches everything — there are {profile.stats.evalGates} gates
+          and they fail closed on the obvious ones; the subtle ones come later.
         </li>
         <li>
           I am not hiding any failures that I am aware of — if a postmortem would change your
@@ -214,7 +226,7 @@ const mistakes = [
 
   <CTABanner
     title="Want the failure log for a specific strategy?"
-    sub="If you have a written spec, send it. I'll send back which of G1–G31 already apply to your stack, which ones would catch your last failure, and which I'd build."
+    sub={`If you have a written spec, send it. I'll send back which of ${GATE_RANGE} already apply to your stack, which ones would catch your last failure, and which I'd build.`}
     primaryLabel="Email me"
     secondaryLabel="Read methodology"
     secondaryHref={path('/methodology')}
@@ -224,8 +236,7 @@ const mistakes = [
 <style>
   .mistakes-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-bg);
+    background: var(--c-bg);
     border-bottom: var(--border);
   }
   .mistakes-head__title {
@@ -245,7 +256,7 @@ const mistakes = [
   .mistakes-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .mistakes-head__eq-block {
     padding: var(--sp-5);
     background: var(--c-paper);
@@ -329,19 +340,19 @@ const mistakes = [
     font-weight: 600;
   }
   .severity-tag--critical {
-    background: rgba(232, 178, 32, 0.18);
+    background: color-mix(in oklab, var(--c-amber) 0.18%, transparent);
     color: var(--c-primary-2);
     border: 1px solid var(--c-primary-2);
   }
   .severity-tag--high {
-    background: rgba(232, 178, 32, 0.12);
+    background: var(--c-amberl-mist);
     color: var(--c-primary-2);
-    border: 1px solid rgba(232, 178, 32, 0.6);
+    border: 1px solid var(--c-amberl-mid);
   }
   .severity-tag--medium {
-    background: rgba(232, 178, 32, 0.07);
+    background: var(--c-amberl-faint);
     color: var(--c-primary-2-deep);
-    border: 1px solid rgba(232, 178, 32, 0.4);
+    border: 1px solid var(--c-amberl-decor);
   }
   .severity-tag--low {
     background: transparent;
@@ -435,7 +446,6 @@ const mistakes = [
     height: 5px;
     border-radius: 50%;
     background: var(--c-ink-3);
-    font-family: var(--ff-mono);
   }
 
   @media (max-width: 720px) {

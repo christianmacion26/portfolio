@@ -45,7 +45,10 @@ const quickCards = [
 <BaseLayout
   title="404 — Off the path"
   description="The page you were looking for isn't here. Try one of the canonical routes below."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "404", href: "/404" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: '404', href: '/404' },
+  ]}
 >
   <meta slot="head" name="robots" content="noindex" />
 
@@ -73,7 +76,9 @@ const quickCards = [
             <a href={c.href} class="quick-card">
               <span class="quick-card__label">{c.label}</span>
               <span class="quick-card__sub">{c.sub}</span>
-              <span class="quick-card__arrow" aria-hidden="true">→</span>
+              <span class="quick-card__arrow" aria-hidden="true">
+                →
+              </span>
             </a>
           ))
         }
@@ -81,9 +86,7 @@ const quickCards = [
 
       {/* v6.0 — search box fallback */}
       <form class="not-found__search" action={path('/search')} method="get" role="search">
-        <label for="not-found-q" class="not-found__search-label mono">
-          Or search · pagefind
-        </label>
+        <label for="not-found-q" class="not-found__search-label mono"> Or search · pagefind </label>
         <div class="not-found__search-row">
           <input
             type="search"
@@ -117,8 +120,7 @@ const quickCards = [
     min-height: 70vh;
     display: flex;
     align-items: center;
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
   }
   .not-found__inner {
     text-align: center;

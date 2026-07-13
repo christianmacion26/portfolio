@@ -12,13 +12,17 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
+import { profile } from '@utils/profile';
 
-const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
-const aiPubs = projects.filter((p) => p.data.role === 'ai');
-const quantPubs = projects.filter((p) => p.data.role === 'quant');
+type ProjectEntry = CollectionEntry<'project'>;
+
+const allProjects: ProjectEntry[] = await getCollection('project');
+const projects = allProjects.sort((a, b) => a.data.order - b.data.order);
+const aiPubs: ProjectEntry[] = projects.filter((p) => p.data.role === 'ai');
+const quantPubs: ProjectEntry[] = projects.filter((p) => p.data.role === 'quant');
 
 // Format a YYYY-MM-DD frontmatter date as "Mon YYYY"
 function fmtDate(d?: Date | string): string {
@@ -34,9 +38,12 @@ function fmtYear(d?: Date | string): string {
   return String(date.getFullYear());
 }
 
-// Group pubs by year (descending) for the AQR-style year header
-function groupByYear<T extends { data: { date?: Date | string } }>(items: T[]): [string, T[]][] {
-  const map = new Map<string, T[]>();
+// Group pubs by year (descending) for the AQR-style year header.
+// Typed against the project collection entry so downstream `.id`,
+// `.data.title`, `.data.summary`, `.data.metrics`, `.data.stack`,
+// `.data.sourceLink` accesses all type-check cleanly.
+function groupByYear(items: ProjectEntry[]): [string, ProjectEntry[]][] {
+  const map = new Map<string, ProjectEntry[]>();
   for (const item of items) {
     const y = fmtYear(item.data.date) || '—';
     if (!map.has(y)) map.set(y, []);
@@ -51,7 +58,7 @@ const aiByYear = groupByYear(aiPubs);
 const workbooks = [
   {
     title: 'AI Architecture & Multi-Agent Systems Workbook',
-    scope: '11-agent orchestrator, eval harness, MCP server, model routing',
+    scope: `${profile.stats.aiAgentCount}-agent orchestrator, eval harness, MCP server, model routing`,
     pages: '~80 pp',
     audience: 'AI engineers, agent architects, eval harness designers',
   },
@@ -73,7 +80,8 @@ const pressUnsorted = [
   {
     date: '2026-07-10',
     year: 2026,
-    title: 'v6.0.5 site patch — three real bugs shipped (Atom feed base path, AI H1 slugs, methodology cross-linking)',
+    title:
+      'v6.0.5 site patch — three real bugs shipped (Atom feed base path, AI H1 slugs, methodology cross-linking)',
     venue: 'portfolio.os · commit history',
     detail:
       'Three post-deploy audit fixes shipped: (1) feed.xml/feed-projects.xml/feed-solutions.xml entry URLs now include the /portfolio base path; (2) AI research page H1s now show human titles (RAG Recall Eval, Tool-Call Agent, LLM-as-Judge Harness, Eval MCP Server, Reflect-Revise Loop, Slop Scanner) instead of filename slugs; (3) /methodology now cross-links 12 unique glossary terms (DSR, PBO, walk-forward, block-bootstrap, embargo, OOS, slippage, Sharpe, regime, Bonferroni-Holm, MinBTL, survivorship) into the /glossary/{id} deep pages, up from zero.',
@@ -160,49 +168,34 @@ const press = [...pressUnsorted].sort((a, b) => {
   return (b.year ?? 0) - (a.year ?? 0);
 });
 
-const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.length;---
+const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.length;
+---
 
 <BaseLayout
   title="Publications"
   description="Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Publications", href: "/publications" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Publications', href: '/publications' },
+  ]}
 >
-  {/* === CSS-only topic filter (no JS) ===
+  {
+    /* === CSS-only topic filter (no JS) ===
       v6.10.17 — a11y: drop aria-hidden="true" so screen readers
       can announce the filter state (was previously masked, defeating
       the purpose of the radio group). Visual hide is via .topic-input
-      CSS below. */}
-  <input
-    type="radio"
-    name="topic"
-    id="topic-all"
-    class="topic-input topic-input--all"
-    checked
-  />
-  <input
-    type="radio"
-    name="topic"
-    id="topic-papers"
-    class="topic-input topic-input--papers"
-  />
-  <input
-    type="radio"
-    name="topic"
-    id="topic-oss"
-    class="topic-input topic-input--oss"
-  />
+      CSS below. */
+  }
+  <input type="radio" name="topic" id="topic-all" class="topic-input topic-input--all" checked />
+  <input type="radio" name="topic" id="topic-papers" class="topic-input topic-input--papers" />
+  <input type="radio" name="topic" id="topic-oss" class="topic-input topic-input--oss" />
   <input
     type="radio"
     name="topic"
     id="topic-workbooks"
     class="topic-input topic-input--workbooks"
   />
-  <input
-    type="radio"
-    name="topic"
-    id="topic-press"
-    class="topic-input topic-input--press"
-  />
+  <input type="radio" name="topic" id="topic-press" class="topic-input topic-input--press" />
   <header class="pub-head">
     <div class="container">
       <p class="section__eyebrow">
@@ -245,7 +238,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   <TrustStrip variant="tape" />
 
   <div class="container">
-    <ReadMeta minutes={7} updatedIso="2026-07-09" href={path('/proof')} />
+    <ReadMeta minutes={7} href={path('/proof')} />
   </div>
 
   <section class="section section--alt" data-topic="papers">
@@ -269,7 +262,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
                     <p class="pub__summary">{p.data.summary}</p>
                     {p.data.metrics.length > 0 && (
                       <ul class="pub__metrics">
-                        {p.data.metrics.map((m) => (
+                        {p.data.metrics.map((m: ProjectEntry['data']['metrics'][number]) => (
                           <li>
                             <span class="pub__metric-label">{m.label}</span>
                             <span class="pub__metric-value mono">{m.value}</span>
@@ -278,7 +271,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
                       </ul>
                     )}
                     <div class="pub__meta">
-                      {p.data.stack.slice(0, 6).map((s) => (
+                      {p.data.stack.slice(0, 6).map((s: string) => (
                         <span class="pill">{s}</span>
                       ))}
                     </div>
@@ -319,7 +312,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
                     <p class="pub__summary">{p.data.summary}</p>
                     {p.data.metrics.length > 0 && (
                       <ul class="pub__metrics">
-                        {p.data.metrics.map((m) => (
+                        {p.data.metrics.map((m: ProjectEntry['data']['metrics'][number]) => (
                           <li>
                             <span class="pub__metric-label">{m.label}</span>
                             <span class="pub__metric-value mono">{m.value}</span>
@@ -328,7 +321,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
                       </ul>
                     )}
                     <div class="pub__meta">
-                      {p.data.stack.slice(0, 6).map((s) => (
+                      {p.data.stack.slice(0, 6).map((s: string) => (
                         <span class="pill">{s}</span>
                       ))}
                     </div>
@@ -476,8 +469,8 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     border-color: var(--c-amber);
   }
   .topic-input--all:checked ~ * label[for='topic-all'] .topic-count {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--c-white-mute);
+    background: var(--c-white-wisp);
   }
   .topic-input--papers:checked ~ * label[for='topic-papers'] {
     background: var(--c-amber-deep);
@@ -485,8 +478,8 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     border-color: var(--c-amber);
   }
   .topic-input--papers:checked ~ * label[for='topic-papers'] .topic-count {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--c-white-mute);
+    background: var(--c-white-wisp);
   }
   .topic-input--oss:checked ~ * label[for='topic-oss'] {
     background: var(--c-amber-deep);
@@ -494,8 +487,8 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     border-color: var(--c-amber);
   }
   .topic-input--oss:checked ~ * label[for='topic-oss'] .topic-count {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--c-white-mute);
+    background: var(--c-white-wisp);
   }
   .topic-input--workbooks:checked ~ * label[for='topic-workbooks'] {
     background: var(--c-amber-deep);
@@ -503,8 +496,8 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     border-color: var(--c-amber);
   }
   .topic-input--workbooks:checked ~ * label[for='topic-workbooks'] .topic-count {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--c-white-mute);
+    background: var(--c-white-wisp);
   }
   .topic-input--press:checked ~ * label[for='topic-press'] {
     background: var(--c-amber-deep);
@@ -512,8 +505,8 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
     border-color: var(--c-amber);
   }
   .topic-input--press:checked ~ * label[for='topic-press'] .topic-count {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--c-white-mute);
+    background: var(--c-white-wisp);
   }
 
   /* Hide sections by default; show based on filter.
@@ -560,8 +553,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
 
   .pub-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-bg);
+    background: var(--c-bg);
     border-bottom: var(--border);
   }
   .pub-head__title {
@@ -581,7 +573,7 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   .pub-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .pub-list {
     display: flex;
     flex-direction: column;

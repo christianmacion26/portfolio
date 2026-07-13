@@ -14,14 +14,10 @@
 
 function init(): void {
   // 1) Top-nav active link (existing behaviour)
-  const navLinks = Array.from(
-    document.querySelectorAll<HTMLAnchorElement>('.nav__link'),
-  );
+  const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.nav__link'));
 
   // 2) In-page section-TOC active link (new in v6.0)
-  const tocLinks = Array.from(
-    document.querySelectorAll<HTMLAnchorElement>('[data-toc-href]'),
-  );
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-href]'));
 
   if (navLinks.length === 0 && tocLinks.length === 0) return;
 
@@ -76,3 +72,5 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+export {};

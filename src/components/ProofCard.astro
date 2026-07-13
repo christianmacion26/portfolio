@@ -14,6 +14,7 @@ interface Props {
   href?: string;
   aspect?: '16/9' | '4/3' | '3/2' | '16/10' | 'auto';
   tone?: 'paper' | 'tape';
+  eager?: boolean;
   /**
    * object-fit policy when an aspect-ratio is set.
    * - 'cover' (default): fill the box, crop if needed. Best for charts/screenshots/shots.
@@ -23,22 +24,41 @@ interface Props {
   fit?: 'cover' | 'contain';
 }
 
-const { src, alt, caption, credit, href, aspect = '16/9', tone = 'paper', fit = 'cover', eager = false } = Astro.props;
+const {
+  src,
+  alt,
+  caption,
+  credit,
+  href,
+  aspect = '16/9',
+  tone = 'paper',
+  fit = 'cover',
+  eager = false,
+} = Astro.props;
 
-const figureStyle =
-  aspect === 'auto'
-    ? ''
-    : `--proof-aspect: ${aspect}; --proof-fit: ${fit};`;
+const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect}; --proof-fit: ${fit};`;
 ---
 
 <figure class={`proof-card proof-card--${tone}`} style={figureStyle}>
   {
     href ? (
       <a href={href} class="proof-card__link" target="_blank" rel="noopener">
-        <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" class="proof-card__img" />
+        <img
+          src={src}
+          alt={alt}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          class="proof-card__img"
+        />
       </a>
     ) : (
-      <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" class="proof-card__img" />
+      <img
+        src={src}
+        alt={alt}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        class="proof-card__img"
+      />
     )
   }
   {
@@ -97,7 +117,7 @@ const figureStyle =
     line-height: var(--lh-snug);
   }
   .proof-card--tape .proof-card__cap {
-    color: rgba(230, 237, 243, 0.75);
+    color: var(--c-ink-soft);
   }
   .proof-card__caption {
   }
@@ -107,7 +127,7 @@ const figureStyle =
     letter-spacing: 0.04em;
   }
   .proof-card--tape .proof-card__credit {
-    color: rgba(230, 237, 243, 0.55);
+    color: var(--c-ink-ghost);
   }
   .proof-card__link:hover .proof-card__img {
     transform: scale(1.01);

@@ -22,23 +22,28 @@ import VoiceLine from '@components/VoiceLine.astro';
 
 const lastRefreshed = buildStampUtc8();
 const email = profile.contact.email;
+const NGATE = `${profile.stats.evalGates}-gate`;
 
 // v6.10.37 — derive tradingDays from data array length so the
 // copy auto-stays in sync when the series is extended. Net return is
 // kept as a curated "12%" headline because it pairs with the rendered
 // chart's terminal point and the IS backtest claim.
 const equitySeries = [
-  100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4, 102.0, 101.4, 100.9,
-  101.6, 102.3, 102.7, 103.1, 102.5, 101.9, 102.2, 102.8, 103.4, 102.9, 103.6, 104.2, 103.8,
-  104.5, 105.1, 104.6, 105.3, 105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5,
-  109.2, 109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
+  100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4, 102.0, 101.4, 100.9, 101.6,
+  102.3, 102.7, 103.1, 102.5, 101.9, 102.2, 102.8, 103.4, 102.9, 103.6, 104.2, 103.8, 104.5, 105.1,
+  104.6, 105.3, 105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5, 109.2, 109.8, 109.1,
+  109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
 ];
-const tradingDays = equitySeries.length;---
+const tradingDays = equitySeries.length;
+---
 
 <BaseLayout
   title="Live paper-trading"
   description="Currently-running strategies. Public data, no live capital, weekly updates."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Positions", href: "/positions/" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Positions', href: '/positions/' },
+  ]}
 >
   <header class="positions-head">
     <div class="container">
@@ -87,15 +92,21 @@ const tradingDays = equitySeries.length;---
       <div class="positions-chart__head">
         <div class="positions-chart__head-text">
           <p class="mono positions-chart__title">Equity curve · drawdown · vol-regime</p>
-          <p class="mono positions-chart__sub">Live paper-trade series, normalized to 100. Top panel: equity. Bottom panel: running drawdown (red fill). Background tint: rolling 5-day vol quantiles — calm / normal / stress. Net of 5 bps/side slippage. 12% return over {tradingDays} trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been a calm regime.</p>
+          <p class="mono positions-chart__sub">
+            Live paper-trade series, normalized to 100. Top panel: equity. Bottom panel: running
+            drawdown (red fill). Background tint: rolling 5-day vol quantiles — calm / normal /
+            stress. Net of 5 bps/side slippage. 12% return over {tradingDays} trading days ≈ 0.39 Sharpe
+            annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than
+            the 30% headline because the live period has been a calm regime.
+          </p>
         </div>
-        <span class="positions-chart__badge positions-chart__badge--ok mono" title="Series is the live paper-trade record; drawdown and regime bands are computed properties of the series, not external claims.">live series</span>
+        <span
+          class="positions-chart__badge positions-chart__badge--ok mono"
+          title="Series is the live paper-trade record; drawdown and regime bands are computed properties of the series, not external claims."
+          >live series</span
+        >
       </div>
-      <EquityCurveChart
-        data={equitySeries}
-        yMin={99}
-        yMax={113}
-      />
+      <EquityCurveChart data={equitySeries} yMin={99} yMax={113} />
 
       <aside class="positions-proof">
         <a href={path('/proof')} class="positions-proof__link">
@@ -163,8 +174,8 @@ const tradingDays = equitySeries.length;---
           </li>
           <li>
             <strong>Regime stability:</strong> the period was dominated by a calm regime. The backtest's
-            worst-drawdown number (−30%) is untested in this window. The next regime event will
-            be the test.
+            worst-drawdown number (−30%) is untested in this window. The next regime event will be the
+            test.
           </li>
           <li>
             <strong>Latency:</strong> Binance kline timestamp drift is real but small at the 1-day cadence.
@@ -214,16 +225,16 @@ const tradingDays = equitySeries.length;---
         <p class="section__eyebrow">Open conversations · the live book</p>
         <h2 class="section__title">Conversations I'd pick up the phone for.</h2>
         <p class="section__sub">
-          Five seats that fit my operating constraints — quant, AI, eval, OSS. Not a JD
-          wishlist; a list of the conversations I'd actually take a 30-min call about. If your
-          role isn't on the list, email me anyway with the JD — I read every one.
+          Five seats that fit my operating constraints — quant, AI, eval, OSS. Not a JD wishlist; a
+          list of the conversations I'd actually take a 30-min call about. If your role isn't on the
+          list, email me anyway with the JD — I read every one.
         </p>
       </header>
 
       <aside class="positions-cal" aria-label="Intro-call availability">
         <p class="positions-cal__note mono">
-          I do 30-min intro calls on Tue/Wed/Thu 18:00–22:00 PHT (10:00–14:00 UTC). Email
-          first — booking link in reply.
+          I do 30-min intro calls on Tue/Wed/Thu 18:00–22:00 PHT (10:00–14:00 UTC). Email first —
+          booking link in reply.
         </p>
         <a
           class="btn btn--primary positions-cal__cta"
@@ -250,7 +261,8 @@ const tradingDays = equitySeries.length;---
             <div>
               <p class="role-card__label mono">I'm a fit because</p>
               <p class="role-card__text">
-                11-agent platform + 31-gate statistical eval harness, NDA-clean by construction.
+                {profile.stats.aiAgentCount}-agent platform + {profile.stats.evalGates}-gate
+                statistical eval harness, NDA-clean by construction.
               </p>
             </div>
           </div>
@@ -263,8 +275,8 @@ const tradingDays = equitySeries.length;---
           <p class="role-card__eyebrow mono">CONVERSATION 02</p>
           <h3 class="role-card__title">AI Research Engineer</h3>
           <p class="role-card__sub">
-            Frontier AI lab (HF / Replicate / HuggingFace / Conjecture) · remote · model
-            eval + RAG infrastructure
+            Frontier AI lab (HF / Replicate / HuggingFace / Conjecture) · remote · model eval + RAG
+            infrastructure
           </p>
           <div class="role-card__body">
             <div>
@@ -301,8 +313,8 @@ const tradingDays = equitySeries.length;---
             <div>
               <p class="role-card__label mono">I'm a fit because</p>
               <p class="role-card__text">
-                Funding-carry, cost-aware backtests, public-data rigor (Binance / Coinbase /
-                EDGAR / FRED).
+                Funding-carry, cost-aware backtests, public-data rigor (Binance / Coinbase / EDGAR /
+                FRED).
               </p>
             </div>
           </div>
@@ -314,9 +326,7 @@ const tradingDays = equitySeries.length;---
         <article class="role-card">
           <p class="role-card__eyebrow mono">CONVERSATION 04</p>
           <h3 class="role-card__title">NLP Evaluation Engineer</h3>
-          <p class="role-card__sub">
-            AI safety / evals org · remote · spec-driven methodology
-          </p>
+          <p class="role-card__sub">AI safety / evals org · remote · spec-driven methodology</p>
           <div class="role-card__body">
             <div>
               <p class="role-card__label mono">Looking for</p>
@@ -327,7 +337,7 @@ const tradingDays = equitySeries.length;---
             <div>
               <p class="role-card__label mono">I'm a fit because</p>
               <p class="role-card__text">
-                31-gate eval harness, position-bias controls, frozen-spec discipline.
+                {NGATE} eval harness, position-bias controls, frozen-spec discipline.
               </p>
             </div>
           </div>
@@ -352,7 +362,8 @@ const tradingDays = equitySeries.length;---
             <div>
               <p class="role-card__label mono">I'm a fit because</p>
               <p class="role-card__text">
-                15 public repos, {profile.stats.certCount} certs, eval-first discipline, NDA-clean by construction.
+                15 public repos, {profile.stats.certCount} certs, eval-first discipline, NDA-clean by
+                construction.
               </p>
             </div>
           </div>
@@ -370,20 +381,14 @@ const tradingDays = equitySeries.length;---
         <p class="section__eyebrow">Off the table</p>
         <h2 class="section__title">Not currently looking for.</h2>
         <p class="section__sub">
-          Three seat types that don't fit my operating constraints. No judgment if you run
-          one — just not where I'm spending the next 12 months.
+          Three seat types that don't fit my operating constraints. No judgment if you run one —
+          just not where I'm spending the next 12 months.
         </p>
       </header>
       <ul class="neg">
-        <li>
-          HFT colocation-dependent seats (Digos is +8 from NYSE; latency kills the edge)
-        </li>
-        <li>
-          Sell-side black-box vendor roles (I prefer open-data / open-source provenance)
-        </li>
-        <li>
-          Crypto market-making seats that require &lt; 100ms latency (same reason)
-        </li>
+        <li>HFT colocation-dependent seats (Digos is +8 from NYSE; latency kills the edge)</li>
+        <li>Sell-side black-box vendor roles (I prefer open-data / open-source provenance)</li>
+        <li>Crypto market-making seats that require &lt; 100ms latency (same reason)</li>
       </ul>
     </div>
   </section>
@@ -423,8 +428,7 @@ const tradingDays = equitySeries.length;---
 <style>
   .positions-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-bg);
+    background: var(--c-bg);
     border-bottom: var(--border);
   }
   .positions-head__title {
@@ -437,7 +441,7 @@ const tradingDays = equitySeries.length;---
   .positions-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .positions-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
@@ -526,7 +530,7 @@ const tradingDays = equitySeries.length;---
   }
   .positions-proof__copy p {
     font-size: var(--fs-sm);
-    color: rgba(230, 237, 243, 0.78);
+    color: var(--c-ink-soft);
     line-height: var(--lh-snug);
     margin: 0;
   }
@@ -586,15 +590,15 @@ const tradingDays = equitySeries.length;---
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--c-primary-2);
-    background: rgba(232, 178, 32, 0.10);
-    border: 1px solid rgba(232, 178, 32, 0.35);
+    background: var(--c-amberl-soft);
+    border: 1px solid var(--c-amberl-strong);
     border-radius: var(--radius-sm);
     white-space: nowrap;
   }
   .positions-chart__badge--ok {
     color: var(--c-primary-2);
-    background: rgba(232, 178, 32, 0.10);
-    border-color: rgba(232, 178, 32, 0.35);
+    background: var(--c-amberl-soft);
+    border-color: var(--c-amberl-strong);
   }
   .positions-metric {
     padding: var(--sp-4);
@@ -612,7 +616,7 @@ const tradingDays = equitySeries.length;---
   .positions-metric__value {
     font-size: var(--fs-xl);
     color: var(--c-primary);
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: var(--sp-1);
   }
   .positions-metric__sub {
@@ -654,7 +658,7 @@ const tradingDays = equitySeries.length;---
     position: absolute;
     left: 0;
     color: var(--c-primary-2-deep);
-    font-weight: 700;
+    font-weight: 600;
   }
   .positions-changes__list {
     counter-reset: change;
@@ -668,7 +672,7 @@ const tradingDays = equitySeries.length;---
     left: 0;
     color: var(--c-primary-2-deep);
     font-family: var(--ff-mono);
-    font-weight: 700;
+    font-weight: 600;
   }
   .positions-tradeoffs__list strong,
   .positions-changes__list strong {
@@ -716,7 +720,6 @@ const tradingDays = equitySeries.length;---
     height: 5px;
     border-radius: 50%;
     background: var(--c-ink-3);
-    font-family: var(--ff-mono);
   }
 
   @media (max-width: 720px) {
@@ -740,9 +743,9 @@ const tradingDays = equitySeries.length;---
     gap: var(--sp-2);
     padding: 6px 14px;
     margin-bottom: var(--sp-4);
-    background: rgba(232, 178, 32, 0.10);
+    background: var(--c-amberl-soft);
     color: var(--c-primary-2);
-    border: 1px solid rgba(232, 178, 32, 0.45);
+    border: 1px solid color-mix(in oklab, var(--c-amber) 0.45%, transparent);
     border-radius: var(--radius-sm);
     font-size: var(--fs-xs);
     font-weight: 600;

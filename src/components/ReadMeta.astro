@@ -8,12 +8,19 @@
  *
  * Usage:
  *   <ReadMeta minutes={9} updatedIso="2026-07-09" href="/proof" />
+ *   <ReadMeta minutes={11} href="/proof" />  <!-- updatedIso omitted →
+ *                                                defaults to buildStampUtc8() -->
  */
+import { buildStampUtc8 } from '@utils/build-stamp';
+
 interface Props {
   /** Approximate read-time in minutes. Calculated client-side from the
    * wordCount prop when omitted. */
   minutes?: number;
-  /** Last-updated ISO date (YYYY-MM-DD). */
+  /** Last-updated ISO date (YYYY-MM-DD). Defaults to buildStampUtc8() —
+   * the deploy timestamp via the canonical BUILD_DATE pipeline. Pass an
+   * explicit date only when the page is meaningfully older than the
+   * current build (e.g., archived). */
   updatedIso?: string;
   /** Optional provenance link — usually /proof. */
   href?: string;
@@ -47,10 +54,11 @@ const computed = (() => {
 })();
 const readLabel = label ?? (computed !== null ? `${computed} min read` : '');
 
-const updatedDate = updatedIso ? new Date(updatedIso) : undefined;
-const updatedFmt = updatedDate
-  ? updatedDate.toISOString().slice(0, 10)
-  : null;
+// updatedIso falls back to the build stamp so callers don't have to
+// hand-maintain a hardcoded YYYY-MM-DD for every long-form page.
+const resolvedUpdatedIso = updatedIso ?? buildStampUtc8();
+const updatedDate = resolvedUpdatedIso ? new Date(resolvedUpdatedIso) : undefined;
+const updatedFmt = updatedDate ? updatedDate.toISOString().slice(0, 10) : null;
 ---
 
 <p class:list={['read-meta', 'mono', className]} aria-label="Read time and last updated">
@@ -58,7 +66,10 @@ const updatedFmt = updatedDate
     readLabel && (
       <>
         <span class="read-meta__time">{readLabel}</span>
-        <span class="read-meta__sep" aria-hidden="true"> · </span>
+        <span class="read-meta__sep" aria-hidden="true">
+          {' '}
+          ·{' '}
+        </span>
       </>
     )
   }
@@ -66,15 +77,22 @@ const updatedFmt = updatedDate
     updatedFmt && (
       <>
         <span class="read-meta__upd-prefix">last updated</span>
-        <time datetime={updatedFmt} class="read-meta__date">{updatedFmt}</time>
+        <time datetime={updatedFmt} class="read-meta__date">
+          {updatedFmt}
+        </time>
       </>
     )
   }
   {
     href && (
       <>
-        <span class="read-meta__sep" aria-hidden="true"> · </span>
-        <a class="read-meta__proof" href={href}>how verified ↗</a>
+        <span class="read-meta__sep" aria-hidden="true">
+          {' '}
+          ·{' '}
+        </span>
+        <a class="read-meta__proof" href={href}>
+          how verified ↗
+        </a>
       </>
     )
   }

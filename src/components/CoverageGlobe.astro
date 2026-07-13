@@ -42,24 +42,19 @@ interface Props {
   /** Spacing in degrees between background landmass dots (default 20). */
   bgStep?: number;
 }
-const {
-  points,
-  width = 720,
-  height = 360,
-  bgStep = 20,
-} = Astro.props;
+const { points, width = 720, height = 360, bgStep = 20 } = Astro.props;
 
 // === Default cities ===
 // Six representative locations spanning research, client, and
 // exchange timezones. `href` cross-links where a page exists; otherwise
 // the dot is informational only. Coordinates are public-domain facts.
 const defaultPoints: Point[] = [
-  { city: 'Digos City', lat: 6.74,  lon: 125.36, weight: 1.0, caption: 'home base', href: '/about' },
-  { city: 'Singapore',  lat: 1.35,  lon: 103.82, weight: 0.8, caption: 'APAC ops' },
-  { city: 'Tokyo',      lat: 35.68, lon: 139.69, weight: 0.7, caption: 'JPX' },
-  { city: 'Zurich',     lat: 47.38, lon: 8.54,   weight: 0.85, caption: 'CTA' },
-  { city: 'London',     lat: 51.51, lon: -0.13,  weight: 0.95, caption: 'LSE' },
-  { city: 'New York',   lat: 40.71, lon: -74.01, weight: 0.9, caption: 'NYSE / Nasdaq' },
+  { city: 'Digos City', lat: 6.74, lon: 125.36, weight: 1.0, caption: 'home base', href: '/about' },
+  { city: 'Singapore', lat: 1.35, lon: 103.82, weight: 0.8, caption: 'APAC ops' },
+  { city: 'Tokyo', lat: 35.68, lon: 139.69, weight: 0.7, caption: 'JPX' },
+  { city: 'Zurich', lat: 47.38, lon: 8.54, weight: 0.85, caption: 'CTA' },
+  { city: 'London', lat: 51.51, lon: -0.13, weight: 0.95, caption: 'LSE' },
+  { city: 'New York', lat: 40.71, lon: -74.01, weight: 0.9, caption: 'NYSE / Nasdaq' },
 ];
 const cities = points ?? defaultPoints;
 
@@ -89,21 +84,21 @@ for (let lat = -60; lat <= 75; lat += bgStep) {
     // Crude land mask: keep dots that fall in a coarse continent outline.
     // The exact borders don't matter — we just want denser coverage in
     // northern-hemisphere continents and sparser in the southern oceans.
-    const latRad = (lat * Math.PI) / 180;
     // North America + Europe + Asia band
     const nhContinent =
-      lat > 5 && lat < 75 &&
-      ((lon > -130 && lon < -55) ||   // North America
-       (lon > -10 && lon < 60) ||    // Europe + W. Asia
-       (lon > 60 && lon < 145));     // E. Asia
+      lat > 5 &&
+      lat < 75 &&
+      ((lon > -130 && lon < -55) || // North America
+        (lon > -10 && lon < 60) || // Europe + W. Asia
+        (lon > 60 && lon < 145)); // E. Asia
     // Africa + South America band
     const shContinent =
-      lat > -55 && lat < 35 &&
-      ((lon > -85 && lon < -30) ||    // S. America
-       (lon > -15 && lon < 50));      // Africa
+      lat > -55 &&
+      lat < 35 &&
+      ((lon > -85 && lon < -30) || // S. America
+        (lon > -15 && lon < 50)); // Africa
     // Australia
-    const au =
-      lat > -40 && lat < -10 && lon > 110 && lon < 155;
+    const au = lat > -40 && lat < -10 && lon > 110 && lon < 155;
     const visible = nhContinent || shContinent || au;
     bgDots.push({ x, y, visible });
   }
@@ -123,11 +118,13 @@ const primeX = project(0, 0).x;
 ---
 
 <figure class="globe">
-  {cityPositions.length > 0 && (
-    <figcaption class="globe__caption">
-      {cityPositions.length} research & ops nodes · equirectangular projection
-    </figcaption>
-  )}
+  {
+    cityPositions.length > 0 && (
+      <figcaption class="globe__caption">
+        {cityPositions.length} research & ops nodes · equirectangular projection
+      </figcaption>
+    )
+  }
   <svg
     class="globe__svg"
     viewBox={`0 0 ${width} ${height}`}
@@ -138,25 +135,17 @@ const primeX = project(0, 0).x;
     <title>Coverage map — equirectangular world dot map with city markers</title>
 
     {/* Background grid lines (equator, prime meridian) — very faint. */}
-    <line x1="0" y1={equatorY} x2={width} y2={equatorY} class="globe__eq" />
-    <line x1={primeX} y1="0" x2={primeX} y2={height} class="globe__pm" />
+    <line x1="0" y1={equatorY} x2={width} y2={equatorY} class="globe__eq"></line>
+    <line x1={primeX} y1="0" x2={primeX} y2={height} class="globe__pm"></line>
 
     {/* Background landmass dots */}
-    {
-      bgDots.map((d) =>
-        d.visible ? (
-          <circle cx={d.x} cy={d.y} r="0.9" class="globe__bg" />
-        ) : null,
-      )
-    }
+    {bgDots.map((d) => (d.visible ? <circle cx={d.x} cy={d.y} r="0.9" class="globe__bg" /> : null))}
 
     {/* City dots + pulse ring for the high-weight ones */}
     {
       cityPositions.map((c) => (
         <g>
-          {c.weight >= 0.7 && (
-            <circle cx={c.x} cy={c.y} r={c.r + 5} class="globe__pulse" />
-          )}
+          {c.weight >= 0.7 && <circle cx={c.x} cy={c.y} r={c.r + 5} class="globe__pulse" />}
           {c.href ? (
             // v6.3 polish — single home-base city dot is rendered as a
             // <circle> with a <title> tooltip instead of a clickable
@@ -179,12 +168,7 @@ const primeX = project(0, 0).x;
               </title>
             </circle>
           )}
-          <text
-            x={c.x}
-            y={c.y - c.r - 4}
-            text-anchor="middle"
-            class="globe__label"
-          >
+          <text x={c.x} y={c.y - c.r - 4} text-anchor="middle" class="globe__label">
             {c.city}
           </text>
         </g>
@@ -196,7 +180,7 @@ const primeX = project(0, 0).x;
     {
       cityPositions.map((c) => (
         <li>
-          <span class="globe__legend-dot" style={`--w: ${c.weight.toFixed(2)}`}></span>
+          <span class="globe__legend-dot" style={`--w: ${c.weight.toFixed(2)}`} />
           <span class="globe__legend-city">{c.city}</span>
           {c.caption && <span class="globe__legend-cap">{c.caption}</span>}
         </li>
@@ -289,6 +273,11 @@ const primeX = project(0, 0).x;
     display: inline-block;
     flex-shrink: 0;
   }
-  .globe__legend-city { color: var(--c-ink); font-weight: 600; }
-  .globe__legend-cap { color: var(--c-ink-3); }
+  .globe__legend-city {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+  .globe__legend-cap {
+    color: var(--c-ink-3);
+  }
 </style>

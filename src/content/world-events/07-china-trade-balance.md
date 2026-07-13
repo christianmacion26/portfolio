@@ -8,5 +8,6 @@ city: Shanghai
 source: government statistics release
 order: 7
 ---
+
 Trade-balance publication. Copper and the Australian dollar swing on the
 export-side number within minutes of the release.

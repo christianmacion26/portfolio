@@ -128,12 +128,9 @@ const dataRange = dataMax - dataMin || 1;
 const ddMin = Math.min(...drawdown, 0);
 const ddMax = 0;
 
-const xForIdx = (i: number, n: number) =>
-  padL + (i / Math.max(1, n - 1)) * innerW;
-const yEqFor = (v: number) =>
-  eqTop + eqH - ((v - dataMin) / dataRange) * eqH;
-const yDdFor = (v: number) =>
-  ddBottom - ((v - ddMin) / (ddMax - ddMin || 1)) * ddH;
+const xForIdx = (i: number, n: number) => padL + (i / Math.max(1, n - 1)) * innerW;
+const yEqFor = (v: number) => eqTop + eqH - ((v - dataMin) / dataRange) * eqH;
+const yDdFor = (v: number) => ddBottom - ((v - ddMin) / (ddMax - ddMin || 1)) * ddH;
 
 // === Paths ===
 function buildLinePath(values: number[]): string {
@@ -179,7 +176,7 @@ const xLabels: { i: number; text: string }[] = (() => {
   return labels;
 })();
 
-// === Deterministic gradient ID (avoid <defs> collision with other charts) ===
+// Deterministic gradient ID — avoids SVG `<defs>` id collisions across charts.
 function hashSeed(s: string): string {
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) {
@@ -252,8 +249,19 @@ const regimeFill: Record<'calm' | 'normal' | 'stress', string> = {
         const y = yDdFor(t);
         return (
           <g>
-            <line x1={padL} y1={y} x2={padL + innerW} y2={y} class="eq-chart__grid eq-chart__grid--dd" />
-            <text x={padL - 6} y={y + 3} class="eq-chart__tick eq-chart__tick--dd mono" text-anchor="end">
+            <line
+              x1={padL}
+              y1={y}
+              x2={padL + innerW}
+              y2={y}
+              class="eq-chart__grid eq-chart__grid--dd"
+            />
+            <text
+              x={padL - 6}
+              y={y + 3}
+              class="eq-chart__tick eq-chart__tick--dd mono"
+              text-anchor="end"
+            >
               {t.toFixed(1)}%
             </text>
           </g>
@@ -267,8 +275,7 @@ const regimeFill: Record<'calm' | 'normal' | 'stress', string> = {
       y1={ddTop - gap / 2}
       x2={padL + innerW}
       y2={ddTop - gap / 2}
-      class="eq-chart__divider"
-    ></line>
+      class="eq-chart__divider"></line>
 
     {/* Panel labels (left margin) */}
     <text x={padL - 32} y={eqTop + 10} class="eq-chart__panel mono">EQ</text>
@@ -282,8 +289,7 @@ const regimeFill: Record<'calm' | 'normal' | 'stress', string> = {
       stroke="var(--c-primary-2)"
       stroke-width="1.75"
       stroke-linejoin="round"
-      stroke-linecap="round"
-    ></path>
+      stroke-linecap="round"></path>
 
     {/* Drawdown area (filled red) */}
     <path d={ddArea} fill="var(--c-fail)" fill-opacity="0.35"></path>

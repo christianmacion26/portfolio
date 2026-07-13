@@ -32,9 +32,9 @@
   }
   /* Append URL after every link so recruiters printing a PDF
      can see where each link points. Cheap via CSS only. */
-  a[href^="http"]::after,
-  a[href^="/"]::after {
-    content: " (" attr(href) ")";
+  a[href^='http']::after,
+  a[href^='/']::after {
+    content: ' (' attr(href) ')';
     font-size: 0.85em;
     color: #555;
     word-break: break-all;
@@ -48,13 +48,21 @@
     padding-block: 0.75rem !important;
     page-break-inside: avoid;
   }
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     page-break-after: avoid;
     color: #000;
   }
-  h1 { font-size: 22pt; }
-  h2 { font-size: 16pt; }
-  h3 { font-size: 13pt; }
+  h1 {
+    font-size: 22pt;
+  }
+  h2 {
+    font-size: 16pt;
+  }
+  h3 {
+    font-size: 13pt;
+  }
   .sol-card,
   .pub,
   .gate,
@@ -73,7 +81,7 @@
   .hero__motif,
   .brand-motif,
   .eq-cell,
-  img[loading="lazy"] {
+  img[loading='lazy'] {
     break-inside: avoid;
   }
   /* Print the v6.0 kv table cleanly */

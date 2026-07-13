@@ -19,6 +19,12 @@ import CTABanner from '@components/CTABanner.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
+import { countProjectsByRole } from '@utils/project-helpers';
+
+// v6.10.42 — derive "n projects" claim from the canonical quant project count.
+const quantProjectCount = await countProjectsByRole('quant');
+
+const NGATE = `${profile.stats.evalGates}-gate`;
 
 const fullName = profile.fullName.split(',')[0];
 
@@ -27,8 +33,7 @@ const memos = [
   {
     title: 'Cost-realism gates for the small-account systematic book',
     date: '2026-07-04',
-    abstract:
-      'A 31-gate evaluation of which cost components (spread, slippage, funding, borrow, exchange fees) are load-bearing for a sub-$250k systematic book versus which inflate the gate count without changing the pass/fail rate. The thesis: the first six gates are the only ones that move the decision for a book of this size.',
+    abstract: `A ${NGATE} evaluation of which cost components (spread, slippage, funding, borrow, exchange fees) are load-bearing for a sub-$250k systematic book versus which inflate the gate count without changing the pass/fail rate. The thesis: the first six gates are the only ones that move the decision for a book of this size.`,
     method:
       'Replay eight reference strategies from /projects/quant with a calibrated cost model (project 08). Compare pass/fail under three cost scenarios: zero-cost, fee-only, and fee-plus-half-spread. Report the gate-by-gate delta and rank gates by marginal information.',
     finding:
@@ -49,18 +54,15 @@ const memos = [
     date: '2026-05-22',
     abstract:
       'A block-bootstrap null with the same autocorrelation as the source is the cheapest defensible null hypothesis for a systematic strategy. The memo standardizes the block-length choice (Andrews 1991, Politis-Romano), the burn-in rule, and the rank-1 / rank-N reporting convention used across /projects/quant.',
-    method:
-      'Run the standardized bootstrap-null routine on the nine /projects/quant strategies. Report the rank-1 strategy\'s z-score against the null for each. Strategies above +1.65σ are flagged for embargoed OOS; strategies below are tabled.',
-    finding:
-      'Three of the nine strategies clear the +1.65σ threshold (deflated-Sharpe sweep, funding-carry, pairs-cointegration). Six are within ±1σ of the null mean. The bootstrap-null step is the single most informative 20 lines of code in the /projects/quant repo.',
+    method: `Run the standardized bootstrap-null routine on the ${quantProjectCount} /projects/quant strategies. Report the rank-1 strategy's z-score against the null for each. Strategies above +1.65σ are flagged for embargoed OOS; strategies below are tabled.`,
+    finding: `Three of the ${quantProjectCount} strategies clear the +1.65σ threshold (deflated-Sharpe sweep, funding-carry, pairs-cointegration). Six are within ±1σ of the null mean. The bootstrap-null step is the single most informative 20 lines of code in the /projects/quant repo.`,
   },
   {
     title: 'Eval-first discipline for multi-agent LLM systems',
     date: '2026-05-04',
     abstract:
       'The same gate stack that defends a quant book (mechanical-validity, OOS discipline, multiple-testing correction) defends a multi-agent LLM system. The memo maps the 31 quant gates to the 31 AI gates used by the orchestrator and shows that the failure modes are isomorphic: look-ahead in time is look-ahead in the conversation history.',
-    method:
-      'Replay the /solutions/01–11 agent logs through the 31-gate evaluation harness. Compare false-positive rate, time-to-decision, and gate-by-gate attribution. Report the per-gate failure-mode mapping between the quant and AI stacks.',
+    method: `Replay the /solutions/01–11 agent logs through the ${NGATE} evaluation harness. Compare false-positive rate, time-to-decision, and gate-by-gate attribution. Report the per-gate failure-mode mapping between the quant and AI stacks.`,
     finding:
       '22 of 31 gates map 1:1 across stacks. The 9 non-trivial mappings are precisely the gates that the 11-agent platform was designed to enforce mechanically — they are the ones that fail closed in production and pass in tests.',
   },
@@ -82,7 +84,7 @@ const shelf: Book[] = [
     author: 'Marcos López de Prado',
     year: 2018,
     blurb:
-      'The reference for backtest-overfitting, combinatorial purged cross-validation, and meta-labeling. Re-read at chapter 16 quarterly — the chapter is the gate stack\'s backbone.',
+      "The reference for backtest-overfitting, combinatorial purged cross-validation, and meta-labeling. Re-read at chapter 16 quarterly — the chapter is the gate stack's backbone.",
     href: 'https://www.wiley.com/en-us/Advances+in+Financial+Machine+Learning-p-9781119482086',
   },
   {
@@ -116,44 +118,47 @@ const shelf: Book[] = [
       'Institutional history of Jim Simons and Medallion. The methodological lesson — that research integrity compounds the way alpha does — is the one that survived the book.',
     href: 'https://www.penguinrandomhouse.com/books/566837/the-man-who-solved-the-market-by-gregory-zuckerman/',
   },
-];---
+];
+---
 
 <BaseLayout
   title="Papers"
   description="Working memos, in-flight drafts, and the bookshelf that backs the methodology. NDA-safe by construction."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Papers", href: "/papers" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Papers', href: '/papers' },
+  ]}
 >
   <header class="papers-head">
     <div class="container">
       <p class="section__eyebrow">
         <span class="mono">papers/</span> · memos + bookshelf
       </p>
-      <h1 class="papers-head__title">
-        Papers, memos, and long-form notes.
-      </h1>
+      <h1 class="papers-head__title">Papers, memos, and long-form notes.</h1>
       <VoiceLine class="papers-head__voice">
         The five references /methodology is downstream of — and the working memos in flight.
       </VoiceLine>
       <p class="papers-head__sub">
-        Section A is the working-memo queue — drafts in flight, no public PDF
-        links yet. Section B is the bookshelf: the five references that
-        <a href={path('/methodology')}>/methodology</a> is downstream of.
-        All public sources.
+        Section A is the working-memo queue — drafts in flight, no public PDF links yet. Section B
+        is the bookshelf: the five references that
+        <a href={path('/methodology')}>/methodology</a> is downstream of. All public sources.
       </p>
     </div>
   </header>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       Section A — Working memos
-      ========================================================= */}
+      ========================================================= */
+  }
   <section class="section" data-reveal>
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Section A · Working memos</p>
         <h2 class="section__title">Drafts in flight.</h2>
         <p class="section__sub">
-          Four working memos, each a real research thread the methodology alludes to.
-          No public PDFs yet; the text below is the page version of the memo.
+          Four working memos, each a real research thread the methodology alludes to. No public PDFs
+          yet; the text below is the page version of the memo.
         </p>
       </header>
 
@@ -185,9 +190,11 @@ const shelf: Book[] = [
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       Section B — Bookshelf
-      ========================================================= */}
+      ========================================================= */
+  }
   <section class="section section--alt" data-reveal>
     <div class="container">
       <header class="section__head">
@@ -236,8 +243,7 @@ const shelf: Book[] = [
 <style>
   .papers-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .papers-head__title {
@@ -259,7 +265,7 @@ const shelf: Book[] = [
   .papers-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .papers-head__sub a {
     color: var(--c-primary-2-deep);
     text-decoration: underline;

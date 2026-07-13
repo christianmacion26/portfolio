@@ -26,14 +26,9 @@ import { buildStampUtc8 as _bs } from '@utils/build-stamp';
 interface Props {
   variant?: 'paper' | 'tape';
   buildSha?: string;
-  /** @deprecated Pass-through no longer used; stamp is read from BUILD_DATE env var. */
-  lastVerifiedIso?: string;
 }
-const {
-  variant = 'paper',
-  buildSha = import.meta.env.PUBLIC_BUILD_SHA as string | undefined,
-  lastVerifiedIso: _ignored = undefined,
-} = Astro.props;
+const { variant = 'paper', buildSha = import.meta.env.PUBLIC_BUILD_SHA as string | undefined } =
+  Astro.props;
 // Deterministic per build (Standing Order §9: no `new Date()` in
 // deterministic outputs). The prop can still be passed from an external
 // caller (e.g., a future CI step that overrides the stamp), but the
@@ -51,7 +46,18 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
       href="/proof/#code-artifacts"
       title="All metrics evaluated by a separate harness"
     >
-      <svg class="trust-pill__icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h4l3 3v7a1 1 0 0 1-1 1H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/><path d="m6 9 1.8 1.8L11 7"/></svg>
+      <svg
+        class="trust-pill__icon"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><path d="M6 3h4l3 3v7a1 1 0 0 1-1 1H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"></path><path
+          d="m6 9 1.8 1.8L11 7"></path></svg
+      >
       <span class="trust-pill__label">tested</span>
       <span class="trust-pill__detail">numerical-eval</span>
     </a>
@@ -61,7 +67,21 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
       href="/projects/"
       title="Every project ships with a public repo + pages deploy"
     >
-      <svg class="trust-pill__icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="4" r="1.5"/><circle cx="12" cy="4" r="1.5"/><circle cx="4" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="8" cy="8" r="1.5"/><path d="M4 4 8 8M12 4 8 8M4 12 8 8M12 12 8 8"/></svg>
+      <svg
+        class="trust-pill__icon"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><circle cx="4" cy="4" r="1.5"></circle><circle cx="12" cy="4" r="1.5"></circle><circle
+          cx="4"
+          cy="12"
+          r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="8" cy="8" r="1.5"
+        ></circle><path d="M4 4 8 8M12 4 8 8M4 12 8 8M12 12 8 8"></path></svg
+      >
       <span class="trust-pill__label">reproducible</span>
       <span class="trust-pill__detail">public repos</span>
     </a>
@@ -71,7 +91,18 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
       href="/experience/#nda-safe"
       title="Past engagement disclosed at /experience; PM-verified, NDA-clean by construction"
     >
-      <svg class="trust-pill__icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.5 2.5 4v4.2c0 3 2.4 5.5 5.5 6.3 3.1-.8 5.5-3.3 5.5-6.3V4L8 1.5Z"/><path d="m5.8 8 1.6 1.6L10.4 6.6"/></svg>
+      <svg
+        class="trust-pill__icon"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><path d="M8 1.5 2.5 4v4.2c0 3 2.4 5.5 5.5 6.3 3.1-.8 5.5-3.3 5.5-6.3V4L8 1.5Z"></path><path
+          d="m5.8 8 1.6 1.6L10.4 6.6"></path></svg
+      >
       <span class="trust-pill__label">NDA-clean</span>
       <span class="trust-pill__detail">by construction</span>
     </a>
@@ -83,7 +114,18 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
       type="application/atom+xml"
       title="Atom feed of new projects"
     >
-      <svg class="trust-pill__icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5a8.5 8.5 0 0 1 8.5 8.5"/><path d="M3 8.5a4.5 4.5 0 0 1 4.5 4.5"/><circle cx="3.8" cy="12.2" r="1.1" fill="currentColor"/></svg>
+      <svg
+        class="trust-pill__icon"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><path d="M3 4.5a8.5 8.5 0 0 1 8.5 8.5"></path><path d="M3 8.5a4.5 4.5 0 0 1 4.5 4.5"
+        ></path><circle cx="3.8" cy="12.2" r="1.1" fill="currentColor"></circle></svg
+      >
       <span class="trust-pill__label">RSS</span>
       <span class="trust-pill__detail">/feed.xml</span>
     </a>
@@ -91,7 +133,21 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
     {
       shortSha && (
         <span class="trust-pill trust-pill--static" title={`Site build ${shortSha}`}>
-          <svg class="trust-pill__icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4 8 1.5 14 4v8L8 14.5 2 12V4Z"/><path d="M2 4 8 6.5 14 4M8 6.5V14.5"/></svg>
+          <svg
+            class="trust-pill__icon"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <>
+              <path d="M2 4 8 1.5 14 4v8L8 14.5 2 12V4Z" />
+              <path d="M2 4 8 6.5 14 4M8 6.5V14.5" />
+            </>
+          </svg>
           <span class="trust-pill__label">build</span>
           <span class="trust-pill__detail mono">{shortSha}</span>
         </span>
@@ -99,7 +155,18 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
     }
 
     <span class="trust-pill trust-pill--static" title={`All claims re-verified on ${lastVerified}`}>
-      <svg class="trust-pill__icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9"/><path d="m11.5 1.5 1 2.5-2.5.5M4.5 14.5l-1-2.5 2.5-.5"/></svg>
+      <svg
+        class="trust-pill__icon"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><path d="M2.5 8a5.5 5.5 0 0 1 9.4-3.9M13.5 8a5.5 5.5 0 0 1-9.4 3.9"></path><path
+          d="m11.5 1.5 1 2.5-2.5.5M4.5 14.5l-1-2.5 2.5-.5"></path></svg
+      >
       <span class="trust-pill__dot" aria-hidden="true"></span>
       <span class="trust-pill__label">verified</span>
       <span class="trust-pill__detail mono">{lastVerified}</span>
@@ -162,7 +229,9 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
   }
   a.trust-pill:hover {
     border-color: var(--c-amber-deep);
-    background: rgba(196, 138, 22, 0.06);
+    /* v6.10.41 — derive hover tint from --c-amber via color-mix so
+       palette tweaks propagate. Was rgba(196,138,22,0.06). */
+    background: color-mix(in oklab, var(--c-amber) 6%, transparent);
   }
   .trust-pill--static {
     cursor: default;
@@ -195,16 +264,23 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
        remains (it's a status semantics, not a glow ring). */
     height: 6px;
     border-radius: 50%;
-    background: var(--c-primary-2);   /* single amber accent, not pass-green */
+    background: var(--c-primary-2); /* single amber accent, not pass-green */
     animation: trust-pulse 2.4s var(--ease-snappy) infinite;
     flex-shrink: 0;
   }
   @keyframes trust-pulse {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.6; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .trust-pill__dot { animation: none; }
+    .trust-pill__dot {
+      animation: none;
+    }
   }
 
   @media (max-width: 720px) {

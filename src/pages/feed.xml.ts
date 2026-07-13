@@ -11,7 +11,8 @@
  * the canonical public URL and carries the frontmatter summary as the content body.
  */
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
+import { profile } from '@utils/profile';
+import { buildStampUtc8Iso } from '@utils/build-stamp';
 import { buildItems, renderFeed } from './_feed-shared';
 
 export const prerender = true;
@@ -22,14 +23,15 @@ export const GET: APIRoute = async ({ site }) => {
   const siteStr = site?.toString().replace(/\/$/, '') ?? 'https://christianmacion26.github.io';
   const basePath = (import.meta.env.BASE_URL || '').replace(/\/$/, '');
   const baseUrl = `${siteStr}${basePath}`;
-  const now = new Date().toISOString();
+  // §9: deterministic feed `<updated>` from BUILD_DATE (env), not `new Date()`.
+  const now = buildStampUtc8Iso();
   const items = await buildItems(baseUrl, now);
 
   const body = renderFeed({
     baseUrl,
     stream: 'all',
     selfHref: `${baseUrl}/feed.xml`,
-    title: 'Christian T. Macion — Portfolio Updates',
+    title: `${profile.fullName} — Portfolio Updates`,
     subtitle: 'Newest projects, research artifacts, and client solutions. Quant, AI, OSS.',
     feedIdTag: 'feed:all',
     items,

@@ -20,6 +20,7 @@ const loc = profile.location;
 const email = profile.contact.email;
 const phoneDisplay = profile.contact.phoneDisplay;
 const linkedin = profile.contact.linkedin;
+const NGATE = `${profile.stats.evalGates}-gate`;
 
 const faqs = [
   {
@@ -28,7 +29,7 @@ const faqs = [
   },
   {
     q: 'What is their current availability?',
-    a: 'Open to remote Quant Researcher, QR-rotational, Quantitative Research Engineer, or Research Engineer seats with US-premarket or APAC overlap. Approximately 30 hrs/wk capacity, immediate start.',
+    a: `Open to remote Quant Researcher, QR-rotational, Quantitative Research Engineer, or Research Engineer seats with US-premarket or APAC overlap. Approximately ${profile.availability.hours} capacity, immediate start.`,
   },
   {
     q: 'What seniority level are they targeting?',
@@ -40,7 +41,7 @@ const faqs = [
   },
   {
     q: 'Do they have a one-page resume PDF?',
-    a: 'Yes. Three tailored one-page resumes are linked at /resume — Quant (one-page), AI-only, and Unified. Each lists the same identity block and 31-gate methodology but weights different evidence.',
+    a: `Yes. Three tailored one-page resumes are linked at /resume — Quant (one-page), AI-only, and Unified. Each lists the same identity block and ${NGATE} methodology but weights different evidence.`,
   },
   {
     q: 'Is the work NDA-clean by construction?',
@@ -64,14 +65,18 @@ const jsonLd = {
     name: f.q,
     acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
-};---
+};
+---
 
 <BaseLayout
   title="For recruiters"
   description="The 60-second candidate one-pager: availability, location, target seats, resume PDFs, and direct contact for hiring managers."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "For recruiters", href: "/for-recruiters" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'For recruiters', href: '/for-recruiters' },
+  ]}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
   <section class="hero">
     <div class="container container--narrow">
@@ -88,8 +93,7 @@ const jsonLd = {
       </VoiceLine>
       <p class="hero__sub">
         Quantitative researcher and AI engineer. {loc.display}.<br />
-        Open to remote QR, QR-rotational, or research-engineer seats with
-        US-premarket or APAC overlap.
+        Open to remote QR, QR-rotational, or research-engineer seats with US-premarket or APAC overlap.
       </p>
 
       <table class="kv">
@@ -100,7 +104,10 @@ const jsonLd = {
           </tr>
           <tr>
             <th scope="row">Target seats</th>
-            <td>Quant Researcher (primary) · QR-Rotational · Quant Research Engineer · Research Engineer</td>
+            <td
+              >Quant Researcher (primary) · QR-Rotational · Quant Research Engineer · Research
+              Engineer</td
+            >
           </tr>
           <tr>
             <th scope="row">Location</th>
@@ -108,11 +115,18 @@ const jsonLd = {
           </tr>
           <tr>
             <th scope="row">Work authorization</th>
-            <td>Filipino citizen · independent contractor · globally remote (EOR) · no sponsorship required</td>
+            <td
+              >Filipino citizen · independent contractor · globally remote (EOR) · no sponsorship
+              required</td
+            >
           </tr>
           <tr>
             <th scope="row">Stack</th>
-            <td>Python ({profile.stats.locPython} LOC) · {profile.stats.aiAgentCount} agents · {profile.stats.evalGates}-gate eval harness · MCP · multi-agent LLM · RAG · frozen-spec evals</td>
+            <td
+              >Python ({profile.stats.locPython} LOC) · {profile.stats.aiAgentCount} agents · {
+                profile.stats.evalGates
+              }-gate eval harness · MCP · multi-agent LLM · RAG · frozen-spec evals</td
+            >
           </tr>
           <tr>
             <th scope="row">Resume PDF</th>
@@ -126,15 +140,23 @@ const jsonLd = {
           <tr>
             <th scope="row">Contact</th>
             <td>
-              <a href={`mailto:${email}?subject=Inquiry%20%E2%80%94%20Christian%20Macion`}>{email}</a>
-              · {phoneDisplay} · <a href={linkedin} rel="noopener noreferrer" target="_blank">LinkedIn</a>
+              <a href={`mailto:${email}?subject=Inquiry%20%E2%80%94%20Christian%20Macion`}
+                >{email}</a
+              >
+              · {phoneDisplay} · <a href={linkedin} rel="noopener noreferrer" target="_blank"
+                >LinkedIn</a
+              >
             </td>
           </tr>
         </tbody>
       </table>
 
       <div class="hero__actions">
-        <a class="btn btn--primary" href={`mailto:${email}?subject=Inquiry%20%E2%80%94%20Christian%20Macion`}>Email {fullName.split(',')[0]} →</a>
+        <a
+          class="btn btn--primary"
+          href={`mailto:${email}?subject=Inquiry%20%E2%80%94%20Christian%20Macion`}
+          >Email {fullName.split(',')[0]} →</a
+        >
         <a class="btn btn--ghost" href={path('/resume')}>View resumes →</a>
         <a class="btn btn--ghost" href={path('/proof')}>See proof →</a>
       </div>
@@ -146,8 +168,8 @@ const jsonLd = {
       <header class="section__head">
         <h2 class="section__title">FAQ — what hiring managers usually ask</h2>
         <p class="section__sub">
-          Eight canonical questions. Each answer is short, factual, and verifiable from the rest
-          of the site.
+          Eight canonical questions. Each answer is short, factual, and verifiable from the rest of
+          the site.
         </p>
       </header>
 
@@ -181,8 +203,7 @@ const jsonLd = {
 <style>
   .hero {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .eyebrow {
@@ -201,7 +222,7 @@ const jsonLd = {
     line-height: 1.1;
     margin-bottom: var(--sp-4);
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
   .hero__sub {
@@ -214,7 +235,7 @@ const jsonLd = {
   .hero__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .kv {
     width: 100%;
     border-collapse: collapse;
@@ -269,7 +290,7 @@ const jsonLd = {
     font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
     margin-bottom: var(--sp-3);
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.01em;
   }
   .section__sub {

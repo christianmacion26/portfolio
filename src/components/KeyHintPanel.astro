@@ -30,23 +30,25 @@ interface Shortcut {
   humps: boolean[];
 }
 
-const shortcuts: Shortcut[] = [
-  { key: '?',  desc: 'Toggle keyboard map' },
-  { key: 'j',  desc: 'Jump down a viewport' },
-  { key: 'k',  desc: 'Jump up a viewport' },
-  { key: 'g',  desc: 'Go to top' },
-  { key: 'b',  desc: 'Go to bottom' },
-  { key: '/',  desc: 'Focus search' },
-];
-
-// === Per-tile deterministic hump-coverage =========================
-// Each tile gets 4 humps; the seeded PRNG picks which humps are
-// "covered" (full opacity) vs "outline" (low opacity). Deterministic
-// per build, so the same build always renders the same density map.
-const humpRng = seedFromString(buildSeed() + '::keyhint-waves');
-for (const s of shortcuts) {
-  s.humps = [0, 1, 2, 3].map(() => humpRng() > 0.5);
-}
+const shortcuts: Shortcut[] = (() => {
+  const base: Omit<Shortcut, 'humps'>[] = [
+    { key: '?', desc: 'Toggle keyboard map' },
+    { key: 'j', desc: 'Jump down a viewport' },
+    { key: 'k', desc: 'Jump up a viewport' },
+    { key: 'g', desc: 'Go to top' },
+    { key: 'b', desc: 'Go to bottom' },
+    { key: '/', desc: 'Focus search' },
+  ];
+  // === Per-tile deterministic hump-coverage =========================
+  // Each tile gets 4 humps; the seeded PRNG picks which humps are
+  // "covered" (full opacity) vs "outline" (low opacity). Deterministic
+  // per build, so the same build always renders the same density map.
+  const humpRng = seedFromString(buildSeed() + '::keyhint-waves');
+  return base.map((s) => ({
+    ...s,
+    humps: [0, 1, 2, 3].map(() => humpRng() > 0.5),
+  }));
+})();
 ---
 
 <aside
@@ -64,65 +66,62 @@ for (const s of shortcuts) {
   </header>
 
   <div class="keyhint__grid">
-    {shortcuts.map((s) => (
-      <div class="keyhint__tile">
-        {/* === Keyboard-key visualization (56×28) ===
+    {
+      shortcuts.map((s) => (
+        <div class="keyhint__tile">
+          {/* === Keyboard-key visualization (56×28) ===
             4×5 grid of 4×4 SVG cells (texture) + centered bracket-label. */}
-        <div class="keyhint__key">
-          <svg viewBox="0 0 56 28" class="keyhint__keysvg" aria-hidden="true">
-            <rect
-              x="0.5"
-              y="0.5"
-              width="55"
-              height="27"
-              rx="2"
-              fill="none"
-              stroke="var(--c-amber)"
-              stroke-width="1"
-              stroke-opacity="0.85"
-            />
-            {/* v6.10.17 — hoist fill/fill-opacity to <g> (was on each of
+          <div class="keyhint__key">
+            <svg viewBox="0 0 56 28" class="keyhint__keysvg" aria-hidden="true">
+              <rect
+                x="0.5"
+                y="0.5"
+                width="55"
+                height="27"
+                rx="2"
+                fill="none"
+                stroke="var(--c-amber)"
+                stroke-width="1"
+                stroke-opacity="0.85"
+              />
+              {/* v6.10.17 — hoist fill/fill-opacity to <g> (was on each of
                 20 rects × 6 shortcuts = 120 attrs ≈ 3KB). */}
-            <g fill="var(--c-amber)" fill-opacity="0.32">
-              {Array.from({ length: 5 }).map((_, row) =>
-                Array.from({ length: 4 }).map((__, col) => (
-                  <rect
-                    x={20 + col * 4}
-                    y={4 + row * 4}
-                    width="3"
-                    height="3"
-                  />
-                )),
-              )}
-            </g>
-            <text
-              x="28"
-              y="17.5"
-              class="keyhint__keylabel"
-              text-anchor="middle"
-              dominant-baseline="middle"
-            >{`[${s.key}]`}</text>
-          </svg>
-        </div>
+              <g fill="var(--c-amber)" fill-opacity="0.32">
+                {Array.from({ length: 5 }).map((_, row) =>
+                  Array.from({ length: 4 }).map((__, col) => (
+                    <rect x={20 + col * 4} y={4 + row * 4} width="3" height="3" />
+                  )),
+                )}
+              </g>
+              <text
+                x="28"
+                y="17.5"
+                class="keyhint__keylabel"
+                text-anchor="middle"
+                dominant-baseline="middle"
+              >{`[${s.key}]`}</text>
+            </svg>
+          </div>
 
-        {/* === Action label (11px mono) === */}
-        <p class="keyhint__label mono">{s.desc}</p>
+          {/* === Action label (11px mono) === */}
+          <p class="keyhint__label mono">{s.desc}</p>
 
-        {/* === Wave-pattern coverage (60×6, 4 humps) ===
+          {/* === Wave-pattern coverage (60×6, 4 humps) ===
             v6.10.18 — hoist fill/stroke/stroke-width/stroke-linecap to <g>
             (4 attrs × 4 paths × 6 tiles = 96 attrs saved ≈ 1.2KB). */}
-        <svg viewBox="0 0 60 6" class="keyhint__wave" aria-hidden="true">
-          <g fill="none" stroke="var(--c-amber)" stroke-width="1" stroke-linecap="round">
-            {s.humps.map((filled, i) => (
-              <path
-                d={`M ${i * 15} 3 Q ${i * 15 + 7.5} ${i % 2 === 0 ? 0 : 6} ${(i + 1) * 15} 3`}
-                stroke-opacity={filled ? 1 : 0.25}
-              />
-            ))}
-          </g>
-        </svg>
-      </div>
-    ))}
+          <svg viewBox="0 0 60 6" class="keyhint__wave" aria-hidden="true">
+            <g fill="none" stroke="var(--c-amber)" stroke-width="1" stroke-linecap="round">
+              {s.humps.map((filled, i) => (
+                <path
+                  d={`M ${i * 15} 3 Q ${i * 15 + 7.5} ${i % 2 === 0 ? 0 : 6} ${(i + 1) * 15} 3`}
+                  stroke-opacity={filled ? 1 : 0.25}
+                />
+              ))}
+            </g>
+          </svg>
+        </div>
+      ))
+    }
   </div>
 </aside>
 
@@ -242,14 +241,16 @@ for (const s of shortcuts) {
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    background: rgba(230, 237, 243, 0.02);
+    background: var(--c-ink-haze);
     border: 1px solid var(--c-rule);
     border-radius: var(--radius-sm);
-    transition: border-color 200ms ease, background 200ms ease;
+    transition:
+      border-color 200ms ease,
+      background 200ms ease;
   }
   .keyhint__tile:hover {
     border-color: var(--c-amber);
-    background: rgba(232, 178, 32, 0.04);
+    background: var(--c-amberl-faint);
   }
   .keyhint__tile:hover .keyhint__wave path {
     stroke-opacity: 1;

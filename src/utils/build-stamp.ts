@@ -58,4 +58,53 @@ export function buildYear(): number {
   return shifted.getUTCFullYear();
 }
 
+/**
+ * Returns the full ISO 8601 timestamp of the build, shifted to UTC+8.
+ * Used for Atom feed `<updated>` elements where a full timestamp is required
+ * (not just YYYY-MM-DD). Stamped from BUILD_DATE; deterministic per build.
+ */
+export function buildStampUtc8Iso(): string {
+  const d = readBuildDate();
+  const shifted = new Date(d.getTime() + TZ_OFFSET_HOURS * 3600 * 1000);
+  return shifted.toISOString();
+}
+
 // v6.10.28 — `buildStampUtc8Iso` removed (knip reported unused).
+// v6.10.45 — restored; the three feed routes (`feed.xml.ts`, `feed-projects.xml.ts`,
+// `feed-solutions.xml.ts`) need a deterministic full ISO8601 string for `<updated>`.
+// They previously called `new Date().toISOString()` directly — a §9 violation.
+// v6.10.52 — added `packageVersion()` reading from package.json via fs.readFileSync
+// at build time. Replaces the stale `packageVersion = '6.5.0'` literal in index.astro
+// that was drifting 6+ months behind the actual published version.
+
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+let _cachedVersion: string | null = null;
+
+/**
+ * Returns the `version` field from package.json as a string (e.g. "6.10.52").
+ * Cached after first read — cheap, called once per page render.
+ *
+ * Used by the institutional end-strip footer on home. The previous literal
+ * `packageVersion = '6.5.0'` was hand-maintained and drifted 6+ months
+ * behind reality; this reads the canonical source at build time.
+ *
+ * Implementation note: during Astro build, `import.meta.url` may resolve
+ * to a bundled chunk path, so we anchor on `process.cwd()` (the repo root
+ * when running `npm run build`). Dev mode also anchors on cwd.
+ */
+export function packageVersion(): string {
+  if (_cachedVersion) return _cachedVersion;
+  try {
+    const pkgPath = resolve(process.cwd(), 'package.json');
+    const raw = readFileSync(pkgPath, 'utf8');
+    const pkg = JSON.parse(raw) as { version?: string };
+    _cachedVersion = pkg.version ?? '0.0.0';
+  } catch {
+    // Defensive: if package.json can't be read, fall back to a literal
+    // so build doesn't fail.
+    _cachedVersion = '0.0.0';
+  }
+  return _cachedVersion;
+}

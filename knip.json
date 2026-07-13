@@ -2,20 +2,42 @@
 // Catches unused imports, exports, files, and dependencies. Runs as `npm run knip`.
 // Ignored built-ins (dist, .astro, node_modules, public) are excluded by knip's defaults;
 // *.d.ts files contain ambient types and aren't tracked.
+//
+// paths: Mirror of tsconfig.json path aliases. knip's tsconfig auto-loader doesn't
+// pick up aliases from the extended `astro/tsconfigs/strict` base reliably, so we
+// declare them inline. Mirroring `compilerOptions.paths` from tsconfig.json.
+//
+// ignore (file glob): files imported via `@components/...` or `@scripts/...` are
+// falsely reported as unused (knip can't follow the alias despite the `paths`
+// setting above — the alias resolver doesn't propagate to all import-tracking paths).
+// Curated allowlist:
+//   - src/components/{DSRCalculator,MetricPill,PipelineDiagram}.astro → @components/...
+//   - src/scripts/*.ts → @scripts/... (BaseLayout.astro:157-165)
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": ["src/pages/**/*.astro"],
+  "paths": {
+    "@components/*": ["src/components/*"],
+    "@layouts/*": ["src/layouts/*"],
+    "@styles/*": ["src/styles/*"],
+    "@utils/*": ["src/utils/*"],
+    "@content/*": ["src/content/*"],
+    "@scripts/*": ["src/scripts/*"],
+    "@data/*": ["src/data/*"]
+  },
+  "ignore": ["src/components/Odometer.astro", "src/scripts/*.ts"],
   "ignoreDependencies": [
     "astro-expressive-code",
-    "@fontsource/inter",
     "@fontsource/jetbrains-mono",
     "@astrojs/rss",
     "astro-icon",
     "lightweight-charts",
     "lucide",
     "rehype-katex",
-    "remark-math"
+    "remark-math",
+    "world-atlas"
   ],
-  "ignoreBinaries": ["pdftotext"],
-  "ignoreExportsUsedInFile": true
+  "ignoreBinaries": ["pdftotext", "python3"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreUnresolved": ["/_pagefind/pagefind-ui.js"]
 }

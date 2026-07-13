@@ -291,8 +291,6 @@ export interface CountryPath {
 }
 
 export const COUNTRY_PATHS: CountryPath[] = ${JSON.stringify(countries, null, 0)};
-
-export const COUNTRY_COUNT: number = COUNTRY_PATHS.length;
 `;
 
   // Emit borders.ts

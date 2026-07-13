@@ -30,9 +30,7 @@
  */
 
 function initCarousel(root: HTMLElement): void {
-  const slides = Array.from(
-    root.querySelectorAll<HTMLElement>('[data-stmt-index]'),
-  );
+  const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-stmt-index]'));
   const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-stmt-dot]'));
   if (slides.length === 0) return;
 
@@ -58,7 +56,11 @@ function initCarousel(root: HTMLElement): void {
     dots.forEach((d, idx) => {
       const on = idx === active;
       d.classList.toggle('is-active', on);
-      d.setAttribute('aria-pressed', on ? 'true' : 'false');
+      // v6.11.6 — dots now use role=tab + aria-selected (parent is
+      // role=tablist). The previous aria-pressed toggle pattern was an
+      // ARIA mismatch since tablist requires tab children.
+      d.setAttribute('aria-selected', on ? 'true' : 'false');
+      d.setAttribute('tabindex', on ? '0' : '-1');
     });
   }
 
@@ -113,3 +115,5 @@ if (typeof window !== 'undefined') {
     init();
   }
 }
+
+export {};

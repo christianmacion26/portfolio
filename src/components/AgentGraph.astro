@@ -15,6 +15,8 @@
  * Usage:
  *   <AgentGraph />
  */
+import { profile } from '@utils/profile';
+
 interface Props {
   /** Optional CSS class on the outer wrapper (e.g. for grid sizing). */
   class?: string;
@@ -51,21 +53,128 @@ const COL_X_OUT = 665;
 
 const nodes: Node[] = [
   // Inputs (4)
-  { id: 'in1', label: 'Doc corpus',   sub: '17 · 34 chunks',  cx: COL_X_INPUT, cy: 60,  w: BOX_W, h: BOX_H, family: 'input' },
-  { id: 'in2', label: 'Eval set',     sub: '35 Q · gold',     cx: COL_X_INPUT, cy: 145, w: BOX_W, h: BOX_H, family: 'input' },
-  { id: 'in3', label: 'Build output', sub: 'ships · tests',   cx: COL_X_INPUT, cy: 230, w: BOX_W, h: BOX_H, family: 'input' },
-  { id: 'in4', label: 'Telemetry',    sub: 'OTel · traces',   cx: COL_X_INPUT, cy: 315, w: BOX_W, h: BOX_H, family: 'input' },
+  {
+    id: 'in1',
+    label: 'Doc corpus',
+    sub: '17 · 34 chunks',
+    cx: COL_X_INPUT,
+    cy: 60,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'input',
+  },
+  {
+    id: 'in2',
+    label: 'Eval set',
+    sub: '35 Q · gold',
+    cx: COL_X_INPUT,
+    cy: 145,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'input',
+  },
+  {
+    id: 'in3',
+    label: 'Build output',
+    sub: 'ships · tests',
+    cx: COL_X_INPUT,
+    cy: 230,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'input',
+  },
+  {
+    id: 'in4',
+    label: 'Telemetry',
+    sub: 'OTel · traces',
+    cx: COL_X_INPUT,
+    cy: 315,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'input',
+  },
   // Middles (3)
-  { id: 'mid1', label: 'RAG-Recall',  sub: 'recall@3 = 0.886', cx: COL_X_MID, cy: 110, w: BOX_W, h: BOX_H, family: 'middle' },
-  { id: 'mid2', label: 'Eval-Gate',   sub: 'G1–G31 · 31 gates', cx: COL_X_MID, cy: 220, w: BOX_W, h: BOX_H, family: 'middle' },
-  { id: 'mid3', label: 'Router',      sub: 'tier-aware',       cx: COL_X_MID, cy: 330, w: BOX_W, h: BOX_H, family: 'middle' },
+  {
+    id: 'mid1',
+    label: 'RAG-Recall',
+    sub: 'recall@3 = 0.886',
+    cx: COL_X_MID,
+    cy: 110,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'middle',
+  },
+  {
+    id: 'mid2',
+    label: 'Eval-Gate',
+    sub: `G1–G${profile.stats.evalGates} · ${profile.stats.evalGates} gates`,
+    cx: COL_X_MID,
+    cy: 220,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'middle',
+  },
+  {
+    id: 'mid3',
+    label: 'Router',
+    sub: 'tier-aware',
+    cx: COL_X_MID,
+    cy: 330,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'middle',
+  },
   // Orchestrator (1)
-  { id: 'orch', label: 'Orchestrator', sub: 'loop · budget · routing', cx: COL_X_ORCH, cy: 200, w: ORCH_W, h: ORCH_H, family: 'orch' },
+  {
+    id: 'orch',
+    label: 'Orchestrator',
+    sub: 'loop · budget · routing',
+    cx: COL_X_ORCH,
+    cy: 200,
+    w: ORCH_W,
+    h: ORCH_H,
+    family: 'orch',
+  },
   // Outputs (3)
-  { id: 'out1', label: 'Artifact',  sub: 'repo · paper',       cx: COL_X_OUT, cy: 110, w: BOX_W, h: BOX_H, family: 'output' },
-  { id: 'out2', label: 'Metric',    sub: 'DSR · κ · SLOP',     cx: COL_X_OUT, cy: 220, w: BOX_W, h: BOX_H, family: 'output' },
-  { id: 'out3', label: 'Feedback',  sub: 'reflect & revise',   cx: COL_X_OUT, cy: 330, w: BOX_W, h: BOX_H, family: 'output' },
+  {
+    id: 'out1',
+    label: 'Artifact',
+    sub: 'repo · paper',
+    cx: COL_X_OUT,
+    cy: 110,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'output',
+  },
+  {
+    id: 'out2',
+    label: 'Metric',
+    sub: 'DSR · κ · SLOP',
+    cx: COL_X_OUT,
+    cy: 220,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'output',
+  },
+  {
+    id: 'out3',
+    label: 'Feedback',
+    sub: 'reflect & revise',
+    cx: COL_X_OUT,
+    cy: 330,
+    w: BOX_W,
+    h: BOX_H,
+    family: 'output',
+  },
 ];
+
+// v6.10.39 — derive agent-count descriptors from the actual `nodes`
+// array, not hardcoded "11". If a 5th input or 4th output is added to
+// the DAG, the aria-label + legend caption auto-update.
+const inputCount = nodes.filter((n) => n.family === 'input').length;
+const middleCount = nodes.filter((n) => n.family === 'middle').length;
+const outputCount = nodes.filter((n) => n.family === 'output').length;
+const totalAgents = nodes.length;
 
 const nodeById = Object.fromEntries(nodes.map((n) => [n.id, n]));
 
@@ -73,7 +182,7 @@ type Edge = { from: string; to: string; active?: boolean; kind?: 'fwd' | 'fb' };
 const edges: Edge[] = [
   // Inputs → Orchestrator
   { from: 'in1', to: 'orch' },
-  { from: 'in2', to: 'orch', active: true },   // active start (input feeds the loop)
+  { from: 'in2', to: 'orch', active: true }, // active start (input feeds the loop)
   { from: 'in3', to: 'orch' },
   { from: 'in4', to: 'orch' },
   // Orchestrator → Middles
@@ -92,9 +201,17 @@ const edges: Edge[] = [
 // Compute (x1, y1, x2, y2) anchor points on each box edge. We anchor on
 // the box's geometric centre edge (midpoint of the side closest to the
 // other endpoint) so arrows terminate on the box, not its centre.
-function anchor(id: string, side: 'right' | 'left' | 'top' | 'bottom' | 'auto' = 'auto'): { x: number; y: number } {
+function anchor(
+  id: string,
+  side: 'right' | 'left' | 'top' | 'bottom' | 'auto' = 'auto',
+): { x: number; y: number } {
   const n = nodeById[id]!;
-  const ax = { right: n.cx + n.w / 2, left: n.cx - n.w / 2, top: n.cy - n.h / 2, bottom: n.cy + n.h / 2 } as const;
+  const ax = {
+    right: n.cx + n.w / 2,
+    left: n.cx - n.w / 2,
+    top: n.cy - n.h / 2,
+    bottom: n.cy + n.h / 2,
+  } as const;
   const ay = n.cy;
   if (side === 'auto') return { x: n.cx, y: n.cy };
   return { x: ax[side], y: ay };
@@ -110,7 +227,10 @@ function sideFor(fromId: string, toId: string): 'right' | 'left' | 'top' | 'bott
 }
 
 interface ResolvedEdge extends Edge {
-  x1: number; y1: number; x2: number; y2: number;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
   sideA: 'right' | 'left' | 'top' | 'bottom';
   sideB: 'right' | 'left' | 'top' | 'bottom';
 }
@@ -152,18 +272,16 @@ function edgePath(e: ResolvedEdge, idx: number): string {
 function dist(x1: number, y1: number, x2: number, y2: number): number {
   return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 }
-const activeLength = activeEdges.reduce(
-  (acc, e) => acc + dist(e.x1, e.y1, e.x2, e.y2),
-  0,
-);
+const activeLength = activeEdges.reduce((acc, e) => acc + dist(e.x1, e.y1, e.x2, e.y2), 0);
 ---
+
 <div class:list={['agent-graph', className]}>
   <svg
     class="agent-graph__svg"
     viewBox={`0 0 ${W} ${H}`}
     preserveAspectRatio="xMidYMid meet"
     role="img"
-    aria-label="Agent platform: 11 agents arranged in a DAG. Inputs feed the Orchestrator, which dispatches to RAG-Recall, Eval-Gate, and Router, producing Artifact, Metric, and Feedback. Feedback loops back to the Orchestrator."
+    aria-label={`Agent platform: ${totalAgents} agents arranged in a DAG. Inputs feed the Orchestrator, which dispatches to RAG-Recall, Eval-Gate, and Router, producing Artifact, Metric, and Feedback. Feedback loops back to the Orchestrator.`}
     xmlns="http://www.w3.org/2000/svg"
   >
     <defs>
@@ -177,7 +295,7 @@ const activeLength = activeEdges.reduce(
         orient="auto-start-reverse"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0 L10,5 L0,10 Z" class="ag-arrow-head" />
+        <path d="M0,0 L10,5 L0,10 Z" class="ag-arrow-head"></path>
       </marker>
       <marker
         id="ag-arrow-active"
@@ -189,91 +307,103 @@ const activeLength = activeEdges.reduce(
         orient="auto-start-reverse"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0 L10,5 L0,10 Z" class="ag-arrow-head ag-arrow-head--active" />
+        <path d="M0,0 L10,5 L0,10 Z" class="ag-arrow-head ag-arrow-head--active"></path>
       </marker>
     </defs>
 
     {/* === Subtle background grid === */}
     <g class="ag-grid" aria-hidden="true">
-      {Array.from({ length: Math.floor(W / 40) + 1 }).map((_, i) => (
-        <line x1={i * 40} y1="0" x2={i * 40} y2={H} class="ag-grid-line ag-grid-line--v" />
-      ))}
-      {Array.from({ length: Math.floor(H / 40) + 1 }).map((_, i) => (
-        <line x1="0" y1={i * 40} x2={W} y2={i * 40} class="ag-grid-line ag-grid-line--h" />
-      ))}
+      {
+        Array.from({ length: Math.floor(W / 40) + 1 }).map((_, i) => (
+          <line x1={i * 40} y1="0" x2={i * 40} y2={H} class="ag-grid-line ag-grid-line--v" />
+        ))
+      }
+      {
+        Array.from({ length: Math.floor(H / 40) + 1 }).map((_, i) => (
+          <line x1="0" y1={i * 40} x2={W} y2={i * 40} class="ag-grid-line ag-grid-line--h" />
+        ))
+      }
     </g>
 
     {/* === Non-active edges (drawn first so nodes overlay them) === */}
-    {resolved.filter((e) => !e.active).map((e, i) => (
-      <path
-        d={edgePath(e, i)}
-        class="ag-edge"
-        fill="none"
-        marker-end="url(#ag-arrow)"
-      />
-    ))}
+    {
+      resolved
+        .filter((e) => !e.active)
+        .map((e, i) => (
+          <path d={edgePath(e, i)} class="ag-edge" fill="none" marker-end="url(#ag-arrow)" />
+        ))
+    }
 
     {/* === Active-loop static track (amber under-glow) === */}
     <path
       d={activePathD}
       class="ag-edge ag-edge--active-track"
       fill="none"
-      marker-end="url(#ag-arrow-active)"
-    />
+      marker-end="url(#ag-arrow-active)"></path>
 
     {/* === Active-loop traveling dot via animated stroke-dashoffset === */}
     <path
       d={activePathD}
       class="ag-edge ag-edge--active-flow"
       fill="none"
-      style={`--ag-flow-len: ${Math.round(activeLength)}`}
-    />
+      style={`--ag-flow-len: ${Math.round(activeLength)}`}></path>
 
     {/* === Feedback-leg overlay (dashed segment from Out3 → Orchestrator) === */}
-    {activeEdges
-      .filter((e) => e.kind === 'fb')
-      .map((e, i) => {
-        const idx = activeEdges.indexOf(e);
-        const prior = activeEdges.slice(0, idx);
-        // Find the resolved index for visual re-curve. Use the in-list position
-        // so the bow varies the same way as for non-active edges.
-        const dummyIdx = resolved.findIndex((r) => r === e);
-        return (
-          <path
-            d={edgePath(e, dummyIdx)}
-            class="ag-edge ag-edge--active-flow"
-            fill="none"
-            marker-end="url(#ag-arrow-active)"
-            style={`--ag-flow-len: ${Math.round(activeLength)}; --ag-flow-delay: ${(prior.length / activeEdges.length) * 4}s;`}
-          />
-        );
-      })}
+    {
+      activeEdges
+        .filter((e) => e.kind === 'fb')
+        .map((e, _i) => {
+          const idx = activeEdges.indexOf(e);
+          const prior = activeEdges.slice(0, idx);
+          // Find the resolved index for visual re-curve. Use the in-list position
+          // so the bow varies the same way as for non-active edges.
+          const dummyIdx = resolved.findIndex((r) => r === e);
+          return (
+            <path
+              d={edgePath(e, dummyIdx)}
+              class="ag-edge ag-edge--active-flow"
+              fill="none"
+              marker-end="url(#ag-arrow-active)"
+              style={`--ag-flow-len: ${Math.round(activeLength)}; --ag-flow-delay: ${(prior.length / activeEdges.length) * 4}s;`}
+            />
+          );
+        })
+    }
 
     {/* === Nodes === */}
-    {nodes.map((n) => (
-      <g class:list={['ag-node', `ag-node--${n.family}`, n.id === 'orch' && 'ag-node--highlight']} transform={`translate(${n.cx - n.w / 2} ${n.cy - n.h / 2})`}>
-        <rect
-          class="ag-node-rect"
-          x="0"
-          y="0"
-          width={n.w}
-          height={n.h}
-          rx="6"
-          ry="6"
-        />
-        <text class="ag-node-label" x={n.w / 2} y={n.family === 'orch' ? 32 : 26} text-anchor="middle">
-          {n.label}
-        </text>
-        <text class="ag-node-sub" x={n.w / 2} y={n.family === 'orch' ? 52 : 46} text-anchor="middle">
-          {n.sub}
-        </text>
-      </g>
-    ))}
+    {
+      nodes.map((n) => (
+        <g
+          class:list={['ag-node', `ag-node--${n.family}`, n.id === 'orch' && 'ag-node--highlight']}
+          transform={`translate(${n.cx - n.w / 2} ${n.cy - n.h / 2})`}
+        >
+          <rect class="ag-node-rect" x="0" y="0" width={n.w} height={n.h} rx="6" ry="6" />
+          <text
+            class="ag-node-label"
+            x={n.w / 2}
+            y={n.family === 'orch' ? 32 : 26}
+            text-anchor="middle"
+          >
+            {n.label}
+          </text>
+          <text
+            class="ag-node-sub"
+            x={n.w / 2}
+            y={n.family === 'orch' ? 52 : 46}
+            text-anchor="middle"
+          >
+            {n.sub}
+          </text>
+        </g>
+      ))
+    }
 
     {/* === Caption / legend === */}
     <g class="ag-legend" aria-hidden="true">
       <text class="ag-legend-text" x="20" y={H - 12}>
-        11 agents · 4 inputs → orchestrator → 3 middles → 3 outputs · feedback loops to orchestrator
+        {totalAgents} agents · {inputCount} inputs → orchestrator → {middleCount} middles → {
+          outputCount
+        } outputs · feedback loops to orchestrator
       </text>
     </g>
   </svg>

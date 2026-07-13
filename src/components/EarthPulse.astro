@@ -40,12 +40,7 @@ interface Props {
   height?: number;
 }
 
-const {
-  centerLat = 20,
-  centerLon = 80,
-  width = 800,
-  height = 800,
-} = Astro.props;
+const { centerLat = 20, centerLon = 80, width = 800, height = 800 } = Astro.props;
 
 const cx = width / 2;
 const cy = height / 2;
@@ -77,12 +72,7 @@ interface RawWorldEvent {
   id: string;
   data: {
     title: string;
-    category:
-      | 'central-bank'
-      | 'earnings'
-      | 'geopolitical'
-      | 'data-release'
-      | 'fx';
+    category: 'central-bank' | 'earnings' | 'geopolitical' | 'data-release' | 'fx';
     severity: 'mild' | 'moderate' | 'critical';
     lat: number;
     lon: number;
@@ -95,10 +85,7 @@ interface RawWorldEvent {
 const allEvents = await getCollection('worldEvent');
 const firing = allEvents
   .filter((e: RawWorldEvent) => e.data.severity === 'critical')
-  .sort(
-    (a: RawWorldEvent, b: RawWorldEvent) =>
-      a.data.order - b.data.order,
-  );
+  .sort((a: RawWorldEvent, b: RawWorldEvent) => a.data.order - b.data.order);
 
 interface RingOut {
   x: number;

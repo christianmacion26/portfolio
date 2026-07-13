@@ -56,18 +56,18 @@
 .ai-hero__stats,
 .r-stats,
 .entry-grid__cell,
-[class*="hero"],
-[class*="tape"],
-[class*="book"],
-[class*="ladder"],
-[class*="quote"],
-[class*="order"],
-[class*="metric"],
-[class*="ingest"],
-[class*="stat"],
-[class*="cell"],
-[class*="row"],
-[class*="grid"] {
+[class*='hero'],
+[class*='tape'],
+[class*='book'],
+[class*='ladder'],
+[class*='quote'],
+[class*='order'],
+[class*='metric'],
+[class*='ingest'],
+[class*='stat'],
+[class*='cell'],
+[class*='row'],
+[class*='grid'] {
   font-variant-numeric: tabular-nums;
 }
 
@@ -300,9 +300,15 @@ li {
 
 /* Data-tick signal — color-only classes for tabular data.
    Pair with .tnum or [class*="metric"] etc. for full institutional readout. */
-.data-up   { color: var(--c-data-positive); }
-.data-down { color: var(--c-data-negative); }
-.data-flat { color: var(--c-data-neutral);  }
+.data-up {
+  color: var(--c-data-positive);
+}
+.data-down {
+  color: var(--c-data-negative);
+}
+.data-flat {
+  color: var(--c-data-neutral);
+}
 
 /* Gridline primitives — 1px hairlines for globe lat/lon, table separators,
    chart axes. Two strengths; the strong variant is for primary axes
@@ -342,7 +348,7 @@ li {
      (--c-tape-2) for rhythm without changing the world. */
   background: var(--c-tape-2);
   color: var(--ink-on-tape);
-  border-block: 1px solid rgba(255, 255, 255, 0.05);
+  border-block: 1px solid var(--c-white-mist);
 }
 
 .section--tight {
@@ -517,9 +523,14 @@ li {
   border-color: var(--c-amber-decor-deep);
 }
 .pill--gold {
-  background: rgba(232, 178, 32, 0.12);
-  color: var(--c-primary-2);
-  border-color: rgba(232, 178, 32, 0.40);
+  /* v6.10.40 — F24 institutional: status-label pills carry the meaning,
+     not the background. Was F13-era rgba(232,178,32,0.12) amber wash
+     (rgb 232,178,32 = #e8b220, the OLD --c-amber before F14 lifted it
+     to #c98a16). Used 3× for status/flagship/public, so cleanup is
+     load-bearing. */
+  background: transparent;
+  color: var(--c-ink-2);
+  border: 1px solid var(--c-rule);
 }
 /* F24 — institutional: pass/warn chrome pills → monochrome ink-3.
      The pass-green / warn-amber backgrounds were AI-vibe. Pills with
@@ -534,7 +545,7 @@ li {
 .pill--warn {
   background: transparent;
   color: var(--c-ink-2);
-  border: 1px solid var(--c-primary-2);   /* outline amber to convey warning */
+  border: 1px solid var(--c-primary-2); /* outline amber to convey warning */
 }
 .pill--tag {
   background: transparent;
@@ -585,6 +596,9 @@ li {
   position: fixed;
   left: 1rem;
   top: 1rem;
+  /* v6.11.6 — must exceed --z-toast (200) so the skip-link always
+     wins over toasts/popovers for a11y compliance. Documented intent;
+     no token covers this top-priority surface. */
   z-index: 1000;
   background: var(--c-bg);
   /* v6.1 polish — raise to 0.875rem so the focused skip-link reaches

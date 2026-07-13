@@ -66,7 +66,7 @@ const candles: Candle[] = (() => {
     // 10% amber highlight, otherwise classify by close-vs-open sign.
     const r = rng();
     let kind: Candle['kind'];
-    if (r < 0.10) kind = 'amber';
+    if (r < 0.1) kind = 'amber';
     else if (close > open + 0.4) kind = 'up';
     else if (close < open - 0.4) kind = 'down';
     else kind = 'flat';
@@ -92,37 +92,31 @@ const candleGeometry = candles.map((c) => {
 const cycle = candles.map((c, i) => ({ candle: c, geom: candleGeometry[i]! }));
 ---
 
-<div class="candle-tape" role="marquee" aria-label="depth-candle tape">
+<div class="candle-tape" aria-label="depth-candle tape">
   <div class="candle-tape__track ticker__track">
-    {[...cycle, ...cycle].map(({ candle, geom }, i) => (
-      <div class:list={['candle', `candle--${candle.kind}`]}>
-        <svg
-          class="candle__svg"
-          viewBox={`0 0 ${CANDLE_W} ${CANDLE_H + 12}`}
-          width={CANDLE_W}
-          height={CANDLE_H + 12}
-          aria-hidden="true"
-        >
-          <line
-            class="candle__wick"
-            x1={CANDLE_W / 2}
-            y1="0"
-            x2={CANDLE_W / 2}
-            y2={CANDLE_H}
-          />
-          <rect
-            class="candle__body"
-            x={(CANDLE_W - BODY_W) / 2}
-            y={geom.bodyY}
-            width={BODY_W}
-            height={geom.bodyH}
-          />
-        </svg>
-        {candle.label && (
-          <span class="candle__label mono">{candle.label}</span>
-        )}
-      </div>
-    ))}
+    {
+      [...cycle, ...cycle].map(({ candle, geom }, _i) => (
+        <div class:list={['candle', `candle--${candle.kind}`]}>
+          <svg
+            class="candle__svg"
+            viewBox={`0 0 ${CANDLE_W} ${CANDLE_H + 12}`}
+            width={CANDLE_W}
+            height={CANDLE_H + 12}
+            aria-hidden="true"
+          >
+            <line class="candle__wick" x1={CANDLE_W / 2} y1="0" x2={CANDLE_W / 2} y2={CANDLE_H} />
+            <rect
+              class="candle__body"
+              x={(CANDLE_W - BODY_W) / 2}
+              y={geom.bodyY}
+              width={BODY_W}
+              height={geom.bodyH}
+            />
+          </svg>
+          {candle.label && <span class="candle__label mono">{candle.label}</span>}
+        </div>
+      ))
+    }
   </div>
 </div>
 
@@ -138,7 +132,7 @@ const cycle = candles.map((c, i) => ({ candle: c, geom: candleGeometry[i]! }));
     overflow: hidden;
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
     position: relative;
     height: 56px;
     display: flex;
@@ -203,15 +197,23 @@ const cycle = candles.map((c, i) => ({ candle: c, geom: candleGeometry[i]! }));
     fill: var(--c-data-neutral);
     shape-rendering: crispEdges;
   }
-  .candle--up .candle__body { fill: var(--c-data-positive); }
-  .candle--down .candle__body { fill: var(--c-data-negative); }
-  .candle--flat .candle__body { fill: var(--c-data-neutral); }
-  .candle--amber .candle__body { fill: var(--c-amber-light); }
+  .candle--up .candle__body {
+    fill: var(--c-data-positive);
+  }
+  .candle--down .candle__body {
+    fill: var(--c-data-negative);
+  }
+  .candle--flat .candle__body {
+    fill: var(--c-data-neutral);
+  }
+  .candle--amber .candle__body {
+    fill: var(--c-amber-light);
+  }
 
   .candle__label {
     font-size: 9px;
     line-height: 1;
-    color: rgba(230, 237, 243, 0.55);
+    color: var(--c-ink-ghost);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     font-family: var(--ff-mono);

@@ -112,16 +112,11 @@ function meterFor(i: number): boolean[] {
 }
 ---
 
-<section
-  class="section section--alt collaborators"
-  aria-labelledby="collaborators-title"
->
+<section class="section section--alt collaborators" aria-labelledby="collaborators-title">
   <div class="container">
     <header class="collaborators__head">
       <p class="section__eyebrow">Collaborators</p>
-      <h2 id="collaborators-title" class="section__title">
-        We work with everyone.
-      </h2>
+      <h2 id="collaborators-title" class="section__title">We work with everyone.</h2>
       <VoiceLine class="section__sub" ruled={true} size="md">
         Built alongside senior desks on three continents. Open-sourced for the next one.
       </VoiceLine>
@@ -157,10 +152,7 @@ function meterFor(i: number): boolean[] {
               >
                 {cells.map((on) => (
                   <span
-                    class:list={[
-                      'collaborator__pip',
-                      on ? 'collaborator__pip--on' : '',
-                    ]}
+                    class:list={['collaborator__pip', on ? 'collaborator__pip--on' : '']}
                     aria-hidden="true"
                   />
                 ))}
@@ -199,7 +191,7 @@ function meterFor(i: number): boolean[] {
   .collaborator {
     width: 200px;
     height: 260px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--c-white-haze);
     background: var(--c-tape-2);
     padding: var(--sp-3);
     display: flex;
@@ -247,7 +239,7 @@ function meterFor(i: number): boolean[] {
   .collaborator__avatar--ink {
     background: var(--c-tape);
     color: var(--c-primary-2-light);
-    border: 1px solid rgba(232, 178, 32, 0.4);
+    border: 1px solid var(--c-amberl-decor);
   }
 
   .collaborator__heading {
@@ -306,7 +298,7 @@ function meterFor(i: number): boolean[] {
 
   .collaborator__deliverable {
     font-size: 11px;
-    color: rgba(230, 237, 243, 0.7);
+    color: var(--c-ink-mute);
     margin: 0;
     line-height: 1.4;
     display: -webkit-box;

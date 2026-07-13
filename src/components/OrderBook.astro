@@ -55,13 +55,7 @@ const halfSpread = (midPxResolved * spreadBps) / 10_000;
 // Tick size derived from symbol — round to a sensible grid. For SPX/NDX
 // that's 0.01; for BTC-USD it's 1. We infer from midPx magnitude.
 const tick =
-  midPxResolved >= 10_000
-    ? 1
-    : midPxResolved >= 1000
-      ? 0.05
-      : midPxResolved >= 100
-        ? 0.01
-        : 0.001;
+  midPxResolved >= 10_000 ? 1 : midPxResolved >= 1000 ? 0.05 : midPxResolved >= 100 ? 0.01 : 0.001;
 
 // Build the size ladders — geometric, with PRNG jitter so adjacent
 // rows don't look like a perfect staircase.  Bids are descending
@@ -128,15 +122,11 @@ const midStr = formatPx(midPxResolved, midPxResolved >= 1000 ? 2 : 4);
 const sessionChangePct = (() => {
   // Use a fixed reference "yesterday close" derived from the seed so
   // the delta is reproducible.  25 bps noise around midPx.
-  return (((midPxResolved * 0.9985) - midPxResolved) / midPxResolved) * 100;
+  return ((midPxResolved * 0.9985 - midPxResolved) / midPxResolved) * 100;
 })();
 const sessionDeltaStr = formatPct(sessionChangePct);
 const sessionColorClass =
-  sessionChangePct > 0.005
-    ? 'pass'
-    : sessionChangePct < -0.005
-      ? 'fail'
-      : 'muted';
+  sessionChangePct > 0.005 ? 'pass' : sessionChangePct < -0.005 ? 'fail' : 'muted';
 
 // === Display decimals — match the symbol ===
 const pxDecimals = midPxResolved >= 1000 ? 2 : midPxResolved >= 100 ? 2 : 4;
@@ -228,26 +218,32 @@ const pxDecimals = midPxResolved >= 1000 ? 2 : midPxResolved >= 100 ? 2 : 4;
   }
   .book__sym {
     font-size: var(--fs-base);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-ink);
     letter-spacing: 0.05em;
   }
   .book__mid {
     font-size: var(--fs-lg);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-primary-2);
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
     text-align: right;
   }
   .book__delta {
-    font-weight: 700;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
   }
-  .book__delta--pass { color: var(--c-pass); }
-  .book__delta--fail { color: var(--c-fail); }
-  .book__delta--muted { color: var(--c-ink-3); }
+  .book__delta--pass {
+    color: var(--c-pass);
+  }
+  .book__delta--fail {
+    color: var(--c-fail);
+  }
+  .book__delta--muted {
+    color: var(--c-ink-3);
+  }
 
   .book__colheads {
     display: grid;
@@ -259,9 +255,15 @@ const pxDecimals = midPxResolved >= 1000 ? 2 : midPxResolved >= 100 ? 2 : 4;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
-  .book__col--size { text-align: left; }
-  .book__col--price { text-align: right; }
-  .book__col--cum { text-align: right; }
+  .book__col--size {
+    text-align: left;
+  }
+  .book__col--price {
+    text-align: right;
+  }
+  .book__col--cum {
+    text-align: right;
+  }
 
   .book__ladder {
     list-style: none;
@@ -311,8 +313,12 @@ const pxDecimals = midPxResolved >= 1000 ? 2 : midPxResolved >= 100 ? 2 : 4;
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
   }
-  .book__price--bid { color: var(--c-pass); }
-  .book__price--ask { color: var(--c-fail); }
+  .book__price--bid {
+    color: var(--c-pass);
+  }
+  .book__price--ask {
+    color: var(--c-fail);
+  }
   .book__cell--cum {
     text-align: right;
     color: var(--c-ink-3);
@@ -332,9 +338,19 @@ const pxDecimals = midPxResolved >= 1000 ? 2 : midPxResolved >= 100 ? 2 : 4;
     color: var(--c-ink-2);
     font-size: 0.7rem;
   }
-  .book__spread > :first-child { color: var(--c-pass); text-align: left; }
-  .book__spread > :last-child { color: var(--c-fail); text-align: right; }
-  .book__spread-mid { color: var(--c-ink-3); text-align: center; letter-spacing: 0.04em; }
+  .book__spread > :first-child {
+    color: var(--c-pass);
+    text-align: left;
+  }
+  .book__spread > :last-child {
+    color: var(--c-fail);
+    text-align: right;
+  }
+  .book__spread-mid {
+    color: var(--c-ink-3);
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
 
   .book__foot {
     display: flex;

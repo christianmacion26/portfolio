@@ -8,6 +8,8 @@ import Avatar from '@components/Avatar.astro';
 import { profile } from '@utils/profile';
 import VoiceLine from '@components/VoiceLine.astro';
 
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
+
 const channels = [
   {
     label: 'Open roles · JDs',
@@ -63,12 +65,16 @@ const platforms = [
     href: profile.contact.upwork,
     use: 'Contract engagements · hourly or fixed-price.',
   },
-];---
+];
+---
 
 <BaseLayout
   title="Contact"
   description={`Email ${profile.contact.email} with a JD, or reach me via LinkedIn, GitHub, or phone. Reply within 24h on weekdays.`}
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Contact", href: "/contact" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Contact', href: '/contact' },
+  ]}
 >
   <header class="contact-head">
     <div class="container">
@@ -77,20 +83,16 @@ const platforms = [
           <p class="section__eyebrow"><span class="mono">contact/</span> · 24h reply · NDA-safe</p>
           <h1 class="contact-head__title">Five channels. Pick the one that fits.</h1>
           <VoiceLine class="contact-head__voice">
-        Email-with-JD gets the richest reply. LinkedIn DM is fine for casual. Phone after email — never first.
-      </VoiceLine>
+            Email-with-JD gets the richest reply. LinkedIn DM is fine for casual. Phone after email
+            — never first.
+          </VoiceLine>
           <p class="contact-head__sub">
             Each tile names the job it does, not the platform. For open roles, the email-with-JD
             path gets the richest reply (problem → approach → evidence → outcome → proof).
           </p>
         </div>
         <div class="contact-head__avatar">
-          <Avatar
-            alt={profile.headshot.alt}
-            size={120}
-            loading="eager"
-            fetchpriority="high"
-          />
+          <Avatar alt={profile.headshot.alt} size={120} loading="eager" fetchpriority="high" />
         </div>
       </div>
 
@@ -195,7 +197,7 @@ const platforms = [
             <h3>Read the JD fully</h3>
             <p>
               If a JD is attached, I'll read it end-to-end before replying. I'll surface the gates
-              from G1–G31 that already apply to your stack.
+              from {GATE_RANGE} that already apply to your stack.
             </p>
           </div>
         </li>
@@ -224,7 +226,7 @@ const platforms = [
           <div class="how-i-reply__body">
             <h3>AI architecture audit (on request)</h3>
             <p>
-              Read your stack end-to-end and surface the gates from G1–G31 that already apply, plus
+              Read your stack end-to-end and surface the gates from {GATE_RANGE} that already apply, plus
               the ones it doesn't yet cover. Same lens I apply to my own multi-agent builds.
             </p>
           </div>
@@ -247,8 +249,7 @@ const platforms = [
 <style>
   .contact-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .contact-head__top {
@@ -300,7 +301,7 @@ const platforms = [
   .contact-head__voice {
     margin: 0 0 var(--sp-4);
     max-width: 60ch;
-}
+  }
   .contact-head__eq {
     padding: var(--sp-4) var(--sp-5);
     background: var(--c-bg);
@@ -417,7 +418,7 @@ const platforms = [
     background: var(--c-tape);
     border: 1px solid var(--c-tape-2);
     border-radius: var(--radius);
-    color: rgba(230, 237, 243, 0.85);
+    color: var(--c-ink-mist);
   }
   .loc-card__title {
     font-size: var(--fs-lg);
@@ -430,7 +431,7 @@ const platforms = [
   }
   .loc-card li {
     padding-block: var(--sp-2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--c-white-mist);
     line-height: var(--lh-loose);
     font-size: var(--fs-sm);
   }

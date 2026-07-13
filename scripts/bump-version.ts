@@ -72,10 +72,7 @@ if (versionLineRe.test(humans)) {
   humans = humans.replace(versionLineRe, versionLine);
 } else {
   // Insert under "## Build metadata" if the line is missing.
-  humans = humans.replace(
-    /## Build metadata\n/,
-    `## Build metadata\n\n${versionLine}\n`,
-  );
+  humans = humans.replace(/## Build metadata\n/, `## Build metadata\n\n${versionLine}\n`);
 }
 
 const lastEditedRe = /Last edited \d{4}-\d{2}-\d{2} · v[\d.]+\./;

@@ -20,6 +20,7 @@ The current site reads as a polished blog. To win senior QR/AI seats it must rea
 ## 2. What's already on disk (the inventory we compose with)
 
 **Content collections (NDA-clean, public data only):**
+
 - `/Users/christianmacion/Contingency/christianmacion.github.io/src/content/projects/quant/` — 9 mdx files (01-deflated-sharpe → 09-lookahead-bias-audit)
 - `/Users/christianmacion/Contingency/christianmacion.github.io/src/content/projects/ai/` — 6 mdx files (01-rag-recall → 06-slop-scanner)
 - `/Users/christianmacion/Contingency/christianmacion.github.io/src/content/solutions/` — 10 case studies
@@ -28,6 +29,7 @@ The current site reads as a polished blog. To win senior QR/AI seats it must rea
 - `/Users/christianmacion/Contingency/christianmacion.github.io/src/content/skills/` — skill groups
 
 **Visual assets:**
+
 - `/Users/christianmacion/Contingency/christianmacion.github.io/public/figures/quant/01-multiple-testing-deflated-sharpe.webp` … `09-bias-audit.webp` (9 equity/drawdown charts)
 - `/Users/christianmacion/Contingency/christianmacion.github.io/public/proof/cta-cert-portrait-2026-01.jpg`
 - `/Users/christianmacion/Contingency/christianmacion.github.io/public/proof/ateneo-american-corner-2025-11.jpg`
@@ -45,12 +47,12 @@ The current site reads as a polished blog. To win senior QR/AI seats it must rea
 
 ## 3. The 4 new primitives
 
-| Component | File (NEW) | LOC | Interface (TS props) | Composition rule |
-|---|---|---|---|---|
-| **MarketTape** | `src/components/MarketTape.astro` | ~90 | `symbols?: {sym:string;px:number;deltaPct:number;vol:string}[]` | Render once at top of `/markets`. CSS-only `@keyframes scroll-x` 60s linear, duplicated track for seamless wrap. |
-| **OrderBook** | `src/components/OrderBook.astro` | ~140 | `symbol: string; midPx: number; spreadBps: number; depth?: number; seed?: string` | PRNG (mulberry32) generates 12 bid + 12 ask rows; deterministic from `BUILD_DATE`. Bid green, ask red, size-bar driven by `max(size)` ratio. |
-| **TermStructure** | `src/components/TermStructure.astro` | ~110 | `points: {tenor:string;yld:number}[]; spot?: number` | Hand-rolled SVG (no runtime JS): polyline + axis ticks + area fill at `--c-amber`. Reusable for yield curves AND prediction-market time-decay curves. |
-| **CoverageGlobe** | `src/components/CoverageGlobe.astro` | ~150 | `points: {city:string;lat:number;lon:number;weight:number}[]` | Inline SVG world dot map (Equirectangular). 6 dots seeded from research locations. Used on `/for-recruiters` footer + `/markets` corner. |
+| Component         | File (NEW)                           | LOC  | Interface (TS props)                                                              | Composition rule                                                                                                                                      |
+| ----------------- | ------------------------------------ | ---- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **MarketTape**    | `src/components/MarketTape.astro`    | ~90  | `symbols?: {sym:string;px:number;deltaPct:number;vol:string}[]`                   | Render once at top of `/markets`. CSS-only `@keyframes scroll-x` 60s linear, duplicated track for seamless wrap.                                      |
+| **OrderBook**     | `src/components/OrderBook.astro`     | ~140 | `symbol: string; midPx: number; spreadBps: number; depth?: number; seed?: string` | PRNG (mulberry32) generates 12 bid + 12 ask rows; deterministic from `BUILD_DATE`. Bid green, ask red, size-bar driven by `max(size)` ratio.          |
+| **TermStructure** | `src/components/TermStructure.astro` | ~110 | `points: {tenor:string;yld:number}[]; spot?: number`                              | Hand-rolled SVG (no runtime JS): polyline + axis ticks + area fill at `--c-amber`. Reusable for yield curves AND prediction-market time-decay curves. |
+| **CoverageGlobe** | `src/components/CoverageGlobe.astro` | ~150 | `points: {city:string;lat:number;lon:number;weight:number}[]`                     | Inline SVG world dot map (Equirectangular). 6 dots seeded from research locations. Used on `/for-recruiters` footer + `/markets` corner.              |
 
 All four: **zero runtime JS**, server-rendered, palette-compliant, `prefers-reduced-motion` honored on `MarketTape`.
 
@@ -58,14 +60,14 @@ All four: **zero runtime JS**, server-rendered, palette-compliant, `prefers-redu
 
 ## 4. The 6 pages (2 new + 4 rebuilt)
 
-| Route | Status | Layout (top → bottom) | Composables | Done artifact |
-|---|---|---|---|---|
-| **`/markets`** | NEW | `<MarketTape>` (full-bleed) → 3-col grid: `<OrderBook>` left · `<TermStructure>` center · `<CoverageGlobe>` right → indices strip (S&P/DXY/VIX `Sparkline` fixtures) | All 4 primitives | Visit `/markets`, screenshot the 4-region grid; tape scrolls; book has 24 rows; curve has 8 tenors |
-| **`/prediction-markets`** | NEW | 6-12 deterministic event cards (election, GDP, BTC end-of-year, etc.) + `<TermStructure>` showing probability decay across tenors. Generic category language only ("binary event markets", "event contracts"). | `<TermStructure>` (reused), `<MetricPill>`, `<VoiceLine>` | Visit `/prediction-markets`; cards read probabilities 0.00–1.00; no platform names anywhere in DOM or comments |
-| **`/research`** | REBUILT (was `/research/index.astro`) | `<MarketTape>` mini-top → 9 quant strategies grid (uses existing `public/figures/quant/*.webp`) → factor decomposition table (Sharpe / Deflated Sharpe / PSR / DSR / PBO columns × rows) | `<MarketTape>`, `<Sparkline>`, existing figures | Visit `/research`; 9 project cards; factor table renders 5 columns × 9 rows with real metrics from `src/content/projects/quant/*.mdx` frontmatter |
-| **`/ai`** | REBUILT (was research stub) | `<MarketTape>` mini-top → 11-agent platform diagram (use `PipelineDiagram` extended) → eval console (31-gate result grid mirroring `methodology.astro` G1–G31) | `<MarketTape>`, `<PipelineDiagram>`, existing `<VoiceLine>` | Visit `/ai`; 11 agents labeled; 31 eval gates visible |
-| **`/proof`** | TOUCHED | No structural change (6-section spine from v6.0.12 preserved). Add 1 nav entry: "→ See the live `/markets` terminal". | `<SectionTOC>` updated | Visit `/proof`; new line item appears in TOC + closing CTABanner |
-| **`/`** (home) | TOUCHED | Identity-first hero STAYS (v6.0.12 Phase R). Add **4-entry-point strip** below hero: Markets · Prediction · Research · AI. Each tile = 1-line caption + mini primitive preview (sparkline for markets, curve for prediction, dot grid for research, agent roster for AI). | All 4 primitives at small size | Visit `/`; new strip visible between hero and Ticker |
+| Route                     | Status                                | Layout (top → bottom)                                                                                                                                                                                                                                                     | Composables                                                 | Done artifact                                                                                                                                     |
+| ------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`/markets`**            | NEW                                   | `<MarketTape>` (full-bleed) → 3-col grid: `<OrderBook>` left · `<TermStructure>` center · `<CoverageGlobe>` right → indices strip (S&P/DXY/VIX `Sparkline` fixtures)                                                                                                      | All 4 primitives                                            | Visit `/markets`, screenshot the 4-region grid; tape scrolls; book has 24 rows; curve has 8 tenors                                                |
+| **`/prediction-markets`** | NEW                                   | 6-12 deterministic event cards (election, GDP, BTC end-of-year, etc.) + `<TermStructure>` showing probability decay across tenors. Generic category language only ("binary event markets", "event contracts").                                                            | `<TermStructure>` (reused), `<MetricPill>`, `<VoiceLine>`   | Visit `/prediction-markets`; cards read probabilities 0.00–1.00; no platform names anywhere in DOM or comments                                    |
+| **`/research`**           | REBUILT (was `/research/index.astro`) | `<MarketTape>` mini-top → 9 quant strategies grid (uses existing `public/figures/quant/*.webp`) → factor decomposition table (Sharpe / Deflated Sharpe / PSR / DSR / PBO columns × rows)                                                                                  | `<MarketTape>`, `<Sparkline>`, existing figures             | Visit `/research`; 9 project cards; factor table renders 5 columns × 9 rows with real metrics from `src/content/projects/quant/*.mdx` frontmatter |
+| **`/ai`**                 | REBUILT (was research stub)           | `<MarketTape>` mini-top → 11-agent platform diagram (use `PipelineDiagram` extended) → eval console (31-gate result grid mirroring `methodology.astro` G1–G31)                                                                                                            | `<MarketTape>`, `<PipelineDiagram>`, existing `<VoiceLine>` | Visit `/ai`; 11 agents labeled; 31 eval gates visible                                                                                             |
+| **`/proof`**              | TOUCHED                               | No structural change (6-section spine from v6.0.12 preserved). Add 1 nav entry: "→ See the live `/markets` terminal".                                                                                                                                                     | `<SectionTOC>` updated                                      | Visit `/proof`; new line item appears in TOC + closing CTABanner                                                                                  |
+| **`/`** (home)            | TOUCHED                               | Identity-first hero STAYS (v6.0.12 Phase R). Add **4-entry-point strip** below hero: Markets · Prediction · Research · AI. Each tile = 1-line caption + mini primitive preview (sparkline for markets, curve for prediction, dot grid for research, agent roster for AI). | All 4 primitives at small size                              | Visit `/`; new strip visible between hero and Ticker                                                                                              |
 
 ---
 
@@ -104,23 +106,23 @@ Home · For-recruiters · Proof · [Markets ▾] · Projects · Solutions · Met
 
 ## 7. File list of changes
 
-| File | Action | LOC delta | Notes |
-|---|---|---|---|
-| `src/components/MarketTape.astro` | CREATE | +90 | CSS scroll animation, prefers-reduced-motion guard |
-| `src/components/OrderBook.astro` | CREATE | +140 | mulberry32 PRNG, 24 rows, 8px font, bid/ask color |
-| `src/components/TermStructure.astro` | CREATE | +110 | Pure SVG, viewBox 0 0 600 240, axis ticks |
-| `src/components/CoverageGlobe.astro` | CREATE | +150 | Inline SVG world dots, 6 cities (Digos, Singapore, NY, London, Zurich, Tokyo) |
-| `src/components/FactorTable.astro` | CREATE | +80 | New: Sharpe/PSR/DSR/PBO column grid for /research |
-| `src/pages/markets.astro` | CREATE | +220 | The terminal layout |
-| `src/pages/prediction-markets.astro` | CREATE | +200 | 8 event cards + probability decay curves |
-| `src/pages/research.astro` | REBUILD | +260 | 9 strategies + factor table |
-| `src/pages/ai.astro` | REBUILD | +240 | 11-agent platform + eval console |
-| `src/pages/proof.astro` | TOUCH | +10 | New TOC line + CTABanner link to /markets |
-| `src/pages/index.astro` | TOUCH | +60 | New 4-entry-point strip |
-| `src/components/Nav.astro` | TOUCH | +30 | New dropdown for Markets |
-| `src/styles/global.css` | TOUCH | +80 | Shared primitives styles (tape, book, curve, globe base) |
-| `src/content/projects/prediction/` | CREATE dir | +120 | 6-8 mdx event fixtures |
-| `src/content.config.ts` | TOUCH | +15 | New `prediction` collection schema |
+| File                                 | Action     | LOC delta | Notes                                                                         |
+| ------------------------------------ | ---------- | --------- | ----------------------------------------------------------------------------- |
+| `src/components/MarketTape.astro`    | CREATE     | +90       | CSS scroll animation, prefers-reduced-motion guard                            |
+| `src/components/OrderBook.astro`     | CREATE     | +140      | mulberry32 PRNG, 24 rows, 8px font, bid/ask color                             |
+| `src/components/TermStructure.astro` | CREATE     | +110      | Pure SVG, viewBox 0 0 600 240, axis ticks                                     |
+| `src/components/CoverageGlobe.astro` | CREATE     | +150      | Inline SVG world dots, 6 cities (Digos, Singapore, NY, London, Zurich, Tokyo) |
+| `src/components/FactorTable.astro`   | CREATE     | +80       | New: Sharpe/PSR/DSR/PBO column grid for /research                             |
+| `src/pages/markets.astro`            | CREATE     | +220      | The terminal layout                                                           |
+| `src/pages/prediction-markets.astro` | CREATE     | +200      | 8 event cards + probability decay curves                                      |
+| `src/pages/research.astro`           | REBUILD    | +260      | 9 strategies + factor table                                                   |
+| `src/pages/ai.astro`                 | REBUILD    | +240      | 11-agent platform + eval console                                              |
+| `src/pages/proof.astro`              | TOUCH      | +10       | New TOC line + CTABanner link to /markets                                     |
+| `src/pages/index.astro`              | TOUCH      | +60       | New 4-entry-point strip                                                       |
+| `src/components/Nav.astro`           | TOUCH      | +30       | New dropdown for Markets                                                      |
+| `src/styles/global.css`              | TOUCH      | +80       | Shared primitives styles (tape, book, curve, globe base)                      |
+| `src/content/projects/prediction/`   | CREATE dir | +120      | 6-8 mdx event fixtures                                                        |
+| `src/content.config.ts`              | TOUCH      | +15       | New `prediction` collection schema                                            |
 
 **Total LOC:** ~1,805 lines added, ~50 removed. **Net +1,755.** All additive; existing pages untouched.
 
@@ -146,6 +148,6 @@ Home · For-recruiters · Proof · [Markets ▾] · Projects · Solutions · Met
 
 ## Open questions for CEO
 
-1. **Flash-crash artifact in OrderBook?** Should the depth-of-book fixture occasionally show a 1-row "thin liquidity gap" as a teaching artifact (mirrors real flash-crash microstructure)? Yes = proves we know the edge case; no = cleaner fixture. *My recommendation: yes, 5% probability.*
-2. **Prediction market event count?** 6 cards (curated, only events with strong public-data priors) vs 12 cards (more impressive, but some feel forced)? *My recommendation: 8.*
+1. **Flash-crash artifact in OrderBook?** Should the depth-of-book fixture occasionally show a 1-row "thin liquidity gap" as a teaching artifact (mirrors real flash-crash microstructure)? Yes = proves we know the edge case; no = cleaner fixture. _My recommendation: yes, 5% probability._
+2. **Prediction market event count?** 6 cards (curated, only events with strong public-data priors) vs 12 cards (more impressive, but some feel forced)? _My recommendation: 8._
 3. **`/ai` separate vs `/research` sub-route?** Nav spec above says separate page, sub-route of /research for IA. Confirm — or merge `/ai` into `/research` as a tab?

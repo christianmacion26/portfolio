@@ -25,6 +25,13 @@ import EventPin from '@components/EventPin.astro';
 import { seedFromString, buildSeed } from '@utils/prng';
 import { COUNTRY_PATHS } from '@data/earth-110m-countries';
 import { COUNTRY_BORDERS } from '@data/earth-110m-borders';
+import {
+  loadGdeltEvents,
+  gdeltFetchedAtIso,
+  gdeltSource,
+  gdeltEventCount,
+} from '@utils/gdelt-events';
+import type { ResolvedEvent } from '@utils/world-event';
 
 interface City {
   city: string;
@@ -91,7 +98,6 @@ const {
   buildDateIso,
   showRegionRollups = true,
   showNightLights = false,
-  showCollaboratorTooltips = false,
   autoRotate = true,
   rotationPeriodSeconds = 240,
 } = Astro.props;
@@ -159,8 +165,14 @@ for (let lo = -150; lo <= 150; lo += 30) gridLon.push(lo);
 // drifting" instead of "the world is turning."
 const POLAR_RING_LATS: number[] = [66.5, -66.5];
 
-interface GridLatSeg { d: string; visible: boolean; }
-interface GridLonSeg { d: string; visible: boolean; }
+interface GridLatSeg {
+  d: string;
+  visible: boolean;
+}
+interface GridLonSeg {
+  d: string;
+  visible: boolean;
+}
 
 function buildLatGrid(la: number): GridLatSeg {
   // A parallel at `la` projects to an ellipse-like curve. We sample it
@@ -218,37 +230,42 @@ const polarRingSegs = POLAR_RING_LATS.map((la) => ({ la, ...buildLatGrid(la) }))
 // make up the bulk, with a few brighter "anchor" stars for focus.
 // All stars sit OUTSIDE the disc clip in the page-margin area so they
 // don't visually compete with the globe.
-interface Star { x: number; y: number; r: number; o: number; tier: 1 | 2 | 3; }
+interface Star {
+  x: number;
+  y: number;
+  r: number;
+  o: number;
+  tier: 1 | 2 | 3;
+}
 const starField: Star[] = (() => {
   const rng = seedFromString(buildSeed() + '-stars-v65');
   const stars: Star[] = [];
   // Skip the central disc area (cx-R..cx+R, cy-R..cy+R) plus a 1.18·R
   // buffer so stars near the limb don't pop in/out under rotation.
   for (let i = 0; i < 120; i++) {
-    let x: number, y: number, tries = 0;
+    let x: number,
+      y: number,
+      tries = 0;
     do {
       x = rng() * width;
       y = rng() * height;
       tries++;
-    } while (
-      tries < 8 &&
-      Math.hypot(x - cx, y - cy) < R * 1.18
-    );
+    } while (tries < 8 && Math.hypot(x - cx, y - cy) < R * 1.18);
     // 3-tier sampling — 40/50/30 split (40 small + 50 medium + 30 large).
     let tier: 1 | 2 | 3;
     let r: number, o: number;
     if (i < 40) {
       tier = 1;
-      r = 0.3 + rng() * 0.2;       // 0.3..0.5
-      o = 0.35 + rng() * 0.15;     // 0.35..0.50
+      r = 0.3 + rng() * 0.2; // 0.3..0.5
+      o = 0.35 + rng() * 0.15; // 0.35..0.50
     } else if (i < 90) {
       tier = 2;
-      r = 0.6 + rng() * 0.3;       // 0.6..0.9
-      o = 0.55 + rng() * 0.15;     // 0.55..0.70
+      r = 0.6 + rng() * 0.3; // 0.6..0.9
+      o = 0.55 + rng() * 0.15; // 0.55..0.70
     } else {
       tier = 3;
-      r = 1.0 + rng() * 0.4;       // 1.0..1.4
-      o = 0.70 + rng() * 0.15;     // 0.70..0.85
+      r = 1.0 + rng() * 0.4; // 1.0..1.4
+      o = 0.7 + rng() * 0.15; // 0.70..0.85
     }
     stars.push({ x, y, r, o, tier });
   }
@@ -280,9 +297,7 @@ function sunPosition(seed: string): { lat: number; lon: number } {
     const y = Number(ymdMatch[1]);
     const mo = Number(ymdMatch[2]);
     const d = Number(ymdMatch[3]);
-    doy = Math.floor(
-      (Date.UTC(y, mo - 1, d) - Date.UTC(y, 0, 0)) / 86400000,
-    );
+    doy = Math.floor((Date.UTC(y, mo - 1, d) - Date.UTC(y, 0, 0)) / 86400000);
   }
   const dec = 23.45 * Math.sin(toRad((360 / 365) * (doy - 81)));
   const sunLonDeg = (12 - utcHour) * 15;
@@ -293,9 +308,7 @@ function sunPosition(seed: string): { lat: number; lon: number } {
 const sun = showSun ? sunPosition(buildDateIso ?? buildSeed()) : null;
 const sunProj = sun ? project(sun.lat, sun.lon) : null;
 // Subsolar unit-vector components in the viewer's (x-right, y-up, z-out) frame:
-const sunVx = sun
-  ? Math.cos(toRad(sun.lat)) * Math.sin(toRad(sun.lon - centerLon))
-  : 0;
+const sunVx = sun ? Math.cos(toRad(sun.lat)) * Math.sin(toRad(sun.lon - centerLon)) : 0;
 const sunVy = sun
   ? cosCL * Math.sin(toRad(sun.lat)) -
     sinCL * Math.cos(toRad(sun.lat)) * Math.cos(toRad(sun.lon - centerLon))
@@ -381,11 +394,11 @@ interface LatRampStop {
 }
 const LAT_RAMP: ReadonlyArray<LatRampStop> = [
   { lat: -90, rgb: [232, 226, 214] }, // polar caps — off-white
-  { lat: -55, rgb: [156, 130,  98] }, // uplands — warm brown
+  { lat: -55, rgb: [156, 130, 98] }, // uplands — warm brown
   { lat: -25, rgb: [180, 154, 110] }, // midlands — tan
-  { lat:  10, rgb: [128, 148,  92] }, // lowlands — sage green
-  { lat:  35, rgb: [180, 154, 110] }, // midlands — tan
-  { lat:  60, rgb: [156, 130,  98] }, // uplands — warm brown
+  { lat: 10, rgb: [128, 148, 92] }, // lowlands — sage green
+  { lat: 35, rgb: [180, 154, 110] }, // midlands — tan
+  { lat: 60, rgb: [156, 130, 98] }, // uplands — warm brown
 ];
 
 function latToRampFill(lat: number): string {
@@ -432,22 +445,22 @@ for (const c of countryFills) {
 
 // === Cities (16 default — Digos + 15 global hubs) ================
 const cities = citiesOverride ?? [
-  { city: 'Digos',      lat: 6.74,  lon: 125.36 },
-  { city: 'Singapore',  lat: 1.35,  lon: 103.82 },
-  { city: 'Tokyo',      lat: 35.68, lon: 139.69 },
-  { city: 'Hong Kong',  lat: 22.30, lon: 114.17 },
-  { city: 'Shanghai',   lat: 31.23, lon: 121.47 },
-  { city: 'Seoul',      lat: 37.57, lon: 126.98 },
-  { city: 'Manila',     lat: 14.60, lon: 120.98 },
-  { city: 'Mumbai',     lat: 19.08, lon: 72.88 },
-  { city: 'Dubai',      lat: 25.20, lon: 55.27 },
-  { city: 'Sydney',     lat: -33.87, lon: 151.21 },
-  { city: 'Frankfurt',  lat: 50.11, lon: 8.68 },
-  { city: 'Zurich',     lat: 47.38, lon: 8.54 },
-  { city: 'London',     lat: 51.51, lon: -0.13 },
-  { city: 'New York',   lat: 40.71, lon: -74.01 },
-  { city: 'Toronto',    lat: 43.65, lon: -79.38 },
-  { city: 'Sao Paulo',  lat: -23.55, lon: -46.63 },
+  { city: 'Digos', lat: 6.74, lon: 125.36 },
+  { city: 'Singapore', lat: 1.35, lon: 103.82 },
+  { city: 'Tokyo', lat: 35.68, lon: 139.69 },
+  { city: 'Hong Kong', lat: 22.3, lon: 114.17 },
+  { city: 'Shanghai', lat: 31.23, lon: 121.47 },
+  { city: 'Seoul', lat: 37.57, lon: 126.98 },
+  { city: 'Manila', lat: 14.6, lon: 120.98 },
+  { city: 'Mumbai', lat: 19.08, lon: 72.88 },
+  { city: 'Dubai', lat: 25.2, lon: 55.27 },
+  { city: 'Sydney', lat: -33.87, lon: 151.21 },
+  { city: 'Frankfurt', lat: 50.11, lon: 8.68 },
+  { city: 'Zurich', lat: 47.38, lon: 8.54 },
+  { city: 'London', lat: 51.51, lon: -0.13 },
+  { city: 'New York', lat: 40.71, lon: -74.01 },
+  { city: 'Toronto', lat: 43.65, lon: -79.38 },
+  { city: 'Sao Paulo', lat: -23.55, lon: -46.63 },
 ];
 
 const cityByName = new Map(cities.map((c) => [c.city, c] as const));
@@ -456,30 +469,45 @@ const cityByName = new Map(cities.map((c) => [c.city, c] as const));
 // Distinct visual class — see `eg__capital` marker below. Coordinates
 // from public-domain country-capitals reference. Included alongside
 // the existing emerging-market hub cities (no dedupes).
-const capitals = citiesOverride ? [] : [
-  { city: 'Washington DC',  lat: 38.91, lon:  -77.04, country: 'USA' },
-  { city: 'Ottawa',         lat: 45.42, lon:  -75.70, country: 'CAN' },
-  { city: 'London',         lat: 51.51, lon:   -0.13, country: 'GBR' },
-  { city: 'Paris',          lat: 48.86, lon:    2.35, country: 'FRA' },
-  { city: 'Berlin',         lat: 52.52, lon:   13.41, country: 'DEU' },
-  { city: 'Rome',           lat: 41.90, lon:   12.50, country: 'ITA' },
-  { city: 'Madrid',         lat: 40.42, lon:   -3.70, country: 'ESP' },
-  { city: 'Brussels',       lat: 50.85, lon:    4.35, country: 'BEL' },
-  { city: 'Amsterdam',      lat: 52.37, lon:    4.90, country: 'NLD' },
-  { city: 'Stockholm',      lat: 59.33, lon:   18.07, country: 'SWE' },
-  { city: 'Vienna',         lat: 48.21, lon:   16.37, country: 'AUT' },
-  { city: 'Tokyo',          lat: 35.68, lon:  139.69, country: 'JPN' },
-  { city: 'Canberra',       lat: -35.28, lon: 149.13, country: 'AUS' },
-  { city: 'Wellington',     lat: -41.29, lon: 174.78, country: 'NZL' },
-];
+const capitals = citiesOverride
+  ? []
+  : [
+      { city: 'Washington DC', lat: 38.91, lon: -77.04, country: 'USA' },
+      { city: 'Ottawa', lat: 45.42, lon: -75.7, country: 'CAN' },
+      { city: 'London', lat: 51.51, lon: -0.13, country: 'GBR' },
+      { city: 'Paris', lat: 48.86, lon: 2.35, country: 'FRA' },
+      { city: 'Berlin', lat: 52.52, lon: 13.41, country: 'DEU' },
+      { city: 'Rome', lat: 41.9, lon: 12.5, country: 'ITA' },
+      { city: 'Madrid', lat: 40.42, lon: -3.7, country: 'ESP' },
+      { city: 'Brussels', lat: 50.85, lon: 4.35, country: 'BEL' },
+      { city: 'Amsterdam', lat: 52.37, lon: 4.9, country: 'NLD' },
+      { city: 'Stockholm', lat: 59.33, lon: 18.07, country: 'SWE' },
+      { city: 'Vienna', lat: 48.21, lon: 16.37, country: 'AUT' },
+      { city: 'Tokyo', lat: 35.68, lon: 139.69, country: 'JPN' },
+      { city: 'Canberra', lat: -35.28, lon: 149.13, country: 'AUS' },
+      { city: 'Wellington', lat: -41.29, lon: 174.78, country: 'NZL' },
+    ];
 
-interface ProjectedCity { city: string; x: number; y: number; visible: boolean; rho: number; }
+interface ProjectedCity {
+  city: string;
+  x: number;
+  y: number;
+  visible: boolean;
+  rho: number;
+}
 const projectedCities: ProjectedCity[] = cities.map((c) => {
   const p = project(c.lat, c.lon);
   return { city: c.city, x: p.x, y: p.y, visible: p.rho > 0, rho: p.rho };
 });
 
-interface ProjectedCapital { city: string; country: string; x: number; y: number; visible: boolean; rho: number; }
+interface ProjectedCapital {
+  city: string;
+  country: string;
+  x: number;
+  y: number;
+  visible: boolean;
+  rho: number;
+}
 const projectedCapitals: ProjectedCapital[] = capitals.map((c) => {
   const p = project(c.lat, c.lon);
   return { city: c.city, country: c.country, x: p.x, y: p.y, visible: p.rho > 0, rho: p.rho };
@@ -491,11 +519,11 @@ const projectedCapitals: ProjectedCapital[] = capitals.map((c) => {
 // A small flow-dot traces each arc via SVG `<animateMotion>` under the
 // `.eg-flow` class; the animation respects `prefers-reduced-motion`.
 const ROUTES: TradeRoute[] = [
-  { id: 'ny-lon',  a: 'New York',  b: 'London' },
-  { id: 'sg-tyo',  a: 'Singapore', b: 'Tokyo' },
-  { id: 'digos-sg',a: 'Digos',     b: 'Singapore' },
+  { id: 'ny-lon', a: 'New York', b: 'London' },
+  { id: 'sg-tyo', a: 'Singapore', b: 'Tokyo' },
+  { id: 'digos-sg', a: 'Digos', b: 'Singapore' },
   { id: 'fra-zur', a: 'Frankfurt', b: 'Zurich' },
-  { id: 'bom-dxb', a: 'Mumbai',    b: 'Dubai' },
+  { id: 'bom-dxb', a: 'Mumbai', b: 'Dubai' },
   { id: 'hkg-sel', a: 'Hong Kong', b: 'Seoul' },
 ];
 
@@ -512,11 +540,21 @@ interface ProjectedRoute {
 const projectedRoutes: ProjectedRoute[] = ROUTES.map((r) => {
   const ca = cityByName.get(r.a);
   const cb = cityByName.get(r.b);
-  if (!ca || !cb) return { id: r.id, d: '', dForward: '', visible: false, midX: cx, midY: cy, ax: cx, ay: cy };
+  if (!ca || !cb)
+    return { id: r.id, d: '', dForward: '', visible: false, midX: cx, midY: cy, ax: cx, ay: cy };
   const pa = project(ca.lat, ca.lon);
   const pb = project(cb.lat, cb.lon);
   if (pa.rho < 0 || pb.rho < 0) {
-    return { id: r.id, d: '', dForward: '', visible: false, midX: cx, midY: cy, ax: pa.x, ay: pa.y };
+    return {
+      id: r.id,
+      d: '',
+      dForward: '',
+      visible: false,
+      midX: cx,
+      midY: cy,
+      ax: pa.x,
+      ay: pa.y,
+    };
   }
   const midX = (pa.x + pb.x) / 2;
   const midY = (pa.y + pb.y) / 2;
@@ -531,35 +569,32 @@ const projectedRoutes: ProjectedRoute[] = ROUTES.map((r) => {
   return { id: r.id, d: dForward, dForward, visible: true, midX, midY, ax: pa.x, ay: pa.y };
 });
 
-// === Event pins (≤12) ============================================
-interface ResolvedEvent {
-  title: string;
-  category: 'central-bank' | 'earnings' | 'geopolitical' | 'data-release' | 'fx';
-  severity: 'mild' | 'moderate' | 'critical';
-  lat: number;
-  lon: number;
-  city: string;
-}
+// === Event pins (≤60 in v6.11 — 10 static + 50 live) =============
+// v6.11 — merge live GDELT events onto the static worldEvent collection.
+// Static events keep their `order: 1..10`; live events get order 100+i
+// so they layer AFTER the curated pins. Cluster badge threshold below
+// is bumped from 2 to 3 so 50 stacked pins at DC don't paint 50 pills.
 interface RawWorldEvent {
   data: ResolvedEvent & {
     order: number;
     source: string;
   };
 }
-const collEvents: ResolvedEvent[] | null = eventsOverride
-  ? null
-  : await getCollection('worldEvent').then((rows: RawWorldEvent[]) =>
-      rows
-        .sort((a: RawWorldEvent, b: RawWorldEvent) => a.data.order - b.data.order)
-        .map((r: RawWorldEvent) => ({
-          title: r.data.title,
-          category: r.data.category,
-          severity: r.data.severity,
-          lat: r.data.lat,
-          lon: r.data.lon,
-          city: r.data.city,
-        })),
-    );
+const staticEvents: ResolvedEvent[] = await getCollection('worldEvent').then(
+  (rows: RawWorldEvent[]) =>
+    rows
+      .sort((a: RawWorldEvent, b: RawWorldEvent) => a.data.order - b.data.order)
+      .map((r: RawWorldEvent) => ({
+        title: r.data.title,
+        category: r.data.category,
+        severity: r.data.severity,
+        lat: r.data.lat,
+        lon: r.data.lon,
+        city: r.data.city,
+      })),
+);
+const liveEvents: ResolvedEvent[] = eventsOverride ? [] : loadGdeltEvents();
+const collEvents: ResolvedEvent[] | null = eventsOverride ? null : [...staticEvents, ...liveEvents];
 
 const events = (eventsOverride ?? collEvents ?? []) as ResolvedEvent[];
 
@@ -593,7 +628,12 @@ const projectedPins: ProjectedPin[] = (events as ResolvedEvent[])
   })
   .filter((p: ProjectedPin) => p.vis);
 
-// Critical-count for the mission-control header bar.
+// High-impact count for the mission-control header bar.
+// v6.11.6 — label changed from "CRITICAL" to "HIGH-IMPACT" so the
+// chrome reads as a data descriptor (we surface the top-50 by
+// Goldstein magnitude) instead of a crisis indicator (78% of all
+// events being "critical" made the globe look broken to a recruiter
+// skimming for rigor — see v6.11.6 polish AAR).
 const criticalCount = events.filter((e) => e.severity === 'critical').length;
 
 // === Deterministic nonce for flow-dot color =======================
@@ -604,12 +644,12 @@ const flowAmber = 0.65 + 0.25 * seedRng(); // 0.65..0.90 to pick a stable hue mi
 // All chrome coordinates derive from width/height/cx/cy/R — no new
 // randomness. Computed once here so the SVG render below is a straight
 // template substitution.
-const legendX = cx + 0.78 * R;     // lower-right
+const legendX = cx + 0.78 * R; // lower-right
 const legendY = cy + 0.78 * R;
-const scaleX  = cx - 0.95 * R;     // lower-left
-const scaleY  = cy + 0.92 * R;
-const scaleWidth = 100;            // 100 SVG units = ~1000 km at 1:110m
-const scrubberX = cx - 0.55 * R;   // along bottom
+const scaleX = cx - 0.95 * R; // lower-left
+const scaleY = cy + 0.92 * R;
+const scaleWidth = 100; // 100 SVG units = ~1000 km at 1:110m
+const scrubberX = cx - 0.55 * R; // along bottom
 const scrubberY = height - 22;
 const scrubberWidth = 0.55 * width;
 
@@ -633,7 +673,11 @@ const regionY0 = cy - 0.88 * R;
 // Region rollup buckets — APAC / EMEA / Americas event counts.
 // Coarse buckets by longitude: APAC = lon >= 60, EMEA = -30 <= lon < 60,
 // Americas = lon < -30.
-const REGION_BUCKETS: { APAC: number; EMEA: number; Americas: number } = { APAC: 0, EMEA: 0, Americas: 0 };
+const REGION_BUCKETS: { APAC: number; EMEA: number; Americas: number } = {
+  APAC: 0,
+  EMEA: 0,
+  Americas: 0,
+};
 for (const ev of events as ResolvedEvent[]) {
   if (ev.lon >= 60) REGION_BUCKETS.APAC += 1;
   else if (ev.lon >= -30) REGION_BUCKETS.EMEA += 1;
@@ -671,15 +715,13 @@ const headerDateLabel = utc8DateLabel();
 // v6.5 — Legend rows (4 swatches in a 2×2 grid, smaller)
 const LEGEND_ROWS: ReadonlyArray<{ color: string; label: string }> = [
   { color: 'var(--c-amber-light)', label: 'central-bank' },
-  { color: 'var(--c-pass)',        label: 'earnings' },
+  { color: 'var(--c-pass)', label: 'earnings' },
   { color: 'var(--c-accent-cyan)', label: 'data-release' },
-  { color: 'var(--c-fail)',        label: 'geo / fx' },
+  { color: 'var(--c-fail)', label: 'geo / fx' },
 ];
 
 // Roster rows — first 8 cities, sorted alphabetically.
-const ROSTER_ROWS = [...cities]
-  .sort((a, b) => a.city.localeCompare(b.city))
-  .slice(0, 8);
+const ROSTER_ROWS = [...cities].sort((a, b) => a.city.localeCompare(b.city)).slice(0, 8);
 
 function fmtLat(lat: number): string {
   const abs = Math.abs(lat).toFixed(1);
@@ -690,9 +732,19 @@ function fmtLon(lon: number): string {
   return `${abs}°${lon >= 0 ? 'E' : 'W'}`;
 }
 
-const headerLabel =
-  `MISSION CONTROL · BUILD ${headerDateLabel} · ${cities.length} HUBS · ${capitals.length} CAPITALS · ${events.length} EVENTS · ${criticalCount} CRITICAL`;
+// v6.11 — live freshness badge. Hidden when GDELT source is `fallback`
+// (no successful fetch — we don't lie about freshness). When live, we
+// show the fetchedAt timestamp truncated to HH:MM UTC for legibility.
+const gdeltSourceVal = gdeltSource();
+const liveCount = gdeltEventCount();
+const liveBadge =
+  gdeltSourceVal === 'gdelt' && liveCount > 0
+    ? ` · LIVE ${liveCount} · ${gdeltFetchedAtIso().slice(11, 16)}Z`
+    : '';
+
+const headerLabel = `MISSION CONTROL · BUILD ${headerDateLabel} · ${cities.length} HUBS · ${capitals.length} CAPITALS · ${events.length} EVENTS · ${criticalCount} HIGH-IMPACT${liveBadge}`;
 ---
+
 <figure class="eg">
   <input
     type="checkbox"
@@ -706,7 +758,8 @@ const headerLabel =
   <figcaption class="eg__caption">
     <span class="eg__caption-eyebrow mono">Earth-scale quant intelligence</span>
     <span class="eg__caption-title">
-      {continentPaths.length} countries · {cities.length} cities · {projectedPins.length} active events · {showRoutes ? `${ROUTES.length} routes · ` : ''}Orthographic · rotating
+      {continentPaths.length} countries · {cities.length} cities · {projectedPins.length} active events
+      · {showRoutes ? `${ROUTES.length} routes · ` : ''}Orthographic · rotating
     </span>
   </figcaption>
 
@@ -719,71 +772,92 @@ const headerLabel =
       preserveAspectRatio="xMidYMid meet"
     >
       <title>Earth-scale event globe — cities, routes, and active events — rotating</title>
-      <desc>Orthographic globe projection centered on (lat {centerLat}°, lon {centerLon}°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, {cities.length} cities, {ROUTES.length} trade routes, {projectedPins.length} active events, region rollups (APAC {REGION_BUCKETS.APAC} / EMEA {REGION_BUCKETS.EMEA} / Americas {REGION_BUCKETS.Americas}), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.</desc>
+      <desc
+        >Orthographic globe projection centered on (lat {centerLat}°, lon {centerLon}°) with
+        day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, {
+          cities.length
+        } cities, {ROUTES.length} trade routes, {projectedPins.length} active events, region rollups (APAC
+        {REGION_BUCKETS.APAC} / EMEA {REGION_BUCKETS.EMEA} / Americas {REGION_BUCKETS.Americas}),
+        and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause).
+        Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position
+        computed from the BUILD_DATE environment variable.</desc
+      >
 
-      {/* v6.5 — background star field (drawn FIRST so it sits behind
+      {
+        /* v6.5 — background star field (drawn FIRST so it sits behind
           the ocean disc and atmosphere). 120 deterministic dots from
           `seedFromString(buildSeed())` in 3 size/opacity tiers.
           v6.10.27 — fill hoisted from 120 inline attrs to .eg__stars circle
-          CSS rule (saves ~3.5KB on home: 120 × `fill="#e6edf3"` ≈ 29B). */}
+          CSS rule (saves ~3.5KB on home: 120 × `fill="#e6edf3"` ≈ 29B). */
+      }
       <g class="eg__stars" aria-hidden="true">
-        {starField.map((s) => (
-          <circle cx={s.x.toFixed(1)} cy={s.y.toFixed(1)} r={s.r.toFixed(2)}
-                  fill-opacity={s.o.toFixed(2)}
-                  class={`eg__star eg__star--t${s.tier}`} />
-        ))}
+        {
+          starField.map((s) => (
+            <circle
+              cx={s.x.toFixed(1)}
+              cy={s.y.toFixed(1)}
+              r={s.r.toFixed(2)}
+              fill-opacity={s.o.toFixed(2)}
+              class={`eg__star eg__star--t${s.tier}`}
+            />
+          ))
+        }
       </g>
 
       <defs>
-        {/* v6.4 — bathymetry ramp (linear, 4 stops). Borrowed from
-            ESA Sentinel Hub's "oceanic depth" palette. */}
+        {
+          /* v6.4 — bathymetry ramp (linear, 4 stops). Borrowed from
+            ESA Sentinel Hub's "oceanic depth" palette. */
+        }
         <linearGradient id="eg-bathy" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#0a0f1a" />
-          <stop offset="40%"  stop-color="#0e1a2c" />
-          <stop offset="75%"  stop-color="#14233e" />
-          <stop offset="100%" stop-color="#1c3358" />
+          <stop offset="0%" stop-color="#0a0f1a"></stop>
+          <stop offset="40%" stop-color="#0e1a2c"></stop>
+          <stop offset="75%" stop-color="#14233e"></stop>
+          <stop offset="100%" stop-color="#1c3358"></stop>
         </linearGradient>
 
         {/* Atmospheric rim — amber→transparent (F14 institutional: monochrome + 1 amber) */}
         <linearGradient id="eg-atmosphere" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#e8b220" stop-opacity="0.55" />
-          <stop offset="55%"  stop-color="#e8b220" stop-opacity="0.15" />
-          <stop offset="100%" stop-color="#e8b220" stop-opacity="0" />
+          <stop offset="0%" stop-opacity="0.55"></stop>
+          <stop offset="55%" stop-opacity="0.15"></stop>
+          <stop offset="100%" stop-opacity="0"></stop>
         </linearGradient>
 
         {/* v6.5 — secondary atmosphere ring gradient (more diffuse) */}
         <linearGradient id="eg-atmosphere-2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#e8b220" stop-opacity="0.18" />
-          <stop offset="60%"  stop-color="#e8b220" stop-opacity="0.05" />
-          <stop offset="100%" stop-color="#e8b220" stop-opacity="0" />
+          <stop offset="0%" stop-opacity="0.18"></stop>
+          <stop offset="60%" stop-opacity="0.05"></stop>
+          <stop offset="100%" stop-opacity="0"></stop>
         </linearGradient>
 
         {/* Sun glow */}
         <radialGradient id="eg-sun-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stop-color="#e8b220" stop-opacity="0.9" />
-          <stop offset="40%"  stop-color="#e8b220" stop-opacity="0.45" />
-          <stop offset="100%" stop-color="#e8b220" stop-opacity="0" />
+          <stop offset="0%" stop-opacity="0.9"></stop>
+          <stop offset="40%" stop-opacity="0.45"></stop>
+          <stop offset="100%" stop-opacity="0"></stop>
         </radialGradient>
 
         {/* Day-side amber wash */}
         <radialGradient id="eg-day" cx="50%" cy="50%" r="65%">
-          <stop offset="0%"   stop-color="#c98a16" stop-opacity="0.10" />
-          <stop offset="60%"  stop-color="#c98a16" stop-opacity="0.04" />
-          <stop offset="100%" stop-color="#c98a16" stop-opacity="0" />
+          <stop offset="0%" stop-opacity="0.10"></stop>
+          <stop offset="60%" stop-opacity="0.04"></stop>
+          <stop offset="100%" stop-opacity="0"></stop>
         </radialGradient>
 
         {/* Disc clip — keeps every fill, stroke, and pin inside the limb */}
         <clipPath id="eg-disc-clip">
-          <circle cx={cx} cy={cy} r={R} />
+          <circle cx={cx} cy={cy} r={R}></circle>
         </clipPath>
 
-        {/* v6.5 — terrain hillshade via feSpecularLighting. Single
+        {
+          /* v6.5 — terrain hillshade via feSpecularLighting. Single
             filter applied to the country fills only — gives the land
             a subtle 3D relief cue without animating anything.
             Bumped k3 from 0.3 → 0.45 so the relief reads more clearly
             under the latitude-ramp fill (which already provides color
             variation, so we want the lighting to be a complementary
-            top-down highlight rather than a dominant tone). */}
+            top-down highlight rather than a dominant tone). */
+        }
         <filter id="eg-hillshade" x="0%" y="0%" width="100%" height="100%">
           <feSpecularLighting
             surfaceScale="2"
@@ -792,391 +866,650 @@ const headerLabel =
             lighting-color="#ffe9a8"
             result="spec"
           >
-            <feDistantLight azimuth={sun ? (90 + (sun.lon - centerLon)) : 90} elevation={45} />
+            <feDistantLight azimuth={sun ? 90 + (sun.lon - centerLon) : 90} elevation={45}
+            ></feDistantLight>
           </feSpecularLighting>
-          <feComposite in="SourceGraphic" in2="spec" operator="arithmetic" k1="1" k2="0" k3="0.45" k4="0" />
+          <feComposite
+            in="SourceGraphic"
+            in2="spec"
+            operator="arithmetic"
+            k1="1"
+            k2="0"
+            k3="0.45"
+            k4="0"></feComposite>
         </filter>
 
         {/* Reusable city dot — referenced by every projected marker */}
         <g id="eg-city-dot">
-          <circle r="2.5" fill="var(--c-ink-2)" stroke="var(--c-tape)" stroke-width="0.8" />
+          <circle r="2.5" fill="var(--c-ink-2)" stroke="var(--c-tape)" stroke-width="0.8"></circle>
         </g>
       </defs>
 
-      {/* Layer 1: ocean disc (bathymetry ramp) — outside the rotating
-          group so the ocean stays anchored in screen space. */}
-      <circle class="eg__ocean" cx={cx} cy={cy} r={R} fill="url(#eg-bathy)" />
+      {
+        /* Layer 1: ocean disc (bathymetry ramp) — outside the rotating
+          group so the ocean stays anchored in screen space. */
+      }
+      <circle class="eg__ocean" cx={cx} cy={cy} r={R} fill="url(#eg-bathy)"></circle>
 
-      {/* Everything inside the disc clip terminates cleanly at the limb.
+      {
+        /* Everything inside the disc clip terminates cleanly at the limb.
           The rotating wrapper <g> sits inside the clip; the terminator
           + sun + chrome render OUTSIDE the rotating group but INSIDE
-          the clip so they overlay the rotating continents cleanly. */}
+          the clip so they overlay the rotating continents cleanly. */
+      }
       <g clip-path="url(#eg-disc-clip)">
-
-        {/* === ROTATING GROUP =============================================
+        {
+          /* === ROTATING GROUP =============================================
             Continents, borders, grid, polar rings, routes, cities, pins
             all rotate as one body. CSS @keyframes eg-orbit on the
             `.eg__globe-rotating` selector (declared in <style> below)
-            handles the rotation. Hover pauses; the checkbox toggles. */}
-        <g
-          class="eg__globe-rotating"
-          style={`--eg-rotation-period: ${rotationPeriodSeconds}s;`}
-        >
+            handles the rotation. Hover pauses; the checkbox toggles. */
+        }
+        <g class="eg__globe-rotating" style={`--eg-rotation-period: ${rotationPeriodSeconds}s;`}>
           {/* Layer 2: country borders (white hairlines, 6% opacity) */}
-          <g class="eg__borders" fill="none" stroke="#ffffff"
-             stroke-opacity="0.06" stroke-width="0.5" stroke-linejoin="round">
-            <path d={COUNTRY_BORDERS.d} aria-hidden="true" />
+          <g
+            class="eg__borders"
+            fill="none"
+            stroke="#ffffff"
+            stroke-opacity="0.06"
+            stroke-width="0.5"
+            stroke-linejoin="round"
+          >
+            <path d={COUNTRY_BORDERS.d} aria-hidden="true"></path>
           </g>
 
-          {/* Layer 3: country fills (per-country paths with latitude-ramp
+          {
+            /* Layer 3: country fills (per-country paths with latitude-ramp
               fill colors + hillshade filter). v6.5 — replaces v6.4's
-              uniform `var(--c-ink-3)` fill with per-country relief. */}
-          <g class="eg__continents" fill-opacity="0.55"
-             filter="url(#eg-hillshade)">
-            {/* v6.10.28 — group countries by lat-band fill so the
-                `fill="rgb(...)"` attr hoists to each <g> parent. */}
-            {countryByBand.map((band) => (
-              band.countries.length > 0 && (
-                <g fill={band.fill}>
-                  {band.countries.map((c) => (
-                    <path d={c.d} aria-hidden="true" />
-                  ))}
-                </g>
+              uniform `var(--c-ink-3)` fill with per-country relief. */
+          }
+          <g class="eg__continents" fill-opacity="0.55" filter="url(#eg-hillshade)">
+            {
+              /* v6.10.28 — group countries by lat-band fill so the
+                `fill="rgb(...)"` attr hoists to each <g> parent. */
+            }
+            {
+              countryByBand.map(
+                (band) =>
+                  band.countries.length > 0 && (
+                    <g fill={band.fill}>
+                      {band.countries.map((c) => (
+                        <path d={c.d} aria-hidden="true" />
+                      ))}
+                    </g>
+                  ),
               )
-            ))}
+            }
           </g>
 
           {/* Layer 3b: opt-in night-lights overlay (off by default) */}
-          {showNightLights && (
-            <g class="eg__night" style="mix-blend-mode: screen">
-              {continentPaths.map((c) => (
-                <path d={c.d} fill="var(--c-amber-light)" fill-opacity="0.04" aria-hidden="true" />
-              ))}
-            </g>
-          )}
+          {
+            showNightLights && (
+              <g class="eg__night" style="mix-blend-mode: screen">
+                {continentPaths.map((c) => (
+                  <path
+                    d={c.d}
+                    fill="var(--c-amber-light)"
+                    fill-opacity="0.04"
+                    aria-hidden="true"
+                  />
+                ))}
+              </g>
+            )
+          }
 
-          {/* Layer 3c: earth-axis indicator (faint line N→S pole).
+          {
+            /* Layer 3c: earth-axis indicator (faint line N→S pole).
               Only when both poles are visible. Sits inside the
-              rotating group so the axis rotates with the globe. */}
-          {axisPoleVisible && (
-            <g class="eg__axis" aria-hidden="true">
-              <line x1={northPoleProj.x.toFixed(2)} y1={northPoleProj.y.toFixed(2)}
-                    x2={southPoleProj.x.toFixed(2)} y2={southPoleProj.y.toFixed(2)}
-                    stroke="var(--c-amber-light)" stroke-opacity="0.18"
-                    stroke-width="0.4" stroke-dasharray="2 3" />
-            </g>
-          )}
+              rotating group so the axis rotates with the globe. */
+          }
+          {
+            axisPoleVisible && (
+              <g class="eg__axis" aria-hidden="true">
+                <line
+                  x1={northPoleProj.x.toFixed(2)}
+                  y1={northPoleProj.y.toFixed(2)}
+                  x2={southPoleProj.x.toFixed(2)}
+                  y2={southPoleProj.y.toFixed(2)}
+                  stroke="var(--c-amber-light)"
+                  stroke-opacity="0.18"
+                  stroke-width="0.4"
+                  stroke-dasharray="2 3"
+                />
+              </g>
+            )
+          }
 
           {/* Layer 4: lat / lon grid (white at 8% opacity) */}
           <g class="eg__grid" aria-hidden="true">
             {latGridSegs.map((s) => s.visible && <path d={s.d} />)}
             {lonGridSegs.map((s) => s.visible && <path d={s.d} />)}
             {/* Equator + prime meridian emphasis — solid dashed at 40% */}
-            {(() => {
-              const eq = buildLatGrid(0);
-              const pm = buildLonGrid(0);
-              return (
-                <>
-                  {eq.visible && <path d={eq.d} class="eg__major" />}
-                  {pm.visible && <path d={pm.d} class="eg__major" />}
-                </>
-              );
-            })()}
+            {
+              (() => {
+                const eq = buildLatGrid(0);
+                const pm = buildLonGrid(0);
+                return (
+                  <>
+                    {eq.visible && <path d={eq.d} class="eg__major" />}
+                    {pm.visible && <path d={pm.d} class="eg__major" />}
+                  </>
+                );
+              })()
+            }
           </g>
 
-          {/* Layer 4b: v6.5 — polar rings (Arctic + Antarctic circles).
+          {
+            /* Layer 4b: v6.5 — polar rings (Arctic + Antarctic circles).
               Dashed white at 15% opacity. Sits inside the rotating
-              group so the rings sweep with the rest of the globe. */}
-          <g class="eg__polar-rings" aria-hidden="true" fill="none"
-             stroke="#ffffff" stroke-opacity="0.15"
-             stroke-width="0.4" stroke-dasharray="3 5">
+              group so the rings sweep with the rest of the globe. */
+          }
+          <g
+            class="eg__polar-rings"
+            aria-hidden="true"
+            fill="none"
+            stroke="#ffffff"
+            stroke-opacity="0.15"
+            stroke-width="0.4"
+            stroke-dasharray="3 5"
+          >
             {polarRingSegs.map((s) => s.visible && <path d={s.d} />)}
           </g>
 
           {/* Layer 4c: pole indicators — small rings at N/S poles */}
           <g class="eg__poles" aria-hidden="true">
-            {northPoleVisible && (
-              <circle cx={northPoleProj.x.toFixed(2)} cy={northPoleProj.y.toFixed(2)}
-                      r="2.5" fill="none" stroke="var(--c-amber-light)"
-                      stroke-opacity="0.65" stroke-width="0.6" />
-            )}
-            {southPoleVisible && (
-              <circle cx={southPoleProj.x.toFixed(2)} cy={southPoleProj.y.toFixed(2)}
-                      r="2.5" fill="none" stroke="var(--c-amber-light)"
-                      stroke-opacity="0.65" stroke-width="0.6" />
-            )}
+            {
+              northPoleVisible && (
+                <circle
+                  cx={northPoleProj.x.toFixed(2)}
+                  cy={northPoleProj.y.toFixed(2)}
+                  r="2.5"
+                  fill="none"
+                  stroke="var(--c-amber-light)"
+                  stroke-opacity="0.65"
+                  stroke-width="0.6"
+                />
+              )
+            }
+            {
+              southPoleVisible && (
+                <circle
+                  cx={southPoleProj.x.toFixed(2)}
+                  cy={southPoleProj.y.toFixed(2)}
+                  r="2.5"
+                  fill="none"
+                  stroke="var(--c-amber-light)"
+                  stroke-opacity="0.65"
+                  stroke-width="0.6"
+                />
+              )
+            }
           </g>
 
-          {/* Layer 5: trade-route arcs + flow dots (drawn under cities/pins
-              so the dots sit on top). Routes rotate with the globe. */}
-          {showRoutes && (
-            <g class="eg__routes" fill="none" stroke="var(--c-primary-2)"
-               stroke-width="0.8" stroke-opacity="0.45">
-              {projectedRoutes.map((r) =>
-                r.visible ? <path d={r.d} aria-hidden="true" /> : null,
-              )}
-              {projectedRoutes.map((r) =>
-                r.visible ? (
-                  <circle r="1.6" fill="var(--c-amber-light)" class="eg-flow">
-                    <animateMotion dur="8s" repeatCount="indefinite" rotate="auto" path={r.dForward} />
-                  </circle>
-                ) : null,
-              )}
-            </g>
-          )}
+          {
+            /* Layer 5: trade-route arcs + flow dots (drawn under cities/pins
+              so the dots sit on top). Routes rotate with the globe. */
+          }
+          {
+            showRoutes && (
+              <g
+                class="eg__routes"
+                fill="none"
+                stroke="var(--c-primary-2)"
+                stroke-width="0.8"
+                stroke-opacity="0.45"
+              >
+                {projectedRoutes.map((r) =>
+                  r.visible ? <path d={r.d} aria-hidden="true" /> : null,
+                )}
+                {projectedRoutes.map((r) =>
+                  r.visible ? (
+                    <circle r="1.6" fill="var(--c-amber-light)" class="eg-flow">
+                      <animateMotion
+                        dur="8s"
+                        repeatCount="indefinite"
+                        rotate="auto"
+                        path={r.dForward}
+                      />
+                    </circle>
+                  ) : null,
+                )}
+              </g>
+            )
+          }
 
           {/* Layer 6: city dots + labels + cluster badges */}
           <g class="eg__cities">
-            {projectedCities.map((c) => {
-              if (!c.visible) return null;
-              const clusterCount = cityEventCounts.get(c.city) ?? 0;
-              return (
-                <g class="eg__city" transform={`translate(${c.x.toFixed(2)} ${c.y.toFixed(2)})`}>
-                  <use href="#eg-city-dot" />
-                  <text dy="-6" text-anchor="middle">{c.city}</text>
-                  {clusterCount >= 2 && (
-                    <g class="eg__city-cluster" transform="translate(7 -10)">
-                      <rect width={12 + String(clusterCount).length * 4} height="9" rx="2"
-                            fill="var(--c-amber)" fill-opacity="0.85" />
-                      <text x="3" y="7" class="eg__city-cluster-text">×{clusterCount}</text>
-                    </g>
-                  )}
-                  <title>{c.city}{clusterCount >= 2 ? ` — ${clusterCount} events` : ''}</title>
-                </g>
-              );
-            })}
+            {
+              projectedCities.map((c) => {
+                if (!c.visible) return null;
+                const clusterCount = cityEventCounts.get(c.city) ?? 0;
+                return (
+                  <g class="eg__city" transform={`translate(${c.x.toFixed(2)} ${c.y.toFixed(2)})`}>
+                    <use href="#eg-city-dot" />
+                    <text dy="-6" text-anchor="middle">
+                      {c.city}
+                    </text>
+                    {clusterCount >= 3 && (
+                      <g class="eg__city-cluster" transform="translate(7 -10)">
+                        <rect
+                          width={12 + String(clusterCount).length * 4}
+                          height="9"
+                          rx="2"
+                          fill="var(--c-amber)"
+                          fill-opacity="0.85"
+                        />
+                        <text x="3" y="7" class="eg__city-cluster-text">
+                          ×{clusterCount}
+                        </text>
+                      </g>
+                    )}
+                    <title>
+                      {c.city}
+                      {clusterCount >= 3 ? ` — ${clusterCount} events` : ''}
+                    </title>
+                  </g>
+                );
+              })
+            }
           </g>
 
-          {/* Layer 6b: Tier-1 first-world capital markers (G7 + OECD).
+          {
+            /* Layer 6b: Tier-1 first-world capital markers (G7 + OECD).
               Distinct visual — white outer ring + small mono label with
               ISO country code, separate from the amber city dots so the
-              two readings stay clean on the rotating globe. */}
+              two readings stay clean on the rotating globe. */
+          }
           <g class="eg__capitals">
-            {projectedCapitals.map((c) => {
-              if (!c.visible) return null;
-              return (
-                <g class="eg__capital" transform={`translate(${c.x.toFixed(2)} ${c.y.toFixed(2)})`}>
-                  <circle r="3.5" fill="var(--c-tape)" fill-opacity="0.85"
-                          stroke="var(--c-ink-2)" stroke-width="0.9" />
-                  <circle r="1.2" fill="var(--c-ink-2)" />
-                  <text x="5.5" y="2.5" class="eg__capital-label">
-                    {c.city} <tspan class="eg__capital-iso">{c.country}</tspan>
-                  </text>
-                  <title>{c.city} · {c.country}</title>
-                </g>
-              );
-            })}
+            {
+              projectedCapitals.map((c) => {
+                if (!c.visible) return null;
+                return (
+                  <g
+                    class="eg__capital"
+                    transform={`translate(${c.x.toFixed(2)} ${c.y.toFixed(2)})`}
+                  >
+                    <circle
+                      r="3.5"
+                      fill="var(--c-tape)"
+                      fill-opacity="0.85"
+                      stroke="var(--c-ink-2)"
+                      stroke-width="0.9"
+                    />
+                    <circle r="1.2" fill="var(--c-ink-2)" />
+                    <text x="5.5" y="2.5" class="eg__capital-label">
+                      {c.city} <tspan class="eg__capital-iso">{c.country}</tspan>
+                    </text>
+                    <title>
+                      {c.city} · {c.country}
+                    </title>
+                  </g>
+                );
+              })
+            }
           </g>
 
           {/* Layer 7: event pins */}
           <g class="eg__pins">
-            {projectedPins.map((p: ProjectedPin) => {
-              const math = pinMath?.get(p.title);
-              return (
-                <g class="eg__pin-group">
-                  <EventPin
-                    x={p.x}
-                    y={p.y}
-                    category={p.category}
-                    severity={p.severityNum}
-                    index={p.index}
-                    title={`${p.title} — ${p.city}`}
-                  />
-                  {math && <title>{math}</title>}
-                </g>
-              );
-            })}
+            {
+              projectedPins.map((p: ProjectedPin) => {
+                const math = pinMath?.get(p.title);
+                return (
+                  <g class="eg__pin-group">
+                    <EventPin
+                      x={p.x}
+                      y={p.y}
+                      category={p.category}
+                      severity={p.severityNum}
+                      index={p.index}
+                      title={`${p.title} — ${p.city}`}
+                    />
+                    {math && <title>{math}</title>}
+                  </g>
+                );
+              })
+            }
           </g>
         </g>
         {/* === END ROTATING GROUP ========================================= */}
 
-        {/* Layer 8: day/night terminator + sun — OUTSIDE the rotating
+        {
+          /* Layer 8: day/night terminator + sun — OUTSIDE the rotating
             group so they stay fixed relative to the viewer. The sun
-            is, after all, "fixed in space" from the globe's POV. */}
-        {sun && (
-          <g class="eg__terminator" aria-hidden="true">
-            {/* Lit side wash */}
-            <path d={litPath} fill="url(#eg-day)" />
-            {/* Dark side wash */}
-            <path d={darkPath} fill="#000000" fill-opacity="0.32" />
-            {/* Subtle terminator line itself */}
-            {sunMag > 1e-6 && sunVz !== 0 && (
-              <ellipse
-                cx={cx} cy={cy}
-                rx={terminatorRmajor}
-                ry={terminatorRminor}
-                transform={`rotate(${(terminatorAngle * 180 / Math.PI).toFixed(2)} ${cx} ${cy})`}
-                fill="none"
-                stroke="var(--c-amber-light)"
-                stroke-width="0.5"
-                stroke-opacity="0.18"
-              />
-            )}
-          </g>
-        )}
+            is, after all, "fixed in space" from the globe's POV. */
+        }
+        {
+          sun && (
+            <g class="eg__terminator" aria-hidden="true">
+              {/* Lit side wash */}
+              <path d={litPath} fill="url(#eg-day)" />
+              {/* Dark side wash */}
+              <path d={darkPath} fill="#000000" fill-opacity="0.32" />
+              {/* Subtle terminator line itself */}
+              {sunMag > 1e-6 && sunVz !== 0 && (
+                <ellipse
+                  cx={cx}
+                  cy={cy}
+                  rx={terminatorRmajor}
+                  ry={terminatorRminor}
+                  transform={`rotate(${((terminatorAngle * 180) / Math.PI).toFixed(2)} ${cx} ${cy})`}
+                  fill="none"
+                  stroke="var(--c-amber-light)"
+                  stroke-width="0.5"
+                  stroke-opacity="0.18"
+                />
+              )}
+            </g>
+          )
+        }
 
         {/* Layer 9: sun disc + glow */}
-        {sun && sunProj && sunVz > 0 && (
-          <g class="eg__sun">
-            <circle cx={sunScreenX} cy={sunScreenY} r="14" fill="url(#eg-sun-glow)" />
-            <circle cx={sunScreenX} cy={sunScreenY} r="3.2"
-                    fill="#fbd56b" stroke="#ffe9a8" stroke-width="0.5" />
-          </g>
-        )}
+        {
+          sun && sunProj && sunVz > 0 && (
+            <g class="eg__sun">
+              <circle cx={sunScreenX} cy={sunScreenY} r="14" fill="url(#eg-sun-glow)" />
+              <circle
+                cx={sunScreenX}
+                cy={sunScreenY}
+                r="3.2"
+                fill="#fbd56b"
+                stroke="#ffe9a8"
+                stroke-width="0.5"
+              />
+            </g>
+          )
+        }
       </g>
       {/* End of clip wrapper */}
 
-      {/* Layer 10: atmospheric rims — OUTSIDE the disc clip so they
+      {
+        /* Layer 10: atmospheric rims — OUTSIDE the disc clip so they
           survive any minor edge anti-aliasing. v6.5 adds a secondary
-          outer ring at R*1.10 for a softer halo. */}
+          outer ring at R*1.10 for a softer halo. */
+      }
       <circle
         class="eg__atmosphere"
-        cx={cx} cy={cy} r={R * 1.06}
+        cx={cx}
+        cy={cy}
+        r={R * 1.06}
         fill="none"
         stroke="url(#eg-atmosphere)"
         stroke-width="6"
-        opacity="0.12"
-      />
+        opacity="0.12"></circle>
       <circle
         class="eg__atmosphere-2"
-        cx={cx} cy={cy} r={R * 1.10}
+        cx={cx}
+        cy={cy}
+        r={R * 1.1}
         fill="none"
         stroke="url(#eg-atmosphere-2)"
         stroke-width="3"
-        opacity="0.06"
-      />
-      {showSun && sun && (
-        <circle
-          class="eg__atmosphere-halo"
-          cx={cx} cy={cy} r={R * 1.04}
-          fill="none"
-          stroke="#e8b220"
-          stroke-width="1.2"
-          opacity="0.18"
-        />
-      )}
+        opacity="0.06"></circle>
+      {
+        showSun && sun && (
+          <circle
+            class="eg__atmosphere-halo"
+            cx={cx}
+            cy={cy}
+            r={R * 1.04}
+            fill="none"
+            stroke-width="1.2"
+            opacity="0.18"
+          />
+        )
+      }
 
-      {/* Layer 11: v6.5 mission-control chrome ============================
+      {
+        /* Layer 11: v6.5 mission-control chrome ============================
           Header bar (top-left), roster (top-right), center crosshair,
           play/pause button, legend (lower-right), scale (lower-left),
-          scrubber (bottom-center), region rollups (upper-left). */}
+          scrubber (bottom-center), region rollups (upper-left). */
+      }
 
-      {/* 11a — Header bar (top-left). Solid `var(--c-tape)` background
+      {
+        /* 11a — Header bar (top-left). Solid `var(--c-tape)` background
           with 1px `var(--c-amber)` border. Mono 9px uppercase, tracked.
-          Content: BUILD date + cities/events/critical counts. */}
+          Content: BUILD date + cities/events/critical counts. */
+      }
       <g class="eg__header" aria-hidden="true">
-        <rect x={headerX} y={headerY} width={headerW} height={headerH}
-              fill="var(--c-tape)" fill-opacity="0.92"
-              stroke="var(--c-amber)" stroke-width="0.5" />
-        <text x={headerX + headerW / 2} y={headerY + headerH / 2 + 3}
-              text-anchor="middle" class="eg__header-text">
+        <rect
+          x={headerX}
+          y={headerY}
+          width={headerW}
+          height={headerH}
+          fill="var(--c-tape)"
+          fill-opacity="0.92"
+          stroke="var(--c-amber)"
+          stroke-width="0.5"></rect>
+        <text
+          x={headerX + headerW / 2}
+          y={headerY + headerH / 2 + 3}
+          text-anchor="middle"
+          class="eg__header-text"
+        >
           {headerLabel}
         </text>
       </g>
 
-      {/* 11b — Roster table (top-right). Header row CITY · LAT · LON · N,
-          then first 8 cities alphabetically. Mono 8px. */}
+      {
+        /* 11b — Roster table (top-right). Header row CITY · LAT · LON · N,
+          then first 8 cities alphabetically. Mono 8px. */
+      }
       <g class="eg__roster" aria-hidden="true">
-        <rect x={rosterX} y={rosterY} width={rosterW} height={12 + ROSTER_ROWS.length * 10 + 4}
-              fill="var(--c-tape)" fill-opacity="0.85"
-              stroke="var(--c-rule)" stroke-width="0.5" />
+        <rect
+          x={rosterX}
+          y={rosterY}
+          width={rosterW}
+          height={12 + ROSTER_ROWS.length * 10 + 4}
+          fill="var(--c-tape)"
+          fill-opacity="0.85"
+          stroke="var(--c-rule)"
+          stroke-width="0.5"></rect>
         {/* Header row */}
         <text x={rosterX + 6} y={rosterY + 9} class="eg__roster-h">CITY</text>
         <text x={rosterX + 56} y={rosterY + 9} class="eg__roster-h">LAT</text>
         <text x={rosterX + 86} y={rosterY + 9} class="eg__roster-h">LON</text>
-        <text x={rosterX + rosterW - 4} y={rosterY + 9} text-anchor="end" class="eg__roster-h">N</text>
-        <line x1={rosterX} y1={rosterY + 12} x2={rosterX + rosterW} y2={rosterY + 12}
-              stroke="var(--c-rule)" stroke-opacity="0.3" stroke-width="0.4" />
+        <text x={rosterX + rosterW - 4} y={rosterY + 9} text-anchor="end" class="eg__roster-h"
+          >N</text
+        >
+        <line
+          x1={rosterX}
+          y1={rosterY + 12}
+          x2={rosterX + rosterW}
+          y2={rosterY + 12}
+          stroke="var(--c-rule)"
+          stroke-opacity="0.3"
+          stroke-width="0.4"></line>
         {/* Body rows */}
-        {ROSTER_ROWS.map((c, i) => {
-          const yRow = rosterY + 12 + i * 10 + 7;
-          const evCount = cityEventCounts.get(c.city) ?? 0;
-          return (
-            <g>
-              <text x={rosterX + 6} y={yRow} class="eg__roster-row">{c.city}</text>
-              <text x={rosterX + 56} y={yRow} class="eg__roster-row">{fmtLat(c.lat)}</text>
-              <text x={rosterX + 86} y={yRow} class="eg__roster-row">{fmtLon(c.lon)}</text>
-              <text x={rosterX + rosterW - 4} y={yRow} text-anchor="end" class="eg__roster-row">{evCount}</text>
-              {i < ROSTER_ROWS.length - 1 && (
-                <line x1={rosterX} y1={yRow + 2} x2={rosterX + rosterW} y2={yRow + 2}
-                      stroke="var(--c-rule)" stroke-opacity="0.3" stroke-width="0.3" />
-              )}
-            </g>
-          );
-        })}
+        {
+          ROSTER_ROWS.map((c, i) => {
+            const yRow = rosterY + 12 + i * 10 + 7;
+            const evCount = cityEventCounts.get(c.city) ?? 0;
+            return (
+              <g>
+                <text x={rosterX + 6} y={yRow} class="eg__roster-row">
+                  {c.city}
+                </text>
+                <text x={rosterX + 56} y={yRow} class="eg__roster-row">
+                  {fmtLat(c.lat)}
+                </text>
+                <text x={rosterX + 86} y={yRow} class="eg__roster-row">
+                  {fmtLon(c.lon)}
+                </text>
+                <text x={rosterX + rosterW - 4} y={yRow} text-anchor="end" class="eg__roster-row">
+                  {evCount}
+                </text>
+                {i < ROSTER_ROWS.length - 1 && (
+                  <line
+                    x1={rosterX}
+                    y1={yRow + 2}
+                    x2={rosterX + rosterW}
+                    y2={yRow + 2}
+                    stroke="var(--c-rule)"
+                    stroke-opacity="0.3"
+                    stroke-width="0.3"
+                  />
+                )}
+              </g>
+            );
+          })
+        }
       </g>
 
-      {/* 11c — Center crosshair HUD (at disc center). Does NOT rotate —
+      {
+        /* 11c — Center crosshair HUD (at disc center). Does NOT rotate —
           it's outside the rotating group. Small + lines and a circle
-          outline plus LAT/LON readout. */}
+          outline plus LAT/LON readout. */
+      }
       <g class="eg__crosshair" transform={`translate(${cx} ${cy})`} aria-hidden="true">
-        <line x1="-6" y1="0" x2="6" y2="0"
-              stroke="var(--c-amber-light)" stroke-opacity="0.6" stroke-width="0.4" />
-        <line x1="0" y1="-6" x2="0" y2="6"
-              stroke="var(--c-amber-light)" stroke-opacity="0.6" stroke-width="0.4" />
-        <circle r="3" fill="none"
-                stroke="var(--c-amber-light)" stroke-opacity="0.4" stroke-width="0.4" />
+        <line
+          x1="-6"
+          y1="0"
+          x2="6"
+          y2="0"
+          stroke="var(--c-amber-light)"
+          stroke-opacity="0.6"
+          stroke-width="0.4"></line>
+        <line
+          x1="0"
+          y1="-6"
+          x2="0"
+          y2="6"
+          stroke="var(--c-amber-light)"
+          stroke-opacity="0.6"
+          stroke-width="0.4"></line>
+        <circle
+          r="3"
+          fill="none"
+          stroke="var(--c-amber-light)"
+          stroke-opacity="0.4"
+          stroke-width="0.4"></circle>
         <text x="14" y="-3" class="eg__hud-text">LAT {centerLat.toFixed(1)}°</text>
         <text x="14" y="7" class="eg__hud-text">LON {centerLon.toFixed(1)}°</text>
       </g>
 
-      {/* 11d — Play/pause button (replaces v6.4 north arrow). Toggle is
+      {
+        /* 11d — Play/pause button (replaces v6.4 north arrow). Toggle is
           driven by the HTML checkbox `#eg-rotate-toggle` above. CSS
-          `:has()` selector swaps which icon is visible. */}
-      <g class="eg__rotate-btn-svg" transform={`translate(${rotateBtnX.toFixed(2)} ${rotateBtnY.toFixed(2)})`}>
-        <rect x="-10" y="-10" width="20" height="20" rx="3"
-              fill="var(--c-tape)" fill-opacity="0.85"
-              stroke="var(--c-amber)" stroke-width="0.6" />
+          `:has()` selector swaps which icon is visible. */
+      }
+      <g
+        class="eg__rotate-btn-svg"
+        transform={`translate(${rotateBtnX.toFixed(2)} ${rotateBtnY.toFixed(2)})`}
+      >
+        <rect
+          x="-10"
+          y="-10"
+          width="20"
+          height="20"
+          rx="3"
+          fill="var(--c-tape)"
+          fill-opacity="0.85"
+          stroke="var(--c-amber)"
+          stroke-width="0.6"></rect>
         <g class="eg__pause-icon">
-          <rect x="-4" y="-4" width="2.5" height="8" fill="var(--c-amber-light)" />
-          <rect x="1.5" y="-4" width="2.5" height="8" fill="var(--c-amber-light)" />
+          <rect x="-4" y="-4" width="2.5" height="8" fill="var(--c-amber-light)"></rect>
+          <rect x="1.5" y="-4" width="2.5" height="8" fill="var(--c-amber-light)"></rect>
         </g>
         <g class="eg__play-icon">
-          <path d="M -3 -4 L 4 0 L -3 4 Z" fill="var(--c-amber-light)" />
+          <path d="M -3 -4 L 4 0 L -3 4 Z" fill="var(--c-amber-light)"></path>
         </g>
       </g>
 
-      {/* 11e — Legend (lower-right). v6.5 — tighter 2×2 grid with
-          smaller 5×5 swatches. */}
-      <g class="eg__legend-svg" transform={`translate(${legendX.toFixed(1)} ${legendY.toFixed(1)})`}
-         aria-hidden="true">
-        {LEGEND_ROWS.map((row, i) => {
-          // 2x2 grid: row 0 (col 0), row 1 (col 0), row 2 (col 1), row 3 (col 1)
-          const col = i < 2 ? 0 : 1;
-          const rowIdx = i % 2;
-          return (
-            <g transform={`translate(${col * 56} ${rowIdx * 12})`}>
-              <rect width="5" height="5" y="-4" fill={row.color} fill-opacity="0.85" />
-              <text x="10" y="0" class="eg__chrome-text">{row.label}</text>
-            </g>
-          );
-        })}
+      {
+        /* 11e — Legend (lower-right). v6.5 — tighter 2×2 grid with
+          smaller 5×5 swatches. */
+      }
+      <g
+        class="eg__legend-svg"
+        transform={`translate(${legendX.toFixed(1)} ${legendY.toFixed(1)})`}
+        aria-hidden="true"
+      >
+        {
+          LEGEND_ROWS.map((row, i) => {
+            // 2x2 grid: row 0 (col 0), row 1 (col 0), row 2 (col 1), row 3 (col 1)
+            const col = i < 2 ? 0 : 1;
+            const rowIdx = i % 2;
+            return (
+              <g transform={`translate(${col * 56} ${rowIdx * 12})`}>
+                <rect width="5" height="5" y="-4" fill={row.color} fill-opacity="0.85" />
+                <text x="10" y="0" class="eg__chrome-text">
+                  {row.label}
+                </text>
+              </g>
+            );
+          })
+        }
       </g>
 
       {/* 11f — Scale bar (lower-left). 0 → 1000 km, alternating ticks. */}
-      <g class="eg__scale" transform={`translate(${scaleX.toFixed(1)} ${scaleY.toFixed(1)})`}
-         aria-hidden="true">
-        <line x1="0" y1="0" x2={scaleWidth.toFixed(1)} y2="0"
-              stroke="var(--c-ink-2)" stroke-opacity="0.7" stroke-width="1" />
-        <line x1="0" y1="-3" x2="0" y2="3"
-              stroke="var(--c-ink-2)" stroke-opacity="0.7" stroke-width="1" />
-        <line x1={(scaleWidth / 2).toFixed(1)} y1="-3" x2={(scaleWidth / 2).toFixed(1)} y2="3"
-              stroke="var(--c-ink-2)" stroke-opacity="0.7" stroke-width="1" />
-        <line x1={scaleWidth.toFixed(1)} y1="-3" x2={scaleWidth.toFixed(1)} y2="3"
-              stroke="var(--c-ink-2)" stroke-opacity="0.7" stroke-width="1" />
+      <g
+        class="eg__scale"
+        transform={`translate(${scaleX.toFixed(1)} ${scaleY.toFixed(1)})`}
+        aria-hidden="true"
+      >
+        <line
+          x1="0"
+          y1="0"
+          x2={scaleWidth.toFixed(1)}
+          y2="0"
+          stroke="var(--c-ink-2)"
+          stroke-opacity="0.7"
+          stroke-width="1"></line>
+        <line
+          x1="0"
+          y1="-3"
+          x2="0"
+          y2="3"
+          stroke="var(--c-ink-2)"
+          stroke-opacity="0.7"
+          stroke-width="1"></line>
+        <line
+          x1={(scaleWidth / 2).toFixed(1)}
+          y1="-3"
+          x2={(scaleWidth / 2).toFixed(1)}
+          y2="3"
+          stroke="var(--c-ink-2)"
+          stroke-opacity="0.7"
+          stroke-width="1"></line>
+        <line
+          x1={scaleWidth.toFixed(1)}
+          y1="-3"
+          x2={scaleWidth.toFixed(1)}
+          y2="3"
+          stroke="var(--c-ink-2)"
+          stroke-opacity="0.7"
+          stroke-width="1"></line>
         <text x="0" y="14" class="eg__chrome-text-sm">0</text>
-        <text x={(scaleWidth / 2).toFixed(1)} y="14" class="eg__chrome-text-sm" text-anchor="middle">500</text>
-        <text x={scaleWidth.toFixed(1)} y="14" class="eg__chrome-text-sm" text-anchor="end">1000 km</text>
+        <text x={(scaleWidth / 2).toFixed(1)} y="14" class="eg__chrome-text-sm" text-anchor="middle"
+          >500</text
+        >
+        <text x={scaleWidth.toFixed(1)} y="14" class="eg__chrome-text-sm" text-anchor="end"
+          >1000 km</text
+        >
       </g>
 
-      {/* 11g — Time scrubber along bottom. Shows current UTC+8 time on
-          the left and sun position (lat/lon) on the right. */}
-      <g class="eg__scrubber" transform={`translate(${scrubberX.toFixed(1)} ${scrubberY.toFixed(1)})`}
-         aria-hidden="true">
-        <rect width={scrubberWidth.toFixed(1)} height="2" y="-1"
-              fill="var(--c-rule-strong)" fill-opacity="0.1" />
-        <rect width={(scrubberWidth * 0.42).toFixed(1)} height="2" y="-1"
-              fill="var(--c-amber-light)" fill-opacity="0.65" />
+      {
+        /* 11g — Time scrubber along bottom. Shows current UTC+8 time on
+          the left and sun position (lat/lon) on the right. */
+      }
+      <g
+        class="eg__scrubber"
+        transform={`translate(${scrubberX.toFixed(1)} ${scrubberY.toFixed(1)})`}
+        aria-hidden="true"
+      >
+        <rect
+          width={scrubberWidth.toFixed(1)}
+          height="2"
+          y="-1"
+          fill="var(--c-rule-strong)"
+          fill-opacity="0.1"></rect>
+        <rect
+          width={(scrubberWidth * 0.42).toFixed(1)}
+          height="2"
+          y="-1"
+          fill="var(--c-amber-light)"
+          fill-opacity="0.65"></rect>
         <text x="0" y="14" class="eg__chrome-text-sm">{scrubberLabel}</text>
         <text x={scrubberWidth.toFixed(1)} y="14" class="eg__chrome-text-sm" text-anchor="end">
           {sun ? `${sun.lat.toFixed(0)}° / ${sun.lon.toFixed(0)}°` : ''}
@@ -1184,20 +1517,31 @@ const headerLabel =
       </g>
 
       {/* 11h — Region rollups (optional, upper-left, below header). */}
-      {showRegionRollups && (
-        <g class="eg__regions" aria-hidden="true">
-          {['APAC', 'EMEA', 'Americas'].map((region, i) => (
-            <g transform={`translate(${regionX.toFixed(1)} ${(regionY0 + i * 18).toFixed(1)})`}>
-              <rect width="86" height="14" rx="2"
-                    fill="#0a0e14" fill-opacity="0.85"
-                    stroke="#2a3548" stroke-width="0.5" />
-              <text x="6" y="10" class="eg__chrome-text-sm">{region}</text>
-              <text x="80" y="10"
-                    text-anchor="end" class="eg__chrome-text-sm">{region === 'APAC' ? '4 ev' : region === 'EMEA' ? '6 ev' : '4 ev'}</text>
-            </g>
-          ))}
-        </g>
-      )}
+      {
+        showRegionRollups && (
+          <g class="eg__regions" aria-hidden="true">
+            {(['APAC', 'EMEA', 'Americas'] as const).map((region, i) => (
+              <g transform={`translate(${regionX.toFixed(1)} ${(regionY0 + i * 18).toFixed(1)})`}>
+                <rect
+                  width="86"
+                  height="14"
+                  rx="2"
+                  fill="#0a0e14"
+                  fill-opacity="0.85"
+                  stroke="#2a3548"
+                  stroke-width="0.5"
+                />
+                <text x="6" y="10" class="eg__chrome-text-sm">
+                  {region}
+                </text>
+                <text x="80" y="10" text-anchor="end" class="eg__chrome-text-sm">
+                  {REGION_BUCKETS[region]} ev
+                </text>
+              </g>
+            ))}
+          </g>
+        )
+      }
     </svg>
   </div>
 
@@ -1221,7 +1565,7 @@ const headerLabel =
     </li>
     <li class="eg__legend-item">
       <span class="eg__legend-dot eg__legend-dot--rose"></span>
-      <span>Critical · {criticalCount}</span>
+      <span>High-impact · {criticalCount}</span>
     </li>
   </ul>
 </figure>
@@ -1273,8 +1617,12 @@ const headerLabel =
      so it pivots on (cx, cy) of the parent SVG viewBox. Honors
      prefers-reduced-motion and the play/pause checkbox via :has(). */
   @keyframes eg-orbit {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
   .eg__globe-rotating {
     transform-origin: 50% 50%;
@@ -1314,13 +1662,33 @@ const headerLabel =
     padding: 0;
     margin: -1px;
   }
+  /* v6.11.6 — show a visible focus ring around the SVG play/pause
+     when the underlying keyboard-accessible checkbox receives focus.
+     The checkbox itself is 1px clip-hidden, so we use :has() to put
+     a focus indicator on the user-visible SVG button. */
+  .eg__rotate-btn-svg {
+    outline: none;
+  }
+  .eg:has(.eg__rotate-toggle:focus-visible) .eg__rotate-btn-svg {
+    outline: 2px solid var(--c-amber-light);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
   .eg__rotate-btn-html {
     display: none;
   }
-  .eg__pause-icon { display: inline; }
-  .eg__play-icon  { display: none; }
-  .eg:has(.eg__rotate-toggle:not(:checked)) .eg__pause-icon { display: none; }
-  .eg:has(.eg__rotate-toggle:not(:checked)) .eg__play-icon  { display: inline; }
+  .eg__pause-icon {
+    display: inline;
+  }
+  .eg__play-icon {
+    display: none;
+  }
+  .eg:has(.eg__rotate-toggle:not(:checked)) .eg__pause-icon {
+    display: none;
+  }
+  .eg:has(.eg__rotate-toggle:not(:checked)) .eg__play-icon {
+    display: inline;
+  }
   .eg__rotate-btn-svg {
     cursor: pointer;
   }
@@ -1341,7 +1709,7 @@ const headerLabel =
   .eg__major {
     stroke: #ffffff;
     stroke-width: 0.5;
-    stroke-opacity: 0.40;
+    stroke-opacity: 0.4;
     stroke-dasharray: 3 3;
   }
   /* v6.5 — polar rings get a slightly heavier stroke + dasharray. */
@@ -1394,11 +1762,18 @@ const headerLabel =
     opacity: 0.85;
   }
   @media (max-width: 720px) {
-    .eg__capital-label { font-size: 7px; opacity: 0.7; }
-    .eg__capital-iso { display: none; }
+    .eg__capital-label {
+      font-size: 7px;
+      opacity: 0.7;
+    }
+    .eg__capital-iso {
+      display: none;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .eg__capital circle { transition: none; }
+    .eg__capital circle {
+      transition: none;
+    }
   }
 
   /* Trade-route flow dot */
@@ -1532,6 +1907,20 @@ const headerLabel =
   .eg__atmosphere-2 {
     pointer-events: none;
   }
+  /* Sun-side halo — amber stroke derived from token (was inline #e8b220) */
+  .eg__atmosphere-halo {
+    stroke: var(--c-amber);
+  }
+  /* Gradient stops — derive from amber tokens (was inline #e8b220 / #c98a16).
+     CSS rules on `<stop>` selectors override SVG-attribute defaults. */
+  #eg-atmosphere stop,
+  #eg-atmosphere-2 stop,
+  #eg-sun-glow stop {
+    stop-color: var(--c-amber-light);
+  }
+  #eg-day stop {
+    stop-color: var(--c-amber);
+  }
 
   /* Legend */
   .eg__legend {
@@ -1556,11 +1945,21 @@ const headerLabel =
     display: inline-block;
     flex-shrink: 0;
   }
-  .eg__legend-dot--amber { background: var(--c-amber-light); }
-  .eg__legend-dot--gold  { background: var(--c-primary-2); }
-  .eg__legend-dot--cyan  { background: var(--c-accent-cyan, #22d3ee); }
-  .eg__legend-dot--ink   { background: var(--c-ink-2); }
-  .eg__legend-dot--rose  { background: var(--c-fail); }
+  .eg__legend-dot--amber {
+    background: var(--c-amber-light);
+  }
+  .eg__legend-dot--gold {
+    background: var(--c-primary-2);
+  }
+  .eg__legend-dot--cyan {
+    background: var(--c-accent-cyan, #22d3ee);
+  }
+  .eg__legend-dot--ink {
+    background: var(--c-ink-2);
+  }
+  .eg__legend-dot--rose {
+    background: var(--c-fail);
+  }
 
   @media (max-width: 1080px) and (min-width: 600px) {
     .eg__city text {
@@ -1571,27 +1970,55 @@ const headerLabel =
   }
 
   @media (max-width: 600px) {
-    .eg__city text { display: none; }
-    .eg__caption-title { font-size: var(--fs-xs); }
-    .eg__legend { gap: var(--sp-2) var(--sp-3); font-size: 0.65rem; }
-    .eg__chrome-text, .eg__chrome-text-sm { font-size: 8px; }
-    .eg__header-text { font-size: 7px; letter-spacing: 0.06em; }
-    .eg__roster-h, .eg__roster-row, .eg__hud-text { font-size: 7px; }
-    .eg__regions { display: none; }
-    .eg__roster { display: none; }
+    .eg__city text {
+      display: none;
+    }
+    .eg__caption-title {
+      font-size: var(--fs-xs);
+    }
+    .eg__legend {
+      gap: var(--sp-2) var(--sp-3);
+      font-size: 0.65rem;
+    }
+    .eg__chrome-text,
+    .eg__chrome-text-sm {
+      font-size: 8px;
+    }
+    .eg__header-text {
+      font-size: 7px;
+      letter-spacing: 0.06em;
+    }
+    .eg__roster-h,
+    .eg__roster-row,
+    .eg__hud-text {
+      font-size: 7px;
+    }
+    .eg__regions {
+      display: none;
+    }
+    .eg__roster {
+      display: none;
+    }
   }
 
   /* Reduced-motion — kill the flow-dot animation and pin pulse, and
      the rotation animation. */
   @media (prefers-reduced-motion: reduce) {
     .eg-flow animateMotion,
-    .eg-flow { animation: none !important; opacity: 0.7 !important; }
-    .eg__pin-group :global(.evp--pulse .evp__ring) { display: none !important; }
-    .eg__globe-rotating { animation: none !important; }
+    .eg-flow {
+      animation: none !important;
+      opacity: 0.7 !important;
+    }
+    .eg__pin-group :global(.evp--pulse .evp__ring) {
+      display: none !important;
+    }
+    .eg__globe-rotating {
+      animation: none !important;
+    }
   }
 </style>
 
-<script define:vars={{ flowAmber }}>
+<script is:inline define:vars={{ flowAmber }}>
   // Set the flow-dot hue deterministically from buildSeed so the amber
   // tones mix consistently across builds. No timers, no randomness —
   // just a CSS custom property for the route-color tint.

@@ -19,9 +19,12 @@ import EvalConsole from '@components/EvalConsole.astro';
 import MiniSpark from '@components/MiniSpark.astro';
 import VoiceLine from '@components/VoiceLine.astro';
 import Stat from '@components/Stat.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 import { profile } from '@utils/profile';
+
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
+const NGATE = `${profile.stats.evalGates}-gate`;
 
 interface AIProject {
   slug: string;
@@ -35,8 +38,8 @@ interface AIProject {
 // Pull the 6 AI projects directly from the existing content collection
 // (no separate file or schema). Order is the frontmatter `order` field;
 // this matches the source-of-truth used by /projects and /research.
-const allProjects = await getCollection('project');
-const aiProjects = allProjects
+const allProjects: CollectionEntry<'project'>[] = await getCollection('project');
+const aiProjects: AIProject[] = allProjects
   .filter((p) => p.data.role === 'ai')
   .sort((a, b) => a.data.order - b.data.order)
   .map<AIProject>((p) => ({
@@ -80,16 +83,17 @@ function miniSeries(seed: string, n: number): number[] {
 }
 
 const loopSteps = [
-  { num: '01', title: 'Idea',    desc: 'Draft the eval harness BEFORE writing the prompt.' },
-  { num: '02', title: 'Eval',    desc: 'Score against G1–G31. Evidence per gate, exit codes.' },
-  { num: '03', title: 'Ship',    desc: 'Tier-routed agents. Per-step budget. Cut-over only on pass.' },
-  { num: '04', title: 'Measure', desc: 'OTel traces · Cohen\'s κ · bootstrap CIs · DSR.' },
-  { num: '05', title: 'Next',    desc: 'Reflect → revise → loop. No-progress halt ships nothing.' },
+  { num: '01', title: 'Idea', desc: 'Draft the eval harness BEFORE writing the prompt.' },
+  { num: '02', title: 'Eval', desc: `Score against ${GATE_RANGE}. Evidence per gate, exit codes.` },
+  { num: '03', title: 'Ship', desc: 'Tier-routed agents. Per-step budget. Cut-over only on pass.' },
+  { num: '04', title: 'Measure', desc: "OTel traces · Cohen's κ · bootstrap CIs · DSR." },
+  { num: '05', title: 'Next', desc: 'Reflect → revise → loop. No-progress halt ships nothing.' },
 ];
 ---
+
 <BaseLayout
-  title="AI lane — 11 agents, 31 gates"
-  description="The 11-agent platform and the 31-gate eval console behind every AI artifact. Every LLM output passes the same statistical gate stack as a published systematic strategy."
+  title={`AI lane — ${profile.stats.aiAgentCount} agents, ${profile.stats.evalGates} gates`}
+  description={`The ${profile.stats.aiAgentCount}-agent platform and the ${profile.stats.evalGates}-gate eval console behind every AI artifact. Every LLM output passes the same statistical gate stack as a published systematic strategy.`}
   breadcrumbs={[
     { name: 'Home', href: '/' },
     { name: 'AI', href: '/ai' },
@@ -99,44 +103,84 @@ const loopSteps = [
     <div class="container">
       <p class="section__eyebrow">AI lane</p>
       <h1 class="section__title">
-        Eleven agents. One loop. <span class="hl">31 gates.</span>
+        Eleven agents. One loop. <span class="hl">{NGATE}.</span>
       </h1>
       <VoiceLine size="md">
-        Every LLM output I ship passes the same statistical gate stack as a systematic
-        strategy. The harness is the artifact; the model is interchangeable.
+        Every LLM output I ship passes the same statistical gate stack as a systematic strategy. The
+        harness is the artifact; the model is interchangeable.
       </VoiceLine>
       <div class="ai-hero__stats">
-        <Stat value={profile.stats.aiAgentCount} label="agents" sub="4 inputs · 3 middles · 3 outputs · 1 orchestrator" size="md" variant="primary" />
-        <Stat value={profile.stats.evalGates} label="eval gates" sub="G1–G31 · 6 families · exit-0 contract" size="md" variant="primary" />
-        <Stat value={String(aiProjects.length)} label="projects" sub="in-repo · reproducible" size="md" variant="primary" />
-        <Stat value={profile.stats.locPython} label="LOC Python" sub="stdlib-heavy · LLM-free scoring" size="md" variant="primary" />
+        <Stat
+          value={profile.stats.aiAgentCount}
+          label="agents"
+          sub="4 inputs · 3 middles · 3 outputs · 1 orchestrator"
+          size="md"
+          variant="primary"
+        />
+        <Stat
+          value={profile.stats.evalGates}
+          label="eval gates"
+          sub="G1–G31 · 6 families · exit-0 contract"
+          size="md"
+          variant="primary"
+        />
+        <Stat
+          value={String(aiProjects.length)}
+          label="projects"
+          sub="in-repo · reproducible"
+          size="md"
+          variant="primary"
+        />
+        <Stat
+          value={profile.stats.locPython}
+          label="LOC Python"
+          sub="stdlib-heavy · LLM-free scoring"
+          size="md"
+          variant="primary"
+        />
       </div>
     </div>
   </header>
 
-  {/* === Section 1 — the 11-agent platform === */}
-  <section class="section section--alt" id="platform" data-toc-id="platform" data-toc-label="11-agent platform">
+  {/* === Section 1 — the {profile.stats.aiAgentCount}-agent platform === */}
+  <section
+    class="section section--alt"
+    id="platform"
+    data-toc-id="platform"
+    data-toc-label={`${profile.stats.aiAgentCount}-agent platform`}
+  >
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">The platform</p>
         <h2 class="section__title">
-          11 agents. A directed-acyclic graph with one feedback edge.
+          {profile.stats.aiAgentCount} agents. A directed-acyclic graph with one feedback edge.
         </h2>
         <p class="section__sub">
-          Four inputs feed the orchestrator. The orchestrator dispatches to
-          RAG-Recall, Eval-Gate, and Router. The middles publish to Artifact,
-          Metric, and Feedback. Feedback loops back to the orchestrator —
-          that loop is the entire system.
+          Four inputs feed the orchestrator. The orchestrator dispatches to RAG-Recall, Eval-Gate,
+          and Router. The middles publish to Artifact, Metric, and Feedback. Feedback loops back to
+          the orchestrator — that loop is the entire system.
         </p>
       </header>
 
       <AgentGraph />
 
       <ul class="ai-cap-list mono">
-        <li><span class="ai-cap-list__k">inputs</span> <span class="ai-cap-list__v">doc corpus · eval set · build output · telemetry</span></li>
-        <li><span class="ai-cap-list__k">middles</span> <span class="ai-cap-list__v">RAG-Recall · Eval-Gate · Router</span></li>
-        <li><span class="ai-cap-list__k">outputs</span> <span class="ai-cap-list__v">Artifact · Metric · Feedback</span></li>
-        <li><span class="ai-cap-list__k">loop</span> <span class="ai-cap-list__v">Feedback → Orchestrator — this is the system</span></li>
+        <li>
+          <span class="ai-cap-list__k">inputs</span>
+          <span class="ai-cap-list__v">doc corpus · eval set · build output · telemetry</span>
+        </li>
+        <li>
+          <span class="ai-cap-list__k">middles</span>
+          <span class="ai-cap-list__v">RAG-Recall · Eval-Gate · Router</span>
+        </li>
+        <li>
+          <span class="ai-cap-list__k">outputs</span>
+          <span class="ai-cap-list__v">Artifact · Metric · Feedback</span>
+        </li>
+        <li>
+          <span class="ai-cap-list__k">loop</span>
+          <span class="ai-cap-list__v">Feedback → Orchestrator — this is the system</span>
+        </li>
       </ul>
     </div>
   </section>
@@ -146,94 +190,102 @@ const loopSteps = [
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Loop engineering</p>
-        <h2 class="section__title">
-          Idea → Eval → Ship → Measure → Next.
-        </h2>
+        <h2 class="section__title">Idea → Eval → Ship → Measure → Next.</h2>
         <p class="section__sub">
-          Loop engineering is what the AI lane is. The first step is the harness,
-          not the prompt. The last step is the gate, not the model's confidence.
+          Loop engineering is what the AI lane is. The first step is the harness, not the prompt.
+          The last step is the gate, not the model's confidence.
         </p>
       </header>
 
       <ol class="ai-loop" aria-label="Five-step loop engineering cycle">
-        {loopSteps.map((s) => (
-          <li class="ai-loop__step">
-            <span class="ai-loop__num mono">{s.num}</span>
-            <h3 class="ai-loop__title">{s.title}</h3>
-            <p class="ai-loop__desc">{s.desc}</p>
-          </li>
-        ))}
+        {
+          loopSteps.map((s) => (
+            <li class="ai-loop__step">
+              <span class="ai-loop__num mono">{s.num}</span>
+              <h3 class="ai-loop__title">{s.title}</h3>
+              <p class="ai-loop__desc">{s.desc}</p>
+            </li>
+          ))
+        }
       </ol>
     </div>
   </section>
 
   {/* === Section 3 — 6 AI projects === */}
-  <section class="section section--alt" id="projects" data-toc-id="projects" data-toc-label="Projects">
+  <section
+    class="section section--alt"
+    id="projects"
+    data-toc-id="projects"
+    data-toc-label="Projects"
+  >
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Projects · the surface evidence</p>
-        <h2 class="section__title">
-          Six artifacts. Each is a project, not a demo.
-        </h2>
+        <h2 class="section__title">Six artifacts. Each is a project, not a demo.</h2>
         <p class="section__sub">
-          Every project on this page ships with a reproducible harness, a labeled
-          eval set or scored output, and a CI-enforced gate stack. None depend
-          on a paid API at read time.
+          Every project on this page ships with a reproducible harness, a labeled eval set or scored
+          output, and a CI-enforced gate stack. None depend on a paid API at read time.
         </p>
       </header>
 
       <div class="ai-projects">
-        {aiProjects.map((p) => (
-          <article class="ai-card" data-project-slug={p.slug}>
-            <header class="ai-card__head">
-              <span class="ai-card__date mono">{p.date}</span>
-              <h3 class="ai-card__title">
-                {/* v6.10.11 — lane prefix needed. /ai/ projects all live here. */}
-                <a href={path(`/projects/${p.slug}`)}>{p.title}</a>
-              </h3>
-              <MiniSpark points={miniSeries(p.slug, 16)} stroke="var(--c-amber)" ariaLabel={`mini sparkline for ${p.title}`} />
-            </header>
-            <p class="ai-card__sum">{p.summary}</p>
-            <ul class="ai-card__metrics">
-              {p.metrics.map((m) => (
-                <li class="ai-card__metric">
-                  <span class="ai-card__mvalue mono">{m.value}</span>
-                  <span class="ai-card__mlabel mono">{m.label}</span>
-                  {m.sub && <span class="ai-card__msub mono">{m.sub}</span>}
-                </li>
-              ))}
-            </ul>
-            <a class="ai-card__more" href={path(`/projects/${p.slug}`)}>
-              Open artifact <span aria-hidden="true">→</span>
-            </a>
-          </article>
-        ))}
+        {
+          aiProjects.map((p) => (
+            <article class="ai-card" data-project-slug={p.slug}>
+              <header class="ai-card__head">
+                <span class="ai-card__date mono">{p.date}</span>
+                <h3 class="ai-card__title">
+                  {/* v6.10.11 — lane prefix needed. /ai/ projects all live here. */}
+                  <a href={path(`/projects/${p.slug}`)}>{p.title}</a>
+                </h3>
+                <MiniSpark
+                  points={miniSeries(p.slug, 16)}
+                  stroke="var(--c-amber)"
+                  ariaLabel={`mini sparkline for ${p.title}`}
+                />
+              </header>
+              <p class="ai-card__sum">{p.summary}</p>
+              <ul class="ai-card__metrics">
+                {p.metrics.map((m) => (
+                  <li class="ai-card__metric">
+                    <span class="ai-card__mvalue mono">{m.value}</span>
+                    <span class="ai-card__mlabel mono">{m.label}</span>
+                    {m.sub && <span class="ai-card__msub mono">{m.sub}</span>}
+                  </li>
+                ))}
+              </ul>
+              <a class="ai-card__more" href={path(`/projects/${p.slug}`)}>
+                Open artifact <span aria-hidden="true">→</span>
+              </a>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
 
-  {/* === Section 4 — the eval console (31 gates) === */}
+  {
+    /* === Section 4 — the eval console (31 gates) === — rendered gate count driven by profile.stats.evalGates */
+  }
   <section class="section" id="console" data-toc-id="console" data-toc-label="Eval console">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">The eval console</p>
         <h2 class="section__title">
-          31 gates. One row per gate. The full stack.
+          {NGATE}. One row per gate. The full stack.
         </h2>
         <p class="section__sub">
-          Same 31 gates you'd run on a published systematic strategy. Mechanical
-          (exit-0 contract), not opinionated. A pass means the candidate is
-          allowed to surface; a fail means it isn't.
+          Same {NGATE} you'd run on a published systematic strategy. Mechanical (exit-0 contract), not
+          opinionated. A pass means the candidate is allowed to surface; a fail means it isn't.
         </p>
       </header>
 
       <EvalConsole />
 
       <p class="ai-disclosure mono">
-        Open-source on GitHub · 31 gates enforced by CI · same gate stack as a
-        published systematic strategy · stdlib-only Python at the core · the
-        one FAIL on <span class="hl">G26</span> is real — slippage budget overrun
-        caught by the harness, not a model that guessed.
+        Open-source on GitHub · {NGATE} enforced by CI · same gate stack as a published systematic strategy
+        · stdlib-only Python at the core · the one FAIL on <span class="hl">G26</span> is real — slippage
+        budget overrun caught by the harness, not a model that guessed.
       </p>
     </div>
   </section>
@@ -323,10 +375,14 @@ const loopSteps = [
     line-height: 1.45;
   }
   @media (max-width: 980px) {
-    .ai-loop { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ai-loop {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   @media (max-width: 560px) {
-    .ai-loop { grid-template-columns: 1fr; }
+    .ai-loop {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* === Project cards === */
@@ -336,10 +392,14 @@ const loopSteps = [
     gap: var(--sp-4);
   }
   @media (max-width: 980px) {
-    .ai-projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ai-projects {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   @media (max-width: 640px) {
-    .ai-projects { grid-template-columns: 1fr; }
+    .ai-projects {
+      grid-template-columns: 1fr;
+    }
   }
 
   .ai-card {
@@ -443,7 +503,7 @@ const loopSteps = [
   .ai-disclosure .hl {
     color: var(--c-primary-2);
     font-weight: 600;
-    background: rgba(232, 178, 32, 0.12);
+    background: var(--c-amberl-mist);
     padding: 0 6px;
     border-radius: 4px;
   }

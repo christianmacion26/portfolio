@@ -1,13 +1,20 @@
 /**
- * globe.ts — v6.7.1.F12 — interactive Earth globe driver.
+ * globe.ts — v6.7.1.F12 + v6.10.51 — interactive Earth globe driver.
  *
  * Owner 2026-07-11: "i cant toggle and tocu and move the fucking globe"
+ * Owner 2026-07-13: "whats the point of the pause button on the earth.
+ *                   also I cant drag and spin the globe. I want complete
+ *                   and accurate"
  *
  * Hooks the .eg__globe-rotating <g> in EarthGlobe.astro so the user can:
  *   • pointerdown / pointermove / pointerup  → drag-to-rotate (longitude)
  *   • wheel                                    → zoom (CSS scale on the SVG)
- *   • click on .eg__rotate-toggle              → play/pause (delegated to
- *                                                 the existing checkbox)
+ *   • click on .eg__rotate-btn-svg             → play/pause (toggles the
+ *                                                 existing checkbox; v6.10.51
+ *                                                 fix — was previously
+ *                                                 visual-only, no handler)
+ *   • keyboard space on the checkbox           → play/pause (a11y)
+ *   • double-click on the figure               → recenter to auto-rotate
  *
  * The CSS @keyframes eg-orbit already auto-rotates the globe; this driver
  * PAUSES the animation and applies an inline `transform: rotate(N deg)` to
@@ -33,7 +40,7 @@ interface GlobeState {
   figure: HTMLElement;
   cx: number; // SVG units — center x of disc
   cy: number; // SVG units — center y of disc
-  R: number;  // SVG units — disc radius
+  R: number; // SVG units — disc radius
   rotation: number; // current rotation degrees (longitude offset)
   dragging: boolean;
   lastX: number;
@@ -181,6 +188,20 @@ function bind(fig: HTMLElement): void {
         pauseAuto(s);
       }
     });
+    // v6.10.51 — fix: SVG pause/play button is purely visual (no click
+    // handler in v6.5). The HTML <label for="eg-rotate-toggle"> is
+    // `display: none`, so the label never receives clicks. Wire a
+    // delegated click on the SVG <g class="eg__rotate-btn-svg"> so
+    // tapping the visible button actually toggles rotation. Stop
+    // propagation so the click doesn't also start a drag operation.
+    const btnSvg = fig.querySelector<SVGGElement>('.eg__rotate-btn-svg');
+    if (btnSvg) {
+      btnSvg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggle.checked = !toggle.checked;
+        toggle.dispatchEvent(new Event('change'));
+      });
+    }
   }
 }
 

@@ -10,7 +10,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import ProofCard from '@components/ProofCard.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 import { profile } from '@utils/profile';
 import VoiceLine from '@components/VoiceLine.astro';
@@ -20,26 +20,36 @@ import VoiceLine from '@components/VoiceLine.astro';
 // the site (humans.md, home description, JSON-LD awards).
 const claimedTotal = Number(profile.stats.certCount);
 
-const groups = (await getCollection('certGroup')).sort((a, b) => a.data.order - b.data.order);
+type CertGroupEntry = CollectionEntry<'certGroup'>;
+const allCertGroups: CertGroupEntry[] = await getCollection('certGroup');
+const groups = allCertGroups.sort((a, b) => a.data.order - b.data.order);
 
 const totalCount = groups.reduce((sum, g) => sum + g.data.items.length, 0);
 const flagshipCount = groups.reduce(
-  (sum, g) => sum + g.data.items.filter((c) => c.flagship).length,
+  (sum: number, g: CertGroupEntry) =>
+    sum + g.data.items.filter((c: CertGroupEntry['data']['items'][number]) => c.flagship).length,
   0,
 );
 const tier1Count = groups.reduce(
-  (sum, g) => sum + g.data.items.filter((c) => c.tier === 1).length,
+  (sum: number, g: CertGroupEntry) =>
+    sum + g.data.items.filter((c: CertGroupEntry['data']['items'][number]) => c.tier === 1).length,
   0,
-);---
+);
+---
 
 <BaseLayout
   title="Certifications"
   description={`Curated ${totalCount}+ of ${claimedTotal} professional certifications, grouped by domain and Tier-1 issuer.`}
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Certifications", href: "/certifications" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Certifications', href: '/certifications' },
+  ]}
 >
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow"><span class="mono">certs/</span> · {claimedTotal} total, curated below</p>
+      <p class="section__eyebrow">
+        <span class="mono">certs/</span> · {claimedTotal} total, curated below
+      </p>
       <h1 class="page-head__title">
         <span class="mono">{totalCount}+ of {claimedTotal}</span> certifications, four domains.
       </h1>
@@ -47,9 +57,9 @@ const tier1Count = groups.reduce(
         Every cert links to its issuer's public registry — or it doesn't ship on this page.
       </VoiceLine>
       <p class="page-head__sub">
-        {claimedTotal} professional certifications across AI, finance, math/statistics, and event flagships —
-        collected in 11 months (Nov 2022 → May 2026). Curated below by domain; Tier-1 issuers
-        flagged.
+        {claimedTotal} professional certifications across AI, finance, math/statistics, and event flagships
+        — collected in {profile.stats.ageMonths} months (Nov 2022 → May 2026). Curated below by domain;
+        Tier-1 issuers flagged.
       </p>
 
       <div class="head-eq">
@@ -63,11 +73,7 @@ const tier1Count = groups.reduce(
       <div class="head-stats">
         <Stat value={String(totalCount)} label="curated" sub="below" />
         <Stat value={String(claimedTotal)} label="total" sub="all-time" trend="up" />
-        <Stat
-          value={String(flagshipCount)}
-          label="flagships"
-          sub="NASA · Meta · IBM · IMC"
-        />
+        <Stat value={String(flagshipCount)} label="flagships" sub="NASA · Meta · IBM · IMC" />
         <Stat value={String(tier1Count)} label="tier-1" sub="STA · SEC · BSP" />
       </div>
     </div>
@@ -94,7 +100,7 @@ const tier1Count = groups.reduce(
             </div>
           )}
           <ul class="certs">
-            {group.data.items.map((item) => (
+            {group.data.items.map((item: CertGroupEntry['data']['items'][number]) => (
               <li
                 class:list={[
                   'cert',
@@ -130,8 +136,7 @@ const tier1Count = groups.reduce(
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -142,7 +147,7 @@ const tier1Count = groups.reduce(
   .page-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

@@ -35,7 +35,7 @@
   - https://christianmacion-portfolio.pages.dev/mistakes/ — `book_quality = min(wins, postmort…` clipped (closing `)` missing)
 - **Local source:** KaTeX wrapper styles likely in `src/styles/global.css` or wherever `.katex-display` is styled.
 - **Issue:** The math blocks render at desktop `font-size` and don't scale to 375px — the closing tokens are scrolled off-screen to the right. The hire-page centerpiece formulas are unreadable on iPhone.
-- **Why it matters:** For a Quant Researcher pitch, the math is the *brand*. If the headline formula is unreadable on a phone, the credibility "passes G1–G31" promise is undermined before the reader gets past the fold.
+- **Why it matters:** For a Quant Researcher pitch, the math is the _brand_. If the headline formula is unreadable on a phone, the credibility "passes G1–G31" promise is undermined before the reader gets past the fold.
 - **Fix:** At ≤600px: `.katex-display { font-size: 0.78em; overflow-x: auto; padding-bottom: 0.25rem; }` and let the math container become `white-space: nowrap; overflow-x: auto;` so it scrolls horizontally inside the card instead of pushing past the viewport edge. Better: render the `katex` HTML at build-time with a mobile-aware `displayMode` size step.
 
 ### P0-4. Header `Resume ↓` CTA on the home page is invisible against the dark navbar
@@ -57,32 +57,32 @@
 - **Live URLs:** Every page with stat tiles — `/solutions/`, `/experience/`, `/certifications/`, `/about/`, `/skills/`, `/resume/`
 - **Local source:** A single `<StatTile>` / `<KPI>` component, likely in `src/components/`.
 - **Issue:** Each stat tile shows a tiny, near-unreadable glyph in the top-right corner: `|S|`, `c(t)`, `Σcₑ`, `Σpₑ`, `Δt`, `|𝒜|`, `|𝒞|`, `g`, `C_shown`, `|D|`, `|R|`, `¬N`, `|P_q|`, `|P_a|`. These are the math notation of each metric — but they're rendered at ~10pt, half-faded, in a position that reads as "broken layout leftover", not as institutional notation. On the Skills page one tile literally says "rated" in the corner (a label for a label).
-- **Why it matters:** For a hedge-fund / AQR / Jane Street reader, math notation is a vocabulary — but only when it's *legible*. Floating tiny glyphs in corners look like a CSS template that the author forgot to clean up. They distract more than they add.
+- **Why it matters:** For a hedge-fund / AQR / Jane Street reader, math notation is a vocabulary — but only when it's _legible_. Floating tiny glyphs in corners look like a CSS template that the author forgot to clean up. They distract more than they add.
 - **Fix:** Either
   1. Remove all corner decorations. The big number + label is enough.
-  2. Make them a proper `<dfn>` in the same amber, set at ~12pt, and place them inline *with* the label (e.g. "Solutions shipped |S| = 10") so they read as semantic math, not as ornaments.
+  2. Make them a proper `<dfn>` in the same amber, set at ~12pt, and place them inline _with_ the label (e.g. "Solutions shipped |S| = 10") so they read as semantic math, not as ornaments.
 
 ### P1-2. Heading yellow underline bleeds past the period on every H1
 
 - **Live URLs:** `/about/` ("Two hats."), `/proof/` ("only."), `/positions/` ("running."), `/uses/` ("work."), `/now/` ("now."), `/skills/` ("stack."), `/methodology/` ("gate.")
 - **Local source:** `src/styles/global.css` (the `.h-underline` / `text-decoration: underline` / `border-bottom` rule)
-- **Issue:** The yellow underline that sits under the *last meaningful word* of the H1 actually extends across the trailing space and the period. So "Two hats." appears with "_______." where the underscore is a fat amber line that runs under the period too. Looks like a typesetting bug.
+- **Issue:** The yellow underline that sits under the _last meaningful word_ of the H1 actually extends across the trailing space and the period. So "Two hats." appears with "_______." where the underscore is a fat amber line that runs under the period too. Looks like a typesetting bug.
 - **Why it matters:** Senior typography (think Stripe, Jane Street, AQR reports) would never let a heading underline visually clip a period. It reads as a CSS mistake.
-- **Fix:** Apply the underline via a `<span class="hl">` wrapping only the last word, *not* via `text-decoration: underline` on the H1 or via an H1 pseudo-element that extends to the period. Already partially done — the `.hl` class exists — but the rule is being applied too widely. Add `padding-right: 0.15em;` to `.hl` and ensure `.h-underline` markup uses `<span class="hl">word</span>` only.
+- **Fix:** Apply the underline via a `<span class="hl">` wrapping only the last word, _not_ via `text-decoration: underline` on the H1 or via an H1 pseudo-element that extends to the period. Already partially done — the `.hl` class exists — but the rule is being applied too widely. Add `padding-right: 0.15em;` to `.hl` and ensure `.h-underline` markup uses `<span class="hl">word</span>` only.
 
 ### P1-3. Empty vertical band between intro and the first content section on `/glossary/`
 
 - **Live URL:** https://christianmacion-portfolio.pages.dev/glossary/
 - **Local source:** `src/pages/glossary.astro`
 - **Issue:** Below the "A short dictionary…" intro paragraph there's an empty band of ~120px of pure dark background before the first section heading "Quant terms · 18" appears. This band does not appear on any other page. Reads as missing content / un-rendered TOC.
-- **Why it matters:** A glossary that visually *gaps* between the intro and the first entry makes the reader think the page has stopped rendering.
+- **Why it matters:** A glossary that visually _gaps_ between the intro and the first entry makes the reader think the page has stopped rendering.
 - **Fix:** Find what's emitting the empty `<div>` / `<section>` — likely a placeholder for a sticky TOC that's been removed. Inspect in DevTools; likely a `<aside>` or empty grid item. Remove or reduce to zero-height.
 
 ### P1-4. `/proof/` page says "Loading sections…" — duplicate of P0-1, but flagging the visible "ON THIS PROOF PAGE" label too
 
 - **Live URL:** `/proof/` desktop footer area
 - **Local source:** `src/components/SectionTOC.astro` line 38 (`<span class="toc__label mono">{label}</span>`)
-- **Issue:** The TOC sticky bar has a label `ON THIS PROOF PAGE` rendered *next to* the `Loading sections…` skeleton. So the user sees literally the words "ON THIS PROOF PAGE — Loading sections…" pinned to the bottom of the page. The label is fine; the dead skeleton is what kills it.
+- **Issue:** The TOC sticky bar has a label `ON THIS PROOF PAGE` rendered _next to_ the `Loading sections…` skeleton. So the user sees literally the words "ON THIS PROOF PAGE — Loading sections…" pinned to the bottom of the page. The label is fine; the dead skeleton is what kills it.
 - **Fix:** Same as P0-1.
 
 ### P1-5. `/contact/` desktop headshot floats awkwardly into the H1 row
@@ -105,14 +105,14 @@
 - **Live URL:** https://christianmacion-portfolio.pages.dev/publications/ (mobile mid-scroll)
 - **Local source:** `src/pages/publications.astro` (CTA section near bottom)
 - **Issue:** A `<CTABanner>` component switches the local background from the dark `--c-tape` to a cream `--c-paper` panel. On mobile, this is fine, but the contrast jump is abrupt: the text on the cream panel reads as near-black on cream while the page above is amber-on-near-black. The reader's eye reads it as a different site.
-- **Why it matters:** The cream CTA banner appears on multiple pages (Methodology, Proof, Publications). If it stays, it should be visibly a CTA *section*, not a background flip. Right now it reads as a stylesheet error.
+- **Why it matters:** The cream CTA banner appears on multiple pages (Methodology, Proof, Publications). If it stays, it should be visibly a CTA _section_, not a background flip. Right now it reads as a stylesheet error.
 - **Fix:** Either make the cream panel an explicit "card" with a 1px amber border + small drop-shadow, or invert: keep the dark background and use amber text for the CTA. Best option: replace the `<CTABanner>` `bg: paper` style with `bg: tape-2` (a slightly lighter shade of the same near-black) so the panel reads as a tonal divider, not a colour swap.
 
 ### P1-8. `/now/` paragraph link `Inspired by /now.` shows two underlines
 
 - **Live URL:** https://christianmacion-portfolio.pages.dev/now/ (desktop + mobile)
 - **Local source:** `src/pages/now.astro` (the `<a href="https://nownownow.com/about">/now</a>` markup)
-- **Issue:** The link text reads "/now" and the trailing period is *not* part of the anchor — but the underlined range visually overlaps the period and the leading slash, creating the impression of a double underline.
+- **Issue:** The link text reads "/now" and the trailing period is _not_ part of the anchor — but the underlined range visually overlaps the period and the leading slash, creating the impression of a double underline.
 - **Fix:** Either include the period inside the anchor: `<a href="...">/now</a>.` (so the period gets the same underline colour as the text), or apply `text-decoration-skip-ink: auto;` so the underline only appears under the glyph strokes.
 
 ### P1-9. `/publications/` eyebrow wraps awkwardly on desktop
@@ -135,7 +135,7 @@
 - **Live URL:** https://christianmacion-portfolio.pages.dev/publications/ (both viewports)
 - **Local source:** `src/pages/publications.astro` (the filter row)
 - **Issue:** The chips `all 23 · papers 9 · oss 6 · workbooks 3 · press 5` look like default Astro/Tailwind chips — rounded pills with light borders, the active one being pale. They don't echo the rest of the site's amber accent system.
-- **Why it matters:** For a "vibe-coded" check, the single biggest tell is a default chip group. Senior portfolios have either no chips (just sections) or chips that feel *typed* (e.g. monospace label, amber-on-dark, no rounded corners).
+- **Why it matters:** For a "vibe-coded" check, the single biggest tell is a default chip group. Senior portfolios have either no chips (just sections) or chips that feel _typed_ (e.g. monospace label, amber-on-dark, no rounded corners).
 - **Fix:** Replace with the project's existing mono-pill pattern: `font: 500 11px/1 var(--ff-mono); letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--c-rule); color: var(--c-ink-2); background: transparent;` and the active state `color: var(--c-tape); background: var(--c-amber); border-color: var(--c-amber);`. The amber-active chip is the institutional signal — matches the eyebrow system already in use.
 
 ### P1-12. Home mobile caption is clipped to one line
@@ -227,17 +227,18 @@
 
 ## Summary scorecard
 
-| Dimension | Score (1–10) | Note |
-|---|---|---|
-| Brand / palette cohesion | 8 | Amber+black+cream holds everywhere |
-| Typography hierarchy | 6 | Heading-underline bug + corner-glyph noise drag this down |
-| Desktop institutional feel | 7 | Strong on Proof, Methodology, Resume; weak on Contact, Home (empty right half) |
-| Mobile rendering quality | 5 | Proof TOC broken; KaTeX overflow on 3 pages; for-recruiters facts table clipped; image caption clipped |
-| Information density | 8 | Senior-research tone is consistent |
-| "Vibe-coded" tells | 6 | Filter chips on Publications, corner-glyphs on stat tiles, underline past period — three big tells |
-| Production correctness | 5 | `/proof/` is broken in production (P0-1) |
+| Dimension                  | Score (1–10) | Note                                                                                                   |
+| -------------------------- | ------------ | ------------------------------------------------------------------------------------------------------ |
+| Brand / palette cohesion   | 8            | Amber+black+cream holds everywhere                                                                     |
+| Typography hierarchy       | 6            | Heading-underline bug + corner-glyph noise drag this down                                              |
+| Desktop institutional feel | 7            | Strong on Proof, Methodology, Resume; weak on Contact, Home (empty right half)                         |
+| Mobile rendering quality   | 5            | Proof TOC broken; KaTeX overflow on 3 pages; for-recruiters facts table clipped; image caption clipped |
+| Information density        | 8            | Senior-research tone is consistent                                                                     |
+| "Vibe-coded" tells         | 6            | Filter chips on Publications, corner-glyphs on stat tiles, underline past period — three big tells     |
+| Production correctness     | 5            | `/proof/` is broken in production (P0-1)                                                               |
 
 **Top three things to fix before any HR-facing share:**
+
 1. P0-1 — proof page TOC (15-min fix if you pass `items={[...]}` explicitly).
 2. P0-2 — for-recruiters mobile facts table (CSS breakpoint change, 30 min).
 3. P1-1 — strip the corner-glyph decorations on stat tiles (one find/replace, 1 hour for the global component).

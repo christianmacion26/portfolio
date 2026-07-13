@@ -32,12 +32,7 @@ interface Props {
   height?: number;
   buildDate?: string;
 }
-const {
-  events,
-  width = 1080,
-  height = 320,
-  buildDate = '2026-07-10',
-} = Astro.props;
+const { events, width = 1080, height = 320, buildDate = '2026-07-10' } = Astro.props;
 
 // Layout constants — padL/R/T/B sized for axis labels + legend
 const padL = 56,
@@ -48,18 +43,13 @@ const innerW = width - padL - padR;
 const innerH = height - padT - padB;
 
 // Anchor date for "now" on the tenor axis. Deterministic per build.
-const anchorIso = (buildDate.includes('T') ? buildDate : `${buildDate}T00:00:00Z`);
+const anchorIso = buildDate.includes('T') ? buildDate : `${buildDate}T00:00:00Z`;
 const anchorMs = new Date(anchorIso).getTime();
 // Max tenor months → convert to fractional years for x-axis.
 // Use 2028-05-09 (latest event in the set) as the right edge.
 const xEndIso = '2028-05-09T00:00:00Z';
 const xEndMs = new Date(xEndIso).getTime();
 const xSpanMs = xEndMs - anchorMs || 1;
-
-function fracX(isoLike: string): number {
-  const m = new Date(isoLike).getTime();
-  return Math.max(0, Math.min(1, (m - anchorMs) / xSpanMs));
-}
 
 function parseTenor(tenor: string): { x: number; label: string } {
   // Strip leading "by " prefix.
@@ -188,19 +178,8 @@ function linePath(pts: { x: number; y: number }[]): string {
     {
       yTicks.map((t) => (
         <g>
-          <line
-            x1={padL}
-            y1={t.y}
-            x2={padL + innerW}
-            y2={t.y}
-            class="prob-decay__grid"
-          />
-          <text
-            x={padL - 8}
-            y={t.y + 3}
-            class="prob-decay__tick mono"
-            text-anchor="end"
-          >
+          <line x1={padL} y1={t.y} x2={padL + innerW} y2={t.y} class="prob-decay__grid" />
+          <text x={padL - 8} y={t.y + 3} class="prob-decay__tick mono" text-anchor="end">
             {(t.p * 100).toFixed(0)}¢
           </text>
         </g>
@@ -213,8 +192,7 @@ function linePath(pts: { x: number; y: number }[]): string {
       y1={padT + innerH}
       x2={padL + innerW}
       y2={padT + innerH}
-      class="prob-decay__axis"
-    />
+      class="prob-decay__axis"></line>
 
     {/* X-axis date ticks */}
     {
@@ -229,12 +207,7 @@ function linePath(pts: { x: number; y: number }[]): string {
               y2={padT + innerH + 4}
               class="prob-decay__axis"
             />
-            <text
-              x={px}
-              y={padT + innerH + 16}
-              class="prob-decay__tick mono"
-              text-anchor="middle"
-            >
+            <text x={px} y={padT + innerH + 16} class="prob-decay__tick mono" text-anchor="middle">
               {t.label}
             </text>
           </g>
@@ -292,11 +265,7 @@ function linePath(pts: { x: number; y: number }[]): string {
               fill={s.color}
               opacity="0.85"
             />
-            <text
-              x={padL + innerW + 26}
-              y={ly + 1}
-              class="prob-decay__legend-text"
-            >
+            <text x={padL + innerW + 26} y={ly + 1} class="prob-decay__legend-text">
               {s.title.length > 30 ? s.title.slice(0, 28) + '…' : s.title}
             </text>
           </g>
@@ -327,7 +296,11 @@ function linePath(pts: { x: number; y: number }[]): string {
               <td class="mono faint">{s.category}</td>
               <td class="mono tnum">{(s.points[0].implied * 100).toFixed(0)}¢</td>
               <td
-                class:list={['mono', 'tnum', s.edgeLabel.startsWith('+') ? 'edge--pos' : 'edge--neg']}
+                class:list={[
+                  'mono',
+                  'tnum',
+                  s.edgeLabel.startsWith('+') ? 'edge--pos' : 'edge--neg',
+                ]}
               >
                 {s.edgeLabel}
               </td>
@@ -387,7 +360,7 @@ function linePath(pts: { x: number; y: number }[]): string {
     stroke-width: 1;
   }
   .prob-decay__tick {
-    font-size: 9px;
+    font-size: var(--fs-3xs);
     fill: var(--c-ink-2);
   }
   .prob-decay__legend-text {
@@ -444,7 +417,7 @@ function linePath(pts: { x: number; y: number }[]): string {
       align-items: flex-start;
     }
     .prob-decay__legend-text {
-      font-size: 8px;
+      font-size: var(--fs-3xs);
     }
   }
 </style>

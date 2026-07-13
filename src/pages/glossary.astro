@@ -13,20 +13,26 @@ import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
 import { terms } from '../data/glossary-terms';
 import VoiceLine from '@components/VoiceLine.astro';
+import { profile } from '@utils/profile';
 
-const grouped = {
-  Quant: terms.filter((t) => t.category === 'Quant'),
-  AI: terms.filter((t) => t.category === 'AI'),
-};
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
 
 // Group by category for layout
-const quantTerms = terms.filter((t) => t.category === 'Quant').sort((a, b) => a.term.localeCompare(b.term));
-const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.localeCompare(b.term));---
+const quantTerms = terms
+  .filter((t) => t.category === 'Quant')
+  .sort((a, b) => a.term.localeCompare(b.term));
+const aiTerms = terms
+  .filter((t) => t.category === 'AI')
+  .sort((a, b) => a.term.localeCompare(b.term));
+---
 
 <BaseLayout
   title="Glossary · Quant & AI terms"
   description="A short, alphabetised glossary of the quant and AI terms used across this site. Written for hiring managers and recruiters who don't yet know the field."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Glossary", href: "/glossary" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Glossary', href: '/glossary' },
+  ]}
 >
   <section class="hero">
     <div class="container container--narrow">
@@ -39,7 +45,8 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
       </p>
       <h1 class="hero__title">A short dictionary of the terms on this site.</h1>
       <VoiceLine class="hero__voice">
-        Twenty-five terms, each short enough to read in thirty seconds, each deep-linkable from /methodology.
+        Twenty-five terms, each short enough to read in thirty seconds, each deep-linkable from
+        /methodology.
       </VoiceLine>
       <p class="hero__sub">
         Twenty-five canonical definitions. Each one is short enough to read in thirty seconds and
@@ -63,10 +70,16 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
           quantTerms.map((t) => (
             <div class="glossary__item" id={t.id}>
               <dt class="glossary__term">
-                <a href={path(`/glossary/${t.id}`)} class="glossary__anchor" aria-label={`Read the full definition of ${t.term}`}>
+                <a
+                  href={path(`/glossary/${t.id}`)}
+                  class="glossary__anchor"
+                  aria-label={`Read the full definition of ${t.term}`}
+                >
                   →
                 </a>
-                <a href={path(`/glossary/${t.id}`)} class="glossary__term-link">{t.term}</a>
+                <a href={path(`/glossary/${t.id}`)} class="glossary__term-link">
+                  {t.term}
+                </a>
               </dt>
               <dd class="glossary__def">{t.short}</dd>
             </div>
@@ -90,10 +103,16 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
           aiTerms.map((t) => (
             <div class="glossary__item" id={t.id}>
               <dt class="glossary__term">
-                <a href={path(`/glossary/${t.id}`)} class="glossary__anchor" aria-label={`Read the full definition of ${t.term}`}>
+                <a
+                  href={path(`/glossary/${t.id}`)}
+                  class="glossary__anchor"
+                  aria-label={`Read the full definition of ${t.term}`}
+                >
                   →
                 </a>
-                <a href={path(`/glossary/${t.id}`)} class="glossary__term-link">{t.term}</a>
+                <a href={path(`/glossary/${t.id}`)} class="glossary__term-link">
+                  {t.term}
+                </a>
               </dt>
               <dd class="glossary__def">{t.short}</dd>
             </div>
@@ -105,7 +124,7 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
 
   <CTABanner
     title="See these terms in action."
-    sub="Each definition above links to a method or artifact on this site where it is applied. The methodology page maps every gate (G1–G31) to the term it implements."
+    sub={`Each definition above links to a method or artifact on this site where it is applied. The methodology page maps every gate (${GATE_RANGE}) to the term it implements.`}
     primaryLabel="Read methodology"
     secondaryLabel="Browse solutions"
     secondaryHref={path('/solutions')}
@@ -115,8 +134,7 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
 <style>
   .hero {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .eyebrow {
@@ -135,7 +153,7 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
     line-height: 1.15;
     margin-bottom: var(--sp-4);
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
   .hero__sub {
@@ -147,7 +165,7 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
   .hero__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .section {
     padding-block: var(--sp-9);
   }
@@ -161,7 +179,7 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
     font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
     margin-bottom: var(--sp-3);
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.01em;
   }
   .section__sub {
@@ -189,7 +207,7 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
     border-top: var(--border);
   }
   .glossary__term {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-ink);
     margin-bottom: var(--sp-2);
     font-size: var(--fs-base);
@@ -200,7 +218,9 @@ const aiTerms = terms.filter((t) => t.category === 'AI').sort((a, b) => a.term.l
     color: var(--c-ink);
     text-decoration: none;
     border-bottom: 1px dotted var(--c-rule);
-    transition: color var(--transition), border-color var(--transition);
+    transition:
+      color var(--transition),
+      border-color var(--transition);
   }
   .glossary__term-link:hover {
     color: var(--c-primary-2-deep);

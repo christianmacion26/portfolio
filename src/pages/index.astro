@@ -16,7 +16,6 @@
  * strategic stats: 9 strategies · 31 gates · 11 agents · 102 certs.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
-import ProjectCard from '@components/ProjectCard.astro';
 import CTABanner from '@components/CTABanner.astro';
 import Ticker from '@components/Ticker.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
@@ -24,7 +23,6 @@ import VoiceLine from '@components/VoiceLine.astro';
 import ProofCard from '@components/ProofCard.astro';
 import DataIngestion from '@components/DataIngestion.astro';
 import TraderDesk from '@components/TraderDesk.astro';
-import Odometer from '@components/Odometer.astro';
 import KeyHintPanel from '@components/KeyHintPanel.astro';
 // v6.2 Mission Q + R — ambient workspace overlay + world-wire feed.
 // Both render server-side between the hero and the entry-point strip.
@@ -47,15 +45,20 @@ import EarthActionSheet from '@components/EarthActionSheet.astro';
 // /solutions, and the recruiter variant.
 import EntryStations from '@components/EntryStations.astro';
 import { pinMathFromCategory } from '@utils/pin-math';
-import { getCollection } from 'astro:content';
+import { loadGdeltEvents } from '@utils/gdelt-events';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { profile } from '@utils/profile';
+
+// v6.10.47 — derive gate-count chrome from canonical stats
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
+
 import { path } from '@utils/url';
 import { seedFromString, buildSeed } from '@utils/prng';
-import { buildStampUtc8, buildYear } from '@utils/build-stamp';
+import { buildStampUtc8, buildYear, packageVersion } from '@utils/build-stamp';
 
-const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
-const aiFeatured = projects.filter((p) => p.data.role === 'ai').slice(0, 3);
-const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3);
+type ProjectEntry = CollectionEntry<'project'>;
+const allProjects: ProjectEntry[] = await getCollection('project');
+const projects = allProjects.sort((a, b) => a.data.order - b.data.order);
 const quantCount = projects.filter((p) => p.data.role === 'quant').length;
 // v6.10.32 — derive prediction events count from canonical source (was 2, wrong; actual is 8 events)
 const predictionEvents = await getCollection('predictionEvent');
@@ -71,8 +74,22 @@ const predictionEvents = await getCollection('predictionEvent');
 //   3. Slop Scanner              — draft quality
 //   4. Macro Regime Overlay      — smoother equity curve
 //   5. Look-Ahead Bias Audit     — phantom detection
-type MetricBar = { label: string; before: number; after: number; unit: string; format: 'pct' | 'num' | 'bp'; deltaPos: boolean };
-type WorkRow = { year: string; title: string; subtitle: string; href: string; tag: 'QUANT' | 'AI'; metrics: MetricBar[] };
+type MetricBar = {
+  label: string;
+  before: number;
+  after: number;
+  unit: string;
+  format: 'pct' | 'num' | 'bp';
+  deltaPos: boolean;
+};
+type WorkRow = {
+  year: string;
+  title: string;
+  subtitle: string;
+  href: string;
+  tag: 'QUANT' | 'AI';
+  metrics: MetricBar[];
+};
 
 const workRows: WorkRow[] = [
   {
@@ -128,29 +145,134 @@ workRows.forEach((row, i) => {
   // The templates use metric units that match the existing summary copy.
   const templates: Record<number, () => MetricBar[]> = {
     0: () => [
-      { label: 'IS Sharpe', before: +(0.88 + rng() * 0.06).toFixed(2), after: +(-0.05 + rng() * 0.04).toFixed(2), unit: '', format: 'num', deltaPos: false },
-      { label: 'OOS Sharpe', before: +(0.88 + rng() * 0.06).toFixed(2), after: +(-0.05 + rng() * 0.04).toFixed(2), unit: '', format: 'num', deltaPos: false },
-      { label: 'CI Straddle', before: +(0.04 + rng() * 0.04).toFixed(2), after: +(0.12 + rng() * 0.06).toFixed(2), unit: '', format: 'num', deltaPos: true },
+      {
+        label: 'IS Sharpe',
+        before: +(0.88 + rng() * 0.06).toFixed(2),
+        after: +(-0.05 + rng() * 0.04).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: false,
+      },
+      {
+        label: 'OOS Sharpe',
+        before: +(0.88 + rng() * 0.06).toFixed(2),
+        after: +(-0.05 + rng() * 0.04).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: false,
+      },
+      {
+        label: 'CI Straddle',
+        before: +(0.04 + rng() * 0.04).toFixed(2),
+        after: +(0.12 + rng() * 0.06).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
     ],
     1: () => [
-      { label: 'Sharpe', before: +(0.25 + rng() * 0.04).toFixed(2), after: +(0.37 + rng() * 0.04).toFixed(2), unit: '', format: 'num', deltaPos: true },
-      { label: 'Max DD', before: +(58 + rng() * 6).toFixed(0), after: +(28 + rng() * 4).toFixed(0), unit: '%', format: 'pct', deltaPos: true },
-      { label: 'Win Rate', before: +(39 + rng() * 3).toFixed(0), after: +(48 + rng() * 3).toFixed(0), unit: '%', format: 'pct', deltaPos: true },
+      {
+        label: 'Sharpe',
+        before: +(0.25 + rng() * 0.04).toFixed(2),
+        after: +(0.37 + rng() * 0.04).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
+      {
+        label: 'Max DD',
+        before: +(58 + rng() * 6).toFixed(0),
+        after: +(28 + rng() * 4).toFixed(0),
+        unit: '%',
+        format: 'pct',
+        deltaPos: true,
+      },
+      {
+        label: 'Win Rate',
+        before: +(39 + rng() * 3).toFixed(0),
+        after: +(48 + rng() * 3).toFixed(0),
+        unit: '%',
+        format: 'pct',
+        deltaPos: true,
+      },
     ],
     2: () => [
-      { label: 'SLOP Index', before: +(78 + rng() * 6).toFixed(0), after: +(2 + rng() * 3).toFixed(0), unit: '', format: 'num', deltaPos: true },
-      { label: 'Hedge Density', before: +(0.18 + rng() * 0.04).toFixed(2), after: +(0.04 + rng() * 0.02).toFixed(2), unit: '', format: 'num', deltaPos: true },
-      { label: 'N-gram Rep', before: +(0.32 + rng() * 0.04).toFixed(2), after: +(0.06 + rng() * 0.02).toFixed(2), unit: '', format: 'num', deltaPos: true },
+      {
+        label: 'SLOP Index',
+        before: +(78 + rng() * 6).toFixed(0),
+        after: +(2 + rng() * 3).toFixed(0),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
+      {
+        label: 'Hedge Density',
+        before: +(0.18 + rng() * 0.04).toFixed(2),
+        after: +(0.04 + rng() * 0.02).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
+      {
+        label: 'N-gram Rep',
+        before: +(0.32 + rng() * 0.04).toFixed(2),
+        after: +(0.06 + rng() * 0.02).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
     ],
     3: () => [
-      { label: 'Sharpe', before: +(0.62 + rng() * 0.04).toFixed(2), after: +(0.65 + rng() * 0.04).toFixed(2), unit: '', format: 'num', deltaPos: true },
-      { label: 'Max DD', before: +(56 + rng() * 4).toFixed(0), after: +(40 + rng() * 4).toFixed(0), unit: '%', format: 'pct', deltaPos: true },
-      { label: 'Calmar', before: +(0.28 + rng() * 0.04).toFixed(2), after: +(0.66 + rng() * 0.06).toFixed(2), unit: '', format: 'num', deltaPos: true },
+      {
+        label: 'Sharpe',
+        before: +(0.62 + rng() * 0.04).toFixed(2),
+        after: +(0.65 + rng() * 0.04).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
+      {
+        label: 'Max DD',
+        before: +(56 + rng() * 4).toFixed(0),
+        after: +(40 + rng() * 4).toFixed(0),
+        unit: '%',
+        format: 'pct',
+        deltaPos: true,
+      },
+      {
+        label: 'Calmar',
+        before: +(0.28 + rng() * 0.04).toFixed(2),
+        after: +(0.66 + rng() * 0.06).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
     ],
     4: () => [
-      { label: 'Clean Sharpe', before: +(0.57 + rng() * 0.04).toFixed(2), after: +(0.59 + rng() * 0.04).toFixed(2), unit: '', format: 'num', deltaPos: true },
-      { label: 'Leaked Sharpe', before: +(0.57 + rng() * 0.04).toFixed(2), after: +(5.0 + rng() * 0.2).toFixed(2), unit: '', format: 'num', deltaPos: false },
-      { label: 'Phantom %', before: +(0 + rng() * 2).toFixed(0), after: +(86 + rng() * 4).toFixed(0), unit: '%', format: 'pct', deltaPos: false },
+      {
+        label: 'Clean Sharpe',
+        before: +(0.57 + rng() * 0.04).toFixed(2),
+        after: +(0.59 + rng() * 0.04).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: true,
+      },
+      {
+        label: 'Leaked Sharpe',
+        before: +(0.57 + rng() * 0.04).toFixed(2),
+        after: +(5.0 + rng() * 0.2).toFixed(2),
+        unit: '',
+        format: 'num',
+        deltaPos: false,
+      },
+      {
+        label: 'Phantom %',
+        before: +(0 + rng() * 2).toFixed(0),
+        after: +(86 + rng() * 4).toFixed(0),
+        unit: '%',
+        format: 'pct',
+        deltaPos: false,
+      },
     ],
   };
   row.metrics = templates[i]();
@@ -160,6 +282,8 @@ workRows.forEach((row, i) => {
 // Key on worldEvent.title so the EarthGlobe hover callout can look up
 // the 1-line formula per pin. Same input → same map every build; the
 // seeded jitter inside pinMathFromCategory only varies the magnitudes.
+// v6.11 — also key live GDELT events so their hover callouts read
+// the same 1-line quant math as the curated pins.
 const evRowsForMath = await getCollection('worldEvent');
 const pinMathMap = new Map<string, string>();
 for (const row of evRowsForMath) {
@@ -170,6 +294,9 @@ for (const row of evRowsForMath) {
       row.data.severity as 'mild' | 'moderate' | 'critical',
     ),
   );
+}
+for (const ev of loadGdeltEvents()) {
+  pinMathMap.set(ev.title, pinMathFromCategory(ev.category, ev.severity));
 }
 
 // === v6.5 — live tape mini-row fixtures =========================
@@ -203,7 +330,7 @@ const tapeSnapshot = (() => {
 // Used by the institutional closer above KeyHintPanel.
 const buildStamp = buildStampUtc8();
 const builtYear = buildYear();
-const packageVersion = '6.5.0'; // Mirrors package.json; read at build time.
+const pkgVersion = packageVersion();
 const commitShort = (process.env.GIT_COMMIT ?? '').slice(0, 7) || 'local';
 
 // === v6.5 — METRIC STRIP ==========================================
@@ -221,7 +348,7 @@ const numRng = seedFromString(buildSeed() + '::numbers');
 const pickDelta = (): { text: string; kind: MetricKind } => {
   // 30% flat, 35% small positive raw, 23% negative pct, 12% larger positive pct.
   const r = numRng();
-  if (r < 0.30) return { text: 'STABLE', kind: 'flat' };
+  if (r < 0.3) return { text: 'STABLE', kind: 'flat' };
   if (r < 0.65) {
     const v = +(numRng() * 4.99 + 0.01).toFixed(2);
     return { text: `+${v}`, kind: 'up' };
@@ -267,10 +394,10 @@ const metricRow2 = metrics.slice(4, 8);
 const whatCellRng = seedFromString(buildSeed() + '::what');
 // 4 deterministic count picks — one per cell. Each ∈ a sensible range
 // matching the cell's unit (projects / events / hubs / capitals).
-const researchN  = 6 + Math.floor(whatCellRng() * 6);   // 6–11 projects
-const aiN        = 9 + Math.floor(whatCellRng() * 7);   // 9–15 events
-const hubsN      = 12 + Math.floor(whatCellRng() * 8);  // 12–19 hubs
-const capitalsN  = 11 + Math.floor(whatCellRng() * 7);  // 11–17 capitals
+const researchN = 6 + Math.floor(whatCellRng() * 6); // 6–11 projects
+const aiN = 9 + Math.floor(whatCellRng() * 7); // 9–15 events
+const hubsN = 12 + Math.floor(whatCellRng() * 8); // 12–19 hubs
+const capitalsN = 11 + Math.floor(whatCellRng() * 7); // 11–17 capitals
 
 // 4-cell letterform grid fixtures. Letter / label / chip / caption are
 // hand-authored; the count value inside the chip is the seeded pick above.
@@ -311,11 +438,11 @@ const whatCells = [
 // marquee order don't drift together across draws.
 const whatMarqueeRng = seedFromString(buildSeed() + '::what-marquee');
 const marqueePool: string[] = [
-  ...projects.map((p) => p.data.title),
+  ...projects.map((p: ProjectEntry) => p.data.title),
   'DSR Calculator',
   'Eval MCP Server',
   'PBO · CSCV',
-  'G1–G31 Gates',
+  `${GATE_RANGE} Gates`,
   'NDA-Clean Pipeline',
 ];
 for (let i = marqueePool.length - 1; i > 0; i--) {
@@ -343,7 +470,7 @@ const shortCodes: Record<string, string> = {
   'Slop Scanner': 'SLOP-SCAN',
   'DSR Calculator': 'DSR-CALC',
   'PBO · CSCV': 'PBO-CSCV',
-  'G1–G31 Gates': 'G1–G31',
+  [`${GATE_RANGE} Gates`]: GATE_RANGE,
   'NDA-Clean Pipeline': 'NDA-CLN',
 };
 const whatMarquee = marqueePool.slice(0, 20).map((name) => ({
@@ -364,18 +491,10 @@ const whatMarquee = marqueePool.slice(0, 20).map((name) => ({
 // the page twice; a stable institutional number reads as identity.
 // Build-stamped seeds remain in the tape / equity curve / order book
 // sections where "live" feel is the point.
-const heroRng = seedFromString('hero-canonical-2026q3');
-// SHARPE — central value 1.84; biased-up delta in [0, +0.06].
-const heroSharpe = +(1.84 + (heroRng() - 0.5) * 0.04).toFixed(2);
-const heroSharpeDelta = +(0.02 + heroRng() * 0.05).toFixed(2);
-// DRAWDOWN — central value -4.7% (magnitude only, sign applied at render).
-const heroDrawdown = +(4.7 + (heroRng() - 0.5) * 0.4).toFixed(1);
-// COVERAGE — central value 12 instruments.
-const heroCoverage = 11 + Math.floor(heroRng() * 3); // 11..13
-// SAMPLES — central value 1.2M.
-const heroSamples = +(1.20 + (heroRng() - 0.5) * 0.10).toFixed(2);
-// CAPITAL — central value 6.4M USD.
-const heroCapital = +(6.40 + (heroRng() - 0.5) * 0.20).toFixed(2);
+// (v6.10.55 — removed 6 dead hero-canonical values: heroRng, heroSharpe,
+//  heroSharpeDelta, heroDrawdown, heroCoverage, heroSamples, heroCapital.
+//  They were declared but never read in JSX — hero ribbon uses inline
+//  stable values now. The `'hero-canonical-2026q3'` PRNG stream is dead.)
 
 // === v6.6 (Mission H) — RESEARCH COVERAGE RADAR ====================
 // 6-axis radar (server-rendered SVG, 320px radius). Each axis = one
@@ -389,7 +508,7 @@ const radarAngles = radarLabels.map((_, i) => (i * Math.PI * 2) / 6 - Math.PI / 
 // Bias toward coverage ≥ 0.60 so the polygon reads as 'full institutional
 // coverage' rather than as 'gaps in radar'. min 0.55 → max 0.95.
 const radarRng = seedFromString('radar-canonical-2026q3');
-const radarValues = radarLabels.map(() => +(0.55 + radarRng() * 0.40).toFixed(2));
+const radarValues = radarLabels.map(() => +(0.55 + radarRng() * 0.4).toFixed(2));
 
 // Polar → Cartesian helpers. Output is rounded to 1 decimal to keep
 // the SVG payload small.
@@ -408,8 +527,8 @@ const radarLabelPos = radarLabels.map((_, i) => {
   // Push labels 36px outside the 320-radius circle.
   const len = Math.hypot(p.x, p.y) || 1;
   return {
-    x: +(p.x / len * (radarRadius + 36)).toFixed(1),
-    y: +(p.y / len * (radarRadius + 36)).toFixed(1),
+    x: +((p.x / len) * (radarRadius + 36)).toFixed(1),
+    y: +((p.y / len) * (radarRadius + 36)).toFixed(1),
   };
 });
 // Grid layer fractions — 0.25, 0.5, 0.75, 1.0.
@@ -422,7 +541,7 @@ const radarGridFracs = [0.25, 0.5, 0.75, 1.0];
 // Model 0.14 / Released 0.20). Color intensity drives a color-mix
 // blend between --c-amber-light and --c-data-positive.
 const velocityStages = ['W', 'P', 'H', 'F', 'M', 'R'] as const;
-const velocityWeights = [0.30, 0.18, 0.10, 0.08, 0.14, 0.20];
+const velocityWeights = [0.3, 0.18, 0.1, 0.08, 0.14, 0.2];
 const velocityStageNames: Record<string, string> = {
   W: 'Wrote',
   P: 'Paper',
@@ -445,7 +564,7 @@ for (let i = 0; i < 24; i++) {
       break;
     }
   }
-  velocityCells.push({ stage, intensity: +(0.20 + velocityRng() * 0.80).toFixed(2) });
+  velocityCells.push({ stage, intensity: +(0.2 + velocityRng() * 0.8).toFixed(2) });
 }
 // Reshape into 4 rows of 6 for the JSX render below.
 const velocityRows: { stage: string; intensity: number }[][] = [
@@ -457,22 +576,28 @@ const velocityRows: { stage: string; intensity: number }[][] = [
 ---
 
 <BaseLayout title={profile.titles.primary} description={profile.titles.secondary}>
-  {/* ============================================================
+  {
+    /* ============================================================
        HERO — identity-first, single-column, dark editorial.
        R.1 (v6.1.x) — the H1 IS the name + role, not what they do.
        A senior QR/AI-engineer reader should answer "who" within 5s.
        Ticker has been demoted from first-pixel to below-hero.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="hero">
-    {/* v6.10.25 — killed duplicate .hero__glow div. It was rendering the
+    {
+      /* v6.10.25 — killed duplicate .hero__glow div. It was rendering the
         same grid (linear-gradient × 2, 80×80, white 0.025) as .hero__grid
         below. Pure duplication: 2 DOM nodes + 2 CSS rules for zero visual
-        delta. Keep only .hero__grid. */}
+        delta. Keep only .hero__grid. */
+    }
     <div class="hero__grid" aria-hidden="true"></div>
     <div class="container hero__inner">
-      {/* v6.5 — institutional Q3 2026 badge. Amber-on-tape pill above
+      {
+        /* v6.5 — institutional Q3 2026 badge. Amber-on-tape pill above
           the eyebrow. Indicates "open to remote QR / AI roles" in the
-          institutional voice. */}
+          institutional voice. */
+      }
       <p class="hero__badge mono">
         <a href="/contact/" class="hero__badge-link">Q3 2026 · Open to remote QR / AI roles →</a>
       </p>
@@ -484,22 +609,22 @@ const velocityRows: { stage: string; intensity: number }[][] = [
 
       <div class="hero__top">
         <div class="hero__top-text">
-          <h1 class="hero__title">
-            Quantitative researcher. AI engineer. One eval harness.
-          </h1>
+          <h1 class="hero__title">Quantitative researcher. AI engineer. One eval harness.</h1>
 
           <VoiceLine class="hero__voice" ruled={false} size="md">
             I build research systems, and I ship the evals that prove they work.
           </VoiceLine>
 
-          {/* F10.2 — Consolidate: drop the 5-stat ribbon and the 4-cell
+          {
+            /* F10.2 — Consolidate: drop the 5-stat ribbon and the 4-cell
               CTA rail; keep ONE compact measurement row.
               Ribbon said SHARPE / DRAWDOWN / COVERAGE / SAMPLES / CAPITAL
               (research output metrics — belongs on /proof or /positions,
               not the first-impression hero). CTA rail said CONTACT / WORK
               / METHOD / RESUME (navigation disguised as data).
               Replacement: 3 inline pills: one credential + two CTAs.
-              Less is more for recruiters who skim. */}
+              Less is more for recruiters who skim. */
+          }
           <p class="hero__sub">
             Based in {profile.location.display} · {profile.availability.hours}
             <span class="hero__sep" aria-hidden="true">·</span>
@@ -509,7 +634,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
           <div class="hero__actions">
             <a href={path('/contact')} class="hero__cta hero__cta--primary">
               <span class="hero__cta-key mono">CONTACT</span>
-              <span class="hero__cta-val">≤ 24 h reply</span>
+              <span class="hero__cta-val">&lt;24 h reply</span>
             </a>
             <a href={path('/resume')} class="hero__cta hero__cta--accent">
               <span class="hero__cta-key mono">RESUME</span>
@@ -527,7 +652,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
           <figure class="hero__portrait">
             <ProofCard
               src={path('/proof/cta-cert-portrait-2026-01.jpg')}
-              alt={`${profile.fullName}, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.`}
+              alt={`${profile.fullName}, Certified Technical Analyst portrait, January 2026. CTA cert #260197.`}
               caption="CTA cert #260197"
               credit="Society of Technical Analysts · Jan 2026"
               aspect="3/2"
@@ -541,7 +666,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.5 (Mission Home Integration) — LIVE TAPE MINI-ROW
        Bloomberg-style summary strip: 4 inline stats + as-of timestamp,
        all in 10px mono with tabular-nums. Sits between the hero and
@@ -552,7 +678,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
        generic asset classes only — no tickers, no platform names.
        The same build always renders the same as-of + values; the
        next day's build rolls a fresh snapshot via the PRNG stream.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="live-tape" aria-label="Market summary tape">
     <div class="container live-tape__inner">
       <div class="live-tape__row mono" role="presentation">
@@ -585,7 +712,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.2 (Mission Q + R) — AMBIENT WORKSPACE BAND
        Two stacked rows:
          1. <HeroVideo />   — orbital grid + price-line + city dots,
@@ -600,16 +728,19 @@ const velocityRows: { stage: string; intensity: number }[][] = [
        border without a hard seam. No client-side JS for either
        component; reduced-motion pauses via CSS + the BaseLayout
        bundle's hero-video.ts driver (SVG fallback is a no-op).
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="workspace" aria-label="Ambient workspace">
     <div class="workspace__ambient">
       <HeroVideo />
     </div>
 
-    {/* v6.6.1 — research coverage radar (6-axis). Fixtures at lines
+    {
+      /* v6.6.1 — research coverage radar (6-axis). Fixtures at lines
         371-411; rendered into a 720×720 SVG with 320-radius disk,
         4 concentric grid polygons, 6 axis lines, filled radar polygon
-        at amber 0.25 fill-opacity, axis labels around the perimeter. */}
+        at amber 0.25 fill-opacity, axis labels around the perimeter. */
+    }
     <div class="workspace__viz" aria-label="Research coverage + project velocity">
       <figure class="workspace__radar">
         <figcaption class="workspace__viz-title mono">
@@ -625,51 +756,67 @@ const velocityRows: { stage: string; intensity: number }[][] = [
         >
           <title>Research coverage · 6-axis radar</title>
           {/* Concentric grid polygons (0.25 / 0.5 / 0.75 / 1.0) */}
-          {radarGridFracs.map((f) => {
-            const pts = radarLabels.map((_, i) => {
-              const p = radarPt(f, i);
-              return `${p.x},${p.y}`;
-            }).join(' ');
-            return <polygon class="radar-grid" points={pts} />;
-          })}
+          {
+            radarGridFracs.map((f) => {
+              const pts = radarLabels
+                .map((_, i) => {
+                  const p = radarPt(f, i);
+                  return `${p.x},${p.y}`;
+                })
+                .join(' ');
+              return <polygon class="radar-grid" points={pts} />;
+            })
+          }
           {/* Axis lines (center → perimeter) */}
-          {radarLabels.map((_, i) => {
-            const p = radarPt(1, i);
-            return <line class="radar-axis" x1="0" y1="0" x2={p.x} y2={p.y} />;
-          })}
+          {
+            radarLabels.map((_, i) => {
+              const p = radarPt(1, i);
+              return <line class="radar-axis" x1="0" y1="0" x2={p.x} y2={p.y} />;
+            })
+          }
           {/* Filled coverage polygon */}
-          <polygon class="radar-polygon" points={radarPolygonPoints} />
+          <polygon class="radar-polygon" points={radarPolygonPoints}></polygon>
           {/* Vertex dots at the actual coverage value on each axis */}
-          {radarLabels.map((_, i) => {
-            const p = radarPt(radarValues[i], i);
-            return <circle class="radar-vertex" cx={p.x} cy={p.y} r="4" />;
-          })}
-          {/* Axis labels (BACKTEST / SIGNALS / RISK / EXEC / EVAL / AGENTS)
+          {
+            radarLabels.map((_, i) => {
+              const p = radarPt(radarValues[i], i);
+              return <circle class="radar-vertex" cx={p.x} cy={p.y} r="4" />;
+            })
+          }
+          {
+            /* Axis labels (BACKTEST / SIGNALS / RISK / EXEC / EVAL / AGENTS)
               with numeric coverage value directly under each label.
               v6.7 — without the value, the polygon is unreadable; with
-              the value, the chart reads as research output. */}
-          {radarLabels.map((label, i) => {
-            const p = radarLabelPos[i];
-            const v = radarValues[i];
-            return (
-              <g>
-                <text
-                  class="radar-label"
-                  x={p.x}
-                  y={p.y - 6}
-                  text-anchor="middle"
-                  dominant-baseline="middle"
-                >{label}</text>
-                <text
-                  class="radar-value"
-                  x={p.x}
-                  y={p.y + 8}
-                  text-anchor="middle"
-                  dominant-baseline="middle"
-                >{(v * 100).toFixed(0)}%</text>
-              </g>
-            );
-          })}
+              the value, the chart reads as research output. */
+          }
+          {
+            radarLabels.map((label, i) => {
+              const p = radarLabelPos[i];
+              const v = radarValues[i];
+              return (
+                <g>
+                  <text
+                    class="radar-label"
+                    x={p.x}
+                    y={p.y - 6}
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                  >
+                    {label}
+                  </text>
+                  <text
+                    class="radar-value"
+                    x={p.x}
+                    y={p.y + 8}
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                  >
+                    {(v * 100).toFixed(0)}%
+                  </text>
+                </g>
+              );
+            })
+          }
         </svg>
       </figure>
 
@@ -679,60 +826,79 @@ const velocityRows: { stage: string; intensity: number }[][] = [
           Project velocity · last 24 weeks
         </figcaption>
 
-        {/* F13.1 — replaced the colored-grid-of-letters with a real
+        {
+          /* F13.1 — replaced the colored-grid-of-letters with a real
             burndown matrix. 4 rows × 6 cols where each ROW is a 6-week
             window (W18–W23 / W12–W17 / W06–W11 / W00–W05) and each COLUMN
             is one of 6 pipeline stages (W/P/H/F/M/R). Cell = the stage
             that shipped that week, intensity = how much output. Bottom
-            rail: stage legend with counts. */}
+            rail: stage legend with counts. */
+        }
         <div class="velocity__grid" role="table" aria-label="24-week project velocity matrix">
           {/* Header row: stage labels */}
           <div class="velocity-row velocity-row--header" role="row">
             <span class="velocity-rowlabel velocity-rowlabel--head" aria-hidden="true">WEEK</span>
-            {velocityStages.map((s) => (
-              <span class="velocity-colhead mono" role="columnheader" title={velocityStageNames[s]}>
-                {s}
-              </span>
-            ))}
+            {
+              velocityStages.map((s) => (
+                <span
+                  class="velocity-colhead mono"
+                  role="columnheader"
+                  title={velocityStageNames[s]}
+                >
+                  {s}
+                </span>
+              ))
+            }
           </div>
 
           {/* Data rows: 4 windows × 6 weeks each. Top = oldest, bottom = newest. */}
-          {velocityRows.map((row, ri) => {
-            // Window label: ri=0 → W18–W23 (oldest), ri=3 → W00–W05 (newest)
-            const highWeek = (3 - ri) * 6 + 5;
-            const lowWeek = (3 - ri) * 6;
-            const label = `W${String(lowWeek).padStart(2, '0')}–W${String(highWeek).padStart(2, '0')}`;
-            return (
-              <div class="velocity-row" role="row">
-                <span class="velocity-rowlabel mono" role="rowheader" aria-hidden="true">{label}</span>
-                {row.map((cell, ci) => (
-                  <div
-                    class:list={['velocity-cell', `velocity-cell--${cell.stage.toLowerCase()}`]}
-                    role="cell"
-                    style={`--intensity: ${(cell.intensity * 100).toFixed(0)}%`}
-                    title={`${label} col ${ci + 1} · ${velocityStageNames[cell.stage]} · intensity ${(cell.intensity * 100).toFixed(0)}%`}
-                  >
-                    <span class="velocity-cell__glyph mono" aria-hidden="true">{cell.stage}</span>
-                    <span class="velocity-cell__bar" aria-hidden="true"></span>
-                  </div>
-                ))}
-              </div>
-            );
-          })}
+          {
+            velocityRows.map((row, ri) => {
+              // Window label: ri=0 → W18–W23 (oldest), ri=3 → W00–W05 (newest)
+              const highWeek = (3 - ri) * 6 + 5;
+              const lowWeek = (3 - ri) * 6;
+              const label = `W${String(lowWeek).padStart(2, '0')}–W${String(highWeek).padStart(2, '0')}`;
+              return (
+                <div class="velocity-row" role="row">
+                  <span class="velocity-rowlabel mono" role="rowheader" aria-hidden="true">
+                    {label}
+                  </span>
+                  {row.map((cell, ci) => (
+                    <div
+                      class:list={['velocity-cell', `velocity-cell--${cell.stage.toLowerCase()}`]}
+                      role="cell"
+                      style={`--intensity: ${(cell.intensity * 100).toFixed(0)}%`}
+                      title={`${label} col ${ci + 1} · ${velocityStageNames[cell.stage]} · intensity ${(cell.intensity * 100).toFixed(0)}%`}
+                    >
+                      <span class="velocity-cell__glyph mono" aria-hidden="true">
+                        {cell.stage}
+                      </span>
+                      <span class="velocity-cell__bar" aria-hidden="true" />
+                    </div>
+                  ))}
+                </div>
+              );
+            })
+          }
         </div>
 
         <div class="velocity-legend" aria-label="Stage legend with totals">
-          {velocityStages.map((s) => {
-            const count = velocityCells.filter((c) => c.stage === s).length;
-            return (
-              <span class="velocity-legend__item">
-                <span class={`velocity-legend__swatch velocity-legend__swatch--${s.toLowerCase()}`} aria-hidden="true"></span>
-                <span class="mono">{s}</span>
-                <span class="velocity-legend__name">{velocityStageNames[s]}</span>
-                <span class="velocity-legend__count mono">{count}×</span>
-              </span>
-            );
-          })}
+          {
+            velocityStages.map((s) => {
+              const count = velocityCells.filter((c) => c.stage === s).length;
+              return (
+                <span class="velocity-legend__item">
+                  <span
+                    class={`velocity-legend__swatch velocity-legend__swatch--${s.toLowerCase()}`}
+                    aria-hidden="true"
+                  />
+                  <span class="mono">{s}</span>
+                  <span class="velocity-legend__name">{velocityStageNames[s]}</span>
+                  <span class="velocity-legend__count mono">{count}×</span>
+                </span>
+              );
+            })
+          }
         </div>
       </figure>
     </div>
@@ -742,87 +908,101 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.5 (Mission Home Integration) — SECTION TRANSITION · ENTRY
        Light 1px hairline + 10px mono label between the workspace
        band and the entry stations. One of four transitions on the
        page (entry-stations, globe, math-behind-tape, collaborators);
        institutional Bloomberg / BIS convention for "next heavy
        section starts here".
-       ============================================================ */}
+       ============================================================ */
+  }
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
     <span>SECTION 03 OF 17 · ENTRY STATIONS</span>
   </p>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.5 — ENTRY STATIONS (extracted from the v6.1 inline strip)
        Four flagship-lane tiles: Markets · Prediction · Research · AI.
        Component owns its own data fixtures and styles; index.astro
        just mounts it in the slot between workspace and AiEntryPoints.
-       ============================================================ */}
+       ============================================================ */
+  }
   <EntryStations />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.4 (Mission E) — AI ENTRY POINTS
        Three library-style chips: READ METHOD / FIND PATTERN / OPEN
        NOTEBOOKS. Server-rendered, no client-side LLM cost. Each chip
        is a deterministic link to an existing artifact on the site
        (the methodology framework, the math-corpus anchor on
        /research, and the /projects/?tag=quant lane-2 filter).
-       ============================================================ */}
+       ============================================================ */
+  }
   <AiEntryPoints />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.2 (Mission S) — DATA INGESTION
        Server-rendered log stream of 30 generic events (ORDER · NEWS ·
        FILING · SENTIMENT · ALERT). Items fade in from translateX(20px)
        with a staggered 80ms per-item delay. Pure CSS, no JS.
        NDA-positive: no platform, employer, or tickers named.
-       ============================================================ */}
+       ============================================================ */
+  }
   <DataIngestion />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.2 (Mission S) — TRADER DESK
        4-cell desk panel (Positions · Orders · Calendar · Alerts)
        deterministic from per-cell PRNG seeds, server-rendered, no JS.
-       ============================================================ */}
+       ============================================================ */
+  }
   <TraderDesk />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        TICKER — institutional marquee of methodology signals.
        Sits between the trader desk and the world-event map, acting as
        a status bar (the institutional "we are rigorous" indicator).
-       ============================================================ */}
+       ============================================================ */
+  }
   <Ticker />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.5 (Mission Home Integration) — SECTION TRANSITION · GLOBE
        Second of four institutional transitions. The globe is the
        page's heaviest visualization; the transition label gives the
        reader a "next heavy section" signpost, BIS / Bloomberg style.
-       ============================================================ */}
+       ============================================================ */
+  }
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
     <span>SECTION 08 OF 17 · GLOBAL EVENT MONITOR</span>
   </p>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.2 — IRON DESK · WORLD EVENT MAP
        Visual centerpiece. Twelve cities, ten active events, Equirectangular
        projection. Server-rendered SVG, no JS, deterministic from the
        `worldEvent` content collection. Pins fade-in over the first ~3s
        via CSS keyframes (EventPin.astro). Honors reduced-motion.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section world-events" aria-label="World event map">
     <div class="container">
       <header class="section__head world-events__head">
         <p class="section__eyebrow">Earth mission control · world event map</p>
-        <h2 class="section__title">
-          Sixteen cities. Thirty-six events. The news behind the math.
-        </h2>
+        <h2 class="section__title">Sixteen cities. Thirty-six events. The news behind the math.</h2>
         <VoiceLine class="section__sub voice-line--cmd" ruled={true} size="md">
           A rate decision in London is a half-life in Manila. We map the half-life.
         </VoiceLine>
@@ -836,27 +1016,32 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.5 (Mission Home Integration) — SECTION TRANSITION · MATH
        Third of four institutional transitions. MathBehindTape is the
        page's quant-density anchor (6 KPI tiles + 6 headline bridges);
        the transition label sets reader expectation.
-       ============================================================ */}
+       ============================================================ */
+  }
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
     <span>SECTION 09 OF 17 · MATH BEHIND THE TAPE</span>
   </p>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.3 Mission D — math-news bridge: 6 of today's headlines
        read as quant. Server-rendered, deterministic per build,
        no client JS. The component ships its own .mathtape section
        with padding-block, so we emit it directly (no wrapper).
-       ============================================================ */}
+       ============================================================ */
+  }
   <MathBehindTape />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        WHAT I DO — v6.5 graphic-visual rebuild.
        Replaces the v6.4 4-paragraph list with two institutional
        primitives:
@@ -869,16 +1054,17 @@ const velocityRows: { stage: string; intensity: number }[][] = [
             of cycle. Pause on hover. Pure CSS animation, no client JS.
        Both are deterministic from `buildSeed() + '::what*'` per the
        standing order; numbers and order roll on each build.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section section--slim what">
     <div class="container">
       <header class="section__head what__head">
         <p class="section__eyebrow">What I do</p>
         <h2 class="section__title">Four things, one discipline.</h2>
         <p class="section__sub">
-          A senior quant and an AI engineer can share a desk only if both
-          write the eval harness. That's the only output that survives the next
-          data drift, the next regime shift, the next model swap.
+          A senior quant and an AI engineer can share a desk only if both write the eval harness.
+          That's the only output that survives the next data drift, the next regime shift, the next
+          model swap.
         </p>
       </header>
 
@@ -891,7 +1077,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
                 <span class="what-cell__chip-dot" aria-hidden="true" />
                 {cell.chipNum} {cell.chipUnit}
               </span>
-              <div class="what-cell__letter" aria-hidden="true">{cell.letter}</div>
+              <div class="what-cell__letter" aria-hidden="true">
+                {cell.letter}
+              </div>
               <div class="what-cell__label mono">{cell.label}</div>
               <p class="what-cell__caption">{cell.caption}</p>
             </article>
@@ -899,11 +1087,13 @@ const velocityRows: { stage: string; intensity: number }[][] = [
         }
       </div>
 
-      {/* === 20-CELL MARQUEE STRIP (project / artifact names) ===
+      {
+        /* === 20-CELL MARQUEE STRIP (project / artifact names) ===
           Pure-CSS keyframe scroll, 28s slide + 2s end-of-cycle pause.
           Pause on hover via animation-play-state. honors
-          prefers-reduced-motion (animation: none !important). */}
-      <div class="what__marquee" role="marquee" aria-label="Projects and artifacts in flight">
+          prefers-reduced-motion (animation: none !important). */
+      }
+      <div class="what__marquee" aria-label="Projects and artifacts in flight">
         <div class="what__marquee-track mono">
           {
             [...whatMarquee, ...whatMarquee].map((item) => (
@@ -917,7 +1107,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.6 (Mission W) — SELECTED WORK TIMELINE
        5 vertical-timeline rows distilled from the 15-project corpus.
        Each row carries a 220px-wide year rail (left), a 1px vertical
@@ -934,7 +1125,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
 
        Section head drops the long subtitle; the timeline's row
        subtitles carry the spec language instead.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section section--alt work">
     <div class="container">
       <header class="section__head work__head">
@@ -943,52 +1135,82 @@ const velocityRows: { stage: string; intensity: number }[][] = [
       </header>
 
       <ol class="work__timeline">
-        {workRows.map((row) => (
-          <li class="work__row">
-            <a class="work__row-link" href={row.href} aria-label={`${row.title} — read case study`}>
-              <div class="work__rail mono">
-                <span class="work__year">{row.year}</span>
-                <span class="work__node" aria-hidden="true"></span>
-              </div>
-              <div class="work__content">
-                <div class="work__line">
-                  <span class={`work__tag mono work__tag--${row.tag.toLowerCase()}`}>{row.tag}</span>
-                  <h3 class="work__title">{row.title}</h3>
-                  <span class="work__subtitle mono">{row.subtitle}</span>
+        {
+          workRows.map((row) => (
+            <li class="work__row">
+              <a
+                class="work__row-link"
+                href={row.href}
+                aria-label={`${row.title} — read case study`}
+              >
+                <div class="work__rail mono">
+                  <span class="work__year">{row.year}</span>
+                  <span class="work__node" aria-hidden="true" />
                 </div>
-                <div class="work__bars" aria-hidden="true">
-                  {row.metrics.map((m) => (
-                    <div class="work__bar">
-                      <span class="work__bar-label mono">{m.label}</span>
-                      <span class="work__bar-track">
-                        <span class="work__bar-fill work__bar-fill--before" style={`width:${Math.min(100, (Math.abs(m.before) / Math.max(1, Math.abs(m.after) + Math.abs(m.before))) * 100).toFixed(1)}%`}></span>
-                      </span>
-                      <span class="work__bar-val mono work__bar-val--before">{m.before.toFixed(m.format === 'pct' ? 0 : 2)}{m.unit}</span>
-                      <span class={`work__bar-pipe ${m.deltaPos ? 'is-pos' : 'is-neg'}`} aria-hidden="true">→</span>
-                      <span class="work__bar-track work__bar-track--after">
-                        <span class={`work__bar-fill work__bar-fill--after ${m.deltaPos ? 'is-pos' : 'is-neg'}`} style={`width:${Math.min(100, (Math.abs(m.after) / Math.max(1, Math.abs(m.after) + Math.abs(m.before))) * 100).toFixed(1)}%`}></span>
-                      </span>
-                      <span class={`work__bar-val mono work__bar-val--after ${m.deltaPos ? 'is-pos' : 'is-neg'}`}>{m.after.toFixed(m.format === 'pct' ? 0 : 2)}{m.unit}</span>
-                    </div>
-                  ))}
+                <div class="work__content">
+                  <div class="work__line">
+                    <span class={`work__tag mono work__tag--${row.tag.toLowerCase()}`}>
+                      {row.tag}
+                    </span>
+                    <h3 class="work__title">{row.title}</h3>
+                    <span class="work__subtitle mono">{row.subtitle}</span>
+                  </div>
+                  <div class="work__bars" aria-hidden="true">
+                    {row.metrics.map((m) => (
+                      <div class="work__bar">
+                        <span class="work__bar-label mono">{m.label}</span>
+                        <span class="work__bar-track">
+                          <span
+                            class="work__bar-fill work__bar-fill--before"
+                            style={`width:${Math.min(100, (Math.abs(m.before) / Math.max(1, Math.abs(m.after) + Math.abs(m.before))) * 100).toFixed(1)}%`}
+                          />
+                        </span>
+                        <span class="work__bar-val mono work__bar-val--before">
+                          {m.before.toFixed(m.format === 'pct' ? 0 : 2)}
+                          {m.unit}
+                        </span>
+                        <span
+                          class={`work__bar-pipe ${m.deltaPos ? 'is-pos' : 'is-neg'}`}
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
+                        <span class="work__bar-track work__bar-track--after">
+                          <span
+                            class={`work__bar-fill work__bar-fill--after ${m.deltaPos ? 'is-pos' : 'is-neg'}`}
+                            style={`width:${Math.min(100, (Math.abs(m.after) / Math.max(1, Math.abs(m.after) + Math.abs(m.before))) * 100).toFixed(1)}%`}
+                          />
+                        </span>
+                        <span
+                          class={`work__bar-val mono work__bar-val--after ${m.deltaPos ? 'is-pos' : 'is-neg'}`}
+                        >
+                          {m.after.toFixed(m.format === 'pct' ? 0 : 2)}
+                          {m.unit}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </a>
-          </li>
-        ))}
+              </a>
+            </li>
+          ))
+        }
       </ol>
 
       <div class="section__foot">
         <a href={path('/projects')} class="projects-cta">
           <span class="projects-cta__eyebrow mono">ALL PROJECTS</span>
-          <span class="projects-cta__main">{projects.length} projects · {quantCount} quant · 4 markets · {predictionEvents.length} prediction</span>
+          <span class="projects-cta__main"
+            >{projects.length} projects · {quantCount} quant · 4 markets · {predictionEvents.length} prediction</span
+          >
           <span class="projects-cta__arrow" aria-hidden="true">→</span>
         </a>
       </div>
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        THE NUMBERS — graphic visual pulse row, v6.5.
        Replaces the v6.2 four oversized Odometer tiles with a
        2-row × 4-col metric strip (180×88 cells, 1px hairlines,
@@ -999,45 +1221,51 @@ const velocityRows: { stage: string; intensity: number }[][] = [
          │ +0.04      │   10px mono, color-coded
          └────────────┘
        Center values are portfolio truths (profile.stats.pagesBuilt pages · 31 gates · 11
-       agents · 102 certs · 9 strategies · 11 months · 100% audit ·
+       agents · 102 certs · 9 strategies · {profile.stats.ageMonths} months · 100% audit ·
        6H AFK loop). Deltas are the "pulse" — seeded from
        `seedFromString(buildSeed() + '::numbers')` so each build
        rolls a fresh combination while the build itself stays
        deterministic.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section section--slim numbers">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">The numbers</p>
-        <h2 class="section__title">What eleven months of build looks like.</h2>
+        <h2 class="section__title">What {profile.stats.ageMonths} months of build looks like.</h2>
       </header>
 
       <div class="metric-strip" aria-label="Portfolio pulse metrics">
-        {[metricRow1, metricRow2].map((row, ri) => (
-          <div class:list={['metric-row', ri === 1 && 'metric-row--second']}>
-            {row.map((m) => (
-              <div class:list={['metric', `metric--${m.kind}`]}>
-                <span class="metric__label mono">{m.label}</span>
-                <span class="metric__num">{m.value}</span>
-                <span class:list={['metric__delta', 'mono', `metric__delta--${m.kind}`]}>
-                  {m.delta}
-                </span>
-              </div>
-            ))}
-          </div>
-        ))}
+        {
+          [metricRow1, metricRow2].map((row, ri) => (
+            <div class:list={['metric-row', ri === 1 && 'metric-row--second']}>
+              {row.map((m) => (
+                <div class:list={['metric', `metric--${m.kind}`]}>
+                  <span class="metric__label mono">{m.label}</span>
+                  <span class="metric__num">{m.value}</span>
+                  <span class:list={['metric__delta', 'mono', `metric__delta--${m.kind}`]}>
+                    {m.delta}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        STATEMENT CAROUSEL — editorial rotating sentences.
        Auto-advances every 5s, pauses on hover. The Anthropic /
        Schonfeld institutional signature: one rotating thought
        that re-anchors the page between the proof band and the
        credentials list.
-       ============================================================ */}
-  {/* ============================================================
+       ============================================================ */
+  }
+  {
+    /* ============================================================
        STATEMENT CAROUSEL — editorial 3-card graphic variant.
        v6.6.0: replaced the single-line rotating sentence with a
        3-card layout. Each card carries a top-left roman-numeral
@@ -1046,19 +1274,21 @@ const velocityRows: { stage: string; intensity: number }[][] = [
        (`STRATEGY NOTE 0X · CONDENSED`), and 3 mini-pip indicators
        in the bottom-right (active = --c-amber, inactive = --c-ink-3).
        Auto-advances every 5s, pauses on hover/focus.
-       ============================================================ */}
+       ============================================================ */
+  }
   <StatementCarousel
     variant="graphic"
     statements={[
       'Eval-first. ↦ Ship-ready.',
       'NDA-clean. ↦ Public-data reproducible.',
-      '31 gates. ↦ Zero rollbacks.',
+      `${profile.stats.evalGates} gates. ↦ Zero rollbacks.`,
     ]}
     label="Discipline statements — three rotations"
     intervalMs={5000}
   />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.6 (Mission W) — CREDENTIALS RIBBON
        Horizontal badge ribbon replacing the prior 4-row text list.
        12 chips, each 64px-tall × auto-width, with:
@@ -1074,7 +1304,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
        long subtitle — the chip row is the new institutional context.
 
        Replaces ~600px list (~6 rows × ~100px) with a 64px ribbon.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section section--slim section--alt creds">
     <div class="container">
       <header class="section__head creds__head">
@@ -1147,7 +1378,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        CTA BANNER — graphic variant (v6.6.0).
        Replaces wordy headline + sub + dual buttons with:
          1. 80px-tall rail: "Ready when you are" (serif italic, ink)
@@ -1158,42 +1390,50 @@ const velocityRows: { stage: string; intensity: number }[][] = [
             (visual abundance); remaining 8 split 4 amber-0.7 / 2 amber-
             solid / 2 ink-3 by status legend. Deterministically
             seeded from `seedFromString(buildSeed() + '::availability')`.
-       ============================================================ */}
+       ============================================================ */
+  }
   <CTABanner variant="graphic" />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.5 (Mission Home Integration) — SECTION TRANSITION · COLLABS
        Fourth of four institutional transitions. The Collaborators
        band is the page's social-proof closer; the transition sets
        the reader's expectation that this is the last "people"
        section before the institutional end-strip.
-       ============================================================ */}
+       ============================================================ */
+  }
   <hr class="section-rule" aria-hidden="true" />
   <p class="section-rule__label mono" aria-hidden="true">
     <span aria-hidden="true">↓</span>
     <span>SECTION 16 OF 17 · COLLABORATORS</span>
   </p>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.4 (Mission E) — COLLABORATORS
        Institutional "we work with everyone" closer. 7 NDA-positive
        mini-cards (role + co-deliverable), mounted below the CTA
        as the page's social-proof closer. No logo walls, no
        identifying imagery — letter-avatar fallback only.
-       ============================================================ */}
+       ============================================================ */
+  }
   <Collaborators />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.4 (Mission E) — EARTH DRAWER
        Fixed-position right-side event drawer (Bloomberg `<F1> Help`
        convention). One <details> panel per 36-event corpus entry;
        sliding opens via the `:has(details[open])` parent selector.
        Position-fixed, mounted at the page root so it survives any
        section-level layout reflow.
-       ============================================================ */}
+       ============================================================ */
+  }
   <EarthDrawer />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.5 (Mission Home Integration) — INSTITUTIONAL END-STRIP
        One-row closer above the KeyHintPanel. 3 columns:
          1. Left: copyright + CTA cert portrait micro-thumb
@@ -1203,39 +1443,54 @@ const velocityRows: { stage: string; intensity: number }[][] = [
        the page's institutional "we are rigorous" closer — it
        reads like a research paper's footer rather than a portfolio
        "© 2026, Built with Astro" line.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="end-strip" aria-label="Build and contact">
     <div class="container end-strip__inner">
       <div class="end-strip__col end-strip__col--left">
         <span class="end-strip__copy mono">© {builtYear} {profile.shortName}</span>
-        <a href={path('/proof/cta-cert-portrait-2026-01.jpg')} class="end-strip__cert mono" rel="noopener">
+        <a
+          href={path('/proof/cta-cert-portrait-2026-01.jpg')}
+          class="end-strip__cert mono"
+          rel="noopener"
+        >
           CTA cert #260197 ↗
         </a>
       </div>
       <div class="end-strip__col end-strip__col--center mono">
         <span class="end-strip__build">
-          BUILD {buildStamp} · v{packageVersion} · COMMIT {commitShort}
+          BUILD {buildStamp} · v{pkgVersion} · COMMIT {commitShort}
         </span>
       </div>
       <div class="end-strip__col end-strip__col--right">
-        <a href={profile.contact.github} target="_blank" rel="noopener" class="end-strip__link mono">
+        <a
+          href={profile.contact.github}
+          target="_blank"
+          rel="noopener"
+          class="end-strip__link mono"
+        >
           GitHub ↗
         </a>
-        <a href={profile.contact.linkedin} target="_blank" rel="noopener" class="end-strip__link mono">
+        <a
+          href={profile.contact.linkedin}
+          target="_blank"
+          rel="noopener"
+          class="end-strip__link mono"
+        >
           LinkedIn ↗
         </a>
-        <a href={`mailto:${profile.contact.email}`} class="end-strip__link mono">
-          Email ↗
-        </a>
+        <a href={`mailto:${profile.contact.email}`} class="end-strip__link mono"> Email ↗ </a>
       </div>
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.2 (Mission T) — KEY HINT PANEL
        Fixed-position keyboard-shortcut hints. Toggle with `?`.
        Wired by `src/scripts/keyboard-shortcuts.ts`.
-       ============================================================ */}
+       ============================================================ */
+  }
   <KeyHintPanel />
 </BaseLayout>
 
@@ -1248,7 +1503,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     padding-block: clamp(var(--sp-7), 14vh, 11rem) clamp(var(--sp-7), 12vh, 9rem);
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--c-white-mist);
     overflow: hidden;
     min-width: 0;
   }
@@ -1260,8 +1515,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      linear-gradient(var(--c-white-mist) 1px, transparent 1px),
+      linear-gradient(90deg, var(--c-white-mist) 1px, transparent 1px);
     background-size: 80px 80px;
     pointer-events: none;
     z-index: 0;
@@ -1297,7 +1552,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     margin: 0;
     padding: 0;
     background: var(--c-tape-2);
-    border: 1px solid rgba(232, 178, 32, 0.45);
+    border: 1px solid color-mix(in oklab, var(--c-amber) 0.45%, transparent);
     border-radius: var(--radius);
     overflow: hidden;
     position: relative;
@@ -1323,7 +1578,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     margin: 0 var(--sp-3) var(--sp-3);
     font-family: var(--ff-mono);
     font-size: 11px;
-    color: rgba(230, 237, 243, 0.75);
+    color: var(--c-ink-soft);
     line-height: 1.4;
   }
   .hero__eyebrow {
@@ -1342,7 +1597,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: 0.08em;
   }
   .hero__eyebrow-sep {
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--c-white-fade);
     padding: 0 0.6em;
   }
 
@@ -1360,10 +1615,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
 
   .hero__voice {
-
     font-weight: 400;
 
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--c-white-soft);
 
     margin-top: var(--sp-4);
     margin-bottom: var(--sp-5);
@@ -1375,7 +1629,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: -0.005em;
 
     min-width: 0;
-}
+  }
 
   /* F10.2 — replaced v6.6 ribbon + v6.7.1 rail-cell with a compact
      3-button CTA row. Hero ribbon (SHARPE / DRAWDOWN / COVERAGE /
@@ -1386,7 +1640,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
      lives in the header. */
   .hero__sub {
     font-size: var(--fs-sm);
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--c-white-faint);
     line-height: 1.6;
     margin-bottom: var(--sp-5);
     max-width: 100%;
@@ -1398,7 +1652,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   .hero__sep {
     margin: 0 0.5em;
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--c-white-fade);
   }
 
   /* Compact CTA row — 3 inline pills with key + value, no borders.
@@ -1428,7 +1682,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   .hero__cta:hover {
     border-color: var(--c-amber);
-    background: rgba(232, 178, 32, 0.04);
+    background: var(--c-amberl-faint);
   }
   .hero__cta--primary {
     background: var(--c-amber);
@@ -1444,7 +1698,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: var(--c-amber);
   }
   .hero__cta--accent:hover {
-    background: rgba(232, 178, 32, 0.10);
+    background: var(--c-amberl-soft);
   }
   .hero__cta-key {
     font-size: 9.5px;
@@ -1496,7 +1750,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
      4-cell letterform grid (240×180) + 20-cell marquee strip.
      Pure styled DOM, no client JS. Honors prefers-reduced-motion.
      ============================================================ */
-  .what__head { margin-bottom: var(--sp-6); }
+  .what__head {
+    margin-bottom: var(--sp-6);
+  }
 
   /* === 4-cell letterform grid === */
   .what__cells {
@@ -1528,8 +1784,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-size: 0.6875rem; /* 11px */
     line-height: 1;
     color: var(--ink-on-tape);
-    background: rgba(232, 178, 32, 0.08);
-    border: 1px solid rgba(232, 178, 32, 0.30);
+    background: color-mix(in oklab, var(--c-amber) 0.08%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-amber) 0.3%, transparent);
     border-radius: var(--radius-sm);
     padding: 0.32rem 0.55rem;
     letter-spacing: 0.04em;
@@ -1668,7 +1924,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
      without introducing extra motion. Pure decoration. */
   .what__marquee-cell:nth-child(5n) {
     color: var(--c-amber-light);
-    background: rgba(232, 178, 32, 0.04);
+    background: var(--c-amberl-faint);
   }
 
   /* Pause on hover — institutional "you can read it" affordance. */
@@ -1713,8 +1969,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     border-radius: var(--radius);
     color: var(--c-ink);
     text-decoration: none;
-    transition:
-      border-color var(--transition);
+    transition: border-color var(--transition);
   }
   .work-card:hover {
     border-color: var(--c-primary);
@@ -1727,7 +1982,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: 0.12em;
     font-weight: 600;
   }
-  .work-card--ai .work-card__tag { color: var(--c-ink-3); }
+  .work-card--ai .work-card__tag {
+    color: var(--c-ink-3);
+  }
   .work-card__title {
     font-size: var(--fs-lg);
     font-weight: 600;
@@ -1753,10 +2010,14 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
 
   @media (max-width: 880px) {
-    .work__grid { grid-template-columns: 1fr 1fr; }
+    .work__grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
   @media (max-width: 540px) {
-    .work__grid { grid-template-columns: 1fr; }
+    .work__grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* ============================================================
@@ -1794,9 +2055,11 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     border-bottom: 1px solid var(--c-rule);
     transition: background 120ms ease-out;
   }
-  .work__row:last-child .work__row-link { border-bottom: 0; }
+  .work__row:last-child .work__row-link {
+    border-bottom: 0;
+  }
   .work__row-link:hover {
-    background: rgba(232, 178, 32, 0.04);
+    background: var(--c-amberl-faint);
   }
   .work__rail {
     position: relative;
@@ -1824,7 +2087,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: var(--c-amber);
     letter-spacing: 0.02em;
   }
-  .work__node { display: none; }
+  .work__node {
+    display: none;
+  }
   .work__content {
     min-width: 0;
   }
@@ -1844,17 +2109,29 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     padding: 2px 8px;
     font-size: 0.625rem;
     text-transform: uppercase;
-    letter-spacing: 0.10em;
+    letter-spacing: 0.1em;
     font-weight: 600;
     border-radius: 2px;
     background: transparent;
     border: 1px solid var(--c-rule);
     color: var(--c-ink-3);
   }
-  .work__tag--ai { border-color: var(--c-rule); color: var(--c-ink-3); }
-  .work__tag--research { border-color: var(--c-rule); color: var(--c-ink-3); }
-  .work__tag--markets { border-color: var(--c-rule); color: var(--c-ink-3); }
-  .work__tag--prediction { border-color: rgba(232, 178, 32, 0.45); color: var(--c-primary-2); }
+  .work__tag--ai {
+    border-color: var(--c-rule);
+    color: var(--c-ink-3);
+  }
+  .work__tag--research {
+    border-color: var(--c-rule);
+    color: var(--c-ink-3);
+  }
+  .work__tag--markets {
+    border-color: var(--c-rule);
+    color: var(--c-ink-3);
+  }
+  .work__tag--prediction {
+    border-color: color-mix(in oklab, var(--c-amber) 0.45%, transparent);
+    color: var(--c-primary-2);
+  }
   .work__title {
     margin: 0;
     font-size: 1.0625rem;
@@ -1867,7 +2144,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .work__subtitle {
     font-size: 0.6875rem;
     text-transform: uppercase;
-    letter-spacing: 0.10em;
+    letter-spacing: 0.1em;
     color: var(--c-ink-2);
   }
   .work__bars {
@@ -1901,28 +2178,47 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     background: var(--c-ink-3);
     transition: width 200ms ease-out;
   }
-  .work__bar-fill--after.is-pos { background: var(--c-data-positive); }
-  .work__bar-fill--after.is-neg { background: var(--c-data-negative); }
+  .work__bar-fill--after.is-pos {
+    background: var(--c-data-positive);
+  }
+  .work__bar-fill--after.is-neg {
+    background: var(--c-data-negative);
+  }
   .work__bar-val {
     font-size: 0.75rem;
     font-variant-numeric: tabular-nums;
     color: var(--c-ink);
     text-align: right;
   }
-  .work__bar-val--after.is-pos { color: var(--c-data-positive); }
-  .work__bar-val--after.is-neg { color: var(--c-data-negative); }
+  .work__bar-val--after.is-pos {
+    color: var(--c-data-positive);
+  }
+  .work__bar-val--after.is-neg {
+    color: var(--c-data-negative);
+  }
   .work__bar-pipe {
     text-align: center;
     color: var(--c-ink-3);
     font-size: 0.75rem;
   }
-  .work__bar-pipe.is-pos { color: var(--c-data-positive); }
-  .work__bar-pipe.is-neg { color: var(--c-data-negative); }
+  .work__bar-pipe.is-pos {
+    color: var(--c-data-positive);
+  }
+  .work__bar-pipe.is-neg {
+    color: var(--c-data-negative);
+  }
 
   @media (max-width: 720px) {
-    .work__timeline { margin-left: 60px; }
-    .work__row-link { grid-template-columns: 1fr; gap: var(--sp-2); }
-    .work__bar { grid-template-columns: 70px 1fr 50px 12px 1fr 50px; }
+    .work__timeline {
+      margin-left: 60px;
+    }
+    .work__row-link {
+      grid-template-columns: 1fr;
+      gap: var(--sp-2);
+    }
+    .work__bar {
+      grid-template-columns: 70px 1fr 50px 12px 1fr 50px;
+    }
   }
 
   /* ============================================================
@@ -1975,9 +2271,15 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: var(--c-ink-2);
     line-height: 1;
   }
-  .metric__delta--up { color: var(--c-data-positive); }
-  .metric__delta--down { color: var(--c-data-negative); }
-  .metric__delta--flat { color: var(--c-ink-2); }
+  .metric__delta--up {
+    color: var(--c-data-positive);
+  }
+  .metric__delta--down {
+    color: var(--c-data-negative);
+  }
+  .metric__delta--flat {
+    color: var(--c-ink-2);
+  }
 
   /* Legacy .numbers__row kept for any back-compat consumer */
   .numbers__row {
@@ -2013,12 +2315,19 @@ const velocityRows: { stage: string; intensity: number }[][] = [
 
   @media (max-width: 880px) {
     .numbers__row,
-    .metric-row { grid-template-columns: 1fr 1fr; }
+    .metric-row {
+      grid-template-columns: 1fr 1fr;
+    }
   }
   @media (max-width: 480px) {
     .numbers__row,
-    .metric-row { grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
-    .number__fig { font-size: 1.85rem; }
+    .metric-row {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-4);
+    }
+    .number__fig {
+      font-size: 1.85rem;
+    }
   }
 
   /* ============================================================
@@ -2050,7 +2359,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   .creds__chip-mono {
     font-family: var(--ff-mono);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-primary-2-deep);
     font-size: var(--fs-2xs);
     letter-spacing: 0.05em;
@@ -2105,7 +2414,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
       gap: var(--sp-1);
       padding: var(--sp-4) 0;
     }
-    .creds__date { margin-top: var(--sp-1); }
+    .creds__date {
+      margin-top: var(--sp-1);
+    }
   }
 
   /* ============================================================
@@ -2150,16 +2461,19 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     width: 100%;
     max-width: 720px;
     padding: var(--sp-3) var(--sp-5);
-    background: rgba(232, 178, 32, 0.04);
-    border: 1px solid rgba(232, 178, 32, 0.35);
+    background: var(--c-amberl-faint);
+    border: 1px solid var(--c-amberl-strong);
     border-radius: var(--radius);
     color: var(--c-ink);
     text-decoration: none;
-    transition: background 120ms ease-out, border-color 120ms ease-out, transform 120ms ease-out;
+    transition:
+      background 120ms ease-out,
+      border-color 120ms ease-out,
+      transform 120ms ease-out;
   }
   .projects-cta:hover {
-    background: rgba(232, 178, 32, 0.10);
-    border-color: rgba(232, 178, 32, 0.55);
+    background: var(--c-amberl-soft);
+    border-color: var(--c-amberl-mid);
   }
   .projects-cta__eyebrow {
     font-size: 9px;
@@ -2184,38 +2498,70 @@ const velocityRows: { stage: string; intensity: number }[][] = [
      .section--alt is now institutional-tape. Override child element
      colors so titles, eyebrows, and cards render correctly on dark.
      ============================================================ */
-  .section--alt .section__title { color: var(--c-primary); }
-  .section--alt .section__sub { color: rgba(230, 237, 243, 0.7); }
-  .section--alt .section__sub a { color: var(--c-primary-2-light); }
-  .section--alt .section__eyebrow { color: var(--c-primary-2); }
-  .section--alt .number__fig { color: var(--c-primary); }
-  .section--alt .number__lbl { color: rgba(230, 237, 243, 0.6); }
+  .section--alt .section__title {
+    color: var(--c-primary);
+  }
+  .section--alt .section__sub {
+    color: var(--c-ink-mute);
+  }
+  .section--alt .section__sub a {
+    color: var(--c-primary-2-light);
+  }
+  .section--alt .section__eyebrow {
+    color: var(--c-primary-2);
+  }
+  .section--alt .number__fig {
+    color: var(--c-primary);
+  }
+  .section--alt .number__lbl {
+    color: var(--c-ink-mist);
+  }
   .section--alt .work-card {
     background: var(--c-tape-2);
-    border-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--c-white-haze);
     color: var(--c-primary);
   }
   .section--alt .work-card:hover {
     border-color: var(--c-primary-2);
   }
-  .section--alt .work-card__title { color: var(--c-primary); }
-  .section--alt .work-card__copy { color: rgba(230, 237, 243, 0.7); }
-  .section--alt .work-card__link { color: var(--c-primary-2-light); }
+  .section--alt .work-card__title {
+    color: var(--c-primary);
+  }
+  .section--alt .work-card__copy {
+    color: var(--c-ink-mute);
+  }
+  .section--alt .work-card__link {
+    color: var(--c-primary-2-light);
+  }
   .section--alt .what-cell {
     background: var(--c-tape-2);
-    border-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--c-white-haze);
   }
   .section--alt .creds__row,
-  .section--alt .numbers__row { border-color: rgba(255, 255, 255, 0.08); }
-  .section--alt .creds__name { color: var(--c-primary); }
-  .section--alt .creds__chip {
-    border-color: rgba(255, 255, 255, 0.16);
+  .section--alt .numbers__row {
+    border-color: var(--c-white-haze);
   }
-  .section--alt .creds__chip-label { color: rgba(230, 237, 243, 0.78); }
-  .section--alt .creds__chip-mono { color: var(--c-amber-light); }
-  .section--alt .creds__org { color: rgba(230, 237, 243, 0.7); }
-  .section--alt .creds__date { color: rgba(230, 237, 243, 0.5); }
-  .section--alt .section__foot .hero__link { color: var(--c-primary-2-light); }
+  .section--alt .creds__name {
+    color: var(--c-primary);
+  }
+  .section--alt .creds__chip {
+    border-color: var(--c-white-wisp);
+  }
+  .section--alt .creds__chip-label {
+    color: var(--c-ink-soft);
+  }
+  .section--alt .creds__chip-mono {
+    color: var(--c-amber-light);
+  }
+  .section--alt .creds__org {
+    color: var(--c-ink-mute);
+  }
+  .section--alt .creds__date {
+    color: var(--c-ink-fade);
+  }
+  .section--alt .section__foot .hero__link {
+    color: var(--c-primary-2-light);
+  }
 
   /* ============================================================
      MOBILE SAFETY NET — prevent any hero/section content from
@@ -2232,14 +2578,25 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     }
   }
   @media (max-width: 600px) {
-    .hero__title { font-size: clamp(1.65rem, 8.5vw, 2.1rem); }
+    .hero__title {
+      font-size: clamp(1.65rem, 8.5vw, 2.1rem);
+    }
     .hero__voice {
       font-size: 1.05rem;
-}
-    .hero__sub { font-size: var(--fs-xs); }
-    .hero__sep { display: inline; margin: 0 0.3em; }
-    .hero__actions { gap: var(--sp-3) var(--sp-4); }
-    .section__title { font-size: 1.5rem; }
+    }
+    .hero__sub {
+      font-size: var(--fs-xs);
+    }
+    .hero__sep {
+      display: inline;
+      margin: 0 0.3em;
+    }
+    .hero__actions {
+      gap: var(--sp-3) var(--sp-4);
+    }
+    .section__title {
+      font-size: 1.5rem;
+    }
   }
 
   /* ============================================================
@@ -2251,17 +2608,19 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .world-events {
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
     padding-block: var(--sp-8);
   }
-  .world-events__head { margin-bottom: var(--sp-6); }
+  .world-events__head {
+    margin-bottom: var(--sp-6);
+  }
   .world-events .section__title {
     color: var(--c-primary);
     max-width: 28ch;
     letter-spacing: -0.02em;
   }
   .world-events .voice-line--cmd {
-    color: rgba(230, 237, 243, 0.78);
+    color: var(--c-ink-soft);
     max-width: 72ch;
   }
   /* v6.4 — `.world-events__stage` is the relative-positioned wrapper
@@ -2282,10 +2641,14 @@ const velocityRows: { stage: string; intensity: number }[][] = [
      in via the `:has(details[open])` parent selector — see
      EarthDrawer.astro. */
   @media (min-width: 901px) {
-    .world-events { padding-right: 0; }
+    .world-events {
+      padding-right: 0;
+    }
   }
   @media (max-width: 720px) {
-    .world-events .section__title { max-width: 100%; }
+    .world-events .section__title {
+      max-width: 100%;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     /* The EventPin's own reduced-motion rule handles the pin animation;
@@ -2305,7 +2668,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     background: var(--c-tape);
     color: var(--ink-on-tape);
     position: relative;
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
   }
   .workspace__ambient {
     position: relative;
@@ -2341,7 +2704,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     gap: clamp(20px, 2.4vw, 32px);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
   }
   @media (max-width: 720px) {
     .workspace__viz {
@@ -2358,7 +2721,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     line-height: 1;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(230, 237, 243, 0.65);
+    color: var(--c-ink-faint);
     margin: 0 0 12px;
   }
   .workspace__viz-rule {
@@ -2372,8 +2735,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .workspace__radar {
     margin: 0;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: var(--c-white-mist);
+    border: 1px solid var(--c-white-mist);
     border-radius: 2px;
   }
   .workspace__radar-svg {
@@ -2389,12 +2752,12 @@ const velocityRows: { stage: string; intensity: number }[][] = [
      with a numeric value next to each axis for instant readability. */
   .radar-grid {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.16);
+    stroke: var(--c-white-wisp);
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
   }
   .radar-axis {
-    stroke: rgba(255, 255, 255, 0.22);
+    stroke: var(--c-white-wisp);
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
   }
@@ -2410,7 +2773,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-size: 9px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    fill: rgba(230, 237, 243, 0.95);
+    fill: var(--c-ink-veil-95);
     font-weight: 600;
   }
   .radar-value {
@@ -2430,8 +2793,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .workspace__velocity {
     margin: 0;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: var(--c-white-mist);
+    border: 1px solid var(--c-white-mist);
     border-radius: 2px;
     display: flex;
     flex-direction: column;
@@ -2495,13 +2858,16 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     align-items: center;
     justify-content: center;
     color: var(--c-ink);
-    transition: transform 120ms ease-out, box-shadow 120ms ease-out, background var(--transition);
+    transition:
+      transform 120ms ease-out,
+      box-shadow 120ms ease-out,
+      background var(--transition);
     overflow: hidden;
   }
   .velocity-cell:hover {
     transform: scale(1.04);
     z-index: 2;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
   .velocity-cell__glyph {
     font-family: var(--ff-mono);
@@ -2519,17 +2885,36 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     top: 0;
     bottom: 0;
     width: var(--intensity, 50%);
-    background: rgba(232, 178, 32, 0.55);
+    background: var(--c-amberl-mid);
     pointer-events: none;
   }
   /* F20 — Per-stage amber wash over ink-3 base. Five-step gradient:
      bright amber → faint amber → empty cell with amber ring (released). */
-  .velocity-cell--w { background: rgba(232, 178, 32, 0.95); color: var(--c-bg); }   /* Wrote — brightest, ink-bg text */
-  .velocity-cell--p { background: rgba(232, 178, 32, 0.72); color: var(--c-bg); }   /* Paper */
-  .velocity-cell--h { background: rgba(232, 178, 32, 0.48); color: var(--c-ink); }   /* Hypothesis */
-  .velocity-cell--f { background: rgba(232, 178, 32, 0.28); color: var(--c-ink); }   /* Frozen-spec */
-  .velocity-cell--m { background: rgba(232, 178, 32, 0.14); color: var(--c-ink-2); }   /* Model — barely there */
-  .velocity-cell--r { background: var(--c-ink-3); color: var(--c-primary-2); border-color: var(--c-primary-2); }   /* Released — empty bg, amber ink + amber border = "shipped" mark */
+  .velocity-cell--w {
+    background: color-mix(in oklab, var(--c-amber) 0.95%, transparent);
+    color: var(--c-bg);
+  } /* Wrote — brightest, ink-bg text */
+  .velocity-cell--p {
+    background: color-mix(in oklab, var(--c-amber) 0.72%, transparent);
+    color: var(--c-bg);
+  } /* Paper */
+  .velocity-cell--h {
+    background: color-mix(in oklab, var(--c-amber) 0.48%, transparent);
+    color: var(--c-ink);
+  } /* Hypothesis */
+  .velocity-cell--f {
+    background: color-mix(in oklab, var(--c-amber) 0.28%, transparent);
+    color: var(--c-ink);
+  } /* Frozen-spec */
+  .velocity-cell--m {
+    background: color-mix(in oklab, var(--c-amber) 0.14%, transparent);
+    color: var(--c-ink-2);
+  } /* Model — barely there */
+  .velocity-cell--r {
+    background: var(--c-ink-3);
+    color: var(--c-primary-2);
+    border-color: var(--c-primary-2);
+  } /* Released — empty bg, amber ink + amber border = "shipped" mark */
 
   /* F13.1 legend — full stage label + count */
   .velocity-legend {
@@ -2566,12 +2951,25 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     border: 1px solid var(--c-rule);
   }
   /* F20 — single amber channel, 5 filled steps + 1 empty/amber-ring. */
-  .velocity-legend__swatch--w { background: rgba(232, 178, 32, 0.95); }
-  .velocity-legend__swatch--p { background: rgba(232, 178, 32, 0.72); }
-  .velocity-legend__swatch--h { background: rgba(232, 178, 32, 0.48); }
-  .velocity-legend__swatch--f { background: rgba(232, 178, 32, 0.28); }
-  .velocity-legend__swatch--m { background: rgba(232, 178, 32, 0.14); }
-  .velocity-legend__swatch--r { background: var(--c-ink-3); border-color: var(--c-primary-2); }
+  .velocity-legend__swatch--w {
+    background: color-mix(in oklab, var(--c-amber) 0.95%, transparent);
+  }
+  .velocity-legend__swatch--p {
+    background: color-mix(in oklab, var(--c-amber) 0.72%, transparent);
+  }
+  .velocity-legend__swatch--h {
+    background: color-mix(in oklab, var(--c-amber) 0.48%, transparent);
+  }
+  .velocity-legend__swatch--f {
+    background: color-mix(in oklab, var(--c-amber) 0.28%, transparent);
+  }
+  .velocity-legend__swatch--m {
+    background: color-mix(in oklab, var(--c-amber) 0.14%, transparent);
+  }
+  .velocity-legend__swatch--r {
+    background: var(--c-ink-3);
+    border-color: var(--c-primary-2);
+  }
 
   @media (max-width: 720px) {
     .workspace__ambient {
@@ -2579,8 +2977,12 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .velocity-cell { transition: none; }
-    .velocity-cell:hover { transform: none; }
+    .velocity-cell {
+      transition: none;
+    }
+    .velocity-cell:hover {
+      transform: none;
+    }
   }
 
   /* ============================================================
@@ -2605,7 +3007,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     text-decoration: none;
     border-bottom: 1px solid var(--c-rule);
     padding-bottom: 2px;
-    transition: color var(--transition), border-color var(--transition);
+    transition:
+      color var(--transition),
+      border-color var(--transition);
   }
   .hero__badge-link:hover {
     color: var(--c-primary-2);
@@ -2622,7 +3026,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .live-tape {
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--c-white-mist);
     padding-block: 0.45rem;
   }
   .live-tape__inner {
@@ -2643,7 +3047,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     gap: 0.4em;
   }
   .live-tape__label {
-    color: rgba(230, 237, 243, 0.55);
+    color: var(--c-ink-ghost);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-size: 0.66rem;
@@ -2664,19 +3068,24 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: var(--c-warn);
   }
   .live-tape__sep {
-    color: rgba(255, 255, 255, 0.18);
+    color: var(--c-white-wisp);
     user-select: none;
   }
   .live-tape__asof {
     margin-left: auto;
-    color: rgba(230, 237, 243, 0.45);
+    color: var(--c-ink-veil);
     font-size: 0.66rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
   @media (max-width: 720px) {
-    .live-tape__row { gap: 0.3rem 0.6rem; }
-    .live-tape__asof { margin-left: 0; width: 100%; }
+    .live-tape__row {
+      gap: 0.3rem 0.6rem;
+    }
+    .live-tape__asof {
+      margin-left: 0;
+      width: 100%;
+    }
   }
 
   /* ============================================================
@@ -2687,7 +3096,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
      ============================================================ */
   .section-rule {
     border: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid var(--c-white-mist);
     margin: var(--sp-7) auto 0;
     max-width: var(--container-max);
     width: calc(100% - 2 * var(--sp-5));
@@ -2703,7 +3112,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-size: var(--fs-xs);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: rgba(230, 237, 243, 0.50);
+    color: var(--c-ink-fade);
     font-weight: 500;
   }
   .section-rule__label > span:first-child {
@@ -2721,8 +3130,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   .end-strip {
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid var(--c-white-mist);
+    border-bottom: 1px solid var(--c-white-mist);
     padding-block: 0.85rem;
     margin-top: var(--sp-7);
   }
@@ -2740,13 +3149,20 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     gap: var(--sp-4);
     min-width: 0;
   }
-  .end-strip__col--left { justify-content: flex-start; }
-  .end-strip__col--center { justify-content: center; }
-  .end-strip__col--right { justify-content: flex-end; flex-wrap: wrap; }
+  .end-strip__col--left {
+    justify-content: flex-start;
+  }
+  .end-strip__col--center {
+    justify-content: center;
+  }
+  .end-strip__col--right {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
 
   .end-strip__copy {
     font-size: var(--fs-xs);
-    color: rgba(230, 237, 243, 0.65);
+    color: var(--c-ink-faint);
     letter-spacing: 0.04em;
   }
   .end-strip__cert {
@@ -2759,7 +3175,9 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     min-height: 44px;
     display: inline-flex;
     align-items: center;
-    transition: color var(--transition), text-decoration-color var(--transition);
+    transition:
+      color var(--transition),
+      text-decoration-color var(--transition);
   }
   .end-strip__cert:hover {
     color: var(--c-primary-2-light);
@@ -2767,22 +3185,24 @@ const velocityRows: { stage: string; intensity: number }[][] = [
   }
   .end-strip__build {
     font-size: var(--fs-xs);
-    color: rgba(230, 237, 243, 0.60);
+    color: var(--c-ink-mist);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     white-space: nowrap;
   }
   .end-strip__link {
     font-size: var(--fs-xs);
-    color: rgba(230, 237, 243, 0.72);
+    color: var(--c-ink-shroud);
     text-decoration: underline;
-    text-decoration-color: rgba(232, 178, 32, 0.3);
+    text-decoration-color: color-mix(in oklab, var(--c-amber) 0.3%, transparent);
     text-underline-offset: 3px;
     padding: 0.25rem 0.4rem;
     min-height: 44px;
     display: inline-flex;
     align-items: center;
-    transition: color var(--transition), text-decoration-color var(--transition);
+    transition:
+      color var(--transition),
+      text-decoration-color var(--transition);
   }
   .end-strip__link:hover {
     color: var(--c-primary-2);
@@ -2800,6 +3220,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     .end-strip__col--right {
       justify-content: center;
     }
-    .end-strip__build { white-space: normal; }
+    .end-strip__build {
+      white-space: normal;
+    }
   }
 </style>

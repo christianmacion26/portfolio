@@ -45,11 +45,36 @@ const spacing = [
 
 // === (d) Motion vocabulary — 5 effects =====================================
 const motion = [
-  { effect: 'odometer', trigger: 'data-counter scrolls into view', duration: '1200ms', easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
-  { effect: 'active-nav', trigger: 'section becomes the in-viewport section', duration: '150ms', easing: 'ease (color + underline slide)' },
-  { effect: 'hover-zoom', trigger: 'hover on card / button / image', duration: '150ms', easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-  { effect: 'shine', trigger: 'verified badge / status pill idle', duration: '1500ms', easing: 'linear (one-shot on appearance)' },
-  { effect: 'trust-pulse', trigger: 'pass / fail status dot', duration: '2400ms', easing: 'ease-in-out (infinite, opacity-only)' },
+  {
+    effect: 'odometer',
+    trigger: 'data-counter scrolls into view',
+    duration: '1200ms',
+    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  },
+  {
+    effect: 'active-nav',
+    trigger: 'section becomes the in-viewport section',
+    duration: '150ms',
+    easing: 'ease (color + underline slide)',
+  },
+  {
+    effect: 'hover-zoom',
+    trigger: 'hover on card / button / image',
+    duration: '150ms',
+    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+  {
+    effect: 'shine',
+    trigger: 'verified badge / status pill idle',
+    duration: '1500ms',
+    easing: 'linear (one-shot on appearance)',
+  },
+  {
+    effect: 'trust-pulse',
+    trigger: 'pass / fail status dot',
+    duration: '2400ms',
+    easing: 'ease-in-out (infinite, opacity-only)',
+  },
 ];
 
 // === (e) Accessibility — WCAG AA pairs + a11y primitives ===================
@@ -59,12 +84,16 @@ const contrastPairs = [
   { fg: '--c-primary-2-deep', bg: '--c-bg', ratio: '5.0:1', level: 'AA' },
   { fg: '--c-amber', bg: '--c-bg', ratio: '6.4:1', level: 'AA' },
   { fg: '--c-primary', bg: '--c-bg', ratio: '19.2:1', level: 'AAA' },
-];---
+];
+---
 
 <BaseLayout
   title="Colophon"
   description="The design system — type, color, spacing, motion, and accessibility — for this site. All values live in src/styles/tokens.css."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Colophon", href: "/colophon" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Colophon', href: '/colophon' },
+  ]}
 >
   <header class="col-head">
     <div class="container">
@@ -76,25 +105,28 @@ const contrastPairs = [
         Every design decision on this site, in one page. Tokens are the source of truth.
       </VoiceLine>
       <p class="col-head__sub">
-        Type, color, spacing, motion, and accessibility — every design decision on this
-        site, in one page. The full source is in
+        Type, color, spacing, motion, and accessibility — every design decision on this site, in one
+        page. The full source is in
         <code class="mono">src/styles/tokens.css</code>.
       </p>
     </div>
   </header>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       (a) Type
-      ========================================================= */}
+      ========================================================= */
+  }
   <section class="section" data-reveal>
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(a) · Type</p>
         <h2 class="section__title">Three faces, four roles.</h2>
         <p class="section__sub">
-          Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math
-          serifs. The four-step scale below is the institutional rhythm; full
-          scale runs <code class="mono">--fs-xs</code> to <code class="mono">--fs-5xl</code>.
+          Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math serifs. The
+          four-step scale below is the institutional rhythm; full scale runs <code class="mono"
+            >--fs-xs</code
+          > to <code class="mono">--fs-5xl</code>.
         </p>
       </header>
 
@@ -118,7 +150,9 @@ const contrastPairs = [
         {
           typeScale.map((t) => (
             <li class="type-scale__row">
-              <span class="type-scale__label mono">{t.token} · {t.px}</span>
+              <span class="type-scale__label mono">
+                {t.token} · {t.px}
+              </span>
               <span class="type-scale__sample" style={`font-size: ${t.px};`}>
                 The quick brown fox jumps
               </span>
@@ -130,18 +164,20 @@ const contrastPairs = [
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       (b) Color palette
-      ========================================================= */}
+      ========================================================= */
+  }
   <section class="section section--alt" data-reveal>
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(b) · Color palette</p>
         <h2 class="section__title">Four colors, four roles.</h2>
         <p class="section__sub">
-          The hedge-fund palette: near-black + deep amber on a term-paper cream.
-          The full token set is in <code class="mono">tokens.css</code> (primary,
-          amber, paper, bg, ink, rule, status, math accents).
+          The hedge-fund palette: near-black + deep amber on a term-paper cream. The full token set
+          is in <code class="mono">tokens.css</code> (primary, amber, paper, bg, ink, rule, status, math
+          accents).
         </p>
       </header>
 
@@ -160,17 +196,19 @@ const contrastPairs = [
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       (c) Spacing scale
-      ========================================================= */}
+      ========================================================= */
+  }
   <section class="section" data-reveal>
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(c) · Spacing scale</p>
         <h2 class="section__title">Six cells, 8px base.</h2>
         <p class="section__sub">
-          A geometric scale (multiples of 4, doubling past <code class="mono">--sp-4</code>).
-          The full scale runs to <code class="mono">--sp-10</code> (8rem) for hero padding.
+          A geometric scale (multiples of 4, doubling past <code class="mono">--sp-4</code>). The
+          full scale runs to <code class="mono">--sp-10</code> (8rem) for hero padding.
         </p>
       </header>
 
@@ -188,9 +226,11 @@ const contrastPairs = [
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       (d) Motion vocabulary
-      ========================================================= */}
+      ========================================================= */
+  }
   <section class="section section--alt" data-reveal>
     <div class="container">
       <header class="section__head">
@@ -198,8 +238,8 @@ const contrastPairs = [
         <h2 class="section__title">Five effects, institutional restraint.</h2>
         <p class="section__sub">
           Motion is minimal and functional. All effects respect
-          <code class="mono">prefers-reduced-motion: reduce</code>. Total motion JS
-          budget is &lt; 4KB minified.
+          <code class="mono">prefers-reduced-motion: reduce</code>. Total motion JS budget is &lt;
+          4KB minified.
         </p>
       </header>
 
@@ -217,7 +257,9 @@ const contrastPairs = [
             {
               motion.map((m) => (
                 <tr>
-                  <th scope="row" class="mono">{m.effect}</th>
+                  <th scope="row" class="mono">
+                    {m.effect}
+                  </th>
                   <td>{m.trigger}</td>
                   <td class="mono">{m.duration}</td>
                   <td class="mono">{m.easing}</td>
@@ -230,18 +272,20 @@ const contrastPairs = [
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       (e) Accessibility
-      ========================================================= */}
+      ========================================================= */
+  }
   <section class="section" data-reveal>
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(e) · Accessibility</p>
         <h2 class="section__title">WCAG AA contrast, skip-nav, focus-visible.</h2>
         <p class="section__sub">
-          All foreground/background pairs in the body of the site meet WCAG AA at
-          body sizes; the <code class="mono">--c-amber-light</code> hover variant is reserved
-          for ≥18px / non-text use on cream surfaces (it drops to 1.7:1 there).
+          All foreground/background pairs in the body of the site meet WCAG AA at body sizes; the <code
+            class="mono">--c-amber-light</code
+          > hover variant is reserved for ≥18px / non-text use on cream surfaces (it drops to 1.7:1 there).
         </p>
       </header>
 
@@ -280,13 +324,13 @@ const contrastPairs = [
         </li>
         <li>
           <strong>Focus-visible ring:</strong> a 2px outline in
-          <code class="mono">--c-primary-2-deep</code> (5.0:1) on every interactive element,
-          gated by <code class="mono">:focus-visible</code> so mouse users see no ring.
+          <code class="mono">--c-primary-2-deep</code> (5.0:1) on every interactive element, gated by
+          <code class="mono">:focus-visible</code> so mouse users see no ring.
         </li>
         <li>
-          <strong>Reduced motion:</strong> a single media query
-          (<code class="mono">prefers-reduced-motion: reduce</code>) zeros all transitions
-          and animations across the site.
+          <strong>Reduced motion:</strong> a single media query (<code class="mono"
+            >prefers-reduced-motion: reduce</code
+          >) zeros all transitions and animations across the site.
         </li>
         <li>
           <strong>Semantic HTML:</strong> the page is heading-hierarchy-correct (single
@@ -311,8 +355,7 @@ const contrastPairs = [
 <style>
   .col-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .col-head__title {
@@ -320,7 +363,7 @@ const contrastPairs = [
     line-height: 1.05;
     margin-bottom: var(--sp-4);
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.03em;
   }
   .col-head__sub {
@@ -332,7 +375,7 @@ const contrastPairs = [
   .col-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .col-head__sub code {
     background: var(--c-bg);
     padding: 1px 6px;

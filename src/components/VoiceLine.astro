@@ -31,13 +31,7 @@ interface Props {
   /** Extra class on the outer element (e.g., for layout positioning). */
   class?: string;
 }
-const {
-  ruled = true,
-  quote = 'curly',
-  size = 'md',
-  railColor,
-  class: className,
-} = Astro.props;
+const { ruled = true, quote = 'curly', size = 'md', railColor, class: className } = Astro.props;
 ---
 
 <p

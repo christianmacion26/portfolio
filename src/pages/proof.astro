@@ -25,15 +25,21 @@ import TrustStrip from '@components/TrustStrip.astro';
 import SectionTOC from '@components/SectionTOC.astro';
 import VoiceLine from '@components/VoiceLine.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 import { profile } from '@utils/profile';
 import { buildStampUtc8 } from '@utils/build-stamp';
 import pkg from '../../package.json';
 const proofVersion = `v${pkg.version}`;
+const NGATE = `${profile.stats.evalGates}-gate`;
+
+type ProjectEntry = CollectionEntry<'project'>;
+type SolutionEntry = CollectionEntry<'solution'>;
+type CertGroupEntry = CollectionEntry<'certGroup'>;
 
 // === Data: 4 flagship credentials (3 from certGroup.featured* + 1 standalone Bitget) ===
-const certGroups = (await getCollection('certGroup')).sort((a, b) => a.data.order - b.data.order);
+const allCertGroups: CertGroupEntry[] = await getCollection('certGroup');
+const certGroups = allCertGroups.sort((a, b) => a.data.order - b.data.order);
 const flagshipCerts = certGroups
   .filter((g) => g.data.featuredImg)
   .map((g) => ({
@@ -51,7 +57,8 @@ const codeArtifacts = [
   {
     title: 'mcp-backtest-server',
     kind: 'MCP server' as const,
-    tagline: 'IP-clean backtest tools over the Model Context Protocol. Three tools, four textbook strategies, zero market data.',
+    tagline:
+      'IP-clean backtest tools over the Model Context Protocol. Three tools, four textbook strategies, zero market data.',
     metric: '100% offline · 4 strategies · 0 lines of proprietary data',
     preview: `$ uv run server.py
 # FastMCP server listening on stdio
@@ -68,7 +75,8 @@ const codeArtifacts = [
   {
     title: 'qfin-rag-harness',
     kind: 'Python package' as const,
-    tagline: 'Citation-grounded retrieval harness over a curated corpus of 16 canonical q-fin papers. Pure-Python TF-IDF cosine, no LLM call.',
+    tagline:
+      'Citation-grounded retrieval harness over a curated corpus of 16 canonical q-fin papers. Pure-Python TF-IDF cosine, no LLM call.',
     metric: '16 papers · 0 API keys · 0 LLM dependency',
     preview: `$ python -m qfin_rag "How do I correct factor significance for data mining?"
 
@@ -87,7 +95,8 @@ const codeArtifacts = [
   {
     title: 'numerical-faithfulness-eval',
     kind: 'Eval harness' as const,
-    tagline: 'Verify LLM numerical claims against deterministic fixtures. Catches the most common LLM failure mode — wrong numbers — in under one second.',
+    tagline:
+      'Verify LLM numerical claims against deterministic fixtures. Catches the most common LLM failure mode — wrong numbers — in under one second.',
     metric: '10 demo claims · 5 pass · 5 fail by design',
     preview: `$ python -m eval_harness
 [FAIL] btc_2024_sma_cross_20_50 / sharpe: claimed=5.0,
@@ -106,7 +115,8 @@ const codeArtifacts = [
   {
     title: 'eval-mcp-server',
     kind: 'MCP server' as const,
-    tagline: 'Slop-evaluation gate exposed as an MCP tool. Tools / Resources / Prompts — 20/20 conformance, 100% round-trip parity.',
+    tagline:
+      'Slop-evaluation gate exposed as an MCP tool. Tools / Resources / Prompts — 20/20 conformance, 100% round-trip parity.',
     metric: 'MCP conformance 20/20 · round-trip parity 100% · primitives 3/3',
     preview: `$ uv run eval_mcp_server.py
 # MCP server with the slop-evaluation gate
@@ -124,27 +134,31 @@ const codeArtifacts = [
 ];
 
 // === Data: projects + solutions, surfaced as compact rows ===
-const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
-const quantProjects = projects.filter((p) => p.data.role === 'quant');
-const aiProjects = projects.filter((p) => p.data.role === 'ai');
-const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
+const allProjects: ProjectEntry[] = await getCollection('project');
+const projects = allProjects.sort((a, b) => a.data.order - b.data.order);
+const quantProjects: ProjectEntry[] = projects.filter((p) => p.data.role === 'quant');
+const aiProjects: ProjectEntry[] = projects.filter((p) => p.data.role === 'ai');
+const allSolutions: SolutionEntry[] = await getCollection('solution');
+const solutions = allSolutions.sort((a, b) => a.data.order - b.data.order);
 
 // v6.10.27 — derive hero stat counts from the actual collections, not
 // hand-written literals. Previously "22 artifacts" was hardcoded but the
 // actual proof-list__name count is quantProjects + aiProjects + solutions
 // = N. The hero numbers now stay in lockstep with the data.
 const heroArtifactCount = quantProjects.length + aiProjects.length + solutions.length;
+// v6.10.40 — derive OSS-project count for the /proof table row.
+const ossProjectCount = projects.filter((p) => p.data.sourceLink).length;
 const heroQuantCount = quantProjects.length;
 const heroAiCount = aiProjects.length;
 const heroSolutionCount = solutions.length;
 
-const formatProjectMetric = (p: typeof projects[number]) => {
+const formatProjectMetric = (p: (typeof projects)[number]) => {
   if (!p.data.metrics?.length) return null;
   const first = p.data.metrics[0];
   return { label: first.label, value: first.value, sub: first.sub };
 };
 
-const formatSolutionMetric = (s: typeof solutions[number]) =>
+const formatSolutionMetric = (s: (typeof solutions)[number]) =>
   s.data.evidence?.[0] ?? s.data.outcome.slice(0, 80);
 
 // === Status → tone + label mapping (for status pills) ===
@@ -163,14 +177,14 @@ const statusInfo = (s?: string): StatusInfo | null => (s && STATUS_MAP[s]) || nu
 // === Filter attributes (Topic × Type) ===
 // Topic: quant | ai | oss (solutions get topic from their lane)
 // Type: code | writeup | talk | live-demo
-const projectTopic = (p: typeof projects[number]) => p.data.topic ?? null;
-const projectType = (p: typeof projects[number]) => p.data.assetType ?? null;
-const solutionTopic = (s: typeof solutions[number]): 'quant' | 'ai' | 'oss' | null => {
+const projectTopic = (p: (typeof projects)[number]) => p.data.topic ?? null;
+const projectType = (p: (typeof projects)[number]) => p.data.assetType ?? null;
+const solutionTopic = (s: (typeof solutions)[number]): 'quant' | 'ai' | 'oss' | null => {
   if (s.data.lane === 'quant' || s.data.lane === 'ai') return s.data.lane;
   // education / systems lanes are public writeups → OSS
   return 'oss';
 };
-const solutionType = (_s: typeof solutions[number]) => 'writeup' as const;
+const solutionType = (_s: (typeof solutions)[number]) => 'writeup' as const;
 
 // === Per-list pagination: page size 6 ===
 const PAGE_SIZE = 6;
@@ -201,29 +215,62 @@ const paginate = (items: any[]) => {
   title="Proof"
   description={`Decision-grade artefacts that back the claims on /experience, /certifications, and /now. Tier-1 credentials, ${codeArtifacts.length} open-source artifacts, ${quantProjects.length} quant projects, ${aiProjects.length} AI projects, ${solutions.length} case studies — all NDA-clean by construction.`}
   type="profile"
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Proof", href: "/proof" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Proof', href: '/proof' },
+  ]}
   extraJsonLd={{
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'Christian T. Macion — Proof',
+    name: `${profile.fullName} — Proof`,
     description:
       'Six-tier proof spine: P.1 identity · P.2 flagship credentials · P.3 shipped code · P.4 research artifacts · P.5 public track record · P.6 NDA-positive disclosure.',
     isPartOf: {
       '@type': 'WebSite',
-      name: 'Christian T. Macion — Portfolio',
+      name: `${profile.fullName} — Portfolio`,
       url: 'https://christianmacion-portfolio.pages.dev/',
     },
     hasPart: [
-      { '@type': 'CreativeWork', name: 'Tier-1 credentials (CTA, Ateneo + US Embassy, BIDA × Meta, Bitget)', url: 'https://christianmacion-portfolio.pages.dev/proof#credentials' },
-      { '@type': 'SoftwareSourceCode', name: `Shipped code (${codeArtifacts.map((c) => c.title).join(', ')})`, url: 'https://christianmacion-portfolio.pages.dev/proof#code' },
-      { '@type': 'ItemList', name: `${quantProjects.length} quant projects + ${aiProjects.length} AI projects + ${solutions.length} case studies`, url: 'https://christianmacion-portfolio.pages.dev/proof#research' },
-      { '@type': 'CreativeWork', name: 'Public track record (lectures, charts, Atom feeds)', url: 'https://christianmacion-portfolio.pages.dev/proof#track' },
-      { '@type': 'CreativeWork', name: 'External accounts (Numerai, HuggingFace, GitHub, TradingView, Medium)', url: 'https://christianmacion-portfolio.pages.dev/proof#public-track' },
-      { '@type': 'DisclosureDocument', name: 'NDA-positive disclosure', url: 'https://christianmacion-portfolio.pages.dev/proof#disclosure' },
+      {
+        '@type': 'CreativeWork',
+        name: 'Tier-1 credentials (CTA, Ateneo + US Embassy, BIDA × Meta, Bitget)',
+        url: 'https://christianmacion-portfolio.pages.dev/proof#credentials',
+      },
+      {
+        '@type': 'SoftwareSourceCode',
+        name: `Shipped code (${codeArtifacts.map((c) => c.title).join(', ')})`,
+        url: 'https://christianmacion-portfolio.pages.dev/proof#code',
+      },
+      {
+        '@type': 'ItemList',
+        name: `${quantProjects.length} quant projects + ${aiProjects.length} AI projects + ${solutions.length} case studies`,
+        url: 'https://christianmacion-portfolio.pages.dev/proof#research',
+      },
+      {
+        '@type': 'CreativeWork',
+        name: 'Public track record (lectures, charts, Atom feeds)',
+        url: 'https://christianmacion-portfolio.pages.dev/proof#track',
+      },
+      {
+        '@type': 'CreativeWork',
+        name: 'External accounts (Numerai, HuggingFace, GitHub, TradingView, Medium)',
+        url: 'https://christianmacion-portfolio.pages.dev/proof#public-track',
+      },
+      {
+        '@type': 'DisclosureDocument',
+        name: 'NDA-positive disclosure',
+        url: 'https://christianmacion-portfolio.pages.dev/proof#disclosure',
+      },
     ],
   }}
 >
-  <header class="proof-head" id="identity" data-toc-id="identity" data-toc-label="Identity" data-reveal>
+  <header
+    class="proof-head"
+    id="identity"
+    data-toc-id="identity"
+    data-toc-label="Identity"
+    data-reveal
+  >
     <div class="container container-narrow">
       <p class="section__eyebrow"><span class="mono">proof/</span> · show your work</p>
       <h1 class="proof-head__title">
@@ -233,7 +280,8 @@ const paginate = (items: any[]) => {
         If it isn't reproducible from public data, it isn't here.
       </VoiceLine>
 
-      {/* v6.3 polish — headline stats moved ABOVE the carousel + motif
+      {
+        /* v6.3 polish — headline stats moved ABOVE the carousel + motif
          so all four numeric cells are visible above the 800 px desktop
          fold. The audit's density check needs ≥ 4 filled data cells;
          previously the stats sat below the fold because the carousel +
@@ -245,22 +293,31 @@ const paginate = (items: any[]) => {
          (heroArtifactCount = quantProjects + aiProjects + solutions)
          rather than hand-written literals. Previously "22" was hardcoded
          but the real count is 25 (9 quant + 6 AI + 10 solutions). The
-         numbers now stay in lockstep with the data. */}
+         numbers now stay in lockstep with the data. */
+      }
       <ul class="proof-head__stats" aria-label="Proof-page at-a-glance counts">
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter={String(heroArtifactCount)}>{heroArtifactCount}</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroArtifactCount)}
+            >{heroArtifactCount}</span
+          >
           <span class="proof-head__stat-lbl mono">artifacts on this page</span>
         </li>
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter={String(heroQuantCount)}>{heroQuantCount}</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroQuantCount)}
+            >{heroQuantCount}</span
+          >
           <span class="proof-head__stat-lbl mono">quant projects</span>
         </li>
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter={String(heroAiCount)}>{heroAiCount}</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroAiCount)}
+            >{heroAiCount}</span
+          >
           <span class="proof-head__stat-lbl mono">AI projects</span>
         </li>
         <li class="proof-head__stat">
-          <span class="proof-head__stat-num tnum" data-counter={String(heroSolutionCount)}>{heroSolutionCount}</span>
+          <span class="proof-head__stat-num tnum" data-counter={String(heroSolutionCount)}
+            >{heroSolutionCount}</span
+          >
           <span class="proof-head__stat-lbl mono">case studies</span>
         </li>
       </ul>
@@ -285,12 +342,12 @@ const paginate = (items: any[]) => {
         <BrandMotif width={320} caption="proof/ · G1–G31 gates emit the artefacts below" />
       </div>
       <p class="proof-head__sub">
-        A gallery of public, NDA-clean artifacts — records, charts, co-signed certificates —
-        that back up the claims on
+        A gallery of public, NDA-clean artifacts — records, charts, co-signed certificates — that
+        back up the claims on
         <a href={path('/experience')}>/experience</a>,
-        <a href={path('/certifications')}>/certifications</a>,
-        and <a href={path('/now')}>/now</a>. Thirty-one artifacts on disk, twenty-two surfaced below.
-        Updated when something new ships; never deleted when something expires.
+        <a href={path('/certifications')}>/certifications</a>, and <a href={path('/now')}>/now</a>.
+        Thirty-one artifacts on disk, twenty-two surfaced below. Updated when something new ships;
+        never deleted when something expires.
       </p>
 
       <p class="proof-head__ver mono">{proofVersion} · {buildStampUtc8()}</p>
@@ -300,7 +357,7 @@ const paginate = (items: any[]) => {
   <TrustStrip variant="tape" />
 
   <div class="container container-narrow">
-    <ReadMeta minutes={11} updatedIso="2026-07-10" href={path('/proof')} />
+    <ReadMeta minutes={11} href={path('/proof')} />
   </div>
 
   <SectionTOC
@@ -312,13 +369,20 @@ const paginate = (items: any[]) => {
       { id: 'track', label: 'Track record' },
       { id: 'public-track', label: 'Public track record' },
       { id: 'disclosure', label: 'NDA disclosure' },
-      { href: path('/markets'), label: 'Live terminal', trailing: '→ /markets' },
+      {
+        id: 'live-terminal',
+        href: path('/markets'),
+        label: 'Live terminal',
+        trailing: '→ /markets',
+      },
     ]}
   />
 
-  {/* =========================================================
+  {
+    /* =========================================================
       P.2 — Flagship credentials (Tier-1 certs with featuredImg)
-      ========================================================= */}
+      ========================================================= */
+  }
   <section
     class="section"
     id="credentials"
@@ -332,24 +396,26 @@ const paginate = (items: any[]) => {
         <h2 class="section__title">Tier-1 certs. Co-signed by name.</h2>
         <p class="section__sub">
           Three flagship credentials already curated on
-          <a href={path('/certifications')}>/certifications</a> plus one standalone Tier-1 from
-          Bitget. Each card carries the issuer, date, and the photo.
+          <a href={path('/certifications')}>/certifications</a> plus one standalone Tier-1 from Bitget.
+          Each card carries the issuer, date, and the photo.
         </p>
       </header>
 
       <div class="proof-grid proof-grid--flagship">
-        {flagshipCerts.map((f) => (
-          <FlagshipCard
-            title={f.title}
-            group={f.group}
-            blurb={f.blurb}
-            src={f.src}
-            alt={f.alt}
-            caption={f.caption}
-            href={f.href}
-            aspect="3/2"
-          />
-        ))}
+        {
+          flagshipCerts.map((f) => (
+            <FlagshipCard
+              title={f.title}
+              group={f.group}
+              blurb={f.blurb}
+              src={f.src}
+              alt={f.alt}
+              caption={f.caption}
+              href={f.href}
+              aspect="3/2"
+            />
+          ))
+        }
         {/* Bitget B4Y-2026-000701 — Tier-1 cert that's currently orphaned on disk */}
         <FlagshipCard
           title="Blockchain4Youth · B4Y-2026-000701"
@@ -365,9 +431,11 @@ const paginate = (items: any[]) => {
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       P.3 — Shipped code (4 CodeProofCards · 3 v3.5 + 1 eval)
-      ========================================================= */}
+      ========================================================= */
+  }
   <section
     class="section section--alt"
     id="code"
@@ -381,33 +449,37 @@ const paginate = (items: any[]) => {
         <h2 class="section__title">Things I can <code class="mono">import</code>.</h2>
         <p class="section__sub">
           Four repositories. Each is <strong>MIT-licensed</strong>,
-          <strong>offline-runnable</strong>, and <strong>dependency-light</strong>. Each one
-          is a small, auditable artifact that demonstrates the eval-first methodology in code
-          rather than prose.
+          <strong>offline-runnable</strong>, and <strong>dependency-light</strong>. Each one is a
+          small, auditable artifact that demonstrates the eval-first methodology in code rather than
+          prose.
         </p>
       </header>
 
       <div class="proof-grid proof-grid--code">
-        {codeArtifacts.map((c) => (
-          <CodeProofCard
-            title={c.title}
-            kind={c.kind}
-            tagline={c.tagline}
-            metric={c.metric}
-            preview={c.preview}
-            outputLines={c.outputLines}
-            path={c.repoPath}
-            href={c.href}
-          />
-        ))}
+        {
+          codeArtifacts.map((c) => (
+            <CodeProofCard
+              title={c.title}
+              kind={c.kind}
+              tagline={c.tagline}
+              metric={c.metric}
+              preview={c.preview}
+              outputLines={c.outputLines}
+              path={c.repoPath}
+              href={c.href}
+            />
+          ))
+        }
       </div>
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       P.4 — Research artifacts (9 quant · 6 AI · 10 solutions)
       Filter bar: Topic × Type. Client-side, URL query sync.
-      ========================================================= */}
+      ========================================================= */
+  }
   <section
     class="section"
     id="research"
@@ -422,7 +494,9 @@ const paginate = (items: any[]) => {
       <header class="section__head">
         <p class="section__eyebrow">P.4 · Research artifacts</p>
         <h2 class="section__title">
-          9 quant · 6 AI · 10 solutions. <span class="mono">All public-data reproducible.</span>
+          {quantProjects.length} quant · {aiProjects.length} AI · {solutions.length} solutions. <span
+            class="mono">All public-data reproducible.</span
+          >
         </h2>
         <p class="section__sub">
           Compact list rendering (AQR-Insights style). Each row links to the project or solution
@@ -436,20 +510,65 @@ const paginate = (items: any[]) => {
         <div class="filter-bar__row">
           <span class="filter-bar__label mono">Topic</span>
           <div class="filter-bar__chips" data-filter-axis="topic">
-            <button type="button" class="filter-chip mono is-active" data-filter-value="all" aria-pressed="true">All</button>
-            <button type="button" class="filter-chip mono" data-filter-value="quant" aria-pressed="false">Quant</button>
-            <button type="button" class="filter-chip mono" data-filter-value="ai" aria-pressed="false">AI</button>
-            <button type="button" class="filter-chip mono" data-filter-value="oss" aria-pressed="false">OSS</button>
+            <button
+              type="button"
+              class="filter-chip mono is-active"
+              data-filter-value="all"
+              aria-pressed="true">All</button
+            >
+            <button
+              type="button"
+              class="filter-chip mono"
+              data-filter-value="quant"
+              aria-pressed="false">Quant</button
+            >
+            <button
+              type="button"
+              class="filter-chip mono"
+              data-filter-value="ai"
+              aria-pressed="false">AI</button
+            >
+            <button
+              type="button"
+              class="filter-chip mono"
+              data-filter-value="oss"
+              aria-pressed="false">OSS</button
+            >
           </div>
         </div>
         <div class="filter-bar__row">
           <span class="filter-bar__label mono">Type</span>
           <div class="filter-bar__chips" data-filter-axis="type">
-            <button type="button" class="filter-chip mono is-active" data-filter-value="all" aria-pressed="true">All</button>
-            <button type="button" class="filter-chip mono" data-filter-value="code" aria-pressed="false">Code</button>
-            <button type="button" class="filter-chip mono" data-filter-value="writeup" aria-pressed="false">Writeup</button>
-            <button type="button" class="filter-chip mono" data-filter-value="talk" aria-pressed="false">Talk</button>
-            <button type="button" class="filter-chip mono" data-filter-value="live-demo" aria-pressed="false">Live demo</button>
+            <button
+              type="button"
+              class="filter-chip mono is-active"
+              data-filter-value="all"
+              aria-pressed="true">All</button
+            >
+            <button
+              type="button"
+              class="filter-chip mono"
+              data-filter-value="code"
+              aria-pressed="false">Code</button
+            >
+            <button
+              type="button"
+              class="filter-chip mono"
+              data-filter-value="writeup"
+              aria-pressed="false">Writeup</button
+            >
+            <button
+              type="button"
+              class="filter-chip mono"
+              data-filter-value="talk"
+              aria-pressed="false">Talk</button
+            >
+            <button
+              type="button"
+              class="filter-chip mono"
+              data-filter-value="live-demo"
+              aria-pressed="false">Live demo</button
+            >
           </div>
         </div>
       </div>
@@ -472,9 +591,7 @@ const paginate = (items: any[]) => {
                   year: 'numeric',
                 })
               : '';
-            const dateIso = p.data.date
-              ? new Date(p.data.date).toISOString().slice(0, 10)
-              : '';
+            const dateIso = p.data.date ? new Date(p.data.date).toISOString().slice(0, 10) : '';
             const topic = projectTopic(p);
             const assetType = projectType(p);
             const isOss = p.data.status === 'open-source';
@@ -489,11 +606,17 @@ const paginate = (items: any[]) => {
               >
                 <div class="proof-list__pills" aria-label="Project metadata">
                   {si && <span class:list={['pill', `pill--${si.tone}`]}>{si.label}</span>}
-                  {dateIso && <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>}
+                  {dateIso && (
+                    <span class="proof-list__pills-sep mono" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
                   {dateIso && <span class="pill pill--mute mono">{dateIso}</span>}
                   {p.data.readMinutes && (
                     <>
-                      <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>
+                      <span class="proof-list__pills-sep mono" aria-hidden="true">
+                        ·
+                      </span>
                       <span class="pill pill--ink mono">{p.data.readMinutes} min read</span>
                     </>
                   )}
@@ -508,11 +631,11 @@ const paginate = (items: any[]) => {
                     </span>
                   )}
                   <span class="proof-list__date mono">{date}</span>
-                  <span class="proof-list__arrow mono" aria-hidden="true">→</span>
+                  <span class="proof-list__arrow mono" aria-hidden="true">
+                    →
+                  </span>
                 </a>
-                {p.data.summary && (
-                  <p class="proof-list__summary">{p.data.summary}</p>
-                )}
+                {p.data.summary && <p class="proof-list__summary">{p.data.summary}</p>}
               </li>
             );
           })
@@ -537,9 +660,7 @@ const paginate = (items: any[]) => {
                   year: 'numeric',
                 })
               : '';
-            const dateIso = p.data.date
-              ? new Date(p.data.date).toISOString().slice(0, 10)
-              : '';
+            const dateIso = p.data.date ? new Date(p.data.date).toISOString().slice(0, 10) : '';
             const topic = projectTopic(p);
             const assetType = projectType(p);
             const isOss = p.data.status === 'open-source';
@@ -554,11 +675,17 @@ const paginate = (items: any[]) => {
               >
                 <div class="proof-list__pills" aria-label="Project metadata">
                   {si && <span class:list={['pill', `pill--${si.tone}`]}>{si.label}</span>}
-                  {dateIso && <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>}
+                  {dateIso && (
+                    <span class="proof-list__pills-sep mono" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
                   {dateIso && <span class="pill pill--mute mono">{dateIso}</span>}
                   {p.data.readMinutes && (
                     <>
-                      <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>
+                      <span class="proof-list__pills-sep mono" aria-hidden="true">
+                        ·
+                      </span>
                       <span class="pill pill--ink mono">{p.data.readMinutes} min read</span>
                     </>
                   )}
@@ -573,11 +700,11 @@ const paginate = (items: any[]) => {
                     </span>
                   )}
                   <span class="proof-list__date mono">{date}</span>
-                  <span class="proof-list__arrow mono" aria-hidden="true">→</span>
+                  <span class="proof-list__arrow mono" aria-hidden="true">
+                    →
+                  </span>
                 </a>
-                {p.data.summary && (
-                  <p class="proof-list__summary">{p.data.summary}</p>
-                )}
+                {p.data.summary && <p class="proof-list__summary">{p.data.summary}</p>}
               </li>
             );
           })
@@ -609,16 +736,26 @@ const paginate = (items: any[]) => {
               >
                 <div class="proof-list__pills" aria-label="Solution metadata">
                   <span class="pill pill--tag">Case Study</span>
-                  {dateIso && <span class="proof-list__pills-sep mono" aria-hidden="true">·</span>}
+                  {dateIso && (
+                    <span class="proof-list__pills-sep mono" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
                   {dateIso && <span class="pill pill--mute mono">{dateIso}</span>}
                 </div>
                 <a class="proof-list__title" href={path(`/solutions#${s.data.slug}`)}>
-                  <span class="proof-list__kind proof-list__kind--sol mono">{s.data.lane.toUpperCase()}</span>
+                  <span class="proof-list__kind proof-list__kind--sol mono">
+                    {s.data.lane.toUpperCase()}
+                  </span>
                   <span class="proof-list__name">{s.data.title}</span>
                   <span class="proof-list__metric mono">
-                    <span class="proof-list__metric-val mono">{formatSolutionMetric(s).replace(/\*\*/g, '')}</span>
+                    <span class="proof-list__metric-val mono">
+                      {formatSolutionMetric(s).replace(/\*\*/g, '')}
+                    </span>
                   </span>
-                  <span class="proof-list__arrow mono" aria-hidden="true">→</span>
+                  <span class="proof-list__arrow mono" aria-hidden="true">
+                    →
+                  </span>
                 </a>
                 <p class="proof-list__summary">{s.data.problem}</p>
               </li>
@@ -630,9 +767,11 @@ const paginate = (items: any[]) => {
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       P.5 — Public track record + lectures
-      ========================================================= */}
+      ========================================================= */
+  }
   <section
     class="section section--alt"
     id="track"
@@ -645,8 +784,8 @@ const paginate = (items: any[]) => {
         <p class="section__eyebrow">P.5 · Public track record</p>
         <h2 class="section__title">Lectures, charts, and feeds.</h2>
         <p class="section__sub">
-          Two public lectures for <strong>USeP EGE 313</strong>, one public TradingView chart,
-          and three Atom feeds (portfolio updates · project updates · solution updates).
+          Two public lectures for <strong>USeP EGE 313</strong>, one public TradingView chart, and
+          three Atom feeds (portfolio updates · project updates · solution updates).
         </p>
       </header>
 
@@ -664,7 +803,7 @@ const paginate = (items: any[]) => {
           poster={path('/proof/ai-workflow.jpg')}
           title="AI workflow — same lecture, authored via ChatGPT-assisted drafting"
           duration={55}
-          caption="Three weeks before the lecture: same deck, drafted end-to-end via a ChatGPT session. The precursor pattern to the current 31-gate authoring harness."
+          caption={`Three weeks before the lecture: same deck, drafted end-to-end via a ChatGPT session. The precursor pattern to the current ${NGATE} authoring harness.`}
           mode="gallery"
         />
       </div>
@@ -681,15 +820,21 @@ const paginate = (items: any[]) => {
       <h3 class="proof-list__heading">Atom feeds — 3 streams</h3>
       <ul class="proof-feeds mono">
         <li><a href={path('/feed.xml')}>{path('/feed.xml')}</a> · portfolio updates</li>
-        <li><a href={path('/feed-projects.xml')}>{path('/feed-projects.xml')}</a> · project updates</li>
-        <li><a href={path('/feed-solutions.xml')}>{path('/feed-solutions.xml')}</a> · solution updates</li>
+        <li>
+          <a href={path('/feed-projects.xml')}>{path('/feed-projects.xml')}</a> · project updates
+        </li>
+        <li>
+          <a href={path('/feed-solutions.xml')}>{path('/feed-solutions.xml')}</a> · solution updates
+        </li>
       </ul>
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       P.5b — Public track record (externally verifiable accounts)
-      ========================================================= */}
+      ========================================================= */
+  }
   <section
     class="section"
     id="public-track"
@@ -702,15 +847,17 @@ const paginate = (items: any[]) => {
         <p class="section__eyebrow">P.5b · External accounts</p>
         <p class="section__sub">
           Six external accounts and surfaces, each with a handle and a public, dated metric.
-          Hairline-rule rows, no thumbnails. If a row is empty, it means that channel isn't
-          public yet.
+          Hairline-rule rows, no thumbnails. If a row is empty, it means that channel isn't public
+          yet.
         </p>
       </header>
 
       <div class="ptr">
         <div class="ptr__row" role="row">
           <div class="ptr__cell ptr__cell--platform" role="cell">Numerai</div>
-          <div class="ptr__cell ptr__cell--handle mono ptr__cell--empty" role="cell">not public yet</div>
+          <div class="ptr__cell ptr__cell--handle mono ptr__cell--empty" role="cell">
+            not public yet
+          </div>
           <div class="ptr__cell ptr__cell--metric mono" role="cell">correlation / MMC / TC</div>
           <div class="ptr__cell ptr__cell--link" role="cell">
             <a href={path('/positions')} class="ptr__link mono">see /positions</a>
@@ -721,29 +868,43 @@ const paginate = (items: any[]) => {
           <div class="ptr__cell ptr__cell--handle mono" role="cell">@christianmacion</div>
           <div class="ptr__cell ptr__cell--metric mono" role="cell">MCP server artifact</div>
           <div class="ptr__cell ptr__cell--link" role="cell">
-            <a href={path('/projects/ai/04-eval-mcp-server')} class="ptr__link mono">/projects/ai/04-eval-mcp-server</a>
+            <a href={path('/projects/ai/04-eval-mcp-server')} class="ptr__link mono"
+              >/projects/ai/04-eval-mcp-server</a
+            >
           </div>
         </div>
         <div class="ptr__row" role="row">
           <div class="ptr__cell ptr__cell--platform" role="cell">GitHub</div>
           <div class="ptr__cell ptr__cell--handle mono" role="cell">christianmacion26</div>
-          <div class="ptr__cell ptr__cell--metric mono" role="cell">102 certs · 76.5k LOC · 15 OSS projects</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">
+            {profile.stats.certCount} certs · {profile.stats.locPython} LOC · {ossProjectCount} OSS projects
+          </div>
           <div class="ptr__cell ptr__cell--link" role="cell">
-            <a href={profile.contact.github} class="ptr__link mono" rel="noopener noreferrer">github.com/christianmacion26</a>
+            <a href={profile.contact.github} class="ptr__link mono" rel="noopener noreferrer"
+              >github.com/christianmacion26</a
+            >
           </div>
         </div>
         <div class="ptr__row" role="row">
           <div class="ptr__cell ptr__cell--platform" role="cell">TradingView</div>
           <div class="ptr__cell ptr__cell--handle mono" role="cell">@CryptoneedsChrist</div>
-          <div class="ptr__cell ptr__cell--metric mono" role="cell">public chart · Elliott Wave</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">
+            public chart · Elliott Wave
+          </div>
           <div class="ptr__cell ptr__cell--link" role="cell">
-            <a href="https://www.tradingview.com/u/CryptoneedsChrist/" class="ptr__link mono" rel="noopener noreferrer">tradingview.com/u/CryptoneedsChrist</a>
+            <a
+              href="https://www.tradingview.com/u/CryptoneedsChrist/"
+              class="ptr__link mono"
+              rel="noopener noreferrer">tradingview.com/u/CryptoneedsChrist</a
+            >
           </div>
         </div>
         <div class="ptr__row" role="row">
           <div class="ptr__cell ptr__cell--platform" role="cell">Atom feeds</div>
           <div class="ptr__cell ptr__cell--handle mono" role="cell">3 streams</div>
-          <div class="ptr__cell ptr__cell--metric mono" role="cell">feed.xml · feed-projects.xml · feed-solutions.xml</div>
+          <div class="ptr__cell ptr__cell--metric mono" role="cell">
+            feed.xml · feed-projects.xml · feed-solutions.xml
+          </div>
           <div class="ptr__cell ptr__cell--link" role="cell">
             <a href={path('/feed.xml')} class="ptr__link mono">/feed.xml</a>
           </div>
@@ -753,16 +914,22 @@ const paginate = (items: any[]) => {
           <div class="ptr__cell ptr__cell--handle mono" role="cell">@christianmacion26</div>
           <div class="ptr__cell ptr__cell--metric mono" role="cell">public essays</div>
           <div class="ptr__cell ptr__cell--link" role="cell">
-            <a href="https://medium.com/@christianmacion" class="ptr__link mono" rel="noopener noreferrer">medium.com/@christianmacion</a>
+            <a
+              href="https://medium.com/@christianmacion"
+              class="ptr__link mono"
+              rel="noopener noreferrer">medium.com/@christianmacion</a
+            >
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  {/* =========================================================
+  {
+    /* =========================================================
       P.6 — Disclosure + contact
-      ========================================================= */}
+      ========================================================= */
+  }
   <section
     class="section section--tight"
     id="disclosure"
@@ -776,11 +943,11 @@ const paginate = (items: any[]) => {
         <h2 class="section__title">NDA-positive disclosure.</h2>
       </header>
       <p class="proof-neg">
-        <strong>What's not here:</strong> photos of NDA-protected offices. Screenshots of
-        proprietary strategy outputs. Calendar entries with client names. The systematic-strategy desk role
-        is a <strong>closed past contract</strong> (03/2026 – 06/2026), and everything on this
-        page is public-data or self-owned. If the proof you need isn't on this page, email me
-        — if it's public, I'll send it within 24 hours.
+        <strong>What's not here:</strong> photos of NDA-protected offices. Screenshots of proprietary
+        strategy outputs. Calendar entries with client names. The systematic-strategy desk role is a <strong
+          >closed past contract</strong
+        > (03/2026 – 06/2026), and everything on this page is public-data or self-owned. If the proof
+        you need isn't on this page, email me — if it's public, I'll send it within 24 hours.
       </p>
     </div>
   </section>
@@ -797,8 +964,7 @@ const paginate = (items: any[]) => {
 <style>
   .proof-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .proof-head__title {
@@ -1154,7 +1320,8 @@ const paginate = (items: any[]) => {
   [data-filter-host][data-active-type='talk'] .proof-list__row:not([data-assettype='talk']) {
     display: none;
   }
-  [data-filter-host][data-active-type='live-demo'] .proof-list__row:not([data-assettype='live-demo']) {
+  [data-filter-host][data-active-type='live-demo']
+    .proof-list__row:not([data-assettype='live-demo']) {
     display: none;
   }
 
@@ -1332,9 +1499,7 @@ const paginate = (items: any[]) => {
     const applyFilter = (axis: 'topic' | 'type', value: string) => {
       host.dataset[axis === 'topic' ? 'activeTopic' : 'activeType'] = value;
       // Update chip state.
-      const axisHost = host.querySelector<HTMLElement>(
-        `[data-filter-axis="${axis}"]`,
-      );
+      const axisHost = host.querySelector<HTMLElement>(`[data-filter-axis="${axis}"]`);
       axisHost?.querySelectorAll<HTMLButtonElement>('.filter-chip').forEach((c) => {
         const active = c.dataset.filterValue === value;
         c.classList.toggle('is-active', active);
@@ -1387,7 +1552,11 @@ const paginate = (items: any[]) => {
 
     function renderPager(pg: Pager, totalPages: number) {
       pg.pager.innerHTML = '';
-      const make = (label: string, page: number | null, opts: { active?: boolean; disabled?: boolean } = {}) => {
+      const make = (
+        label: string,
+        page: number | null,
+        opts: { active?: boolean; disabled?: boolean } = {},
+      ) => {
         const b = document.createElement('button');
         b.type = 'button';
         b.className = 'proof-pager__chip mono' + (opts.active ? ' is-active' : '');
@@ -1436,9 +1605,10 @@ const paginate = (items: any[]) => {
           pg.pager.hidden = true;
           // Show all visible rows on the only page.
           allRows.forEach((r) => {
-            r.style.display = window.getComputedStyle(r).display === 'none' && r.dataset._filterHidden
-              ? 'none'
-              : '';
+            r.style.display =
+              window.getComputedStyle(r).display === 'none' && r.dataset._filterHidden
+                ? 'none'
+                : '';
           });
           return;
         }

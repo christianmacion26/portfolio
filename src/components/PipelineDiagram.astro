@@ -48,11 +48,7 @@ const V_BOX_X = (V_W - BOX_W) / 2;
 const V_BOX_START_Y = 40;
 const V_BOX_GAP = 60;
 const V_ARROW_X = V_W / 2;
-const vTotalH =
-  V_BOX_START_Y * 2 +
-  steps.length * BOX_H +
-  (steps.length - 1) * V_BOX_GAP +
-  60; // trailing room for "loops" caption
+const vTotalH = V_BOX_START_Y * 2 + steps.length * BOX_H + (steps.length - 1) * V_BOX_GAP + 60; // trailing room for "loops" caption
 const V_H = vTotalH;
 
 const vBoxes = steps.map((_, i) => ({
@@ -65,8 +61,7 @@ const vBoxes = steps.map((_, i) => ({
 
 // Sub-label truncator: keep first ~28 chars so the text fits the
 // 148px-wide sub area at 10px sans-serif.
-const clip = (s: string, n: number) =>
-  s.length <= n ? s : s.slice(0, n - 1).trimEnd() + '…';
+const clip = (s: string, n: number) => (s.length <= n ? s : s.slice(0, n - 1).trimEnd() + '…');
 ---
 
 <div class:list={['pipeline', `pipeline--${tone}`]}>
@@ -91,7 +86,7 @@ const clip = (s: string, n: number) =>
         orient="auto-start-reverse"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head" />
+        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head"></path>
       </marker>
       {/* feedback arrowhead */}
       <marker
@@ -104,7 +99,7 @@ const clip = (s: string, n: number) =>
         orient="auto-start-reverse"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head pd-arrow-head--loop" />
+        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head pd-arrow-head--loop"></path>
       </marker>
     </defs>
 
@@ -112,24 +107,12 @@ const clip = (s: string, n: number) =>
     <g class="pd-grid" aria-hidden="true">
       {
         Array.from({ length: Math.floor(H_W / 40) + 1 }).map((_, i) => (
-          <line
-            x1={i * 40}
-            y1="0"
-            x2={i * 40}
-            y2={H_H}
-            class="pd-grid-line pd-grid-line--v"
-          />
+          <line x1={i * 40} y1="0" x2={i * 40} y2={H_H} class="pd-grid-line pd-grid-line--v" />
         ))
       }
       {
         Array.from({ length: Math.floor(H_H / 40) + 1 }).map((_, i) => (
-          <line
-            x1="0"
-            y1={i * 40}
-            x2={H_W}
-            y2={i * 40}
-            class="pd-grid-line pd-grid-line--h"
-          />
+          <line x1="0" y1={i * 40} x2={H_W} y2={i * 40} class="pd-grid-line pd-grid-line--h" />
         ))
       }
     </g>
@@ -157,15 +140,7 @@ const clip = (s: string, n: number) =>
         const b = hBoxes[i];
         return (
           <g class="pd-box" transform={`translate(${b.x} ${b.y})`}>
-            <rect
-              class="pd-box-rect"
-              x="0"
-              y="0"
-              width={b.w}
-              height={b.h}
-              rx="6"
-              ry="6"
-            />
+            <rect class="pd-box-rect" x="0" y="0" width={b.w} height={b.h} rx="6" ry="6" />
             <text class="pd-box-num" x="12" y="22">
               {s.num}
             </text>
@@ -173,9 +148,7 @@ const clip = (s: string, n: number) =>
               {s.title}
             </text>
             <foreignObject x="6" y="54" width={b.w - 12} height="22">
-              <div class="pd-box-sub">
-                {clip(s.desc, 28)}
-              </div>
+              <div class="pd-box-sub">{clip(s.desc, 28)}</div>
             </foreignObject>
           </g>
         );
@@ -192,8 +165,7 @@ const clip = (s: string, n: number) =>
           Q ${firstCx} ${feedbackBottom} ${firstCx} ${feedbackBottom - 14}
           L ${firstCx} ${feedbackTop}`}
       fill="none"
-      marker-end="url(#pd-arrow-feedback)"
-    />
+      marker-end="url(#pd-arrow-feedback)"></path>
     {/* loop label */}
     <text
       class="pd-loop-label"
@@ -225,7 +197,7 @@ const clip = (s: string, n: number) =>
         orient="auto"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head" />
+        <path d="M0,0 L10,5 L0,10 Z" class="pd-arrow-head"></path>
       </marker>
     </defs>
 
@@ -233,24 +205,12 @@ const clip = (s: string, n: number) =>
     <g class="pd-grid" aria-hidden="true">
       {
         Array.from({ length: Math.floor(V_W / 40) + 1 }).map((_, i) => (
-          <line
-            x1={i * 40}
-            y1="0"
-            x2={i * 40}
-            y2={V_H}
-            class="pd-grid-line pd-grid-line--v"
-          />
+          <line x1={i * 40} y1="0" x2={i * 40} y2={V_H} class="pd-grid-line pd-grid-line--v" />
         ))
       }
       {
         Array.from({ length: Math.floor(V_H / 40) + 1 }).map((_, i) => (
-          <line
-            x1="0"
-            y1={i * 40}
-            x2={V_W}
-            y2={i * 40}
-            class="pd-grid-line pd-grid-line--h"
-          />
+          <line x1="0" y1={i * 40} x2={V_W} y2={i * 40} class="pd-grid-line pd-grid-line--h" />
         ))
       }
     </g>
@@ -280,15 +240,7 @@ const clip = (s: string, n: number) =>
         const b = vBoxes[i];
         return (
           <g class="pd-box" transform={`translate(${b.x} ${b.y})`}>
-            <rect
-              class="pd-box-rect"
-              x="0"
-              y="0"
-              width={b.w}
-              height={b.h}
-              rx="6"
-              ry="6"
-            />
+            <rect class="pd-box-rect" x="0" y="0" width={b.w} height={b.h} rx="6" ry="6" />
             <text class="pd-box-num" x="12" y="22">
               {s.num}
             </text>
@@ -296,9 +248,7 @@ const clip = (s: string, n: number) =>
               {s.title}
             </text>
             <foreignObject x="6" y="54" width={b.w - 12} height="22">
-              <div class="pd-box-sub">
-                {clip(s.desc, 28)}
-              </div>
+              <div class="pd-box-sub">{clip(s.desc, 28)}</div>
             </foreignObject>
           </g>
         );
@@ -306,12 +256,7 @@ const clip = (s: string, n: number) =>
     }
 
     {/* loop caption at bottom (no curve on vertical — just annotation) */}
-    <text
-      class="pd-loop-label"
-      x={V_W / 2}
-      y={V_H - 18}
-      text-anchor="middle"
-    >
+    <text class="pd-loop-label" x={V_W / 2} y={V_H - 18} text-anchor="middle">
       ↻ feedback loop: deliverable revises intent
     </text>
   </svg>
@@ -368,7 +313,7 @@ const clip = (s: string, n: number) =>
     fill: var(--c-primary-2-deep);
     font-family: var(--ff-mono);
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
   .pipeline--tape .pd-box-num {

@@ -84,7 +84,8 @@ const spotInterp = (() => {
   if (typeof spot !== 'number') return null;
   if (points.length < 2) return null;
   // Linear interpolation by index.
-  const xs = points.map((_, i) => i);
+  // (v6.10.55 — removed unused `xs` const; first-tenor anchor is the
+  //  only interpolation target we render.)
   // For a "spot vs curve at first tenor" anchor, project to x=0.
   // Simpler: render the spot line at x=padL (left axis), extending to
   // the first point at x=padL+(innerW/(n-1)).
@@ -94,10 +95,7 @@ const spotInterp = (() => {
 
 // === Y ticks (4 evenly spaced) ===
 const yTickCount = 4;
-const yTicks = Array.from(
-  { length: yTickCount + 1 },
-  (_, i) => yLo + (i / yTickCount) * yRange,
-);
+const yTicks = Array.from({ length: yTickCount + 1 }, (_, i) => yLo + (i / yTickCount) * yRange);
 
 // === X-axis labels — every Nth ===
 const xStride = Math.max(1, Math.ceil(points.length / 8));
@@ -150,24 +148,14 @@ const lastY = yFor(lastPoint.yld);
     }
 
     {/* X-axis line */}
-    <line
-      x1={padL}
-      y1={padT + innerH}
-      x2={padL + innerW}
-      y2={padT + innerH}
-      class="term__axis"
+    <line x1={padL} y1={padT + innerH} x2={padL + innerW} y2={padT + innerH} class="term__axis"
     ></line>
 
     {/* X-axis tenor labels (every xStride) */}
     {
       points.map((p, i) =>
         i % xStride === 0 || i === points.length - 1 ? (
-          <text
-            x={xFor(i)}
-            y={padT + innerH + 14}
-            text-anchor="middle"
-            class="term__xtick mono"
-          >
+          <text x={xFor(i)} y={padT + innerH + 14} text-anchor="middle" class="term__xtick mono">
             {p.tenor}
           </text>
         ) : null,
@@ -195,33 +183,24 @@ const lastY = yFor(lastPoint.yld);
       stroke="var(--c-primary-2)"
       stroke-width="1.75"
       stroke-linejoin="round"
-      stroke-linecap="round"
-    ></path>
+      stroke-linecap="round"></path>
 
     {/* Per-point markers (faint) */}
-    {
-      points.map((p, i) => (
-        <circle cx={xFor(i)} cy={yFor(p.yld)} r="2" fill="var(--c-primary-2)" />
-      ))
-    }
+    {points.map((p, i) => <circle cx={xFor(i)} cy={yFor(p.yld)} r="2" fill="var(--c-primary-2)" />)}
 
     {/* Last-point hairline + close label (Bloomberg treatment) */}
-    <line
-      x1={lastX}
-      y1={padT}
-      x2={lastX}
-      y2={padT + innerH}
-      class="term__hairline"
-    ></line>
-    <text
-      x={lastX + 6}
-      y={lastY - 6}
-      class="term__close mono"
-    >
+    <line x1={lastX} y1={padT} x2={lastX} y2={padT + innerH} class="term__hairline"></line>
+    <text x={lastX + 6} y={lastY - 6} class="term__close mono">
       {lastPoint.tenor} · {yFormat(lastPoint.yld)}
     </text>
   </svg>
-  {yLabel && <div class="term__yaxis mono" aria-hidden="true">{yLabel}</div>}
+  {
+    yLabel && (
+      <div class="term__yaxis mono" aria-hidden="true">
+        {yLabel}
+      </div>
+    )
+  }
 </figure>
 
 <style>

@@ -12,11 +12,12 @@ import Equation from '@components/Equation.astro';
 import CTABanner from '@components/CTABanner.astro';
 import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
 
-const entries = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
+const allEntries: CollectionEntry<'experience'>[] = await getCollection('experience');
+const entries = allEntries.sort((a, b) => a.data.order - b.data.order);
 
 // Pre-render each entry's content
 const rendered = await Promise.all(
@@ -39,7 +40,10 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
 <BaseLayout
   title="Experience"
   description="Operator and researcher experience across multi-agent AI platforms, venture incubation, content automation, and systematic trading research."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Experience", href: "/experience" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Experience', href: '/experience' },
+  ]}
 >
   <header class="page-head">
     <div class="container">
@@ -52,7 +56,8 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
       </VoiceLine>
       <p class="page-head__sub">
         {entries.length} engagements. Each entry lists the contributions made and points to public artifacts
-        that prove them. The systematic-strategy desk role is a <strong>closed past contract</strong>
+        that prove them. The systematic-strategy desk role is a <strong>closed past contract</strong
+        >
         (03/2026 – 06/2026); all references are NDA-safe and free of proprietary data sources.
       </p>
 
@@ -61,11 +66,15 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
         <div>
           <strong>NDA-safe by construction.</strong> Every entry on this page was written from publicly-attributable
           signals (public repos, public talks, public-data backtests) plus the contributions I have explicit
-          permission to disclose. <strong>systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)</strong>
-          is a <strong>closed past contract</strong>; PM of record with publicly attributable initials
-          <span class="mono">(NDA-protected desk)</span>. No proprietary data sources, strategy internals,
-          or desk PnL are referenced anywhere on this site. If the proof you need is missing, email
-          me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.
+          permission to disclose. <strong
+            >systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)</strong
+          >
+          is a <strong>closed past contract</strong>; PM of record with publicly attributable
+          initials
+          <span class="mono">(NDA-protected desk)</span>. No proprietary data sources, strategy
+          internals, or desk PnL are referenced anywhere on this site. If the proof you need is
+          missing, email me and if it's public, NDA-clean, and I have it on disk, I'll send it
+          within 24 hours.
         </div>
       </div>
 
@@ -101,7 +110,7 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
   <TrustStrip variant="tape" />
 
   <div class="container container-narrow">
-    <ReadMeta minutes={8} updatedIso="2026-07-09" href={path('/proof')} />
+    <ReadMeta minutes={8} href={path('/proof')} />
   </div>
 
   <section class="section">
@@ -137,8 +146,7 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -149,7 +157,7 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
   .page-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .page-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
@@ -191,8 +199,8 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
     gap: var(--sp-3);
     margin-top: var(--sp-5);
     padding: var(--sp-4) var(--sp-5);
-    background: rgba(232, 178, 32, 0.05);
-    border: 1px solid rgba(232, 178, 32, 0.35);
+    background: var(--c-amberl-faint);
+    border: 1px solid var(--c-amberl-strong);
     border-left: 3px solid var(--c-primary-2);
     border-radius: var(--radius);
     font-size: var(--fs-sm);

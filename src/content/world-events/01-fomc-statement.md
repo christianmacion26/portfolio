@@ -8,6 +8,7 @@ city: Washington, DC
 source: central-bank press release
 order: 1
 ---
+
 Policy statement release. Markets reprice the front-end of the rate curve on
 every word that lands. Position-books carry a half-life of minutes around
 this hour.

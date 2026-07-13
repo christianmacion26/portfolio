@@ -28,8 +28,14 @@
  */
 import { seedFromString, buildSeed } from '@utils/prng';
 import { path } from '@utils/url';
+import { profile } from '@utils/profile';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
+type ProjectEntry = CollectionEntry<'project'>;
 const seed = buildSeed();
+// v6.10.40 — derive stat counts from canonical sources.
+const allProjectsES: ProjectEntry[] = await getCollection('project');
+const quantCount = allProjectsES.filter((p) => p.data.role === 'quant').length;
 
 // === STATION 01 · MARKETS =========================================
 // Plausible institutional ranges:
@@ -53,7 +59,7 @@ const mkSign = mkTwoTen >= 0 ? '+' : '';
 const pdRng = seedFromString(seed + '::station-02');
 const pdMedian = +(0.62 + (pdRng() - 0.5) * 0.18).toFixed(2);
 const pdEvents = Math.max(6, Math.min(10, Math.round(8 + (pdRng() - 0.5) * 4)));
-const pdEdge = +(0.30 + pdRng() * 0.10).toFixed(2);
+const pdEdge = +(0.3 + pdRng() * 0.1).toFixed(2);
 const pdTenor = ['2027-Q1', '2027-Q2', '2027-Q3', '2027-Q4'][Math.floor(pdRng() * 4)];
 const pdSpark = [0.4, 0.6, 0.3, 0.7].map((b) => +(b + (pdRng() - 0.5) * 0.2).toFixed(2));
 
@@ -72,10 +78,9 @@ const aiPass = Math.max(91, Math.min(97, Math.round(94 + (aiRng() - 0.5) * 6)));
 const aiSpark = [0.6, 0.5, 0.8, 0.7].map((b) => +(b + (aiRng() - 0.5) * 0.2).toFixed(2));
 
 // === STATUS ROW — AS OF (deterministic UTC+8 time) ================
-const tsRng = seedFromString(seed + '::station-asof');
-const hh = Math.floor(tsRng() * 24).toString().padStart(2, '0');
-const mm = Math.floor(tsRng() * 60).toString().padStart(2, '0');
-const asOf = hh + ':' + mm + ' UTC+8';
+// v6.10.55 — removed dead tsRng / hh / mm / asOf cluster. The status row
+// now consumes a parent-supplied `nowIso`; the per-station timestamp was
+// never rendered after the v6.5 → v6.6 polish sweep.
 
 // === Per-station new-feature RNGs =================================
 // Each station gets fresh closures so existing renderings stay stable
@@ -101,8 +106,12 @@ function statusRowFor(sIdx: string): { status: string; delta: string; next: stri
   const status = STATUS_KINDS[Math.floor(r() * STATUS_KINDS.length)];
   const deltaRaw = (r() - 0.5) * 0.16;
   const delta = (deltaRaw >= 0 ? '+' : '') + deltaRaw.toFixed(2);
-  const nHH = Math.floor(r() * 24).toString().padStart(2, '0');
-  const nMM = Math.floor(r() * 60).toString().padStart(2, '0');
+  const nHH = Math.floor(r() * 24)
+    .toString()
+    .padStart(2, '0');
+  const nMM = Math.floor(r() * 60)
+    .toString()
+    .padStart(2, '0');
   return { status, delta, next: nHH + ':' + nMM + ' UTC+8' };
 }
 
@@ -117,19 +126,16 @@ function miniSpark(sIdx: string): number[] {
 const TAPE_COLORS = ['neutral', 'amber'] as const;
 function tapeColors(sIdx: string): number[] {
   const r = tapeRngFn(sIdx);
-  return Array.from({ length: 5 }, () => Math.floor(r() * 8) === 0 ? 1 : 0);
+  return Array.from({ length: 5 }, () => (Math.floor(r() * 8) === 0 ? 1 : 0));
 }
 
 // === 14px monoline icons (currentColor; ≤3 lines each) ===========
-const ICONS = {
+const ICONS: Record<string, string> = {
   chart:
     '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1.5,10 5,6 8.5,8 12.5,3"/><circle cx="12.5" cy="3" r="1" fill="currentColor" stroke="none"/></svg>',
-  cone:
-    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11 Q 7 1.5 12 11"/><line x1="2" y1="11" x2="12" y2="11"/></svg>',
-  grid:
-    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="1.5" width="3.5" height="3.5"/><rect x="5.25" y="1.5" width="3.5" height="3.5"/><rect x="9" y="1.5" width="3.5" height="3.5"/><rect x="1.5" y="5.25" width="3.5" height="3.5"/><rect x="5.25" y="5.25" width="3.5" height="3.5"/><rect x="9" y="5.25" width="3.5" height="3.5"/><rect x="1.5" y="9" width="3.5" height="3.5"/><rect x="5.25" y="9" width="3.5" height="3.5"/><rect x="9" y="9" width="3.5" height="3.5"/></svg>',
-  net:
-    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="3" cy="3" r="1.5"/><circle cx="11" cy="3" r="1.5"/><circle cx="7" cy="11" r="1.5"/><line x1="3" y1="3" x2="7" y2="11"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="3" y1="3" x2="11" y2="3"/></svg>',
+  cone: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11 Q 7 1.5 12 11"/><line x1="2" y1="11" x2="12" y2="11"/></svg>',
+  grid: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="1.5" width="3.5" height="3.5"/><rect x="5.25" y="1.5" width="3.5" height="3.5"/><rect x="9" y="1.5" width="3.5" height="3.5"/><rect x="1.5" y="5.25" width="3.5" height="3.5"/><rect x="5.25" y="5.25" width="3.5" height="3.5"/><rect x="9" y="5.25" width="3.5" height="3.5"/><rect x="1.5" y="9" width="3.5" height="3.5"/><rect x="5.25" y="9" width="3.5" height="3.5"/><rect x="9" y="9" width="3.5" height="3.5"/></svg>',
+  net: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="3" cy="3" r="1.5"/><circle cx="11" cy="3" r="1.5"/><circle cx="7" cy="11" r="1.5"/><line x1="3" y1="3" x2="7" y2="11"/><line x1="11" y1="3" x2="7" y2="11"/><line x1="3" y1="3" x2="11" y2="3"/></svg>',
 };
 
 // === 4-bar mini sparkline helper (existing 48x24) =================
@@ -144,9 +150,17 @@ function sparkBars(values: number[]): string {
       const x = i * (barW + gap);
       const y = h - bh - 1;
       return (
-        '<rect x="' + x.toFixed(2) + '" y="' + y.toFixed(2) +
-        '" width="' + barW + '" height="' + bh.toFixed(2) +
-        '" fill="currentColor" opacity="' + (0.55 + 0.15 * i).toFixed(2) + '" />'
+        '<rect x="' +
+        x.toFixed(2) +
+        '" y="' +
+        y.toFixed(2) +
+        '" width="' +
+        barW +
+        '" height="' +
+        bh.toFixed(2) +
+        '" fill="currentColor" opacity="' +
+        (0.55 + 0.15 * i).toFixed(2) +
+        '" />'
       );
     })
     .join('');
@@ -167,9 +181,19 @@ function spark60(values: number[]): string {
       const y = h - bh - 1;
       const cls = i === n - 1 ? ' entry-station__bar--last' : '';
       return (
-        '<rect class="entry-station__bar' + cls + '"' +
-        ' x="' + x.toFixed(2) + '" y="' + y.toFixed(2) + '"' +
-        ' width="' + barW + '" height="' + bh.toFixed(2) + '" />'
+        '<rect class="entry-station__bar' +
+        cls +
+        '"' +
+        ' x="' +
+        x.toFixed(2) +
+        '" y="' +
+        y.toFixed(2) +
+        '"' +
+        ' width="' +
+        barW +
+        '" height="' +
+        bh.toFixed(2) +
+        '" />'
       );
     })
     .join('');
@@ -187,13 +211,19 @@ function tapeRect(colors: number[]): string {
   return colors
     .map((colorIdx, i) => {
       const y = gap + i * (tickSize + gap);
-      const cls =
-        'entry-station__tape-tick entry-station__tape-tick--' +
-        TAPE_COLORS[colorIdx];
+      const cls = 'entry-station__tape-tick entry-station__tape-tick--' + TAPE_COLORS[colorIdx];
       return (
-        '<rect class="' + cls + '"' +
-        ' x="9" y="' + y.toFixed(2) + '"' +
-        ' width="' + tickSize + '" height="' + tickSize + '" />'
+        '<rect class="' +
+        cls +
+        '"' +
+        ' x="9" y="' +
+        y.toFixed(2) +
+        '"' +
+        ' width="' +
+        tickSize +
+        '" height="' +
+        tickSize +
+        '" />'
       );
     })
     .join('');
@@ -208,10 +238,18 @@ function flowArrow(input: string, output: string): string {
     '</svg>';
   return (
     '<span class="entry-station__flow-node entry-station__flow-node--in">' +
-    '[ ' + input + ' ]</span>' +
-    '<span class="entry-station__flow-arrow">' + chev + chev + chev + '</span>' +
+    '[ ' +
+    input +
+    ' ]</span>' +
+    '<span class="entry-station__flow-arrow">' +
+    chev +
+    chev +
+    chev +
+    '</span>' +
     '<span class="entry-station__flow-node entry-station__flow-node--out">' +
-    '[ ' + output + ' ]</span>'
+    '[ ' +
+    output +
+    ' ]</span>'
   );
 }
 
@@ -232,11 +270,18 @@ const aiTape = tapeColors('04');
 // Compose the 4 stations as a data array so the template stays terse.
 const stations = [
   {
-    n: '01', name: 'Markets', icon: 'chart', href: '/markets/',
+    n: '01',
+    name: 'Markets',
+    icon: 'chart',
+    href: '/markets/',
     title: 'Where is rate-of-change concentrated?',
     numHtml: mkSign + mkTwoTen + '<span class="entry-station__unit"> bp</span>',
     caption: '2s10s spread · UST',
-    stats: [['DXY', mkDxy], ['VIX', mkVix], ['BRENT', mkBrent]],
+    stats: [
+      ['DXY', mkDxy],
+      ['VIX', mkVix],
+      ['BRENT', mkBrent],
+    ],
     spark: mkSpark,
     row: mkRow,
     mini: mkMini,
@@ -245,11 +290,18 @@ const stations = [
     flowOut: 'spread',
   },
   {
-    n: '02', name: 'Prediction', icon: 'cone', href: '/prediction-markets/',
+    n: '02',
+    name: 'Prediction',
+    icon: 'cone',
+    href: '/prediction-markets/',
     title: 'What does the market price next?',
     numHtml: pdMedian.toFixed(2),
     caption: 'median implied probability',
-    stats: [['events', pdEvents], ['edge ±', pdEdge.toFixed(2)], ['tenor', pdTenor]],
+    stats: [
+      ['events', pdEvents],
+      ['edge ±', pdEdge.toFixed(2)],
+      ['tenor', pdTenor],
+    ],
     spark: pdSpark,
     row: pdRow,
     mini: pdMini,
@@ -258,24 +310,38 @@ const stations = [
     flowOut: 'edge',
   },
   {
-    n: '03', name: 'Research', icon: 'grid', href: '/research/',
+    n: '03',
+    name: 'Research',
+    icon: 'grid',
+    href: '/research/',
     title: 'Which strategies pass the gates?',
-    numHtml: '9',
-    caption: 'strategies · G1–G31',
-    stats: [['gates', 31], ['categories', 4], ['pass', rsPass + '%']],
+    numHtml: String(quantCount),
+    caption: `strategies · G1–G${profile.stats.evalGates}`,
+    stats: [
+      ['gates', parseInt(profile.stats.evalGates, 10)],
+      ['categories', 4],
+      ['pass', rsPass + '%'],
+    ],
     spark: rsSpark,
     row: rsRow,
     mini: rsMini,
     tape: rsTape,
     flowIn: 'ideas',
-    flowOut: 'G1-31',
+    flowOut: `G1–G${profile.stats.evalGates}`,
   },
   {
-    n: '04', name: 'AI', icon: 'net', href: '/methodology/',
+    n: '04',
+    name: 'AI',
+    icon: 'net',
+    href: '/methodology/',
     title: 'How do evals ship?',
     numHtml: aiPass + '<span class="entry-station__unit">%</span>',
-    caption: 'eval pass rate · 31 gates',
-    stats: [['models', 12], ['datasets', 7], ['harnesses', 3]],
+    caption: `eval pass rate · ${profile.stats.evalGates} gates`,
+    stats: [
+      ['models', 12],
+      ['datasets', 7],
+      ['harnesses', 3],
+    ],
     spark: aiSpark,
     row: aiRow,
     mini: aiMini,
@@ -294,44 +360,61 @@ const stations = [
     </header>
 
     <ol class="entry-stations__grid" role="list">
-      {stations.map((s) => (
-        <li class="entry-station-wrap">
-          <a href={path(s.href)} class="entry-station">
-            <div class="entry-station__id mono">
-              <span class="entry-station__id-bar" aria-hidden="true"></span>
-              <span>Station {s.n} · {s.name}</span>
-            </div>
-            <h3 class="entry-station__title">{s.title}</h3>
-            <div class="entry-station__big">
-              <span class="entry-station__icon" set:html={ICONS[s.icon]} />
-              <span class="entry-station__num" set:html={s.numHtml} />
-            </div>
-            <p class="entry-station__caption mono">{s.caption}</p>
-            <ul class="entry-station__stats mono" role="list">
-              {s.stats.map(([k, v]) => (
-                <li>
-                  <span class="entry-station__stat-k">{k}</span>
-                  <span class="entry-station__stat-v">{v}</span>
-                </li>
-              ))}
-            </ul>
-            <div class="entry-station__row mono" aria-label="status, delta, next">
-              <span class="entry-station__row-cell">{s.row.status}</span>
-              <span class="entry-station__row-cell">{s.row.delta}</span>
-              <span class="entry-station__row-cell">{s.row.next}</span>
-            </div>
-            <div class="entry-station__trend" aria-hidden="true">
-              <svg width="48" height="24" viewBox="0 0 48 24" set:html={sparkBars(s.spark)} />
-            </div>
-            <div class="entry-station__minitrend" aria-hidden="true">
-              <svg width="240" height="40" viewBox="0 0 240 40" preserveAspectRatio="xMinYMid meet" set:html={spark60(s.mini)} />
-            </div>
-            <svg class="entry-station__tape" width="24" height="96" viewBox="0 0 24 96" aria-hidden="true" set:html={tapeRect(s.tape)} />
-            <div class="entry-station__flow mono" set:html={flowArrow(s.flowIn, s.flowOut)} />
-            <span class="entry-station__rail" aria-hidden="true"></span>
-          </a>
-        </li>
-      ))}
+      {
+        stations.map((s) => (
+          <li class="entry-station-wrap">
+            <a href={path(s.href)} class="entry-station">
+              <div class="entry-station__id mono">
+                <span class="entry-station__id-bar" aria-hidden="true" />
+                <span>
+                  Station {s.n} · {s.name}
+                </span>
+              </div>
+              <h3 class="entry-station__title">{s.title}</h3>
+              <div class="entry-station__big">
+                <span class="entry-station__icon" set:html={ICONS[s.icon]} />
+                <span class="entry-station__num" set:html={s.numHtml} />
+              </div>
+              <p class="entry-station__caption mono">{s.caption}</p>
+              <ul class="entry-station__stats mono" role="list">
+                {s.stats.map(([k, v]) => (
+                  <li>
+                    <span class="entry-station__stat-k">{k}</span>
+                    <span class="entry-station__stat-v">{v}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="entry-station__row mono" aria-label="status, delta, next">
+                <span class="entry-station__row-cell">{s.row.status}</span>
+                <span class="entry-station__row-cell">{s.row.delta}</span>
+                <span class="entry-station__row-cell">{s.row.next}</span>
+              </div>
+              <div class="entry-station__trend" aria-hidden="true">
+                <svg width="48" height="24" viewBox="0 0 48 24" set:html={sparkBars(s.spark)} />
+              </div>
+              <div class="entry-station__minitrend" aria-hidden="true">
+                <svg
+                  width="240"
+                  height="40"
+                  viewBox="0 0 240 40"
+                  preserveAspectRatio="xMinYMid meet"
+                  set:html={spark60(s.mini)}
+                />
+              </div>
+              <svg
+                class="entry-station__tape"
+                width="24"
+                height="96"
+                viewBox="0 0 24 96"
+                aria-hidden="true"
+                set:html={tapeRect(s.tape)}
+              />
+              <div class="entry-station__flow mono" set:html={flowArrow(s.flowIn, s.flowOut)} />
+              <span class="entry-station__rail" aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
     </ol>
   </div>
 </section>
@@ -358,123 +441,189 @@ const stations = [
 
   /* === Head (eyebrow + title) === */
   .entry-stations__head {
-    display: flex; align-items: baseline; gap: var(--sp-5);
-    margin-bottom: var(--sp-5); padding-bottom: var(--sp-3);
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-5);
+    margin-bottom: var(--sp-5);
+    padding-bottom: var(--sp-3);
     border-bottom: 1px solid var(--c-rule);
   }
   .entry-stations__eyebrow {
-    font-size: var(--fs-xs); text-transform: uppercase;
-    letter-spacing: 0.14em; color: var(--c-amber);
-    font-weight: 600; margin: 0;
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--c-amber);
+    font-weight: 600;
+    margin: 0;
   }
   .entry-stations__title {
-    font-size: var(--fs-lg); color: var(--c-ink);
-    font-weight: 500; letter-spacing: -0.012em; margin: 0;
+    font-size: var(--fs-lg);
+    color: var(--c-ink);
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    margin: 0;
   }
 
   /* === 4-col grid (2x2 tablet, 1x4 mobile) === */
   .entry-stations__grid {
-    list-style: none; padding: 0; margin: 0;
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0; border-left: 1px solid var(--c-rule);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    border-left: 1px solid var(--c-rule);
   }
-  .entry-station-wrap { min-width: 0; }
-  .entry-station-wrap + .entry-station-wrap { border-left: 1px solid var(--c-rule); }
+  .entry-station-wrap {
+    min-width: 0;
+  }
+  .entry-station-wrap + .entry-station-wrap {
+    border-left: 1px solid var(--c-rule);
+  }
 
   /* === Each station — a single clickable anchor ===
      Right padding reserves a 24px-wide vertical strip on the right
      edge for the absolute-positioned tape (NEW v6.6). */
   .entry-station {
     position: relative;
-    display: flex; flex-direction: column; gap: var(--sp-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
     padding: var(--sp-4) calc(var(--sp-4) + 28px) var(--sp-3);
-    min-height: 44px; color: var(--c-ink);
-    text-decoration: none; background: transparent;
+    min-height: 44px;
+    color: var(--c-ink);
+    text-decoration: none;
+    background: transparent;
     transition: background var(--transition);
   }
   .entry-station:hover,
   .entry-station:focus-visible {
-    background: rgba(232, 178, 32, 0.04);
+    background: var(--c-amberl-faint);
   }
   .entry-station:focus-visible {
-    outline: 2px solid var(--c-amber); outline-offset: -2px;
+    outline: 2px solid var(--c-amber);
+    outline-offset: -2px;
   }
 
   /* === ID bar — 1px amber line + tracked mono label === */
   .entry-station__id {
-    display: flex; align-items: center; gap: var(--sp-2);
-    font-size: 0.65rem; text-transform: uppercase;
-    letter-spacing: 0.14em; color: var(--c-ink-2);
-    font-weight: 600; margin-bottom: var(--sp-1);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--c-ink-2);
+    font-weight: 600;
+    margin-bottom: var(--sp-1);
   }
   .entry-station__id-bar {
     display: inline-block;
-    width: 18px; height: 1px;
-    background: var(--c-amber); flex-shrink: 0;
+    width: 18px;
+    height: 1px;
+    background: var(--c-amber);
+    flex-shrink: 0;
     transition: width var(--transition);
   }
 
   /* === Title — serif italic (institutional question form) === */
   .entry-station__title {
-    font-family: var(--ff-math); font-style: italic;
-    font-size: 1.0625rem; line-height: 1.25;
-    color: var(--c-ink); font-weight: 500;
+    font-family: var(--ff-math);
+    font-style: italic;
+    font-size: 1.0625rem;
+    line-height: 1.25;
+    color: var(--c-ink);
+    font-weight: 500;
     letter-spacing: -0.005em;
-    margin: 0 0 var(--sp-2); min-height: 2.7em;
+    margin: 0 0 var(--sp-2);
+    min-height: 2.7em;
   }
 
   /* === Big number — tabular-nums + 14px amber icon === */
   .entry-station__big {
-    display: flex; align-items: baseline; gap: var(--sp-2);
-    color: var(--c-ink); line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+    color: var(--c-ink);
+    line-height: 1;
   }
   .entry-station__icon {
-    display: inline-flex; align-items: center; justify-content: center;
-    color: var(--c-amber); flex-shrink: 0;
-    width: 14px; height: 14px; transform: translateY(2px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-amber);
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    transform: translateY(2px);
   }
   .entry-station__num {
-    font-size: 1.95rem; font-weight: 500;
-    letter-spacing: -0.022em; color: var(--c-ink);
+    font-size: 1.95rem;
+    font-weight: 500;
+    letter-spacing: -0.022em;
+    color: var(--c-ink);
   }
   .entry-station__unit {
-    font-size: 0.5em; color: var(--c-ink-2);
-    font-weight: 400; letter-spacing: 0; margin-left: 0.05em;
+    font-size: 0.5em;
+    color: var(--c-ink-2);
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-left: 0.05em;
   }
 
   /* === Caption — mono subtitle under the big number === */
   .entry-station__caption {
-    font-size: 0.7rem; color: var(--c-ink-3);
-    letter-spacing: 0.04em; margin: 0 0 var(--sp-2);
+    font-size: 0.7rem;
+    color: var(--c-ink-3);
+    letter-spacing: 0.04em;
+    margin: 0 0 var(--sp-2);
   }
 
   /* === 3 supporting stats — key/value pairs (existing) === */
   .entry-station__stats {
-    list-style: none; padding: 0; margin: 0 0 var(--sp-1);
-    display: flex; flex-wrap: wrap; gap: 0 var(--sp-3);
-    font-size: 0.7rem; letter-spacing: 0.02em; line-height: 1.6;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--sp-1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--sp-3);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    line-height: 1.6;
   }
   .entry-station__stats li {
-    display: inline-flex; align-items: baseline; gap: 0.3em;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
   }
   .entry-station__stat-k {
-    color: var(--c-ink-3); text-transform: uppercase;
-    letter-spacing: 0.08em; font-size: 0.65rem;
+    color: var(--c-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.65rem;
   }
-  .entry-station__stat-v { color: var(--c-ink); font-weight: 600; }
+  .entry-station__stat-v {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
 
   /* === 4th row — STATUS · DELTA · NEXT (NEW v6.6) ===
      1px pipe-separated inline metric triplet. Sits directly below
      the 3 dl stats, before the existing 48x24 trend. */
   .entry-station__row {
-    display: flex; flex-wrap: wrap; align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
     gap: var(--sp-2);
-    font-size: 0.65rem; letter-spacing: 0.06em; line-height: 1.4;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
     color: var(--c-ink-2);
     margin: 0 0 var(--sp-2);
   }
   .entry-station__row-cell {
-    display: inline-block; white-space: nowrap;
+    display: inline-block;
+    white-space: nowrap;
   }
   .entry-station__row-cell + .entry-station__row-cell {
     padding-left: var(--sp-2);
@@ -487,28 +636,36 @@ const stations = [
 
   /* === Trend strip (existing) — 48x24 right-aligned bars === */
   .entry-station__trend {
-    align-self: flex-end; color: var(--c-amber);
+    align-self: flex-end;
+    color: var(--c-amber);
     margin-bottom: var(--sp-1);
   }
-  .entry-station__trend svg { display: block; }
+  .entry-station__trend svg {
+    display: block;
+  }
 
   /* === Mini-trend (NEW v6.6) — 240x40, 60 bars, last-bar amber ===
      Sits directly below the existing 48x24 trend. Fixed viewBox at
      240x40; on tighter columns (mobile) SVG shrinks via its viewBox.
      Inner bars styled by class for ink-3 default, amber-light highlight. */
   .entry-station__minitrend {
-    display: block; width: 100%;
+    display: block;
+    width: 100%;
     margin-bottom: var(--sp-2);
   }
   .entry-station__minitrend svg {
-    display: block; width: 100%; height: 40px;
+    display: block;
+    width: 100%;
+    height: 40px;
     max-width: 240px;
   }
   .entry-station__minitrend rect {
-    fill: var(--c-ink-3); opacity: 0.55;
+    fill: var(--c-ink-3);
+    opacity: 0.55;
   }
   .entry-station__minitrend rect.entry-station__bar--last {
-    fill: var(--c-amber-light); opacity: 0.9;
+    fill: var(--c-amber-light);
+    opacity: 0.9;
   }
 
   /* === Vertical mini-event-tape (NEW v6.6) — 24x96, 5 stacked 6x6 ticks ===
@@ -518,7 +675,8 @@ const stations = [
     position: absolute;
     right: var(--sp-3);
     top: var(--sp-4);
-    width: 24px; height: 96px;
+    width: 24px;
+    height: 96px;
     pointer-events: none;
   }
   .entry-station__tape rect {
@@ -532,16 +690,23 @@ const stations = [
      Replaces the v6.5 3-pill status row at the bottom of the
      station. Inline mono with 3 chevron <path>s. */
   .entry-station__flow {
-    display: flex; flex-wrap: wrap; align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: var(--sp-2);
-    font-size: 0.7rem; letter-spacing: 0.04em; line-height: 1.4;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
     color: var(--c-ink-2);
     margin-top: var(--sp-1);
   }
   .entry-station__flow-node {
-    display: inline-block; padding: 1px 6px;
-    border: 1px solid var(--c-rule); border-radius: 2px;
-    background: transparent; white-space: nowrap;
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid var(--c-rule);
+    border-radius: 2px;
+    background: transparent;
+    white-space: nowrap;
     font-weight: 500;
   }
   .entry-station__flow-node--in {
@@ -553,18 +718,29 @@ const stations = [
     border-color: var(--c-amber);
   }
   .entry-station__flow-arrow {
-    display: inline-flex; align-items: center; gap: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
     color: var(--c-ink-3);
   }
-  .entry-station__chevron { display: block; flex-shrink: 0; }
+  .entry-station__chevron {
+    display: block;
+    flex-shrink: 0;
+  }
 
   /* === Bottom rail — 1px hairline at the bottom of the column === */
   .entry-station__rail {
-    display: block; position: absolute;
-    left: var(--sp-4); right: calc(var(--sp-4) + 28px); bottom: 0;
-    height: 1px; background: var(--c-rule);
+    display: block;
+    position: absolute;
+    left: var(--sp-4);
+    right: calc(var(--sp-4) + 28px);
+    bottom: 0;
+    height: 1px;
+    background: var(--c-rule);
   }
-  .entry-station-wrap:last-child .entry-station__rail { display: none; }
+  .entry-station-wrap:last-child .entry-station__rail {
+    display: none;
+  }
 
   /* === Hover affordance — only color shifts; no translate === */
   .entry-station:hover .entry-station__id-bar,
@@ -579,24 +755,56 @@ const stations = [
 
   /* === Responsive — 2x2 tablet, 1x4 mobile === */
   @media (max-width: 880px) {
-    .entry-stations__grid { grid-template-columns: 1fr 1fr; }
-    .entry-station-wrap + .entry-station-wrap { border-left: none; }
-    .entry-station-wrap:nth-child(odd) { border-left: 1px solid var(--c-rule); }
-    .entry-station-wrap:nth-child(-n+2) { border-bottom: 1px solid var(--c-rule); }
-    .entry-station-wrap:nth-child(n+3) { border-bottom: none; }
-    .entry-station__title { font-size: 1rem; min-height: 2.5em; }
-    .entry-station__num { font-size: 1.7rem; }
+    .entry-stations__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .entry-station-wrap + .entry-station-wrap {
+      border-left: none;
+    }
+    .entry-station-wrap:nth-child(odd) {
+      border-left: 1px solid var(--c-rule);
+    }
+    .entry-station-wrap:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--c-rule);
+    }
+    .entry-station-wrap:nth-child(n + 3) {
+      border-bottom: none;
+    }
+    .entry-station__title {
+      font-size: 1rem;
+      min-height: 2.5em;
+    }
+    .entry-station__num {
+      font-size: 1.7rem;
+    }
   }
 
   @media (max-width: 540px) {
-    .entry-stations__grid { grid-template-columns: 1fr; }
+    .entry-stations__grid {
+      grid-template-columns: 1fr;
+    }
     .entry-station-wrap,
-    .entry-station-wrap:nth-child(odd) { border-left: none; }
-    .entry-station-wrap { border-bottom: 1px solid var(--c-rule); }
-    .entry-station-wrap:last-child { border-bottom: none; }
-    .entry-stations__head { flex-direction: column; gap: var(--sp-2); align-items: flex-start; }
-    .entry-station__title { font-size: 1.0625rem; min-height: 0; }
-    .entry-station__num { font-size: 1.95rem; }
+    .entry-station-wrap:nth-child(odd) {
+      border-left: none;
+    }
+    .entry-station-wrap {
+      border-bottom: 1px solid var(--c-rule);
+    }
+    .entry-station-wrap:last-child {
+      border-bottom: none;
+    }
+    .entry-stations__head {
+      flex-direction: column;
+      gap: var(--sp-2);
+      align-items: flex-start;
+    }
+    .entry-station__title {
+      font-size: 1.0625rem;
+      min-height: 0;
+    }
+    .entry-station__num {
+      font-size: 1.95rem;
+    }
   }
 
   /* === Reduced motion — disable hover width-grow (no hover-translate used) === */

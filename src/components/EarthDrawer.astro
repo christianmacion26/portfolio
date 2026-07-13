@@ -559,14 +559,7 @@ function signalPillColor(sig: string): string {
             <dl class="earth-drawer__meta">
               <dt>Signal</dt>
               <dd>
-                <span
-                  class:list={[
-                    'pill',
-                    `pill--${signalPillColor(e.signal)}`,
-                  ]}
-                >
-                  {e.signal}
-                </span>
+                <span class:list={['pill', `pill--${signalPillColor(e.signal)}`]}>{e.signal}</span>
               </dd>
               <dt>Magnitude</dt>
               <dd class="earth-drawer__num">
@@ -602,7 +595,7 @@ function signalPillColor(sig: string): string {
     border-left: 1px solid var(--c-rule);
     transform: translateX(100%);
     transition: transform 240ms var(--ease-out, ease);
-    z-index: 60;
+    z-index: var(--z-nav-more);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -767,11 +760,31 @@ function signalPillColor(sig: string): string {
      amber border is also misleading → --amber-bordered (describes CSS,
      not signal semantics). All five collapse to hairline-bordered ink
      variants matching the global .pill system. */
-  .pill--amber-bordered { background: transparent; color: var(--c-ink-2); border: 1px solid var(--c-primary-2); }
-  .pill--pass    { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }
-  .pill--neutral { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }
-  .pill--amber   { background: transparent; color: var(--c-primary-2); border: 1px solid rgba(232, 178, 32, 0.4); }
-  .pill--tag  { background: transparent; color: var(--c-ink-3); border: 1px solid var(--c-rule); }
+  .pill--amber-bordered {
+    background: transparent;
+    color: var(--c-ink-2);
+    border: 1px solid var(--c-primary-2);
+  }
+  .pill--pass {
+    background: transparent;
+    color: var(--c-ink-3);
+    border: 1px solid var(--c-rule);
+  }
+  .pill--neutral {
+    background: transparent;
+    color: var(--c-ink-3);
+    border: 1px solid var(--c-rule);
+  }
+  .pill--amber {
+    background: transparent;
+    color: var(--c-primary-2);
+    border: 1px solid var(--c-amberl-decor);
+  }
+  .pill--tag {
+    background: transparent;
+    color: var(--c-ink-3);
+    border: 1px solid var(--c-rule);
+  }
 
   @media (max-width: 720px) {
     .earth-drawer {

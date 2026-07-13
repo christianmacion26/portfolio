@@ -86,7 +86,7 @@ const isGallery = mode === 'gallery';
     top: var(--sp-2);
     right: var(--sp-2);
     padding: 2px 8px;
-    background: rgba(13, 17, 23, 0.78);
+    background: color-mix(in oklab, var(--c-tape) 0.78%, transparent);
     color: var(--c-primary-2-deep);
     font-size: var(--fs-xs);
     border-radius: 3px;
@@ -99,6 +99,6 @@ const isGallery = mode === 'gallery';
     line-height: var(--lh-snug);
   }
   .video-embed--tape .video-embed__cap {
-    color: rgba(230, 237, 243, 0.78);
+    color: var(--c-ink-soft);
   }
 </style>

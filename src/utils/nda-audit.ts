@@ -78,6 +78,11 @@ const RULES: Rule[] = [
     label: 'No proprietary data sources referenced (Polymarket, Kalshi, NOAA, USDA)',
     pattern: /\b(?:Polymarket|Kalshi|NOAA|USDA)\b/g,
     scope: 'content',
+    // v6.11 — GDELT 2.0 (Global Database of Events, Language, and Tone)
+    // is a public-domain event monitor from Yahoo Research / Georgetown.
+    // It's NOT in the proprietary-data-sources ban list. We do not
+    // render raw GDELT SOURCEURL fields; the gdelt-bucket.ts mapper
+    // hardcodes `source: 'GDELT event monitor'` for safety.
   },
   {
     id: 'quantivo-mention',
@@ -168,7 +173,7 @@ function extractPdfText(pdfPath: string): string {
   // If pdftotext is missing, PDFs are silently skipped (not silently passed).
   const r = spawnSync('pdftotext', ['-q', pdfPath, '-'], { encoding: 'utf8' });
   if (r.status === 0) return r.stdout;
-  if (r.error && r.error.code === 'ENOENT') {
+  if (r.error && (r.error as NodeJS.ErrnoException).code === 'ENOENT') {
     console.warn(`[nda-audit] warn: pdftotext not found — skipping ${pdfPath}`);
     return '';
   }

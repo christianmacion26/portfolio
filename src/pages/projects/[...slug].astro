@@ -5,34 +5,25 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import MetricPill from '@components/MetricPill.astro';
 import CTABanner from '@components/CTABanner.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('project');
-  return projects.map((p) => ({
+  const projects: CollectionEntry<'project'>[] = await getCollection('project');
+  return projects.map((p: CollectionEntry<'project'>) => ({
     params: { slug: p.id },
     props: { project: p },
   }));
 }
 
-const { project } = Astro.props;
+const { project } = Astro.props as { project: CollectionEntry<'project'> };
 const { Content } = await render(project);
-const {
-  title,
-  summary,
-  summary_long,
-  stack,
-  metrics,
-  sourceLink,
-  tags,
-  status,
-  role,
-  hero,
-} = project.data;
+const { title, summary, summary_long, stack, metrics, sourceLink, tags, status, role, hero } =
+  project.data;
 const laneLabel = role === 'ai' ? 'AI Engineer' : 'Quantitative Researcher';
-const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
+const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';
+---
 
 <BaseLayout title={title} description={summary_long ?? summary} type="article">
   <article class="proj">
@@ -61,14 +52,12 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
         }
 
         <h1 class="proj__title">{title}</h1>
-        {summary_long && <VoiceLine class="proj__voice">
-        {summary_long}
-      </VoiceLine>}
+        {summary_long && <VoiceLine class="proj__voice">{summary_long}</VoiceLine>}
 
         {
           metrics.length > 0 && (
             <div class="proj__metrics">
-              {metrics.map((m) => (
+              {metrics.map((m: CollectionEntry<'project'>['data']['metrics'][number]) => (
                 <MetricPill
                   label={m.label}
                   value={m.value}
@@ -116,7 +105,7 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
             <section class="proj__panel">
               <h3 class="proj__panel-title">Stack</h3>
               <ul class="proj__stack">
-                {stack.map((s) => (
+                {stack.map((s: string) => (
                   <li>{s}</li>
                 ))}
               </ul>
@@ -125,7 +114,7 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
               <section class="proj__panel">
                 <h3 class="proj__panel-title">Topics</h3>
                 <div class="proj__tags">
-                  {tags.map((t) => (
+                  {tags.map((t: string) => (
                     <span class="pill">{t}</span>
                   ))}
                 </div>
@@ -192,7 +181,7 @@ const laneClass = role === 'ai' ? 'pill--brand' : 'pill--accent';---
   .proj__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .proj__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);

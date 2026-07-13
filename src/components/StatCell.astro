@@ -32,17 +32,9 @@ const deltaClass =
         ? 'stat-cell--up'
         : 'stat-cell--down';
 const arrow =
-  typeof delta !== 'number'
-    ? ''
-    : Math.abs(delta) < 0.005
-      ? '·'
-      : delta > 0
-        ? '▲'
-        : '▼';
+  typeof delta !== 'number' ? '' : Math.abs(delta) < 0.005 ? '·' : delta > 0 ? '▲' : '▼';
 const deltaStr =
-  typeof delta === 'number'
-    ? `${delta > 0 ? '+' : delta < 0 ? '' : ''}${delta.toFixed(2)}%`
-    : '';
+  typeof delta === 'number' ? `${delta > 0 ? '+' : delta < 0 ? '' : ''}${delta.toFixed(2)}%` : '';
 ---
 
 <div class:list={['stat-cell', deltaClass]}>
@@ -93,7 +85,7 @@ const deltaStr =
   }
   .stat-cell__value {
     font-size: var(--fs-xl);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-ink);
     line-height: 1.05;
     font-variant-numeric: tabular-nums;
@@ -102,14 +94,20 @@ const deltaStr =
   }
   .stat-cell__delta {
     font-size: var(--fs-xs);
-    font-weight: 700;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
     color: var(--c-ink-2);
   }
-  .stat-cell--up .stat-cell__delta { color: var(--c-pass); }
-  .stat-cell--down .stat-cell__delta { color: var(--c-fail); }
-  .stat-cell--flat .stat-cell__delta { color: var(--c-ink-3); }
+  .stat-cell--up .stat-cell__delta {
+    color: var(--c-pass);
+  }
+  .stat-cell--down .stat-cell__delta {
+    color: var(--c-fail);
+  }
+  .stat-cell--flat .stat-cell__delta {
+    color: var(--c-ink-3);
+  }
 
   .stat-cell__sub {
     font-size: 0.66rem;

@@ -5,6 +5,7 @@
  * (Resources disclosure) to keep 1280px rows breathable.
  */
 import { path } from '@utils/url';
+import { profile } from '@utils/profile';
 import NavMore from '@components/NavMore.astro';
 const { pathname } = Astro.url;
 const isActive = (href: string) => {
@@ -56,16 +57,17 @@ const secondary = [
     <a href={path('/')} class="nav__brand" aria-label="Christian Macion - home">
       <picture class="nav__brand-mark" aria-hidden="true">
         <source media="(prefers-color-scheme: dark)" srcset={path('/cm-mark-amber-dark.svg')} />
-        <img
-          src={path('/cm-mark-amber-light.svg')}
-          alt=""
-          width="36"
-          height="36"
-        />
+        <img src={path('/cm-mark-amber-light.svg')} alt="" width="36" height="36" />
       </picture>
       <span class="nav__brand-text">
-        <span class="nav__brand-name">Christian T. Macion, CTA<sup>®</sup></span>
-        <span class="nav__brand-sub">Quant Researcher · AI Engineer</span>
+        {
+          /* v6.10.47 — derive the brand name from profile.fullName. The ®
+            glyph is wrapped in <sup> so the existing `.nav__brand-name sup`
+            rule (font-size 0.65em + amber tint) renders it as a proper
+            typographic superscript instead of inline text. */
+        }
+        <span class="nav__brand-name" set:html={profile.fullName.replace('®', '<sup>®</sup>')} />
+        <span class="nav__brand-sub">{profile.titles.short}</span>
       </span>
     </a>
 
@@ -76,9 +78,11 @@ const secondary = [
 
     <nav class="nav__links" aria-label="Primary">
       <div class="nav__primary">
-        {/* v6.1.0 (Mission G) — Markets dropdown sits BETWEEN Proof and Projects.
+        {
+          /* v6.1.0 (Mission G) — Markets dropdown sits BETWEEN Proof and Projects.
             Split the loop into 3 chunks so the dropdown interrupts the linear
-            flow at the spec'd position. */}
+            flow at the spec'd position. */
+        }
         {
           primary.slice(0, 3).map(({ href, label }) => (
             <a href={href} class:list={['nav__link', { 'nav__link--active': isActive(href) }]}>
@@ -100,9 +104,8 @@ const secondary = [
       <div class="nav__secondary-row">
         <NavMore items={markets} mode="inline" label="Markets" class="nav__more-flat" />
         <NavMore items={secondary} mode="inline" class="nav__more-flat" />
-        <a
-          href={path('/resume')}
-          class="btn btn--primary btn--sm nav__cta nav__cta--mobile">Resume ↓</a
+        <a href={path('/resume')} class="btn btn--primary btn--sm nav__cta nav__cta--mobile"
+          >Resume ↓</a
         >
       </div>
 
@@ -112,13 +115,25 @@ const secondary = [
         aria-label="Search the site"
         title="Search (Pagefind)"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
           <circle cx="11" cy="11" r="7"></circle>
           <path d="m21 21-4.3-4.3"></path>
         </svg>
       </a>
       {/* v6.1.0 — theme toggle REMOVED. The site is one consistent palette. */}
-      <a href={path('/resume')} class="btn btn--primary btn--sm nav__cta nav__cta--desktop">Resume ↓</a>
+      <a href={path('/resume')} class="btn btn--primary btn--sm nav__cta nav__cta--desktop"
+        >Resume ↓</a
+      >
     </nav>
   </div>
 </header>
@@ -127,10 +142,12 @@ const secondary = [
   .nav {
     position: sticky;
     top: 0;
-    z-index: 50;
-    /* v6.1.0 — always institutional-tape (single palette, no light/dark flip) */
-    background: rgba(13, 17, 23, 1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: var(--z-nav);
+    /* v6.1.0 — always institutional-tape (single palette, no light/dark flip).
+       v6.11.6 — was rgba(13,17,23,1); use --c-tape token so future
+       palette shifts propagate. */
+    background: var(--c-tape);
+    border-bottom: 1px solid var(--c-white-haze);
     color: var(--ink-on-tape);
   }
   /* v6.1.0 — light/dark mode removed. Background is always tape (set above
@@ -147,7 +164,7 @@ const secondary = [
     align-items: center;
     gap: var(--sp-3);
     text-decoration: none;
-    color: var(--c-primary);        /* v6.1.0 — always tape nav, light text */
+    color: var(--c-primary); /* v6.1.0 — always tape nav, light text */
     flex-shrink: 0;
     /* v6.3 polish — enforce ≥ 44 px tap target on the brand link.
        The audit flagged "Christian T. Macion, CTA®" at 184×36 px.
@@ -156,7 +173,8 @@ const secondary = [
     min-height: 44px;
     padding: 0.25rem 0;
   }
-  .nav__brand-mark {    display: block;
+  .nav__brand-mark {
+    display: block;
     width: 36px;
     height: 36px;
     border-radius: var(--radius-sm);
@@ -176,7 +194,7 @@ const secondary = [
   }
   .nav__brand-sub {
     font-size: var(--fs-xs);
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--c-white-faint);
   }
 
   .nav__links {
@@ -193,7 +211,7 @@ const secondary = [
     display: none;
   }
   .nav__link {
-    color: rgba(230, 237, 243, 0.7);  /* v6.1.0 — light text on dark nav */
+    color: var(--c-ink-mute); /* v6.1.0 — light text on dark nav */
     font-size: var(--fs-sm);
     font-weight: 500;
     padding: 0.5rem 0;
@@ -222,7 +240,7 @@ const secondary = [
      here the nav is institutional-tape, so re-color and remove the
      pill-shaped hover background that no longer fits the row layout. */
   .nav__primary .nav-more__summary {
-    color: rgba(230, 237, 243, 0.7);
+    color: var(--c-ink-mute);
     font-size: var(--fs-sm);
     font-weight: 500;
     padding: 0.5rem 0;
@@ -284,9 +302,9 @@ const secondary = [
     min-height: 44px;
     padding: 0;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--c-white-wisp);
     border-radius: var(--radius-sm);
-    color: rgba(230, 237, 243, 0.7);
+    color: var(--c-ink-mute);
     text-decoration: none;
     transition:
       color var(--transition),
@@ -299,41 +317,13 @@ const secondary = [
     inset: -6px;
   }
   .nav-search:hover {
-    color: var(--c-primary-2-deep);
-    border-color: var(--c-primary-2-deep);
+    color: var(--c-primary-2-light);
+    border-color: var(--c-primary-2-light);
   }
-  .theme-toggle__sun,
-  .theme-toggle__moon {
-    transition: opacity var(--transition);
-  }
-  /* Default (light): show moon (suggest switching to dark) */
-  .theme-toggle__sun {
-    display: none;
-  }
-  .theme-toggle__moon {
-    display: block;
-  }
-  /* Dark mode: show sun (suggest switching to light) */
-  :root[data-theme='dark'] .theme-toggle__sun {
-    display: block;
-  }
-  :root[data-theme='dark'] .theme-toggle__moon {
-    display: none;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .theme-toggle__sun {
-      display: block;
-    }
-    :root:not([data-theme='light']) .theme-toggle__moon {
-      display: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .theme-toggle__sun,
-    .theme-toggle__moon {
-      transition: none;
-    }
-  }
+  /* v6.11.6 — removed dead .theme-toggle__sun / .theme-toggle__moon /
+     [data-theme='dark'] / prefers-color-scheme CSS. The theme toggle
+     was removed (single palette, no light/dark flip) but the CSS
+     survived. Aspirational bloat. */
 
   .nav__toggle-input {
     display: none;
@@ -343,7 +333,8 @@ const secondary = [
     flex-direction: column;
     justify-content: space-between;
     width: 28px;
-    height: 22px;    cursor: pointer;
+    height: 22px;
+    cursor: pointer;
   }
   .nav__toggle span {
     display: block;
@@ -419,10 +410,7 @@ const secondary = [
       align-self: flex-start;
       margin-top: var(--sp-3);
     }
-    .theme-toggle {
-      align-self: flex-start;
-      margin-top: var(--sp-3);
-    }
+    /* v6.11.6 — removed dead .theme-toggle block from mobile MQ. */
     .nav-search {
       align-self: flex-start;
       margin-top: var(--sp-3);

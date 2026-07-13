@@ -19,10 +19,10 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import { path } from '@utils/url';
-import { getCollection } from 'astro:content';
 import VoiceLine from '@components/VoiceLine.astro';
+import { countProjectsByRole } from '@utils/project-helpers';
 
-const quantProjectCount = (await getCollection('project')).filter((p) => p.data.role === 'quant').length;
+const quantProjectCount = await countProjectsByRole('quant');
 
 const resumes = [
   {
@@ -33,9 +33,24 @@ const resumes = [
     pages: '4 pages',
     slug: 'tailored',
     formats: [
-      { kind: 'pdf', file: path('/resume-tailored.pdf'), label: 'PDF', note: 'visual · brand-faithful' },
-      { kind: 'md', file: path('/resume-tailored.md'), label: 'MD', note: 'LLM-agent · llms.txt ingest' },
-      { kind: 'txt', file: path('/resume-tailored.txt'), label: 'TXT', note: 'Workday · Greenhouse · Taleo' },
+      {
+        kind: 'pdf',
+        file: path('/resume-tailored.pdf'),
+        label: 'PDF',
+        note: 'visual · brand-faithful',
+      },
+      {
+        kind: 'md',
+        file: path('/resume-tailored.md'),
+        label: 'MD',
+        note: 'LLM-agent · llms.txt ingest',
+      },
+      {
+        kind: 'txt',
+        file: path('/resume-tailored.txt'),
+        label: 'TXT',
+        note: 'Workday · Greenhouse · Taleo',
+      },
     ],
   },
   {
@@ -45,21 +60,50 @@ const resumes = [
     pages: '4 pages',
     slug: 'ai-only',
     formats: [
-      { kind: 'pdf', file: path('/resume-ai-only.pdf'), label: 'PDF', note: 'visual · brand-faithful' },
-      { kind: 'md', file: path('/resume-ai-only.md'), label: 'MD', note: 'LLM-agent · llms.txt ingest' },
-      { kind: 'txt', file: path('/resume-ai-only.txt'), label: 'TXT', note: 'Workday · Greenhouse · Taleo' },
+      {
+        kind: 'pdf',
+        file: path('/resume-ai-only.pdf'),
+        label: 'PDF',
+        note: 'visual · brand-faithful',
+      },
+      {
+        kind: 'md',
+        file: path('/resume-ai-only.md'),
+        label: 'MD',
+        note: 'LLM-agent · llms.txt ingest',
+      },
+      {
+        kind: 'txt',
+        file: path('/resume-ai-only.txt'),
+        label: 'TXT',
+        note: 'Workday · Greenhouse · Taleo',
+      },
     ],
   },
   {
     label: 'Quant Researcher Lane (one-pager)',
-    blurb:
-      'Quantitative Researcher emphasis: nine public-data projects with real headline metrics, plus the methodology that ties them together.',
+    blurb: `Quantitative Researcher emphasis: ${quantProjectCount} public-data projects with real headline metrics, plus the methodology that ties them together.`,
     pages: '1 page',
     slug: 'quant-onepage',
     formats: [
-      { kind: 'pdf', file: path('/resume-quant-onepage.pdf'), label: 'PDF', note: 'visual · brand-faithful' },
-      { kind: 'md', file: path('/resume-quant-onepage.md'), label: 'MD', note: 'LLM-agent · llms.txt ingest' },
-      { kind: 'txt', file: path('/resume-quant-onepage.txt'), label: 'TXT', note: 'Workday · Greenhouse · Taleo' },
+      {
+        kind: 'pdf',
+        file: path('/resume-quant-onepage.pdf'),
+        label: 'PDF',
+        note: 'visual · brand-faithful',
+      },
+      {
+        kind: 'md',
+        file: path('/resume-quant-onepage.md'),
+        label: 'MD',
+        note: 'LLM-agent · llms.txt ingest',
+      },
+      {
+        kind: 'txt',
+        file: path('/resume-quant-onepage.txt'),
+        label: 'TXT',
+        note: 'Workday · Greenhouse · Taleo',
+      },
     ],
   },
 ];
@@ -68,26 +112,35 @@ const resumes = [
 const resumeCount = resumes.length;
 const formatCount = resumes[0]?.formats?.length ?? 0;
 const downloadCount = resumeCount * formatCount;
-
 ---
 
 <BaseLayout
   title="Resume"
   description={`${resumeCount} tailored resumes × ${formatCount} formats (PDF / Markdown / plain text). NDA-safe, public-data reproducible, ATS-friendly.`}
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Resume", href: "/resume" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Resume', href: '/resume' },
+  ]}
 >
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow"><span class="mono">resume/</span> · {resumeCount} versions × {formatCount} formats = {downloadCount} download targets</p>
-      <h1 class="page-head__title">{resumeCount === 3 ? 'Three tailored resumes.' : `${resumeCount} tailored resumes.`}</h1>
+      <p class="section__eyebrow">
+        <span class="mono">resume/</span> · {resumeCount} versions × {formatCount} formats = {
+          downloadCount
+        } download targets
+      </p>
+      <h1 class="page-head__title">
+        {resumeCount === 3 ? 'Three tailored resumes.' : `${resumeCount} tailored resumes.`}
+      </h1>
       <VoiceLine class="page-head__voice">
-        Same person, three shapes. Pick the resume that fits the seat — then pick the format the system expects.
+        Same person, three shapes. Pick the resume that fits the seat — then pick the format the
+        system expects.
       </VoiceLine>
       <p class="page-head__sub">
-        Pick the version that matches the role you're hiring for. Each version ships in three formats —
-        PDF for human reviewers, Markdown for LLM-based recruiter agents, plain text for Workday-classic /
-        Greenhouse / Taleo ATS pipelines. All three are NDA-safe, free of proprietary data sources, and
-        reference only public-data methodology or open-source work.
+        Pick the version that matches the role you're hiring for. Each version ships in three
+        formats — PDF for human reviewers, Markdown for LLM-based recruiter agents, plain text for
+        Workday-classic / Greenhouse / Taleo ATS pipelines. All three are NDA-safe, free of
+        proprietary data sources, and reference only public-data methodology or open-source work.
       </p>
 
       <div class="head-eq">
@@ -142,8 +195,8 @@ const downloadCount = resumeCount * formatCount;
         <p class="resume-note__mono">
           Built with the same HIRED-FlowCV builder used for OnlineJobs.ph and Upwork applications —
           ATS-safe, single-column, no tables-for-layout. Source JSONs live in
-          <code>scripts/resumes/</code>; PDFs regenerate via <code>npm run resumes:build</code>,
-          MD + TXT via <code>npm run resumes:build:md</code>.
+          <code>scripts/resumes/</code>; PDFs regenerate via <code>npm run resumes:build</code>, MD
+          + TXT via <code>npm run resumes:build:md</code>.
         </p>
       </aside>
     </div>
@@ -153,8 +206,7 @@ const downloadCount = resumeCount * formatCount;
 <style>
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -172,7 +224,7 @@ const downloadCount = resumeCount * formatCount;
   .page-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .head-eq {
     padding: var(--sp-4) var(--sp-5);
     background: var(--c-bg);

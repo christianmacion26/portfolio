@@ -53,7 +53,7 @@ const sevClass = `evp-sev--${severity}`;
   transform={`translate(${x.toFixed(2)} ${y.toFixed(2)})`}
 >
   {showPulse && <circle r={radius + 5} class="evp__ring" />}
-  <circle r={radius} class="evp__dot" />
+  <circle r={radius} class="evp__dot"></circle>
   {title && <title>{title}</title>}
 </g>
 
@@ -66,7 +66,7 @@ const sevClass = `evp-sev--${severity}`;
 
   .evp__dot {
     stroke-width: 1;
-    stroke: rgba(13, 17, 23, 0.85);
+    stroke: color-mix(in oklab, var(--c-tape) 0.85%, transparent);
   }
 
   .evp__ring {
@@ -79,21 +79,47 @@ const sevClass = `evp-sev--${severity}`;
   }
 
   /* Category colors — palette tokens only. */
-  .evp-cat--central-bank .evp__dot { fill: var(--c-amber-light); }
-  .evp-cat--earnings .evp__dot { fill: var(--c-pass); }
-  .evp-cat--geopolitical .evp__dot { fill: var(--c-fail); }
-  .evp-cat--data-release .evp__dot { fill: var(--c-accent-cyan); }
-  .evp-cat--fx .evp__dot { fill: var(--c-primary-2); }
+  .evp-cat--central-bank .evp__dot {
+    fill: var(--c-amber-light);
+  }
+  .evp-cat--earnings .evp__dot {
+    fill: var(--c-pass);
+  }
+  .evp-cat--geopolitical .evp__dot {
+    fill: var(--c-fail);
+  }
+  .evp-cat--data-release .evp__dot {
+    fill: var(--c-accent-cyan);
+  }
+  .evp-cat--fx .evp__dot {
+    fill: var(--c-primary-2);
+  }
 
-  .evp-cat--central-bank .evp__ring { stroke: var(--c-amber-light); }
-  .evp-cat--earnings .evp__ring { stroke: var(--c-pass); }
-  .evp-cat--geopolitical .evp__ring { stroke: var(--c-fail); }
-  .evp-cat--data-release .evp__ring { stroke: var(--c-accent-cyan); }
-  .evp-cat--fx .evp__ring { stroke: var(--c-primary-2); }
+  .evp-cat--central-bank .evp__ring {
+    stroke: var(--c-amber-light);
+  }
+  .evp-cat--earnings .evp__ring {
+    stroke: var(--c-pass);
+  }
+  .evp-cat--geopolitical .evp__ring {
+    stroke: var(--c-fail);
+  }
+  .evp-cat--data-release .evp__ring {
+    stroke: var(--c-accent-cyan);
+  }
+  .evp-cat--fx .evp__ring {
+    stroke: var(--c-primary-2);
+  }
 
   @keyframes evp-fade-in {
-    from { opacity: 0; transform: scale(0.8); }
-    to   { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
   /* When the <g> has its own translate transform, animating its inner
      scale fights the inline transform. So we animate opacity only
@@ -104,13 +130,23 @@ const sevClass = `evp-sev--${severity}`;
     animation: evp-pop 320ms var(--ease-out, ease) backwards;
   }
   @keyframes evp-pop {
-    from { transform: scale(0.4); }
-    to   { transform: scale(1); }
+    from {
+      transform: scale(0.4);
+    }
+    to {
+      transform: scale(1);
+    }
   }
 
   @keyframes evp-pulse-ring {
-    0%   { transform: scale(0.7); opacity: 0.7; }
-    100% { transform: scale(2.2); opacity: 0; }
+    0% {
+      transform: scale(0.7);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -120,6 +156,8 @@ const sevClass = `evp-sev--${severity}`;
       animation: none !important;
       opacity: 1 !important;
     }
-    .evp__ring { display: none !important; }
+    .evp__ring {
+      display: none !important;
+    }
   }
 </style>

@@ -31,6 +31,7 @@
  *   <StatementCarousel />
  *   <StatementCarousel statements={[...]} variant="graphic" />
  */
+import { profile } from '@utils/profile';
 
 interface Props {
   /** Statements to rotate through. Defaults match the canonical site-wide set. */
@@ -47,13 +48,18 @@ interface Props {
 }
 
 const {
+  // v6.10.39 — defaults derive from profile.stats.* so a future
+  // stat update auto-propagates. Note: all current callers pass
+  // their own `statements` prop (see index/solutions/methodology/proof),
+  // so these defaults are dead code in production but kept for
+  // grep consistency and graceful fallback.
   statements = [
     'Eval-first. ↦ Ship-ready.',
     'NDA-clean. ↦ Public-data reproducible.',
-    '31 gates. ↦ Zero rollbacks.',
+    `${profile.stats.evalGates} gates. ↦ Zero rollbacks.`,
     'PBO-tested. ↦ OOS-validated.',
-    '11 agents. ↦ One method.',
-    '102 certs. ↦ One discipline.',
+    `${profile.stats.aiAgentCount} agents. ↦ One method.`,
+    `${profile.stats.certCount} certs. ↦ One discipline.`,
   ] as string[],
   intervalMs = 3000,
   label = 'Discipline statements — rotating',
@@ -66,108 +72,113 @@ const graphicStatements = statements.slice(0, 3);
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi'];
 ---
 
-{variant === 'inline' ? (
-  <div class="stmt-carousel" data-stmt-carousel data-interval={String(intervalMs)} aria-roledescription="carousel" aria-label={label}>
-    <div class="stmt-carousel__viewport">
-      <ol class="stmt-carousel__track">
-        {statements.map((s, i) => (
-          <li
-            class:list={['stmt-carousel__slide', { 'is-active': i === 0 }]}
-            aria-hidden={i === 0 ? 'false' : 'true'}
-            data-stmt-index={i}
-          >
-            {/* Inner span gives us a real block child so `text-wrap: balance`
-                and `padding-inline` work — bare text inside a flex item
-                becomes an anonymous flex item with `min-width: auto` and
+{
+  variant === 'inline' ? (
+    <div
+      class="stmt-carousel"
+      data-stmt-carousel
+      data-interval={String(intervalMs)}
+      aria-roledescription="carousel"
+      aria-label={label}
+    >
+      <div class="stmt-carousel__viewport">
+        <ol class="stmt-carousel__track">
+          {statements.map((s, i) => (
+            <li
+              class:list={['stmt-carousel__slide', { 'is-active': i === 0 }]}
+              aria-hidden={i === 0 ? 'false' : 'true'}
+              data-stmt-index={i}
+            >
+              {/* Inner span gives us a real block child so text-wrap: balance
+                and padding-inline work — bare text inside a flex item
+                becomes an anonymous flex item with min-width: auto and
                 refuses to wrap properly. */}
-            <span class="stmt-carousel__text">{s}</span>
+              <span class="stmt-carousel__text">{s}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <ol class="stmt-carousel__dots" role="tablist" aria-label="Choose statement">
+        {statements.map((_s, i) => (
+          <li role="presentation">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              class:list={['stmt-carousel__dot', { 'is-active': i === 0 }]}
+              data-stmt-dot={i}
+              aria-label={`Show statement ${i + 1}`}
+              tabindex={i === 0 ? 0 : -1}
+            />
           </li>
         ))}
       </ol>
     </div>
-    <ol class="stmt-carousel__dots" role="tablist" aria-label="Choose statement">
-      {statements.map((_s, i) => (
-        <li>
-          <button
-            type="button"
-            class:list={['stmt-carousel__dot', { 'is-active': i === 0 }]}
-            data-stmt-dot={i}
-            aria-label={`Show statement ${i + 1}`}
-            aria-pressed={i === 0 ? 'true' : 'false'}
-          ></button>
-        </li>
-      ))}
-    </ol>
-  </div>
-) : (
-  <div
-    class="stmt-cards"
-    data-stmt-carousel
-    data-interval={String(intervalMs)}
-    aria-roledescription="carousel"
-    aria-label={label}
-  >
-    <div class="stmt-cards__viewport" aria-live="polite" aria-atomic="false">
-      {graphicStatements.map((s, i) => (
-        <article
-          class:list={['stmt-card', { 'is-active': i === 0 }]}
-          aria-hidden={i === 0 ? 'false' : 'true'}
-          aria-roledescription="slide"
-          aria-label={`Strategy note ${i + 1} of ${graphicStatements.length}`}
-          data-stmt-index={i}
-        >
-          <p class="stmt-card__eyebrow mono" aria-hidden="true">
-            <span>STRATEGY NOTE</span>
-            <span class="stmt-card__num-pad">0{i + 1}</span>
-            <span class="stmt-card__sep">·</span>
-            <span>CONDENSED</span>
-          </p>
+  ) : (
+    <div
+      class="stmt-cards"
+      data-stmt-carousel
+      data-interval={String(intervalMs)}
+      aria-roledescription="carousel"
+      aria-label={label}
+    >
+      <div class="stmt-cards__viewport" aria-live="polite" aria-atomic="false">
+        {graphicStatements.map((s, i) => (
+          <article
+            class:list={['stmt-card', { 'is-active': i === 0 }]}
+            aria-hidden={i === 0 ? 'false' : 'true'}
+            aria-roledescription="slide"
+            aria-label={`Strategy note ${i + 1} of ${graphicStatements.length}`}
+            data-stmt-index={i}
+          >
+            <p class="stmt-card__eyebrow mono" aria-hidden="true">
+              <span>STRATEGY NOTE</span>
+              <span class="stmt-card__num-pad">0{i + 1}</span>
+              <span class="stmt-card__sep">·</span>
+              <span>CONDENSED</span>
+            </p>
 
-          <div class="stmt-card__head">
-            <span class="stmt-card__numeral" aria-hidden="true">{ROMAN[i]}</span>
-            <span class="stmt-card__sr">Card {i + 1} of {graphicStatements.length}</span>
-          </div>
+            <div class="stmt-card__head">
+              <span class="stmt-card__numeral" aria-hidden="true">
+                {ROMAN[i]}
+              </span>
+              <span class="stmt-card__sr">
+                Card {i + 1} of {graphicStatements.length}
+              </span>
+            </div>
 
-          <p class="stmt-card__text">{s}</p>
+            <p class="stmt-card__text">{s}</p>
 
-          <div class="stmt-card__pips" aria-hidden="true">
-            {graphicStatements.map((_p, j) => (
-              <span
-                class:list={['stmt-card__pip', { 'is-active': j === 0 }]}
-                data-stmt-pip={j}
-              ></span>
-            ))}
-          </div>
-        </article>
-      ))}
+            <div class="stmt-card__pips" aria-hidden="true">
+              {graphicStatements.map((_p, j) => (
+                <span class:list={['stmt-card__pip', { 'is-active': j === 0 }]} data-stmt-pip={j} />
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <ol class="stmt-cards__pips" role="tablist" aria-label="Choose statement">
+        {graphicStatements.map((_s, i) => (
+          <li role="presentation">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              class:list={['stmt-cards__pip', { 'is-active': i === 0 }]}
+              data-stmt-dot={i}
+              aria-label={`Show statement ${i + 1}`}
+              tabindex={i === 0 ? 0 : -1}
+            />
+          </li>
+        ))}
+      </ol>
     </div>
-
-    <ol class="stmt-cards__pips" role="tablist" aria-label="Choose statement">
-      {graphicStatements.map((_s, i) => (
-        <li>
-          <button
-            type="button"
-            class:list={['stmt-cards__pip', { 'is-active': i === 0 }]}
-            data-stmt-dot={i}
-            aria-label={`Show statement ${i + 1}`}
-            aria-pressed={i === 0 ? 'true' : 'false'}
-          ></button>
-        </li>
-      ))}
-    </ol>
-  </div>
-)}
-
-<!-- Driver is in src/scripts/carousel.ts, imported via BaseLayout.
-     Astro 7 was dropping per-component <script> blocks during the build
-     (the chunk never materialised in dist/_astro/), so the carousel
-     silently rendered as static HTML with no behavior. Routing the
-     driver through the BaseLayout bundle — alongside reveal-on-scroll,
-     odometer, active-nav, copy-button, scroll-progress — guarantees it
-     ships on every page that includes the carousel. -->
+  )
+}
 
 <style>
-  /* === INLINE VARIANT (legacy) === */
+  /* INLINE VARIANT (legacy) */
   .stmt-carousel {
     display: flex;
     flex-direction: column;
@@ -388,7 +399,7 @@ const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi'];
     gap: 0.5ch;
     margin: 0;
     font-family: var(--ff-mono);
-    font-size: 10px;
+    font-size: var(--fs-2xs);
     line-height: 1;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -466,7 +477,9 @@ const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi'];
     width: var(--stmt-pip);
     height: var(--stmt-pip);
     background: var(--c-ink-3);
-    transition: background var(--transition), transform var(--transition);
+    transition:
+      background var(--transition),
+      transform var(--transition);
   }
   .stmt-card__pip.is-active {
     background: var(--c-amber);
@@ -507,7 +520,9 @@ const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi'];
     height: var(--stmt-pip);
     border-radius: 0;
     background: var(--c-ink-3);
-    transition: background var(--transition), transform var(--transition);
+    transition:
+      background var(--transition),
+      transform var(--transition);
   }
   .stmt-cards__pip:hover::before {
     background: var(--c-ink-2);
@@ -541,5 +556,3 @@ const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi'];
     }
   }
 </style>
-</content>
-</invoke>

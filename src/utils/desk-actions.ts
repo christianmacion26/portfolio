@@ -23,11 +23,7 @@
 import { seedFromString, buildSeed } from '@utils/prng';
 
 export type NewsEventCategory =
-  | 'central-bank'
-  | 'earnings'
-  | 'data-release'
-  | 'geopolitical'
-  | 'fx';
+  'central-bank' | 'earnings' | 'data-release' | 'geopolitical' | 'fx';
 
 export const DESK_ACTIONS: Record<NewsEventCategory, readonly string[]> = {
   'central-bank': [
@@ -38,7 +34,7 @@ export const DESK_ACTIONS: Record<NewsEventCategory, readonly string[]> = {
     'desk writes 6m vol on the front-end',
     'book rolls down 5y into the auction',
   ],
-  'earnings': [
+  earnings: [
     'desk buys 3m 110% call spreads',
     'TWAP through the last 15 min',
     'book lifts gamma into the print',
@@ -54,7 +50,7 @@ export const DESK_ACTIONS: Record<NewsEventCategory, readonly string[]> = {
     'desk fades the kneejerk in 5 min',
     'book keeps breakeven watch to next print',
   ],
-  'geopolitical': [
+  geopolitical: [
     'desk buys 1m ATM straddles on brent',
     'book lifts flight-to-quality beta',
     'desk shortens duration into the headline',
@@ -62,7 +58,7 @@ export const DESK_ACTIONS: Record<NewsEventCategory, readonly string[]> = {
     'desk buys 6m sovereign CDS optionality',
     'book holds cash, waits for the dust to settle',
   ],
-  'fx': [
+  fx: [
     'book holds cross-currency basis through fix',
     'desk sells 1w vol-of-vol on dollar smile',
     'desk buys 3m USD/JPY wings into intervention',
@@ -83,14 +79,10 @@ export const DESK_ACTIONS: Record<NewsEventCategory, readonly string[]> = {
  * Falls back to `central-bank` if `category` is unknown — defensive;
  * keeps callers from needing to import the union type.
  */
-export function deskActionFor(
-  category: NewsEventCategory | string,
-  buildDateIso?: string,
-): string {
+export function deskActionFor(category: NewsEventCategory | string, buildDateIso?: string): string {
   const key = category as NewsEventCategory;
   const pool = DESK_ACTIONS[key] ?? DESK_ACTIONS['central-bank'];
-  const seed =
-    (buildDateIso ?? buildSeed()) + '::desk-action-' + category;
+  const seed = (buildDateIso ?? buildSeed()) + '::desk-action-' + category;
   const rand = seedFromString(seed);
   const idx = Math.floor(rand() * pool.length);
   return pool[idx];

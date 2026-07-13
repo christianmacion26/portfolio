@@ -17,31 +17,40 @@ import CTABanner from '@components/CTABanner.astro';
 import Avatar from '@components/Avatar.astro';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import VoiceLine from '@components/VoiceLine.astro';
+
+type SolutionEntry = CollectionEntry<'solution'>;
+type ProjectEntry = CollectionEntry<'project'>;
 
 // Top 3 AI-lane solutions for the proof strip. Filter by data.lane
 // and sort by data.order rather than relying on collection entry ids
 // (glob-loader ids vary across Astro versions).
-const proofStrip = (await getCollection('solution'))
+const allSolutions: SolutionEntry[] = await getCollection('solution');
+const proofStrip: SolutionEntry[] = allSolutions
   .filter((s) => s.data.lane === 'ai')
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
 
 // v6.10.31 — derive project count from collection (quant lane = public-data reproducible)
-const quantProjectCount = (await getCollection('project')).filter((p) => p.data.role === 'quant').length;---
+const allProjectsForCount: ProjectEntry[] = await getCollection('project');
+const quantProjectCount = allProjectsForCount.filter((p) => p.data.role === 'quant').length;
+
+// v6.10.47 — derive gate-count chrome from profile.stats.evalGates.
+const NGATE = `${profile.stats.evalGates}-gate`;
+---
 
 <BaseLayout
   title="About"
   description="Operator + researcher building eval-first multi-agent AI systems and systematic trading research."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "About", href: "/about" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+  ]}
 >
   <header class="page-head">
     <div class="container container-narrow">
-      <Avatar
-        alt="Christian T. Macion, dark blazer over graphic tee, three-quarter view, neutral background."
-        size={200}
-      />
+      <Avatar alt={profile.headshot.alt} size={200} />
       <p class="section__eyebrow"><span class="mono">about/</span> · operator + researcher</p>
       <h1 class="page-head__title">
         One method. <span class="hl">Two hats</span>.
@@ -53,29 +62,31 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
       <div class="head-eq">
         <Equation
           block
-          latex={`\\mathrm{ship}(x) = \\begin{cases} 1 & \\text{if } x \\text{ passes G1--G31} \\\\ 0 & \\text{otherwise} \\end{cases}`}
+          latex={`\\mathrm{ship}(x) = \\begin{cases} 1 & \\text{if } x \\text{ passes G1--G${profile.stats.evalGates}} \\\\ 0 & \\text{otherwise} \\end{cases}`}
           size="md"
         />
       </div>
 
       <div class="head-stats">
-        <Stat value={profile.stats.certCount} label="certs" sub="11-month arc" />
-        <Stat value={profile.stats.evalGates} label="gates" sub="G1–G31" />
         <Stat
-          value={profile.stats.aiAgentCount}
-          label="agents"
-          sub="orch + workers"
+          value={profile.stats.certCount}
+          label="certs"
+          sub={`${profile.stats.ageMonths}-month arc`}
         />
+        <Stat value={profile.stats.evalGates} label="gates" sub="G1–G31" />
+        <Stat value={profile.stats.aiAgentCount} label="agents" sub="orch + workers" />
         <Stat value={profile.stats.locPython} label="LOC" sub="light-dep" />
       </div>
     </div>
   </header>
 
-  {/*
+  {
+    /*
     PROOF STRIP — proof-first, not bio-first.
     The top three solutions: strongest signal of shipped work. A recruiter's
     first glance is here, not the bio.
-  */}
+  */
+  }
   <section class="section section--proof">
     <div class="container">
       <header class="section__head">
@@ -91,7 +102,7 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
 
       <div class="proof-grid">
         {
-          proofStrip.map((s) => (
+          proofStrip.map((s: SolutionEntry) => (
             <article class="proof-card">
               <header class="proof-card__head">
                 <span class="proof-card__ord mono">#{String(s.data.order).padStart(2, '0')}</span>
@@ -102,7 +113,7 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
               <div class="proof-card__row">
                 <div class="proof-card__row-label">Evidence</div>
                 <ul class="proof-card__list mono">
-                  {s.data.evidence.slice(0, 3).map((e) => (
+                  {s.data.evidence.slice(0, 3).map((e: string) => (
                     <li>{e}</li>
                   ))}
                 </ul>
@@ -120,23 +131,25 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
       </div>
 
       <p class="proof-strip__foot mono">
-        Full record at <a href={path('/solutions')}>{path('/solutions')}</a> ·
-        engagements at <a href={path('/experience')}>{path('/experience')}</a> ·
-        methodology at <a href={path('/methodology')}>{path('/methodology')}</a>
+        Full record at <a href={path('/solutions')}>{path('/solutions')}</a> · engagements at <a
+          href={path('/experience')}>{path('/experience')}</a
+        > · methodology at <a href={path('/methodology')}>{path('/methodology')}</a>
       </p>
     </div>
   </section>
 
-  {/*
-    METHODOLOGY TEASER — Gates G1–G31, DSR, PBO, MinBTL.
+  {
+    /*
+    METHODOLOGY TEASER — Gates {GATE_RANGE}, DSR, PBO, MinBTL.
     A single inline equation + 3-stat row mirrors /methodology without
     duplicating it; the link does the heavy lifting.
-  */}
+  */
+  }
   <section class="section section--alt">
     <div class="container container-narrow">
       <header class="section__head">
         <p class="section__eyebrow">Method</p>
-        <h2 class="section__title">31 gates before a number ships.</h2>
+        <h2 class="section__title">{NGATE} before a number ships.</h2>
       </header>
 
       <div class="method-ribbon">
@@ -149,26 +162,28 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
         <ul class="method-ribbon__list mono">
           <li><strong>G1–G12</strong> · single-strategy guardrails</li>
           <li><strong>G16–G20</strong> · multiple-testing layer</li>
-          <li><strong>G23–G31</strong> · LLM-output validation</li>
+          <li><strong>{`G23–G${profile.stats.evalGates}`}</strong> · LLM-output validation</li>
         </ul>
       </div>
 
       <p class="section__foot mono">
-        Full method at <a href={path('/methodology')}>{path('/methodology')}</a> ·
-        live calculator at <a href={path('/methodology')}#calculator>DSR calculator →</a>
+        Full method at <a href={path('/methodology')}>{path('/methodology')}</a> · live calculator at
+        <a href={path('/methodology')} #calculator>DSR calculator →</a>
       </p>
     </div>
   </section>
 
-  {/*
+  {
+    /*
     QUANT SIDE TEASER — single equation + quant-specific stat row.
     Mirrors the canonical quant research discipline the user cares about.
-  */}
+  */
+  }
   <section class="section">
     <div class="container container-narrow">
       <header class="section__head">
         <p class="section__eyebrow">Quant side</p>
-        <h2 class="section__title">Nine projects, public-data reproducible.</h2>
+        <h2 class="section__title">{quantProjectCount} projects, public-data reproducible.</h2>
       </header>
 
       <div class="method-ribbon">
@@ -186,16 +201,19 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
       </div>
 
       <p class="section__foot mono">
-        Reading log at <a href={path('/publications')}>{path('/publications')}</a> ·
-        engagements at <a href={path('/experience')}>{path('/experience')}</a>
+        Reading log at <a href={path('/publications')}>{path('/publications')}</a> · engagements at <a
+          href={path('/experience')}>{path('/experience')}</a
+        >
       </p>
     </div>
   </section>
 
-  {/*
+  {
+    /*
     BIO — kept short, moved below the proof surface.
     Four flowing paragraphs in the HIRED voice.
-  */}
+  */
+  }
   <section class="section section--bio">
     <div class="container container-narrow">
       <header class="section__head">
@@ -208,48 +226,52 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
           I work at the intersection of <strong>multi-agent LLM systems</strong> and
           <strong>systematic trading research</strong>. The through-line is a single engineering
           principle: <strong>don't ship what hasn't passed a measurable quality gate.</strong>
-          Eleven agents in an orchestrator-worker topology. A 31-gate statistical evaluation
-          harness. Pre-registered research windows. Public-data reproducibility. Headline
-          metrics you can verify.
+          {profile.stats.aiAgentCount} agents in an orchestrator-worker topology. A {NGATE} statistical
+          evaluation harness. Pre-registered research windows. Public-data reproducibility. Headline metrics
+          you can verify.
         </p>
 
         <p>
           I was previously the AI Systems Engineer / Quantitative Researcher on the
-          <strong>systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)</strong>
-          under a PM with publicly attributable initials (closed past contract),
-          where the same eval harness served both LLM outputs and
-          systematic trading strategies. Before that I shipped a 7-agent venture-incubation
-          pipeline under Macion Ventures, an 8-agent content-production pipeline for
-          editorial automation, and a portfolio of runnable AI projects (RAG scorecard, ReAct
-          tool-calling agent, MCP eval server, LLM-as-judge harness, reflection agent, AI-slop
-          evaluation gate).
+          <strong
+            >systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)</strong
+          >
+          under a PM with publicly attributable initials (closed past contract), where the same eval harness
+          served both LLM outputs and systematic trading strategies. Before that I shipped a 7-agent venture-incubation
+          pipeline under Macion Ventures, an 8-agent content-production pipeline for editorial automation,
+          and a portfolio of runnable AI projects (RAG scorecard, ReAct tool-calling agent, MCP eval server,
+          LLM-as-judge harness, reflection agent, AI-slop evaluation gate).
         </p>
 
         <p>
-          On the quant side I design and backtest systematic strategies on crypto and
-          equities — {quantProjectCount} reproducible public-data projects spanning multiple-testing
-          (Deflated Sharpe), cross-sectional and time-series alpha, volatility carry,
-          cointegration, funding-carry, regime overlays, transaction-cost realism, and
-          look-ahead-bias audits. Every project ships with the standard senior-research
-          discipline: locked OOS windows, block-bootstrap CIs, and the methodology stated
-          up-front, not bolted on at the end.
+          On the quant side I design and backtest systematic strategies on crypto and equities — {
+            quantProjectCount
+          } reproducible public-data projects spanning multiple-testing (Deflated Sharpe), cross-sectional
+          and time-series alpha, volatility carry, cointegration, funding-carry, regime overlays, transaction-cost
+          realism, and look-ahead-bias audits. Every project ships with the standard senior-research discipline:
+          locked OOS windows, block-bootstrap CIs, and the methodology stated up-front, not bolted on
+          at the end.
         </p>
 
         <p>
-          I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available 30 hrs/wk
-          remote. I hold 102 professional certifications across AI, finance, math/statistics,
-          and event flagships, built up in 11 months. I write about what I'm learning and
-          ship the things I'm building.
+          I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available {
+            profile.availability.hours
+          }
+          remote. I hold {profile.stats.certCount} professional certifications across AI, finance, math/statistics,
+          and event flagships, built up in {profile.stats.ageMonths} months. I write about what I'm learning
+          and ship the things I'm building.
         </p>
       </div>
     </div>
   </section>
 
-  {/*
+  {
+    /*
     EDUCATION — flowing prose, not a list.
     Genre rule: quant and AI references keep education as one paragraph
     (Eva Miller, Gwern, Percy Liang pattern), not as a structured card list.
-  */}
+  */
+  }
   <section class="section section--alt">
     <div class="container container-narrow">
       <header class="section__head">
@@ -258,21 +280,22 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
       </header>
 
       <p class="long-form-prose">
-        Graduate of the Philippine Science High School — Southern Mindanao Campus
-        (2022, national competitive exam). Engineering units at the University of
-        Southeastern Philippines (2022–2024, did not complete). Currently enrolled in
-        Financial Management at the University of Mindanao (1st Semester, AY 2026–27).
-        Completed the Certified Technical Analyst Program at the Society of Technical
-        Analysts of the Philippines (Tier-1, December 2025).
+        Graduate of the Philippine Science High School — Southern Mindanao Campus (2022, national
+        competitive exam). Engineering units at the University of Southeastern Philippines
+        (2022–2024, did not complete). Currently enrolled in Financial Management at the University
+        of Mindanao (1st Semester, AY 2026–27). Completed the Certified Technical Analyst Program at
+        the Society of Technical Analysts of the Philippines (Tier-1, December 2025).
       </p>
     </div>
   </section>
 
-  {/*
+  {
+    /*
     DISCLOSURE POSTURE — flowing prose, not an X-list.
     Genre rule: quants don't disclose NDA posture with red X marks;
     they declare it as a prose paragraph (D.E. Shaw / RenTec / Jane Street style).
-  */}
+  */
+  }
   <section class="section">
     <div class="container container-narrow">
       <header class="section__head">
@@ -282,11 +305,11 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
 
       <p class="long-form-prose">
         All work shown here is NDA-safe. The systematic-strategy desk role is a closed past contract
-        (03/2026 – 06/2026) under a PM with publicly attributable initials. I do not reference per-strategy t-stats,
-        bps figures, live Sharpe numbers, proprietary data sources, fund-renames, or any
-        desk-internal terms. Headline metrics cite public-data work or open-source runnable
-        projects. If a proof you need is missing, email me the JD and I'll send back a
-        tailored version within 24 hours.
+        (03/2026 – 06/2026) under a PM with publicly attributable initials. I do not reference
+        per-strategy t-stats, bps figures, live Sharpe numbers, proprietary data sources,
+        fund-renames, or any desk-internal terms. Headline metrics cite public-data work or
+        open-source runnable projects. If a proof you need is missing, email me the JD and I'll send
+        back a tailored version within 24 hours.
       </p>
     </div>
   </section>
@@ -305,8 +328,7 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
   /* === Hero === */
   .page-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-paper);
+    background: var(--c-paper);
     border-bottom: var(--border);
   }
   .page-head__title {
@@ -317,9 +339,10 @@ const quantProjectCount = (await getCollection('project')).filter((p) => p.data.
   .page-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   @media (max-width: 480px) {
-    .avatar-img, .avatar {
+    .avatar-img,
+    .avatar {
       width: 140px !important;
       height: 140px !important;
     }

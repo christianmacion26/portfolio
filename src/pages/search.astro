@@ -13,16 +13,15 @@
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { path } from '@utils/url';
+import { buildStampUtc8 } from '@utils/build-stamp';
 import fs from 'node:fs';
 import nodePath from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Last build stamp for the footer note. The Pagefind index itself doesn't
-// carry a build date, so we surface the deploy timestamp from Astro.props
-// (set by the build via --define or read from fs.statSync at build time).
-// For simplicity we ship a static stamp; the next content-bearing build
-// will bump this string in the source.
-const lastBuild = '2026-07-10';
+// Pagefind's index doesn't carry a build date itself; surface the
+// deploy stamp from the canonical BUILD_DATE env var (Standing Order §9:
+// no Date.now / argless new Date in deterministic outputs).
+const lastBuild = buildStampUtc8();
 
 // Live page count — read directly from the Pagefind manifest at build time.
 // This avoids the previous stale literal "33 documents indexed" (which was
@@ -122,12 +121,17 @@ const popular = [
 <BaseLayout
   title="Search"
   description="Client-side full-text search across the portfolio — projects, methods, glossary, receipts."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Search", href: "/search" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Search', href: '/search' },
+  ]}
 >
   <header class="search-head">
     <div class="container">
       <p class="section__eyebrow"><span class="mono">search/</span></p>
-      <h1 class="search-head__title">Search · <span class="mono">{pageCount} documents indexed.</span></h1>
+      <h1 class="search-head__title">
+        Search · <span class="mono">{pageCount} documents indexed.</span>
+      </h1>
       <p class="search-head__sub">
         Type to search across every static page, project, glossary term, and proof asset. Results
         are scored and ranked by Pagefind at the edge — no server, no query log.
@@ -140,8 +144,10 @@ const popular = [
       {/* Pagefind mounts itself into this root. The UI lives in /_pagefind/. */}
       <div id="search-root"></div>
 
-      {/* Empty state — hidden once the user starts typing. Pure CSS via
-          the .search-root.has-query class that the script below toggles. */}
+      {
+        /* Empty state — hidden once the user starts typing. Pure CSS via
+          the .search-root.has-query class that the script below toggles. */
+      }
       <section id="search-empty" class="search-empty" aria-label="Popular destinations">
         <h2 class="search-empty__title">Popular destinations</h2>
         <p class="search-empty__hint">Or pick a starting point below.</p>
@@ -152,7 +158,9 @@ const popular = [
                 <a class="search-card" href={p.href}>
                   <span class="search-card__title">{p.title}</span>
                   <span class="search-card__sub">{p.sub}</span>
-                  <span class="search-card__arrow" aria-hidden="true">→</span>
+                  <span class="search-card__arrow" aria-hidden="true">
+                    →
+                  </span>
                 </a>
               </li>
             ))
@@ -162,8 +170,9 @@ const popular = [
 
       <footer class="search-foot">
         <p class="search-foot__note">
-          Index built by <a href="https://pagefind.app" rel="noopener">Pagefind</a> ·
-          last build <span class="mono">{lastBuild}</span>
+          Index built by <a href="https://pagefind.app" rel="noopener">Pagefind</a> · last build <span
+            class="mono">{lastBuild}</span
+          >
         </p>
         <p class="search-foot__back">
           <a href={path('/')}>← back to home</a>
@@ -196,6 +205,8 @@ const popular = [
 
     // Dynamically inject the Pagefind UI assets. Astro does not bundle
     // these — they live as static files in dist/_pagefind/ after postbuild.
+    // @ts-expect-error — pagefind-ui is generated at postbuild; path resolves
+    // at runtime only, so TS's static module resolution is necessarily wrong.
     await import(/* @vite-ignore */ '/_pagefind/pagefind-ui.js');
 
     // The Pagefind UI module exposes `PagefindUI` on `window` after load.

@@ -28,6 +28,8 @@
  *   - `prefers-reduced-motion: reduce` honored (the radial pulse is
  *     suppressed via `@media (prefers-reduced-motion: reduce)`).
  */
+import { profile } from '@utils/profile';
+
 type ChipIcon = 'book' | 'search' | 'box';
 
 interface Chip {
@@ -43,7 +45,7 @@ const chips: Chip[] = [
     label: 'READ METHOD',
     href: '/methodology/',
     icon: 'book',
-    count: 31,
+    count: Number(profile.stats.evalGates),
     countLabel: 'GATES',
   },
   {
@@ -64,35 +66,34 @@ const chips: Chip[] = [
 
 const ICONS: Record<ChipIcon, string> = {
   // Tiny inline SVGs — keep markup terse.
-  book:
-    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 2.5h6a2 2 0 0 1 2 2v7"/><path d="M2.5 2.5v7a2 2 0 0 0 2 2h6"/><path d="M2.5 11.5V13"/></svg>',
+  book: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 2.5h6a2 2 0 0 1 2 2v7"/><path d="M2.5 2.5v7a2 2 0 0 0 2 2h6"/><path d="M2.5 11.5V13"/></svg>',
   search:
     '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3.5"/><path d="m9 9 3 3"/></svg>',
-  box:
-    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1.5 2.5 4v6L7 12.5l4.5-2.5V4L7 1.5Z"/><path d="M2.5 4 7 6.5 11.5 4"/><path d="M7 6.5v6"/></svg>',
+  box: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1.5 2.5 4v6L7 12.5l4.5-2.5V4L7 1.5Z"/><path d="M2.5 4 7 6.5 11.5 4"/><path d="M7 6.5v6"/></svg>',
 };
 ---
 
-<section
-  class="section section--tight ai-entry-points"
-  aria-labelledby="ai-entry-title"
->
+<section class="section section--tight ai-entry-points" aria-labelledby="ai-entry-title">
   <div class="container">
     <header class="ai-entry-points__head">
       <p class="section__eyebrow">Entry points</p>
-      <h2 id="ai-entry-title" class="section__title">
-        What would you like to see first?
-      </h2>
+      <h2 id="ai-entry-title" class="section__title">What would you like to see first?</h2>
     </header>
 
     <ul class="ai-entry-points__chips" role="list">
       {
         chips.map((c) => (
           <li>
-            <a class="epip-tile" href={c.href} aria-label={`${c.label} — ${c.count} ${c.countLabel}`}>
+            <a
+              class="epip-tile"
+              href={c.href}
+              aria-label={`${c.label} — ${c.count} ${c.countLabel}`}
+            >
               <span class="epip-tile__orb" set:html={ICONS[c.icon]} aria-hidden="true" />
               <span class="epip-tile__label">{c.label}</span>
-              <span class="epip-tile__count mono">{c.count} {c.countLabel}</span>
+              <span class="epip-tile__count mono">
+                {c.count} {c.countLabel}
+              </span>
             </a>
           </li>
         ))
@@ -192,7 +193,7 @@ const ICONS: Record<ChipIcon, string> = {
     font-size: 10px;
     color: var(--c-ink-3);
     letter-spacing: 0.04em;
-    background: rgba(13, 17, 23, 0.65);
+    background: color-mix(in oklab, var(--c-tape) 0.65%, transparent);
     border: 1px solid var(--c-rule);
     padding: 2px 6px;
     border-radius: var(--radius-sm);
@@ -200,12 +201,12 @@ const ICONS: Record<ChipIcon, string> = {
 
   /* Hover: 4px-wide amber bar slides in from the left, 220ms CSS-only. */
   .epip-tile::before {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     top: 0;
     height: 100%;
-    width: 0;            /* animated open on hover */
+    width: 0; /* animated open on hover */
     background: var(--c-primary-2);
     transition: width 220ms ease;
     pointer-events: none;

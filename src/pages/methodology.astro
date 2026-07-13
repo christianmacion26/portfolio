@@ -14,6 +14,12 @@ import PipelineDiagram from '@components/PipelineDiagram.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
+import { profile } from '@utils/profile';
+
+// Gate-count chrome: derives from profile.stats.evalGates. Used in
+// SectionTOC label, data-toc-label, headline H2, voice sub line,
+// and other "G1–G31" references on this page.
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
 
 const gates = [
   {
@@ -68,14 +74,18 @@ const charter = [
   { tag: 'inputs', value: 'Typed input contract (JSON Schema, fail-closed)' },
   { tag: 'outputs', value: 'Typed output contract with strict validation' },
   { tag: 'handoffs', value: 'What this agent must NOT do (anti-charter)' },
-  { tag: 'gates', value: 'Which of G1–G31 apply, with exit codes' },
+  { tag: 'gates', value: `Which of ${GATE_RANGE} apply, with exit codes` },
   { tag: 'evidence', value: 'What the agent must attach as proof' },
-];---
+];
+---
 
 <BaseLayout
   title="Methodology"
-  description="The eval-first discipline. G1–G31 statistical gate stack. Model-routing policy. Agent charter pattern."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Methodology", href: "/methodology" }]}
+  description={`The eval-first discipline. ${GATE_RANGE} statistical gate stack. Model-routing policy. Agent charter pattern.`}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Methodology', href: '/methodology' },
+  ]}
 >
   <header class="method-head">
     <div class="container">
@@ -83,9 +93,7 @@ const charter = [
       <h1 class="method-head__title">
         Don’t ship what hasn’t passed a <span class="hl">measurable gate</span>.
       </h1>
-      <VoiceLine class="method-head__voice">
-        If it isn't measured, it isn't built.
-      </VoiceLine>
+      <VoiceLine class="method-head__voice"> If it isn't measured, it isn't built. </VoiceLine>
 
       <div class="method-head__carousel">
         <StatementCarousel
@@ -118,7 +126,18 @@ const charter = [
       {/* === Headline stats — gate lattice at a glance === */}
       <div class="method-head__stats">
         <div class="method-head__stat">
-          <span class="method-head__stat-num tnum">{gates.reduce((sum, g) => sum + (parseInt(g.range.split('–')[1].replace('G', ''), 10) - parseInt(g.range.split('–')[0].replace('G', ''), 10) + 1), 0)}</span>
+          <span class="method-head__stat-num tnum"
+            >{
+              gates.reduce(
+                (sum, g) =>
+                  sum +
+                  (parseInt(g.range.split('–')[1].replace('G', ''), 10) -
+                    parseInt(g.range.split('–')[0].replace('G', ''), 10) +
+                    1),
+                0,
+              )
+            }</span
+          >
           <span class="method-head__stat-lbl">statistical gates</span>
         </div>
         <div class="method-head__stat">
@@ -140,13 +159,13 @@ const charter = [
   <TrustStrip variant="tape" />
 
   <div class="container container-narrow">
-    <ReadMeta minutes={11} updatedIso="2026-07-09" href={path('/proof')} />
+    <ReadMeta minutes={11} href={path('/proof')} />
   </div>
 
   <SectionTOC
     label="On this methodology page"
     items={[
-      { id: 'gates', label: 'G1–G31 gate stack' },
+      { id: 'gates', label: `${GATE_RANGE} gate stack` },
       { id: 'routing', label: 'Model routing' },
       { id: 'dsr', label: 'DSR calculator' },
       { id: 'charter', label: 'Agent charter' },
@@ -155,11 +174,11 @@ const charter = [
     ]}
   />
 
-  <section class="section" data-toc-id="gates" data-toc-label="G1–G31 gate stack">
+  <section class="section" data-toc-id="gates" data-toc-label={`${GATE_RANGE} gate stack`}>
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">The gate stack</p>
-        <h2 class="section__title" id="gates">G1–G31. Six families. One contract.</h2>
+        <h2 class="section__title" id="gates">{GATE_RANGE}. Six families. One contract.</h2>
         <p class="section__sub">
           Every candidate — LLM output, systematic strategy, content artifact — passes through the
           same gate stack. Gates are mechanical (exit-0 contract), not opinionated. A pass means the
@@ -213,7 +232,10 @@ const charter = [
         />
       </div>
 
-      <div class="routing-pipeline" aria-label="End-to-end pipeline from intent to deliverable with feedback loop">
+      <div
+        class="routing-pipeline"
+        aria-label="End-to-end pipeline from intent to deliverable with feedback loop"
+      >
         <p class="routing-pipeline__cap mono">end-to-end pipeline · every project</p>
         <PipelineDiagram
           tone="paper"
@@ -221,8 +243,12 @@ const charter = [
             { num: '01', title: 'Intent', desc: 'problem statement + success metric + NDA audit' },
             { num: '02', title: 'Frame', desc: 'frozen spec · eval harness drafted before code' },
             { num: '03', title: 'Build', desc: 'tier-routed agents · cost-capped per step' },
-            { num: '04', title: 'Verify', desc: 'gate stack G1–G31 · exit-0 contract' },
-            { num: '05', title: 'Deliver', desc: 'public repo or live paper-trade · published only if all pass' },
+            { num: '04', title: 'Verify', desc: `gate stack ${GATE_RANGE} · exit-0 contract` },
+            {
+              num: '05',
+              title: 'Deliver',
+              desc: 'public repo or live paper-trade · published only if all pass',
+            },
           ]}
         />
       </div>
@@ -233,10 +259,13 @@ const charter = [
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Interactive · G16</p>
-        <h2 class="section__title" id="dsr">Try the <a href={path("/glossary/deflated-sharpe")}>deflated Sharpe</a> calculator.</h2>
+        <h2 class="section__title" id="dsr">
+          Try the <a href={path('/glossary/deflated-sharpe')}>deflated Sharpe</a> calculator.
+        </h2>
         <p class="section__sub">
-          See how the same in-sample <a href={path("/glossary/sharpe")}>Sharpe</a> can pass or fail G16 depending on how many strategies
-          you actually tried. This is the gate that turns "1.14 looks great" into <a href={path("/glossary/deflated-sharpe")}>"DSR 0.70 — fail."</a>
+          See how the same in-sample <a href={path('/glossary/sharpe')}>Sharpe</a> can pass or fail G16
+          depending on how many strategies you actually tried. This is the gate that turns "1.14 looks
+          great" into <a href={path('/glossary/deflated-sharpe')}>"DSR 0.70 — fail."</a>
         </p>
       </header>
 
@@ -276,18 +305,23 @@ const charter = [
       </header>
       <ul class="neg">
         <li>
-          I will not claim current employment at any NDA-protected firm. The systematic-strategy desk engagement
-          is a <strong>closed past contract</strong> (03/2026 – 06/2026).
+          I will not claim current employment at any NDA-protected firm. The systematic-strategy
+          desk engagement is a <strong>closed past contract</strong> (03/2026 – 06/2026).
         </li>
         <li>
           I will not reference proprietary data sources, fund renames, or per-strategy t-stats from
           any NDA-protected desk.
         </li>
         <li>
-          I will not share a <a href={path("/glossary/sharpe")}>"Sharpe = X.X"</a> number without showing the gate stack that produced it.
+          I will not share a <a href={path('/glossary/sharpe')}>"Sharpe = X.X"</a> number without showing
+          the gate stack that produced it.
         </li>
         <li>I will not ship an agent without an exit-0 mechanical-validator contract.</li>
-        <li>I will not present a backtest without capacity, <a href={path("/glossary/slippage")}>slippage</a>, and a locked <a href={path("/glossary/oos")}>OOS</a> window.</li>
+        <li>
+          I will not present a backtest without capacity, <a href={path('/glossary/slippage')}
+            >slippage</a
+          >, and a locked <a href={path('/glossary/oos')}>OOS</a> window.
+        </li>
       </ul>
     </div>
   </section>
@@ -321,9 +355,9 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Cost-model calibration + break-even turnaround</h3>
             <p class="plan__body-p">
-              Per-strategy <a href={path("/glossary/slippage")}>slippage</a> / impact / spread estimate. For every strategy, ship the
-              break-even turnaround cost (project 08). Strategies that win gross and lose net come
-              off the book.
+              Per-strategy <a href={path('/glossary/slippage')}>slippage</a> / impact / spread estimate.
+              For every strategy, ship the break-even turnaround cost (project 08). Strategies that win
+              gross and lose net come off the book.
             </p>
             <div class="plan__gates mono">G26–G31 · economic & cost realism</div>
           </div>
@@ -333,9 +367,12 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Multiple-testing correction across the book</h3>
             <p class="plan__body-p">
-              Re-rank every strategy by <a href={path("/glossary/deflated-sharpe")}>DSR</a> (project 01), not raw <a href={path("/glossary/sharpe")}>Sharpe</a>. Re-rank by <a href={path("/glossary/cscv-pbo")}>CSCV-based PBO</a>
-              (prob. of backtest overfit). The book's "best strategy" is rarely the strategy with
-              the highest raw Sharpe.
+              Re-rank every strategy by <a href={path('/glossary/deflated-sharpe')}>DSR</a> (project 01),
+              not raw <a href={path('/glossary/sharpe')}>Sharpe</a>. Re-rank by <a
+                href={path('/glossary/cscv-pbo')}>CSCV-based PBO</a
+              >
+              (prob. of backtest overfit). The book's "best strategy" is rarely the strategy with the
+              highest raw Sharpe.
             </p>
             <div class="plan__gates mono">G16–G20 · multiple testing</div>
           </div>
@@ -345,8 +382,10 @@ const charter = [
           <div class="plan__body">
             <h3 class="plan__title">Walk-forward OOS window standardization</h3>
             <p class="plan__body-p">
-              Locked, <a href={path("/glossary/embargo")}>embargoed</a> <a href={path("/glossary/oos")}>OOS</a> windows (project 06 pattern) across the book. Frozen-spec
-              evaluation. <a href={path("/glossary/walk-forward")}>Walk-forward</a> standardization. The book becomes reproducible from cold start.
+              Locked, <a href={path('/glossary/embargo')}>embargoed</a>
+              <a href={path('/glossary/oos')}>OOS</a> windows (project 06 pattern) across the book. Frozen-spec
+              evaluation. <a href={path('/glossary/walk-forward')}>Walk-forward</a> standardization. The
+              book becomes reproducible from cold start.
             </p>
             <div class="plan__gates mono">G11–G15 · walk-forward & OOS</div>
           </div>
@@ -362,7 +401,7 @@ const charter = [
 
   <CTABanner
     title="Method under-spec? Send the JD."
-    sub="If your role has a written spec, send it. I'll respond with which gates from G1–G31 already apply to your stack, and which I'd build."
+    sub={`If your role has a written spec, send it. I'll respond with which gates from ${GATE_RANGE} already apply to your stack, and which I'd build.`}
     primaryLabel="Email me"
     secondaryLabel="View solutions"
     secondaryHref={path('/solutions')}
@@ -372,8 +411,7 @@ const charter = [
 <style>
   .method-head {
     padding-block: var(--sp-9) var(--sp-7);
-    background:
-      var(--c-bg);
+    background: var(--c-bg);
     border-bottom: var(--border);
   }
   .method-head__title {
@@ -386,7 +424,7 @@ const charter = [
   .method-head__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .method-head__sub {
     font-size: var(--fs-lg);
     color: var(--c-ink-2);
@@ -570,7 +608,6 @@ const charter = [
     height: 5px;
     border-radius: 50%;
     background: var(--c-ink-3);
-    font-family: var(--ff-mono);
   }
   .neg strong {
     color: var(--c-ink);

@@ -21,19 +21,21 @@
  *   <EvalConsole />
  */
 
+import { profile } from '@utils/profile';
+
 type Result = 'PASS' | 'CHECK' | 'FAIL';
 
 interface Gate {
-  id: string;          // "G1", "G2", ...
-  label: string;       // exact methodology label
-  value: string;       // mono measured-value (e.g. "0.886", "100 %", "4 / 5")
+  id: string; // "G1", "G2", ...
+  label: string; // exact methodology label
+  value: string; // mono measured-value (e.g. "0.886", "100 %", "4 / 5")
   result: Result;
 }
 
 interface Family {
-  range: string;       // "G1–G5"
-  name: string;        // family header (system-area voice, e.g. "Retrieval")
-  source: string;      // methodology family name (e.g. "Mechanical validity")
+  range: string; // "G1–G5"
+  name: string; // family header (system-area voice, e.g. "Retrieval")
+  source: string; // methodology family name (e.g. "Mechanical validity")
   gates: Gate[];
 }
 
@@ -43,11 +45,11 @@ const families: Family[] = [
     name: 'Retrieval',
     source: 'Mechanical validity — schema, exit codes, byte budgets',
     gates: [
-      { id: 'G1',  label: 'schema conformance',         value: '100 %',       result: 'PASS' },
-      { id: 'G2',  label: 'exit-0 contract',            value: '0.997',       result: 'PASS' },
-      { id: 'G3',  label: 'structured output parse',    value: '0.992',       result: 'PASS' },
-      { id: 'G4',  label: 'JSON Schema strict-mode',    value: '100 %',       result: 'PASS' },
-      { id: 'G5',  label: 'byte-length budget',         value: '2 144 B',     result: 'PASS' },
+      { id: 'G1', label: 'schema conformance', value: '100 %', result: 'PASS' },
+      { id: 'G2', label: 'exit-0 contract', value: '0.997', result: 'PASS' },
+      { id: 'G3', label: 'structured output parse', value: '0.992', result: 'PASS' },
+      { id: 'G4', label: 'JSON Schema strict-mode', value: '100 %', result: 'PASS' },
+      { id: 'G5', label: 'byte-length budget', value: '2 144 B', result: 'PASS' },
     ],
   },
   {
@@ -55,11 +57,11 @@ const families: Family[] = [
     name: 'Generation',
     source: 'Statistical nulls — bootstrap, regime-shuffle, priors',
     gates: [
-      { id: 'G6',  label: 'block-bootstrap CIs',        value: 'n=10 000',    result: 'CHECK' },
-      { id: 'G7',  label: 'random-timing nulls',        value: 'p = 0.41',    result: 'PASS' },
-      { id: 'G8',  label: 'regime-shuffle',             value: 'p = 0.62',    result: 'PASS' },
-      { id: 'G9',  label: 'parameter-prior sensitivity',value: '0.318',       result: 'PASS' },
-      { id: 'G10', label: 'Monte-Carlo coverage',       value: '0.94',        result: 'PASS' },
+      { id: 'G6', label: 'block-bootstrap CIs', value: 'n=10 000', result: 'CHECK' },
+      { id: 'G7', label: 'random-timing nulls', value: 'p = 0.41', result: 'PASS' },
+      { id: 'G8', label: 'regime-shuffle', value: 'p = 0.62', result: 'PASS' },
+      { id: 'G9', label: 'parameter-prior sensitivity', value: '0.318', result: 'PASS' },
+      { id: 'G10', label: 'Monte-Carlo coverage', value: '0.94', result: 'PASS' },
     ],
   },
   {
@@ -67,11 +69,11 @@ const families: Family[] = [
     name: 'Eval',
     source: 'Walk-forward & OOS — frozen spec, embargoed test set',
     gates: [
-      { id: 'G11', label: 'Locked OOS windows',         value: '24 mo',       result: 'CHECK' },
-      { id: 'G12', label: '5-era stability',            value: '4 / 5',       result: 'PASS' },
-      { id: 'G13', label: 'expanding / rolling walk-fwd',value: '6 folds',    result: 'PASS' },
-      { id: 'G14', label: 'frozen-spec evaluation',     value: '3 rev',       result: 'PASS' },
-      { id: 'G15', label: 'embargoed test set',         value: 'holdout',     result: 'PASS' },
+      { id: 'G11', label: 'Locked OOS windows', value: '24 mo', result: 'CHECK' },
+      { id: 'G12', label: '5-era stability', value: '4 / 5', result: 'PASS' },
+      { id: 'G13', label: 'expanding / rolling walk-fwd', value: '6 folds', result: 'PASS' },
+      { id: 'G14', label: 'frozen-spec evaluation', value: '3 rev', result: 'PASS' },
+      { id: 'G15', label: 'embargoed test set', value: 'holdout', result: 'PASS' },
     ],
   },
   {
@@ -79,11 +81,11 @@ const families: Family[] = [
     name: 'Deploy',
     source: 'Multiple testing — DSR, PBO, Bonferroni–Holm, BH-FDR',
     gates: [
-      { id: 'G16', label: 'Deflated Sharpe Ratio (DSR)', value: '0.70',       result: 'PASS' },
-      { id: 'G17', label: 'CSCV-based PBO',              value: '0.18',        result: 'PASS' },
-      { id: 'G18', label: 'Minimum Backtest Length (MinBTL)', value: '8.4 yr',result: 'PASS' },
-      { id: 'G19', label: 'Bonferroni–Holm',            value: 'p = 0.04',    result: 'PASS' },
-      { id: 'G20', label: 'BH-FDR',                     value: 'q = 0.07',    result: 'PASS' },
+      { id: 'G16', label: 'Deflated Sharpe Ratio (DSR)', value: '0.70', result: 'PASS' },
+      { id: 'G17', label: 'CSCV-based PBO', value: '0.18', result: 'PASS' },
+      { id: 'G18', label: 'Minimum Backtest Length (MinBTL)', value: '8.4 yr', result: 'PASS' },
+      { id: 'G19', label: 'Bonferroni–Holm', value: 'p = 0.04', result: 'PASS' },
+      { id: 'G20', label: 'BH-FDR', value: 'q = 0.07', result: 'PASS' },
     ],
   },
   {
@@ -91,11 +93,11 @@ const families: Family[] = [
     name: 'Monitoring',
     source: 'Look-ahead discipline — PIT datasets, survivorship, no leakage',
     gates: [
-      { id: 'G21', label: 'point-in-time dataset',      value: 'refresh Q',   result: 'CHECK' },
-      { id: 'G22', label: 'survivorship-bias check',    value: 'verified',    result: 'PASS' },
-      { id: 'G23', label: 'rebalance vs signal timing', value: 't-1',         result: 'PASS' },
-      { id: 'G24', label: 'frozen-spec (no leak)',      value: 'enforced',    result: 'PASS' },
-      { id: 'G25', label: 'no leakage to scoring',      value: 'verified',    result: 'PASS' },
+      { id: 'G21', label: 'point-in-time dataset', value: 'refresh Q', result: 'CHECK' },
+      { id: 'G22', label: 'survivorship-bias check', value: 'verified', result: 'PASS' },
+      { id: 'G23', label: 'rebalance vs signal timing', value: 't-1', result: 'PASS' },
+      { id: 'G24', label: 'frozen-spec (no leak)', value: 'enforced', result: 'PASS' },
+      { id: 'G25', label: 'no leakage to scoring', value: 'verified', result: 'PASS' },
     ],
   },
   {
@@ -106,12 +108,12 @@ const families: Family[] = [
       // Honest FAIL — slippage overrun is the most common budget miss in
       // real backtests. A console showing 100% green is a credibility
       // marker (G26 visible FAIL signals: I read my own gates).
-      { id: 'G26', label: 'spread / slippage / latency', value: '7.2 bps',    result: 'FAIL' },
-      { id: 'G27', label: 'capacity-constraint report', value: '$250 k',      result: 'PASS' },
-      { id: 'G28', label: 'funding-carry',              value: '1.42 %',      result: 'CHECK' },
-      { id: 'G29', label: 'borrow cost',                value: '0.18 %',      result: 'PASS' },
-      { id: 'G30', label: 'vol-targeted sizing',        value: 'σ → 8 %',     result: 'PASS' },
-      { id: 'G31', label: 'regime overlay',             value: 'ON',          result: 'PASS' },
+      { id: 'G26', label: 'spread / slippage / latency', value: '7.2 bps', result: 'FAIL' },
+      { id: 'G27', label: 'capacity-constraint report', value: '$250 k', result: 'PASS' },
+      { id: 'G28', label: 'funding-carry', value: '1.42 %', result: 'CHECK' },
+      { id: 'G29', label: 'borrow cost', value: '0.18 %', result: 'PASS' },
+      { id: 'G30', label: 'vol-targeted sizing', value: 'σ → 8 %', result: 'PASS' },
+      { id: 'G31', label: 'regime overlay', value: 'ON', result: 'PASS' },
     ],
   },
 ];
@@ -127,13 +129,19 @@ const counts = {
 
 // Big mirror the methodology headline: 31 statistical gates / 6 families.
 // Keep a one-line pass-rate headline so the reader scans the console.
-const passRate = (counts.pass / counts.total);
+const passRate = counts.pass / counts.total;
 const passRateStr = passRate.toFixed(3);
 ---
-<section class="eval-console" aria-label={`Eval console — G1 through G31, ${counts.pass} pass, ${counts.check} under review, ${counts.fail} fail out of ${counts.total}`}>
+
+<section
+  class="eval-console"
+  aria-label={`Eval console — G1 through G${profile.stats.evalGates}, ${counts.pass} pass, ${counts.check} under review, ${counts.fail} fail out of ${counts.total}`}
+>
   <header class="eval-console__head">
     <div class="eval-console__head-cap">
-      <span class="eval-console__cap mono">eval console · G1–G31 · 6 families</span>
+      <span class="eval-console__cap mono"
+        >eval console · G1–G{profile.stats.evalGates} · 6 families</span
+      >
     </div>
     <div class="eval-console__head-summary">
       <span class="eval-console__summary-item">
@@ -155,37 +163,39 @@ const passRateStr = passRate.toFixed(3);
     </div>
   </header>
 
-  {families.map((f) => (
-    <article class="eval-family">
-      <header class="eval-family__head">
-        <span class="eval-family__range mono">{f.range}</span>
-        <h3 class="eval-family__name">{f.name}</h3>
-        <span class="eval-family__source">— {f.source}</span>
-      </header>
-      <table class="eval-table">
-        <colgroup>
-          <col class="col-id" />
-          <col class="col-label" />
-          <col class="col-result" />
-          <col class="col-value" />
-        </colgroup>
-        <tbody>
-          {f.gates.map((g) => (
-            <tr class:list={['eval-row', `eval-row--${g.result.toLowerCase()}`]}>
-              <td class="eval-row__id mono">[{g.id}]</td>
-              <td class="eval-row__label">{g.label}</td>
-              <td class="eval-row__result">
-                <span class:list={['eval-pill', `eval-pill--${g.result.toLowerCase()}`]}>
-                  {g.result}
-                </span>
-              </td>
-              <td class="eval-row__value mono">{g.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </article>
-  ))}
+  {
+    families.map((f) => (
+      <article class="eval-family">
+        <header class="eval-family__head">
+          <span class="eval-family__range mono">{f.range}</span>
+          <h3 class="eval-family__name">{f.name}</h3>
+          <span class="eval-family__source">— {f.source}</span>
+        </header>
+        <table class="eval-table">
+          <colgroup>
+            <col class="col-id" />
+            <col class="col-label" />
+            <col class="col-result" />
+            <col class="col-value" />
+          </colgroup>
+          <tbody>
+            {f.gates.map((g) => (
+              <tr class:list={['eval-row', `eval-row--${g.result.toLowerCase()}`]}>
+                <td class="eval-row__id mono">[{g.id}]</td>
+                <td class="eval-row__label">{g.label}</td>
+                <td class="eval-row__result">
+                  <span class:list={['eval-pill', `eval-pill--${g.result.toLowerCase()}`]}>
+                    {g.result}
+                  </span>
+                </td>
+                <td class="eval-row__value mono">{g.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </article>
+    ))
+  }
 </section>
 
 <style>
@@ -225,7 +235,7 @@ const passRateStr = passRate.toFixed(3);
   }
   .eval-console__num {
     font-size: var(--fs-xl);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-primary);
     font-variant-numeric: tabular-nums;
   }
@@ -235,9 +245,15 @@ const passRateStr = passRate.toFixed(3);
     letter-spacing: 0.06em;
     color: var(--c-ink-3);
   }
-  .eval-console__summary-item--check .eval-console__num { color: var(--c-amber); }
-  .eval-console__summary-item--fail .eval-console__num { color: var(--c-fail); }
-  .eval-console__summary-item--rate .eval-console__num { color: var(--c-pass); }
+  .eval-console__summary-item--check .eval-console__num {
+    color: var(--c-amber);
+  }
+  .eval-console__summary-item--fail .eval-console__num {
+    color: var(--c-fail);
+  }
+  .eval-console__summary-item--rate .eval-console__num {
+    color: var(--c-pass);
+  }
 
   /* === Family blocks === */
   .eval-family {
@@ -275,10 +291,18 @@ const passRateStr = passRate.toFixed(3);
     border-collapse: collapse;
     table-layout: fixed;
   }
-  .col-id { width: 56px; }
-  .col-label { width: auto; }
-  .col-result { width: 80px; }
-  .col-value { width: 110px; }
+  .col-id {
+    width: 56px;
+  }
+  .col-label {
+    width: auto;
+  }
+  .col-result {
+    width: 80px;
+  }
+  .col-value {
+    width: 110px;
+  }
 
   .eval-row {
     border-top: 1px dashed var(--c-rule-soft);
@@ -317,8 +341,10 @@ const passRateStr = passRate.toFixed(3);
   .eval-row--fail {
     background: rgba(248, 81, 73, 0.08);
   }
+  /* v6.10.41 — check-row amber tint now derives from --c-amber.
+     Was rgba(201,138,22,0.04). */
   .eval-row--check {
-    background: rgba(201, 138, 22, 0.04);
+    background: color-mix(in oklab, var(--c-amber) 4%, transparent);
   }
 
   /* === Result pills === */
@@ -342,12 +368,12 @@ const passRateStr = passRate.toFixed(3);
   .eval-pill--pass {
     background: rgba(63, 185, 80, 0.18);
     color: #3fb950;
-    border: 1px solid rgba(63, 185, 80, 0.40);
+    border: 1px solid rgba(63, 185, 80, 0.4);
   }
   .eval-pill--check {
-    background: rgba(232, 178, 32, 0.14);
+    background: var(--c-amberl-mist);
     color: var(--c-amber);
-    border: 1px solid rgba(232, 178, 32, 0.30);
+    border: 1px solid var(--c-amberl-decor);
   }
   .eval-pill--fail {
     background: rgba(173, 186, 199, 0.14);
@@ -360,8 +386,12 @@ const passRateStr = passRate.toFixed(3);
     .eval-console {
       padding: var(--sp-4);
     }
-    .col-label { width: auto; }
-    .col-value { width: 88px; }
+    .col-label {
+      width: auto;
+    }
+    .col-value {
+      width: 88px;
+    }
     .eval-row__value {
       font-size: 11px;
     }

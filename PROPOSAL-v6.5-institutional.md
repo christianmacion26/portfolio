@@ -19,12 +19,12 @@ v6.4 hit 88/88 = 100% but left four loose ends on home:
 
 ## Scope (4 builder agents)
 
-| Builder | Files | LOC est. |
-|---|---|---|
-| **B1 EarthGlobe rotation** | edit `src/components/EarthGlobe.astro` | +60 |
-| **B2 EntryStations IA** | create `src/components/EntryStations.astro` + edit `src/pages/index.astro` (mount between Workspace and AiEntryPoints) | +300 |
-| **B3 Type/Palette polish** | edit `src/styles/tokens.css` (+7 tokens) + edit `src/styles/global.css` (+5 utility classes) | +80 |
-| **B4 Home integration** | new live-tape mini-row + 4 section transitions | +180 |
+| Builder                    | Files                                                                                                                  | LOC est. |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
+| **B1 EarthGlobe rotation** | edit `src/components/EarthGlobe.astro`                                                                                 | +60      |
+| **B2 EntryStations IA**    | create `src/components/EntryStations.astro` + edit `src/pages/index.astro` (mount between Workspace and AiEntryPoints) | +300     |
+| **B3 Type/Palette polish** | edit `src/styles/tokens.css` (+7 tokens) + edit `src/styles/global.css` (+5 utility classes)                           | +80      |
+| **B4 Home integration**    | new live-tape mini-row + 4 section transitions                                                                         | +180     |
 
 ---
 
@@ -43,10 +43,13 @@ v6.4 hit 88/88 = 100% but left four loose ends on home:
 ## 6 new v6.5 audit checks
 
 ### 1. `globeRotating`
+
 Load `/`. Query `svg.eg__svg`. Confirm `querySelectorAll('animateTransform').length >= 1` AND one of them has `type` containing "rotate" AND has a `dur` attribute. The rotate element wraps the globe group `<g transform-origin="center">` and animates `rotate(0 → 360)` over a long `dur` (e.g. `120s`).
 
 ### 2. `stationsGrid`
+
 Load `/`. Query `.entry-stations` (or `[class*="entry-stations"]`). Confirm `cellCount === 4` AND each cell has:
+
 - `[class*="id-bar"]` or `[class*="station-id"]` (e.g. "STN-01")
 - `[class*="title"]` (e.g. "Methodology")
 - `[class*="big-num"]` (headline number)
@@ -54,16 +57,21 @@ Load `/`. Query `.entry-stations` (or `[class*="entry-stations"]`). Confirm `cel
 - `[class*="status"]` row (status pill)
 
 ### 3. `hudChrome`
+
 The `globeRotating` check and the existing `earthChrome` check overlap; `hudChrome` is a stricter form that confirms the chrome wrap (`.eg__chrome`) contains all 4 institutional elements (legend, scale, north, scrubber) **with non-zero bounding boxes**.
 
 ### 4. `liveTape`
+
 Load `/`. Query `.live-tape`. Confirm `numericCount >= 4` AND `monoNumericCount >= 4` (each numeric stat uses mono font or tabular-nums). The live-tape is between hero and workspace.
 
 ### 5. `sectionTransitions`
+
 Load `/`. Count `[class*="section-transition"]` elements. Confirm `>= 4`. Targets the 4 heaviest sections: hero → workspace, workspace → entry-strip/EntryStations, EarthGlobe → MathBehindTape, work → numbers.
 
 ### 6. `v65Tokens` (smoke test)
+
 Load `/`. Read 7 new CSS custom properties from `:root`:
+
 - `--c-hud-bg` (HUD panel background, dim navy)
 - `--c-hud-border` (HUD panel border, faded amber)
 - `--c-grid-line` (graph paper line, low alpha)
@@ -79,12 +87,14 @@ All must be present and non-empty.
 ## Concrete deliverables (per builder)
 
 ### Builder 1 — EarthGlobe rotation
+
 - Add `<animateTransform>` inside `svg.eg__svg` wrapping the existing globe `<g transform-origin="50% 50%">` group
 - `attributeName="transform"` `type="rotate"` `from="0 50 50"` `to="360 50 50"` `dur="120s"` `repeatCount="indefinite"`
 - Add `@media (prefers-reduced-motion: reduce)` to disable the animation
 - Update `src/components/EarthGlobe.astro` comment header to note the new rotation
 
 ### Builder 2 — EntryStations IA
+
 - Create `src/components/EntryStations.astro` (~300 LOC)
 - 4-station responsive grid: `grid-template-columns: repeat(2, minmax(0, 1fr))` desktop / `1fr` mobile
 - Each station: top ID-bar (mono, "STN-01" through "STN-04"), big mono number, title, 3 supporting stats, status row at bottom
@@ -94,6 +104,7 @@ All must be present and non-empty.
 - Mount order: Hero → Workspace → **EntryStations** → DataIngestion → TraderDesk → Ticker → EarthGlobe → MathBehindTape → what → work → numbers → StatementCarousel → creds → CTABanner → Collaborators → KeyHintPanel
 
 ### Builder 3 — type/palette polish
+
 - `src/styles/tokens.css`: append 7 new tokens (hud-bg, hud-border, grid-line, grid-line-2, data-up, data-down, data-flat)
 - `src/styles/global.css`: append 5 utility classes:
   - `.mono-micro` — font-size 10px / line-height 14px / letter-spacing 0.04em
@@ -105,6 +116,7 @@ All must be present and non-empty.
   - `.grid-line-2` — same with stronger alpha
 
 ### Builder 4 — home integration (live-tape + transitions)
+
 - Add a `<section class="live-tape">` between hero and workspace in `src/pages/index.astro`
 - 4 mono stats: "OPEN 14:32 UTC+8" / "POSITIONS 6" / "TARGETS 23" / "BUILDS 312 KB"
 - Each stat: mono font, tabular-nums, mini-icon glyph prefix
@@ -115,12 +127,12 @@ All must be present and non-empty.
 
 ## Risk register
 
-| Risk | Probability | Mitigation |
-|---|---|---|
-| EarthGlobe rotation breaks existing 88/88 baseline (e.g. transform-origin zeros) | low | re-run v64-integrated-shot.mjs before/after |
-| EntryStations collides with existing `entry-strip` styling | medium | drop `entry-strip` entirely — EntryStations absorbs it |
-| Tokens leak into AiEntryPoints or Collaborators styles (regression on 88/88 visual checks) | low | token names start with `--c-` so grep catches any drift in v65-integrated-shot manifest |
-| Live-tape appears below the fold on 1440×900 | high | position it just after hero, before workspace — uses top-of-fold real estate |
+| Risk                                                                                       | Probability | Mitigation                                                                              |
+| ------------------------------------------------------------------------------------------ | ----------- | --------------------------------------------------------------------------------------- |
+| EarthGlobe rotation breaks existing 88/88 baseline (e.g. transform-origin zeros)           | low         | re-run v64-integrated-shot.mjs before/after                                             |
+| EntryStations collides with existing `entry-strip` styling                                 | medium      | drop `entry-strip` entirely — EntryStations absorbs it                                  |
+| Tokens leak into AiEntryPoints or Collaborators styles (regression on 88/88 visual checks) | low         | token names start with `--c-` so grep catches any drift in v65-integrated-shot manifest |
+| Live-tape appears below the fold on 1440×900                                               | high        | position it just after hero, before workspace — uses top-of-fold real estate            |
 
 ---
 

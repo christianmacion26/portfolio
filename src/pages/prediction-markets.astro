@@ -25,32 +25,35 @@ import StatCell from '@components/StatCell.astro';
 import PredictionCard from '@components/PredictionCard.astro';
 import ProbabilityDecay from '@components/ProbabilityDecay.astro';
 import CTABanner from '@components/CTABanner.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { buildStampUtc8 } from '@utils/build-stamp';
 import { path } from '@utils/url';
+import { profile } from '@utils/profile';
 
-const events = (await getCollection('predictionEvent')).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const GATE_RANGE = `G1–G${profile.stats.evalGates}`;
+
+type PredictionEntry = CollectionEntry<'predictionEvent'>;
+const allEvents: PredictionEntry[] = await getCollection('predictionEvent');
+const events = allEvents.sort((a, b) => a.data.order - b.data.order);
 
 const buildDate = buildStampUtc8();
 
 // === v6.1 polish — aggregate stats across all 8 events ===
 // Computed deterministically from the same events array; no extra seeding.
 const n = events.length;
-const meanImplied =
-  events.reduce((s, e) => s + e.data.impliedPx, 0) / n; // [0,1]
-const meanEdge =
-  events.reduce((s, e) => s + e.data.edge, 0) / n; // signed [-1,+1]
+const meanImplied = events.reduce((s, e) => s + e.data.impliedPx, 0) / n; // [0,1]
+const meanEdge = events.reduce((s, e) => s + e.data.edge, 0) / n; // signed [-1,+1]
 const positiveEdgeCount = events.filter((e) => e.data.edge >= 0).length;
 const pct = (x: number, d = 1) => `${(x * 100).toFixed(d)}`;
 const meanImpliedCents = `${pct(meanImplied, 0)}¢`;
 const meanEdgeCents = `${meanEdge >= 0 ? '+' : '−'}${pct(Math.abs(meanEdge), 0)}¢`;
 // Coverage span — earliest tenor year to latest tenor year.
-const tenorYears = events.map((e) => {
-  const m = new Date(e.data.tenor.replace(/^by\s+/i, '').trim());
-  return Number.isNaN(m.getTime()) ? null : m.getUTCFullYear();
-}).filter((y): y is number => y !== null);
+const tenorYears = events
+  .map((e) => {
+    const m = new Date(e.data.tenor.replace(/^by\s+/i, '').trim());
+    return Number.isNaN(m.getTime()) ? null : m.getUTCFullYear();
+  })
+  .filter((y): y is number => y !== null);
 const minYear = Math.min(...tenorYears);
 const maxYear = Math.max(...tenorYears);
 const coverageSpan = minYear === maxYear ? `${minYear}` : `${minYear}–${maxYear}`;
@@ -85,18 +88,22 @@ const decayPoints = events.map((e) => ({
   title="Binary event markets · 8 events · 0 platforms named"
   description="Eight binary event contracts — implied probability, model-implied fair value, and edge over the market. NDA-positive by construction."
 >
-  {/* ============================================================
+  {
+    /* ============================================================
        TAPE — full-bleed. Same MarketTape component used on /markets/.
        Brings 16 symbols of dense signal above the fold — the page now
        reads as a terminal at first paint, not a hero.
-       ============================================================ */}
+       ============================================================ */
+  }
   <MarketTape trailing={`prediction · build ${buildDate} · 8 binary event contracts`} />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        HERO — compact identity strip.
        H1 reads as a sentence; the "0 platforms named" claim is the
        proof point for NDA positivity (it is what the audit verifies).
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="hero">
     <div class="container hero__inner">
       <p class="hero__eyebrow mono">V6.1 · BINARY EVENT MARKETS</p>
@@ -104,10 +111,9 @@ const decayPoints = events.map((e) => ({
         Eight events. One implied-probability model. Zero platforms named.
       </h1>
       <VoiceLine class="hero__voice" ruled={true} size="md">
-        Every metric on this page is a public-data probability, derived from
-        the same seed-time fixture pattern that gates the equity curves and
-        the order book. No proprietary feeds, no platform labels, no
-        counterparty leakage — by construction.
+        Every metric on this page is a public-data probability, derived from the same seed-time
+        fixture pattern that gates the equity curves and the order book. No proprietary feeds, no
+        platform labels, no counterparty leakage — by construction.
       </VoiceLine>
       <div class="hero__meta mono">
         <span>8 events</span>
@@ -119,101 +125,110 @@ const decayPoints = events.map((e) => ({
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.1 polish — STATS ROW above the first H2.
        4 cells: event count, mean implied, mean edge, coverage span.
        Pulls the page above-the-fold density from 3 → ~30 data cells.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section pm-stats">
     <div class="container">
       <div class="pm-stats__grid">
-        <StatCell label="Events" value={String(n)} delta={0} sub="binary contracts · NDA-positive" />
-        <StatCell label="Mean implied" value={meanImpliedCents} sub="cent-weighted across all 8 events" />
+        <StatCell
+          label="Events"
+          value={String(n)}
+          delta={0}
+          sub="binary contracts · NDA-positive"
+        />
+        <StatCell
+          label="Mean implied"
+          value={meanImpliedCents}
+          sub="cent-weighted across all 8 events"
+        />
         <StatCell
           label="Mean edge"
           value={meanEdgeCents}
           delta={+(meanEdge * 100).toFixed(2)}
           sub={`${positiveEdgeCount}/${n} positive · aggregate model fair vs implied`}
         />
-        <StatCell label="Coverage span" value={coverageSpan} sub="earliest tenor → latest tenor endpoint" />
+        <StatCell
+          label="Coverage span"
+          value={coverageSpan}
+          sub="earliest tenor → latest tenor endpoint"
+        />
       </div>
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        v6.1 polish — TOP-3 IMPLIED-PROBABILITY LADDER.
        Mini ProbabilityDecay over the 3 events with the largest |edge|.
        Lifts the page from "hero with grid below" to "Bloomberg-terminal
        surface" — polylines visible above the fold on desktop.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section pm-ladder">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Top 3 by edge</p>
         <h2 class="section__title">Where the model disagrees most.</h2>
         <p class="section__sub">
-          The three events with the largest absolute edge — the spots where
-          the model-implied fair value diverges from the market price by the
-          widest margin. Each polyline starts at today's implied probability
-          and converges toward fair at the tenor endpoint.
+          The three events with the largest absolute edge — the spots where the model-implied fair
+          value diverges from the market price by the widest margin. Each polyline starts at today's
+          implied probability and converges toward fair at the tenor endpoint.
         </p>
       </header>
 
-      <ProbabilityDecay
-        events={topDecayPoints}
-        buildDate={buildDate}
-        width={1080}
-        height={260}
-      />
+      <ProbabilityDecay events={topDecayPoints} buildDate={buildDate} width={1080} height={260} />
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        GRID — 4-col desktop, 3-col tablet, 2-col mobile.
        The cards compose one card per event in `predictionEvent` order.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section grid-section">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Event contracts</p>
         <h2 class="section__title">Implied, fair, edge.</h2>
         <p class="section__sub">
-          Each card is one binary event contract. <strong>Implied</strong> is the
-          market-quoted probability in cents. <strong>Fair</strong> is the model-implied
-          probability from the methodology noted in the footer.
-          <strong>Edge</strong> is the gap — positive means the model thinks the
-          market under-prices the event. All decimals derive from a single
-          build-time seed so two visitors loading the same build see the same
-          numbers.
+          Each card is one binary event contract. <strong>Implied</strong> is the market-quoted probability
+          in cents. <strong>Fair</strong> is the model-implied probability from the methodology noted
+          in the footer.
+          <strong>Edge</strong> is the gap — positive means the model thinks the market under-prices the
+          event. All decimals derive from a single build-time seed so two visitors loading the same build
+          see the same numbers.
         </p>
       </header>
 
       <div class="grid">
-        {
-          events.map((ev) => (
-            <PredictionCard event={ev} buildDate={buildDate} />
-          ))
-        }
+        {events.map((ev) => <PredictionCard event={ev} buildDate={buildDate} />)}
       </div>
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        AGGREGATE PANEL — probability decay across tenors.
        Same eight events; each rendered as a polyline on a
        probability-vs-time axis. The table beneath the chart gives
        the headline numbers in a 4-col scan layout.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section decay-section">
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Tenor ladder</p>
         <h2 class="section__title">Probability decays to fair.</h2>
         <p class="section__sub">
-          Each polyline starts at today's implied probability and converges
-          toward the model-implied fair value at the event's tenor endpoint.
-          A positive-edge event drifts up; a negative-edge event drifts down.
-          The seeded perturbation is purely visual — it does not change the
+          Each polyline starts at today's implied probability and converges toward the model-implied
+          fair value at the event's tenor endpoint. A positive-edge event drifts up; a negative-edge
+          event drifts down. The seeded perturbation is purely visual — it does not change the
           anchor points.
         </p>
       </header>
@@ -222,12 +237,14 @@ const decayPoints = events.map((e) => ({
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        DISCLOSURE — explicit NDA-positivity claim. This is the
        audit-trail surface: a hiring manager who runs
        `curl /prediction-markets/ | grep -i platform` gets zero hits,
        and the page itself says so.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="section disclosure">
     <div class="container">
       <div class="disclosure__card">
@@ -235,33 +252,28 @@ const decayPoints = events.map((e) => ({
         <h2 class="disclosure__title">No platform names. No bookmaker.</h2>
         <ul class="disclosure__list">
           <li>
-            <strong>No proprietary feeds.</strong> Every input is a public-data
-            aggregate — FRED-equivalent macro series, Yahoo Finance for
-            equities and crypto, public polling aggregators for political
+            <strong>No proprietary feeds.</strong> Every input is a public-data aggregate — FRED-equivalent
+            macro series, Yahoo Finance for equities and crypto, public polling aggregators for political
             events, and CBOE-equivalent vol surfaces for volatility.
           </li>
           <li>
-            <strong>No counterparty labels.</strong> The model refers to the
-            contract, not the venue. Generic language only: "binary event
-            market", "implied", "fair", "edge", "counterparty", "platform".
+            <strong>No counterparty labels.</strong> The model refers to the contract, not the venue.
+            Generic language only: "binary event market", "implied", "fair", "edge", "counterparty", "platform".
             The page names zero venues.
           </li>
           <li>
-            <strong>Deterministic by build.</strong> Every probability is
-            derived from a build-time seed. Re-running
+            <strong>Deterministic by build.</strong> Every probability is derived from a build-time seed.
+            Re-running
             <code class="mono">npm run build</code> with the same
-            <code class="mono">BUILD_DATE</code> produces byte-identical
-            output. The page is auditable end-to-end with
+            <code class="mono">BUILD_DATE</code> produces byte-identical output. The page is auditable
+            end-to-end with
             <code class="mono">curl</code> + <code class="mono">grep</code>.
           </li>
           <li>
-            <strong>Audit gate.</strong> A regulatory shop can verify with
-            one command:
-            <code class="mono"
-              >curl /prediction-markets/ | grep -i platform</code
-            >
-            — the response is empty. The page names zero venues, zero
-            counterparties, zero proprietary feeds by construction.
+            <strong>Audit gate.</strong> A regulatory shop can verify with one command:
+            <code class="mono">curl /prediction-markets/ | grep -i platform</code>
+            — the response is empty. The page names zero venues, zero counterparties, zero proprietary
+            feeds by construction.
           </li>
         </ul>
       </div>
@@ -270,7 +282,7 @@ const decayPoints = events.map((e) => ({
 
   <CTABanner
     title="Want the methodology behind any edge?"
-    sub="Every card links back to a strategy on /research with a reproducible eval harness. The methodology page documents the gate stack (G1–G31)."
+    sub={`Every card links back to a strategy on /research with a reproducible eval harness. The methodology page documents the gate stack (${GATE_RANGE}).`}
     primaryLabel="Read methodology"
     primaryHref={path('/methodology')}
     secondaryLabel="See the markets terminal"
@@ -286,7 +298,7 @@ const decayPoints = events.map((e) => ({
     padding-block: clamp(var(--sp-7), 10vh, 8rem) clamp(var(--sp-6), 8vh, 5rem);
     background: var(--c-tape);
     color: var(--c-primary);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--c-white-mist);
   }
   .hero__inner {
     max-width: 1080px;
@@ -297,7 +309,7 @@ const decayPoints = events.map((e) => ({
     letter-spacing: 0.12em;
     color: var(--c-primary-2);
     margin-bottom: var(--sp-4);
-    font-weight: 700;
+    font-weight: 600;
   }
   .hero__title {
     font-size: clamp(1.65rem, 4vw, 3rem);
@@ -310,7 +322,7 @@ const decayPoints = events.map((e) => ({
     text-wrap: balance;
   }
   .hero__voice {
-    color: rgba(230, 237, 243, 0.78);
+    color: var(--c-ink-soft);
     max-width: 60ch;
     margin-bottom: var(--sp-5);
   }
@@ -325,7 +337,7 @@ const decayPoints = events.map((e) => ({
     font-weight: 600;
   }
   .hero__sep {
-    color: rgba(255, 255, 255, 0.25);
+    color: var(--c-white-fade);
   }
 
   /* ============================================================
@@ -354,7 +366,9 @@ const decayPoints = events.map((e) => ({
     gap: var(--sp-3);
   }
   @media (max-width: 880px) {
-    .pm-stats__grid { grid-template-columns: repeat(2, 1fr); }
+    .pm-stats__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   /* ============================================================
@@ -377,7 +391,7 @@ const decayPoints = events.map((e) => ({
     letter-spacing: 0.12em;
     color: var(--c-primary-2);
     margin-bottom: var(--sp-3);
-    font-weight: 700;
+    font-weight: 600;
   }
   .section__title {
     font-size: clamp(1.45rem, 3vw, 2.1rem);
@@ -426,13 +440,13 @@ const decayPoints = events.map((e) => ({
      ============================================================ */
   .decay-section {
     background: var(--c-tape);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
   }
   .decay-section .section__title {
     color: var(--c-primary);
   }
   .decay-section .section__sub {
-    color: rgba(230, 237, 243, 0.7);
+    color: var(--c-ink-mute);
   }
 
   /* ============================================================
@@ -453,7 +467,7 @@ const decayPoints = events.map((e) => ({
     letter-spacing: 0.12em;
     color: var(--c-primary-2);
     margin: 0 0 var(--sp-3);
-    font-weight: 700;
+    font-weight: 600;
   }
   .disclosure__title {
     font-size: clamp(1.3rem, 2.6vw, 1.75rem);

@@ -19,7 +19,7 @@
 //   node scripts/build-llms-full.mjs           # build from dist/
 //   astro build && node scripts/build-llms-full.mjs   # build then refresh
 
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 

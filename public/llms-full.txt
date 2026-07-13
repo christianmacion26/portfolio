@@ -9,13 +9,11 @@
 
 ---
 
-# Quantitative Researcher · AI Engineer · Christian T. Macion
+# Quantitative Researcher · AI Engineer
 
 > Christian T. Macion, CTA® — Quant Researcher and AI Engineer. 11-agent research platform, 31-gate statistical eval harness, 76.5k LOC Python, 102 professional certifications. NDA-safe by construction.
 
 Source: `/index/`
-
-[Skip to content](#main)
 
 [Q3 2026 · Open to remote QR / AI roles →](/contact/)
 
@@ -26,7 +24,7 @@ Christian T. Macion, CTA®·Open to remote roles · UTC+8
 I build research systems, and I ship the evals that prove they work.
 
 Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk·remote-first, async-friendly
-[CONTACT≤ 24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s+18.94 BP·DXY99.56·VIX11.02·BRENT72.32·AS OF 09:54 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
+[CONTACT<24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s+18.11 BP·DXY98.48·VIX14.50·BRENT82.79·AS OF 15:42 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
 
 World wire — 4 channels, 80 fixtures
 
@@ -763,32 +761,32 @@ Entry points · stations grid
 [Station 01 · Markets
 
 ### Where is rate-of-change concentrated?
-+0.48 bp
++0.63 bp
 
 2s10s spread · UST
 
-DXY103.8
+DXY105.1
 
-VIX13.8
+VIX13.9
 
-BRENT79.5
+BRENT82.5
 
-OBS+0.0614:35 UTC+8[ UST ][ spread ]](/markets/)
+LIVE-0.0606:10 UTC+8[ UST ][ spread ]](/markets/)
 
 [Station 02 · Prediction
 
 ### What does the market price next?
-0.58
+0.64
 
 median implied probability
 
 events9
 
-edge ±0.31
+edge ±0.36
 
-tenor2027-Q3
+tenor2027-Q1
 
-LIVE-0.0402:41 UTC+8[ odds ][ edge ]](/prediction-markets/)
+OPEN+0.0608:40 UTC+8[ odds ][ edge ]](/prediction-markets/)
 
 [Station 03 · Research
 
@@ -801,14 +799,14 @@ gates31
 
 categories4
 
-pass79%
+pass84%
 
-OBS-0.0509:34 UTC+8[ ideas ][ G1-31 ]](/research/)
+OBS-0.0713:20 UTC+8[ ideas ][ G1–G31 ]](/research/)
 
 [Station 04 · AI
 
 ### How do evals ship?
-92%
+93%
 
 eval pass rate · 31 gates
 
@@ -818,7 +816,7 @@ datasets7
 
 harnesses3
 
-OPEN+0.0709:44 UTC+8[ models ][ evals ]](/methodology/)
+OPEN+0.0610:43 UTC+8[ models ][ evals ]](/methodology/)
 
 Entry points
 
@@ -835,28 +833,28 @@ Data ingestion
 ## Pipeline live.▍
 
 Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single deterministic PRNG.
-throughput · events / s4.4k4.2k3.8k2.0k1.8kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE26%NORMALIZE30%ENRICH33%INDEX23%STREAM23%
+throughput · events / s2.7k3.3k3.8k4.2k3.9kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE42%NORMALIZE20%ENRICH79%INDEX85%STREAM45%
 
 Trader desk
 
 ## P&L · order flow · risk · signalslive
-φ 0.734ms
+φ 0.345ms
 
 Book equity · 60 bars · today
 
-+0.42%60d
++0.95%60d
 
-0.50Sharpe-5.45%Max DD-3.90%Book skew
+0.52Sharpe-9.55%Max DD+6.00%Book skew
 
 Order flow · 8 × 4 heat
 
-+2,378/−2,571
-B175B142B147B64A44A144A204A284B63B259B53B60A257A213A206A29B190B263B89B265A40A287A61A123B126B72B138B272A16A259A152A252
++2,547/−2,260
+B182B62B184B278A121A130A63A184B180B263B54B40A198A252A268A110B192B67B236B32A32A203A192A64B290B184B276B27A75A17A161A190
 
 Risk · 1-day VaR
 
 NAV-normalized
-025507510069.4% NAV
+025507510022.7% NAV
 
 Signals · 4 × 4 sparklines
 
@@ -867,15 +865,15 @@ Positions
 
 5
 
-net +$16
+net +$36
 
-top · COMMOD-2
+top · RATES-12
 
 Orders
 
 5
 
-+1·1·3·1
++3·1·2·1
 
 open · partial · ack · rej
 
@@ -883,15 +881,15 @@ Calendar
 
 3
 
-next +6h
+next +3h
 
-impact MED
+impact LOW
 
 Alerts
 
 3
 
-3·1·0
+1·2·0
 
 crit · warn · info
 2y5y10y30y1m3m6m12mBTCETHSOLDXY2y5y10y30y1m3m6m12mBTCETHSOLDXY
@@ -905,7 +903,68 @@ Earth mission control · world event map
 ## Sixteen cities. Thirty-six events. The news behind the math.
 
 A rate decision in London is a half-life in Manila. We map the half-life.
-Earth-scale quant intelligence140 countries · 16 cities · 6 active events · 6 routes · Orthographic · rotatingEarth-scale event globe — cities, routes, and active events — rotatingOrthographic globe projection centered on (lat 20°, lon 80°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, 16 cities, 6 trade routes, 6 active events, region rollups (APAC 4 / EMEA 2 / Americas 4), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.DigosDigosSingaporeSingaporeTokyoTokyoHong KongHong KongShanghaiShanghaiSeoulSeoulManilaManilaMumbaiMumbaiDubaiDubaiSydneySydneyFrankfurtFrankfurtZurichZurichLondonLondonLondon GBRLondon · GBRParis FRAParis · FRABerlin DEUBerlin · DEURome ITARome · ITAMadrid ESPMadrid · ESPBrussels BELBrussels · BELAmsterdam NLDAmsterdam · NLDStockholm SWEStockholm · SWEVienna AUTVienna · AUTTokyo JPNTokyo · JPNCanberra AUSCanberra · AUSCentral bank press conference — FrankfurtΔy = ±8.8·σ_pp · cov(b,1y) ≈ +1.1σCentral bank policy decision — TokyoΔy = ±4.6·σ_pp · cov(b,1y) ≈ +1.3σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.3σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.7; DVO1 spikes 8.8%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 1.7σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.2× pre; vol regime shift: low → midMISSION CONTROL · BUILD 2026-07-13 10:57 UTC+8 · 16 HUBS · 14 CAPITALS · 10 EVENTS · 5 CRITICALCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km10:57:42 UTC+822° / 136°APAC4 evEMEA6 evAmericas4 ev
+Earth-scale quant intelligence140 countries · 16 cities · 33 active events · 6 routes · Orthographic · rotatingEarth-scale event globe — cities, routes, and active events — rotatingOrthographic globe projection centered on (lat 20°, lon 80°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, 16 cities, 6 trade routes, 33 active events, region rollups (APAC20 / EMEA 18 / Americas 22), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.Digos
+                      Digos
+                      
+                    Singapore
+                      Singapore
+                      
+                    Tokyo
+                      Tokyo
+                      
+                    Hong Kong
+                      Hong Kong
+                      
+                    Shanghai
+                      Shanghai
+                      
+                    Seoul
+                      Seoul
+                      
+                    Manila
+                      Manila
+                      
+                    Mumbai
+                      Mumbai
+                      
+                    Dubai
+                      Dubai
+                      
+                    Sydney
+                      Sydney
+                      
+                    Frankfurt
+                      Frankfurt
+                      
+                    Zurich
+                      Zurich
+                      
+                    London
+                      London
+                      
+                    London GBR
+                      London · GBR
+                    Paris FRA
+                      Paris · FRA
+                    Berlin DEU
+                      Berlin · DEU
+                    Rome ITA
+                      Rome · ITA
+                    Madrid ESP
+                      Madrid · ESP
+                    Brussels BEL
+                      Brussels · BEL
+                    Amsterdam NLD
+                      Amsterdam · NLD
+                    Stockholm SWE
+                      Stockholm · SWE
+                    Vienna AUT
+                      Vienna · AUT
+                    Tokyo JPN
+                      Tokyo · JPN
+                    Canberra AUS
+                      Canberra · AUS
+                    Central bank press conference — FrankfurtΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σCentral bank policy decision — TokyoΔy = ±9.5·σ_pp · cov(b,1y) ≈ +1.0σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.5σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.6; DVO1 spikes 9.9%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 2.0σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.5× pre; vol regime shift: low → midFRA–WST yield · Kyiv — Kyivflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%FRA–WST yield · Kyiv — Kyivflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%FRA–WST yield · Paris — Parisflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%AFR aid · South Africa — South Africaflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%AUS diplomacy · India — IndiaΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σAUS diplomacy · Australia — AustraliaΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σBGD diplomacy · Bangladesh — Bangladeshflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%diplomacy · New Delhi — New Delhiflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%IND diplomacy · Tamil Nadu — Tamil NaduΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σBGD diplomacy · Bangladesh — Bangladeshflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%diplomacy · Tuticorin — Tuticorinflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%IND diplomacy · Tamil Nadu — Tamil NaduΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σIND diplomacy · Tuticorin — TuticorinΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σIND diplomacy · Tuticorin — TuticorinΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σAFR aid · Durban — Durbanflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%ARM aid · Vanadzor — Vanadzorflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%EUR aid · Ukraine — UkraineΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σaid · Japan — Japanflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%aid · Telangana — Telanganaflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%aid · Telangana — Telanganaflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%IND aid · Telangana — TelanganaΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σISR aid · Jerusalem — Jerusalemflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%JPN aid · Japan — JapanΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σUGA aid · Wakiso — Wakisoflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%USA aid · New Delhi — New DelhiΔy = ±6.4·σ_pp · cov(b,1y) ≈ +1.1σZAF aid · Durban — Durbanflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%ZAF–AFR aid · Durban — Durbanflight-to-quality β ≈ 0.6; DVO1 spikes 19.4%MISSION CONTROL · BUILD 2026-07-14 00:35 UTC+8 · 16 HUBS · 14 CAPITALS · 60 EVENTS · 50 HIGH-IMPACT · LIVE 50 · 16:26ZCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W2LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km00:35:25 UTC+822° / -69°APAC20 evEMEA18 evAmericas22 ev
 
 Sun (subsolar)
 
@@ -913,9 +972,9 @@ City · 16 hubs
 
 Route · 6
 
-Event pin (6/10)
+Event pin (33/60)
 
-Critical · 5
+High-impact · 50
 
 news/36 events · last 24h
 
@@ -1065,7 +1124,7 @@ news/36 events · last 24h
 
 Digos· desk action1
 
-central-bankdesk writes 6m vol on the front-end
+central-bankbook fades FX carry into the fix
 
 ---
 
@@ -1073,7 +1132,7 @@ central-bankdesk writes 6m vol on the front-end
 
 Math · news · signals
 
-## Wall-street math in one glance.
+## Wall Street math in one glance.
 
 Six formulas. Seven inputs. Seven outputs. One correlation map. Every figure is a fixture — but the grid is wired the way a desk wires it.
 inputs
@@ -1120,26 +1179,26 @@ VRP 3.8σ
 
 σ̂ 0.85
 
-ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.5939
+ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.1659
 
 What I do
 
 ## Four things, one discipline.
 
 A senior quant and an AI engineer can share a desk only if both write the eval harness. That's the only output that survives the next data drift, the next regime shift, the next model swap.
-7 projectsRRESEARCH
+8 projectsRRESEARCH
 
 Multi-testing-aware systematic strategies on public data.
-10 eventsAARTIFICIAL INTELLIGENCE
+13 eventsAARTIFICIAL INTELLIGENCE
 
 Multi-agent LLM systems with explicit eval harness and MCP contracts.
-18 hubsMMARKETS
+17 hubsMMARKETS
 
 Sixteen financial hubs. Thirty-six monitored events. Live tape.
-12 capitalsCCOVERAGE
+11 capitalsCCOVERAGE
 
 NDA-clean coverage. Past contracts disclosed, dates closed.
-MCP-EVALLLM-AS-JUDTOOL-CALL-G1–G31CROSS-SECTSLOP-SCANMCP-EVALCRYPTO-FUNNDA-CLNDEF-SHARPEMACRO-/-VOBACKTEST-EPBO-CSCVPAIRS-TRADTHE-VARIANREFLECT-RERAG-RECALLLOOK-AHEADTIME-SERIEDSR-CALCMCP-EVALLLM-AS-JUDTOOL-CALL-G1–G31CROSS-SECTSLOP-SCANMCP-EVALCRYPTO-FUNNDA-CLNDEF-SHARPEMACRO-/-VOBACKTEST-EPBO-CSCVPAIRS-TRADTHE-VARIANREFLECT-RERAG-RECALLLOOK-AHEADTIME-SERIEDSR-CALC
+PAIRS-TRADLOOK-AHEADSLOP-SCANTIME-SERIEG1–G31NDA-CLNMACRO-/-VOMCP-EVALBACKTEST-EREFLECT-RECRYPTO-FUNPBO-CSCVCROSS-SECTTHE-VARIANDSR-CALCDEF-SHARPELLM-AS-JUDRAG-RECALLMCP-EVALTOOL-CALL-PAIRS-TRADLOOK-AHEADSLOP-SCANTIME-SERIEG1–G31NDA-CLNMACRO-/-VOMCP-EVALBACKTEST-EREFLECT-RECRYPTO-FUNPBO-CSCVCROSS-SECTTHE-VARIANDSR-CALCDEF-SHARPELLM-AS-JUDRAG-RECALLMCP-EVALTOOL-CALL-
 
 Selected work
 
@@ -1148,34 +1207,34 @@ Selected work
 [2025 · Q4QUANT
 
 ### Cross-Sectional Momentum (18 coins)
-18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.92→-0.02OOS Sharpe0.89→-0.04CI Straddle0.05→0.15](/projects/quant/02-cross-sectional-momentum/)
+18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.88→-0.03OOS Sharpe0.93→-0.04CI Straddle0.08→0.14](/projects/quant/02-cross-sectional-momentum/)
 
 [2025 · Q4QUANT
 
 ### Time-Series Momentum + Vol Targeting
-20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.25→0.39Max DD63%→31%Win Rate40%→49%](/projects/quant/03-timeseries-momentum-voltarget/)
+20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.29→0.40Max DD63%→31%Win Rate39%→50%](/projects/quant/03-timeseries-momentum-voltarget/)
 
 [2026 · Q1AI
 
 ### Slop Scanner
-13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index82.00→5.00Hedge Density0.20→0.06N-gram Rep0.35→0.07](/projects/ai/06-slop-scanner/)
+13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index80.00→4.00Hedge Density0.20→0.05N-gram Rep0.33→0.08](/projects/ai/06-slop-scanner/)
 
 [2026 · Q2QUANT
 
 ### Macro / Volatility-Regime Overlay
-VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.62→0.68Max DD58%→44%Calmar0.31→0.72](/projects/quant/07-macro-regime-overlay/)
+VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.64→0.66Max DD60%→42%Calmar0.32→0.70](/projects/quant/07-macro-regime-overlay/)
 
 [2026 · Q2QUANT
 
 ### Look-Ahead Bias Audit (the shift test)
-ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.63Leaked Sharpe0.58→5.03Phantom %2%→89%](/projects/quant/09-lookahead-bias-audit/)
+ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.61Leaked Sharpe0.57→5.14Phantom %1%→89%](/projects/quant/09-lookahead-bias-audit/)
 
 [ALL PROJECTS15 projects · 9 quant · 4 markets · 8 prediction→](/projects/)
 
 The numbers
 
-## What eleven months of build looks like.
-PAGES BUILT84+4.01AUDIT100%−1%AFK LOOP6H−2%EVAL GATES31+3.3%STRATEGIES9+2.4%AI AGENTS11STABLECERTS102+1.2%MONTHS11−1.5%
+## What 11 months of build looks like.
+PAGES BUILT84+1.6%AUDIT100%+0.66AFK LOOP6H+0.71EVAL GATES31+1.98STRATEGIES9+1.9%AI AGENTS11−0.7%CERTS102+3.13MONTHS11+1.07
 
 STRATEGY NOTE01·CONDENSED
 iCard 1 of 3
@@ -1192,9 +1251,323 @@ iiiCard 3 of 3
 
 31 gates. ↦ Zero rollbacks.
 
+Credentials
+
+## Twelve names that earned a callout.
+
+STATier-1 Analyst · STA
+
+BMCBloomberg BMC
+
+BIDABIDA · Meta AI
+
+NASANASA Space Apps
+
+B4YBitget B4Y
+
+CRYCryptoneeds
+
+ADDUAteneo de Davao
+
+USePUSeP · Engineering
+
+NMRNumerai
+
+HFHugging Face
+
+UPUpwork · Top Rated
+
+OJPOnlineJobs.ph
+
+Ready when you are.
+[[CTA: Schedule a 30-min review →]](/contact/)
+
+Availability · next 14 days · UTC+8
+
+30-min slots, 4 windows/day. Amber-soft = open, amber = confirmed, gray = blocked.
+09:0012:0015:0018:00Jul 13MonJul 14TueJul 15WedJul 16ThuJul 17FriJul 18SatJul 19SunJul 20MonJul 21TueJul 22WedJul 23ThuJul 24FriJul 25SatJul 26Sun
+
+Open4
+
+Confirmed2
+
+Blocked2
+
+Open · soft (48)48
+
 ---
 
-# For recruiters · Christian T. Macion
+↓SECTION 16 OF 17 · COLLABORATORS
+
+Collaborators
+
+## We work with everyone.
+
+Built alongside senior desks on three continents. Open-sourced for the next one.
+
+S
+
+### Senior QR (independent)
+
+2024
+
+Co-built: [Carry-channel slope model — open-source repo, MIT](/projects/)
+
+Q
+
+### Quant mentor via online platform
+
+2025
+
+Co-built: [Deflated Sharpe Reader exercise-set](/methodology/)
+
+C
+
+### Co-author with PhD candidate (public preprint)
+
+2025
+
+Co-built: [Anatomy of a Tape — methodology paper](/research/)
+
+N
+
+### Numerai participant
+
+2024 → present
+
+Co-built: [Numerai tournament notes — public notebook series](/projects/)
+
+U
+
+### Upwork contract — quant tools
+
+2024
+
+Co-built: [DSR-calculator web component, public](/projects/)
+
+N
+
+### NASA Space Apps Challenge (Zurich)
+
+Oct 2025
+
+Co-built: [Galactic Problem Solver — public repo](/ai/)
+
+S
+
+### STA Tier-1 cohort peer
+
+2025
+
+Co-built: [Tape-reading rubric — public teaching artifact](/certifications/)
+
+Event detail36 fixturesDigosPH inflation print, in-line with consensus2026-07-11 14:32 UTC+8
+
+### PH inflation print, in-line with consensus
+
+|ε| ≈ 1.1σ
+Signalbreakeven-watchMagnitude±1.1 σDesk actiondesk holds breakevens, lift vega 1mSourcePH statistics authority (public)Research[backtest artifact →](/research#event-digos-ph-inflation)DigosPSEi index rebalance, semi-annual review2026-07-11 13:05 UTC+8
+
+### PSEi index rebalance, semi-annual review
+
+Δweight ≈ 0.18%
+SignalflattenMagnitude0.18 % ΔweightDesk actionTWAP through the last 15 minSourcePH exchange (public notice)Research[backtest artifact →](/research#event-digos-psei-rebalance)DigosPHP crosses 58/USD, central-bank fix window2026-07-11 12:18 UTC+8
+
+### PHP crosses 58/USD, central-bank fix window
+
+ΔUSD/PHP ≈ 0.4%
+SignalcarryMagnitude+0.4 % USD/PHPDesk actionbook clips FX carry at 75 bpSourcePH central-bank fix (public)Research[backtest artifact →](/research#event-digos-php-cross)DigosPH 10Y auction, bid-cover 3.1×2026-07-11 11:40 UTC+8
+
+### PH 10Y auction, bid-cover 3.1×
+
+tail = 1.2 bp
+SignalcarryMagnitude1.2 bp tailDesk actionbook rolls down 5y into the auctionSourcePH treasury auction (public)Research[backtest artifact →](/research#event-digos-ph10y-auction)SingaporeSGD NEER policy-band re-anchoring2026-07-11 08:15 UTC+8
+
+### SGD NEER policy-band re-anchoring
+
+ΔNEER ≈ −0.6%
+SignalcarryMagnitude−0.6 % NEERDesk actionbook clips FX carry at 75 bpSourceSG monetary authority (public)Research[backtest artifact →](/research#event-sgd-neer-anchor)SingaporeNon-oil domestic exports, monthly2026-07-11 09:00 UTC+8
+
+### Non-oil domestic exports, monthly
+
+ΔNODX ≈ 4.2% MoM
+SignalflattenMagnitude+4.2 % MoMDesk actionbook sizes position to vol surpriseSourceSG trade statistics (public)Research[backtest artifact →](/research#event-sg-nodx-monthly)TokyoBoJ policy decision, hold unanimous2026-07-11 11:00 UTC+8
+
+### BoJ policy decision, hold unanimous
+
+p(hold) ≈ 0.78
+SignalsteepenMagnitude0.78 pDesk actiondesk trims 10Y receivers, rolls into 5YSourceBoJ statement (public)Research[backtest artifact →](/research#event-boj-policy-hold)TokyoYen crosses 152/USD, verbal intervention2026-07-11 14:55 UTC+8
+
+### Yen crosses 152/USD, verbal intervention
+
+|z| ≈ 1.4σ
+Signalshort-volMagnitude1.4 σDesk actiondesk buys 3m USD/JPY wings into interventionSourceMoF briefing (public)Research[backtest artifact →](/research#event-jpy-intervention)Hong KongHIBOR fixing, 1m at 4.85%2026-07-11 11:15 UTC+8
+
+### HIBOR fixing, 1m at 4.85%
+
+ΔHIBOR ≈ +12 bp
+SignalcarryMagnitude+12 bp HIBORDesk actionbook holds cross-currency basis through fixSourceHKMA fixing (public)Research[backtest artifact →](/research#event-hibor-1m-fix)Hong KongMega-IPO bookbuild, demand-cover 4.2×2026-07-11 10:30 UTC+8
+
+### Mega-IPO bookbuild, demand-cover 4.2×
+
+pricing 4 bp inside range
+Signallong-volMagnitude4.2 demand-cover ×Desk actiondesk buys 3m 110% call spreadsSourceHK exchange filings (public)Research[backtest artifact →](/research#event-hk-mega-ipo)ShanghaiTrade-balance release, surplus $68 B2026-07-11 12:00 UTC+8
+
+### Trade-balance release, surplus $68 B
+
+Δcopper ≈ 0.6%/$B
+SignalflattenMagnitude+0.6 % copper/$BDesk actionbook keeps breakeven watch to next printSourceCN customs release (public)Research[backtest artifact →](/research#event-cn-trade-balance)ShanghaiPBoC MLF, 1Y rate unchanged2026-07-11 09:20 UTC+8
+
+### PBoC MLF, 1Y rate unchanged
+
+ΔMLF ≈ 0 bp
+SignalcarryMagnitude0 bp MLFDesk actiondesk trims 10Y receivers, rolls into 5YSourcePBoC operation notice (public)Research[backtest artifact →](/research#event-pboc-mlf-1y)SeoulKOSPI earnings bellwether, tech print2026-07-11 10:00 UTC+8
+
+### KOSPI earnings bellwether, tech print
+
+|z_post| ≈ 1.5×
+Signallong-volMagnitude1.5 × post-printDesk actiondesk buys 3m 110% call spreadsSourceKR exchange filings (public)Research[backtest artifact →](/research#event-kospi-earnings-tech)SeoulKRW crosses 1380/USD, exporter bid2026-07-11 13:30 UTC+8
+
+### KRW crosses 1380/USD, exporter bid
+
+Δcarry ≈ −18 bp
+SignalcarryMagnitude−18 bp carryDesk actionbook clips FX carry at 75 bpSourceKR BOK reference (public)Research[backtest artifact →](/research#event-krw-exporter-bid)MumbaiEM sovereign coupon, 10Y external2026-07-11 11:45 UTC+8
+
+### EM sovereign coupon, 10Y external
+
+roll-down ≈ 18 bp
+SignalcarryMagnitude18 bp roll-downDesk actionbook rolls down 5y into the auctionSourceEM sovereign issuance notice (public)Research[backtest artifact →](/research#event-em-sov-coupon-10y)MumbaiNifty 50 rebalance, weight shift2026-07-11 14:00 UTC+8
+
+### Nifty 50 rebalance, weight shift
+
+Δweight ≈ 0.22%
+SignalflattenMagnitude0.22 % ΔweightDesk actionTWAP through the last 15 minSourceIN index provider (public)Research[backtest artifact →](/research#event-nifty-rebalance)SydneyIron-ore export, weekly port data2026-07-11 09:30 UTC+8
+
+### Iron-ore export, weekly port data
+
+Δiron ≈ ±1.4%
+SignalflattenMagnitude±1.4 % ironDesk actiondesk fades the kneejerk in 5 minSourceAU port authority weekly (public)Research[backtest artifact →](/research#event-iron-ore-weekly)SydneyRBA minutes, hawkish tilt2026-07-11 11:30 UTC+8
+
+### RBA minutes, hawkish tilt
+
+Δy_2y ≈ +6 bp
+SignalsteepenMagnitude+6 bp y_2yDesk actiondesk trims 10Y receivers, rolls into 5YSourceRBA minutes (public)Research[backtest artifact →](/research#event-rba-minutes-hawk)ManilaPH GDP Q2 advance estimate, +6.0% YoY2026-07-11 10:00 UTC+8
+
+### PH GDP Q2 advance estimate, +6.0% YoY
+
+surprise ≈ +0.3%
+SignalflattenMagnitude+0.3 % surpriseDesk actionbook sizes position to vol surpriseSourcePH statistics authority advance (public)Research[backtest artifact →](/research#event-ph-gdp-q2)ManilaBSP overnight rate decision, hold2026-07-11 16:00 UTC+8
+
+### BSP overnight rate decision, hold
+
+p(hold) ≈ 0.86
+SignalcarryMagnitude0.86 pDesk actiondesk buys 1m wings on the front-endSourceBSP statement (public)Research[backtest artifact →](/research#event-bsp-policy-hold)FrankfurtECB press conference, verbal forward-guidance2026-07-11 20:45 UTC+8
+
+### ECB press conference, verbal forward-guidance
+
+dσ/dword ≈ 1.4 bp
+Signallong-volMagnitude1.4 bp / wordDesk actiondesk writes 6m vol on the front-endSourceECB press conference (public)Research[backtest artifact →](/research#event-ecb-press-conference)FrankfurtBunds 10Y auction, weak bid-cover2026-07-11 19:15 UTC+8
+
+### Bunds 10Y auction, weak bid-cover
+
+tail = 1.8 bp
+SignalflattenMagnitude1.8 bp tailDesk actionbook holds curve-flattener into the statementSourceDE federal auction (public)Research[backtest artifact →](/research#event-bund-10y-weak-cover)ZurichSMI index rebalance, defensive tilt2026-07-11 16:30 UTC+8
+
+### SMI index rebalance, defensive tilt
+
+Δweight ≈ 0.15%
+SignalflattenMagnitude0.15 % ΔweightDesk actionbook holds post-print drift via dispersionSourceCH index provider (public)Research[backtest artifact →](/research#event-smi-rebalance)ZurichSX5E vol-of-vol, gap-widening2026-07-11 18:00 UTC+8
+
+### SX5E vol-of-vol, gap-widening
+
+VRP ≈ 4σ
+Signalshort-volMagnitude4 σ VRPDesk actiondesk sells weekly IV into the bellSourceSX5E option surface (public surface)Research[backtest artifact →](/research#event-sx5e-vov-gap)LondonGilts 10Y auction, strong cover2026-07-11 19:30 UTC+8
+
+### Gilts 10Y auction, strong cover
+
+tail = 0.6 bp
+SignalsteepenMagnitude0.6 bp tailDesk actiondesk trims 10Y receivers, rolls into 5YSourceUK DMO auction (public)Research[backtest artifact →](/research#event-gilts-10y-strong)LondonBrent settles at $84, framework talks2026-07-11 22:00 UTC+8
+
+### Brent settles at $84, framework talks
+
+Δbrent ≈ ±1.1%
+Signallong-volMagnitude±1.1 % brentDesk actiondesk buys 1m ATM straddles on brentSourceICE brent settle (public)Research[backtest artifact →](/research#event-brent-84-framework)DubaiEnergy-export framework talks, headline tone2026-07-11 15:00 UTC+8
+
+### Energy-export framework talks, headline tone
+
+β ≈ 0.62
+Signallong-volMagnitude0.62 βDesk actiondesk buys 1m ATM straddles on brentSourceAE ministry briefing (public)Research[backtest artifact →](/research#event-dxb-energy-framework)DubaiUAE dirham peg, USD-anchored review2026-07-11 13:00 UTC+8
+
+### UAE dirham peg, USD-anchored review
+
+ΔUSD/AED ≈ 0 bp
+SignalcarryMagnitude0 bp pegDesk actionbook holds cross-currency basis through fixSourceCBUAE peg statement (public)Research[backtest artifact →](/research#event-aed-peg-review)New YorkHeadline CPI release, +0.2% MoM2026-07-11 20:30 UTC+8
+
+### Headline CPI release, +0.2% MoM
+
+|ε| ≈ 1.4σ
+Signallong-volMagnitude1.4 σDesk actiondesk adds 1m options if surprise > 1.4σSourceBLS release (public)Research[backtest artifact →](/research#event-cpi-headline-print)New YorkMega-cap tech earnings, post-print drift2026-07-11 21:00 UTC+8
+
+### Mega-cap tech earnings, post-print drift
+
+|z_post| ≈ 1.5×
+Signallong-volMagnitude1.5 × post-printDesk actionbook lifts gamma into the printSourceissuer earnings filings (public)Research[backtest artifact →](/research#event-mega-cap-tech-earnings)TorontoCAD employment, surprise +25k2026-07-11 20:30 UTC+8
+
+### CAD employment, surprise +25k
+
+ΔP(recession) ≈ ±18%
+SignalflattenMagnitude±18 % ΔP(recession)Desk actionbook keeps breakeven watch to next printSourceStatCan labour force (public)Research[backtest artifact →](/research#event-cad-employment-surprise)TorontoTSX index rebalance, energy weight up2026-07-11 16:00 UTC+8
+
+### TSX index rebalance, energy weight up
+
+Δweight ≈ 0.20%
+SignalflattenMagnitude0.20 % ΔweightDesk actionTWAP through the last 15 minSourceCA index provider (public)Research[backtest artifact →](/research#event-tsx-rebalance-energy)Sao PauloBCB Selic decision, cut 50 bp2026-07-11 23:00 UTC+8
+
+### BCB Selic decision, cut 50 bp
+
+ΔSelic ≈ −50 bp
+SignalsteepenMagnitude−50 bp SelicDesk actiondesk buys 1m wings on the front-endSourceBCB Copom statement (public)Research[backtest artifact →](/research#event-bcb-selic-cut-50)Sao PauloBRL crosses 5.10/USD, fiscal-headline risk2026-07-11 22:30 UTC+8
+
+### BRL crosses 5.10/USD, fiscal-headline risk
+
+Δcarry ≈ −24 bp
+SignalflattenMagnitude−24 bp carryDesk actionbook unwinds EM-FX carry to one-thirdSourceBR fiscal headline (public news)Research[backtest artifact →](/research#event-brl-fiscal-risk)New YorkAll-stock deal announced, $42 B EV2026-07-11 14:00 UTC+8
+
+### All-stock deal announced, $42 B EV
+
+arb-spread ≈ 1.8%
+SignalflattenMagnitude1.8 % arb-spreadDesk actionbook holds post-print drift via dispersionSourceSEC merger filing (public)Research[backtest artifact →](/research#event-ny-mna-deal)New YorkTech IPO launch, range $34-382026-07-11 18:30 UTC+8
+
+### Tech IPO launch, range $34-38
+
+demand-cover ≈ 4.2×
+Signallong-volMagnitude4.2 × coverDesk actiondesk buys 3m 110% call spreadsSourceissuer S-1 filing (public)Research[backtest artifact →](/research#event-ny-tech-ipo-launch)© 2026 Christian Macion[CTA cert #260197 ↗](/proof/cta-cert-portrait-2026-01.jpg)BUILD 2026-07-14 · v6.11.8 · COMMIT local[GitHub ↗](https://github.com/christianmacion26)[LinkedIn ↗](https://www.linkedin.com/in/christianmacion)[Email ↗](mailto:christianmacion26@gmail.com)Keyboard
+
+### Shortcuts
+
+Press ? again to close
+[?]
+
+Toggle keyboard map
+[j]
+
+Jump down a viewport
+[k]
+
+Jump up a viewport
+[g]
+
+Go to top
+[b]
+
+Go to bottom
+[/]
+
+Focus search
+
+---
+
+# For recruiters
 
 > The 60-second candidate one-pager: availability, location, target seats, resume PDFs, and direct contact for hiring managers.
 
@@ -1253,7 +1626,7 @@ Every claim on this page is backed by a public-data reproducible artifact. See /
 
 ---
 
-# Proof · Christian T. Macion
+# Proof
 
 > Decision-grade artefacts that back the claims on /experience, /certifications, and /now. Tier-1 credentials, 4 open-source artifacts, 9 quant projects, 6 AI projects, 10 case studies — all NDA-clean by construction.
 
@@ -1284,6 +1657,94 @@ Every metric is real. Headline numbers come from disk.
 Every testimonial is an attestable paper trail, not a quote.
 
 Every NDA-protected engagement is closed past contract.
+
+[Validation gate lattice — G1–G31 across 6 familiesThirty-three cells representing the G1–G31 statistical eval stack. Cells
+        16 and 27 are reserved indicator positions (ship, block). Hover any cell
+        to read its family.
+                  G1–G5 · Mechanical validity
+                
+                  G1–G5 · Mechanical validity
+                
+                  G1–G5 · Mechanical validity
+                
+                  G1–G5 · Mechanical validity
+                
+                  G1–G5 · Mechanical validity
+                
+                  G6–G10 · Statistical nulls
+                
+                  G6–G10 · Statistical nulls
+                
+                  G6–G10 · Statistical nulls
+                
+                  G6–G10 · Statistical nulls
+                
+                  G6–G10 · Statistical nulls
+                
+                  G11–G15 · Walk-forward & OOS
+                
+                  G11–G15 · Walk-forward & OOS
+                
+                  G11–G15 · Walk-forward & OOS
+                
+                  G11–G15 · Walk-forward & OOS
+                
+                  G11–G15 · Walk-forward & OOS
+                
+                  G16–G20 · Multiple testing
+                
+                  G16–G20 · Multiple testing
+                
+                  G16–G20 · Multiple testing
+                
+                  G16–G20 · Multiple testing
+                
+                  G16–G20 · Multiple testing
+                
+                  G21–G25 · Look-ahead discipline
+                
+                  G21–G25 · Look-ahead discipline
+                
+                  G21–G25 · Look-ahead discipline
+                
+                  G21–G25 · Look-ahead discipline
+                
+                  G21–G25 · Look-ahead discipline
+                
+                  G26–G31 · Economic & cost realism
+                
+                  G26–G31 · Economic & cost realism
+                
+                  G26–G31 · Economic & cost realism
+                
+                  G26–G31 · Economic & cost realism
+                
+                  G26–G31 · Economic & cost realism
+                
+                  G26–G31 · Economic & cost realism
+                proof/ · G1–G31 gates emit the artefacts below](/methodology/)
+
+A gallery of public, NDA-clean artifacts — records, charts, co-signed certificates — that back up the claims on[/experience](/experience/),[/certifications](/certifications/), and [/now](/now/). Thirty-one artifacts on disk, twenty-two surfaced below. Updated when something new ships; never deleted when something expires.
+
+v6.11.8 · 2026-07-14
+trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-14
+
+11 min read · last updated2026-07-14 · [how verified ↗](/proof/)
+On this proof page
+
+[Flagship credentials](#credentials)
+
+[Shipped code](#code)
+
+[Research artifacts](#research)
+
+[Track record](#track)
+
+[Public track record](#public-track)
+
+[NDA disclosure](#disclosure)
+
+[Live terminal→ /markets](/markets/)
 
 P.2 · Flagship credentials
 
@@ -1612,7 +2073,7 @@ Email me with the proof you need. If it's public, NDA-clean, and I have it on di
 
 ---
 
-# Methodology · Christian T. Macion
+# Methodology
 
 > The eval-first discipline. G1–G31 statistical gate stack. Model-routing policy. Agent charter pattern.
 
@@ -1622,7 +2083,7 @@ methodology/ · eval-first discipline
 
 # Don’t ship what hasn’t passed a measurable gate.
 
-If it isn't measured, it isn't built.
+ If it isn't measured, it isn't built. 
 
 Gate before ship. Always.
 
@@ -1635,6 +2096,24 @@ Deflated Sharpe. Multiple-testing aware.
 Frozen-spec eval. No live tuning.
 
 Five-era stability. One regime is anecdote.
+
+One engineering principle. Applied to LLM outputs and to systematic trading strategies with the same gate stack. The method is what scales; the tools change.
+Pr(ship)=Pr(ship∣passes G1–G31)⋅i=1∏31​Pr(Gi​∣evidencei​)31statistical gates6gate families11agents on the same method0rollbacks on shipped worktrust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-14
+
+11 min read · last updated2026-07-14 · [how verified ↗](/proof/)
+On this methodology page
+
+[G1–G31 gate stack](#gates)
+
+[Model routing](#routing)
+
+[DSR calculator](#dsr)
+
+[Agent charter](#charter)
+
+[Negative space](#neg)
+
+[If you hired me](#hire)
 
 The gate stack
 
@@ -1789,7 +2268,7 @@ WK 9–12
 
 ### Walk-forward OOS window standardization
 
-Locked, [embargoed](/glossary/embargo/) [OOS](/glossary/oos/) windows (project 06 pattern) across the book. Frozen-spec evaluation. [Walk-forward](/glossary/walk-forward/) standardization. The book becomes reproducible from cold start.
+Locked, [embargoed](/glossary/embargo/)[OOS](/glossary/oos/) windows (project 06 pattern) across the book. Frozen-spec evaluation. [Walk-forward](/glossary/walk-forward/) standardization. The book becomes reproducible from cold start.
 G11–G15 · walk-forward & OOS
 
 The pattern:
@@ -1802,13 +2281,13 @@ If your role has a written spec, send it. I'll respond with which gates from G1�
 
 ---
 
-# Now · Christian T. Macion
+# Now
 
-> What Christian is shipping this month (10 July 2026). Open-to / not-open-to / where / how to reach me.
+> What Christian is shipping this month (14 July 2026). Open-to / not-open-to / where / how to reach me.
 
 Source: `/now/`
 
-now/ · last updated 2026-07-10
+now/ · last updated 2026-07-14
 
 # What I'm doing right now.
 
@@ -1896,13 +2375,13 @@ I read every email. If the role matches, you'll get a reply within 24h with: pro
 
 ---
 
-# Live paper-trading · Christian T. Macion
+# Live paper-trading
 
 > Currently-running strategies. Public data, no live capital, weekly updates.
 
 Source: `/positions/`
 
-Status: open to conversations · last refreshed 2026-07-13
+Status: open to conversations · last refreshed 2026-07-14
 
 positions/ · live paper-trading
 
@@ -2096,7 +2575,7 @@ Send the strategy you're hiring for. I'll send back which of my currently-runnin
 
 ---
 
-# Experience · Christian T. Macion
+# Experience
 
 > Operator and researcher experience across multi-agent AI platforms, venture incubation, content automation, and systematic trading research.
 
@@ -2120,9 +2599,9 @@ systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/202
 is a 
 
 closed past contract
-; PM of record with publicly attributable initials(NDA-protected desk). No proprietary data sources, strategy internals, or desk PnL are referenced anywhere on this site. If the proof you need is missing, email me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.contribution_density=months(ΔE)∑e∈E​proofs(e)​engagements∣E∣8multi-hatcontributions∑ce​32↑declaredproof pointers∑pe​22↑public artifactsmonthsΔt252024-12 → 2026-05trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-13
+; PM of record with publicly attributable initials(NDA-protected desk). No proprietary data sources, strategy internals, or desk PnL are referenced anywhere on this site. If the proof you need is missing, email me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.contribution_density=months(ΔE)∑e∈E​proofs(e)​engagements∣E∣8multi-hatcontributions∑ce​32↑declaredproof pointers∑pe​22↑public artifactsmonthsΔt252024-12 → 2026-05trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-14
 
-8 min read · last updated2026-07-09 · [how verified ↗](/proof/)
+8 min read · last updated2026-07-14 · [how verified ↗](/proof/)
 
 ### AI Systems Engineer / Quantitative Researcher (contract)
 
@@ -2498,7 +2977,7 @@ Contact me and I'll share a tailored reference pack — name, role, brief contex
 
 ---
 
-# Skills · Christian T. Macion
+# Skills
 
 > Domain-grouped skill matrix with self-rated proficiency and years of practice: AI &amp; multi-agent systems, quantitative research &amp; statistics, and engineering tools.
 
@@ -2758,7 +3237,7 @@ knowledge base · agent-memory governance
 
 ---
 
-# Certifications · Christian T. Macion
+# Certifications
 
 > Curated 49+ of 102 professional certifications, grouped by domain and Tier-1 issuer.
 
@@ -2903,7 +3382,7 @@ Full list:
 
 ---
 
-# Publications · Christian T. Macion
+# Publications
 
 > Public work — research projects, workbooks, talks, OSS repos, and press. All NDA-safe.
 
@@ -2916,9 +3395,9 @@ publications/ · 27 artifacts
 Dated. Linkable. If a row says I did something, the proof is in the same row.
 
 Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No proprietary data sources. No NDA-protected content.
-all 27papers9oss 6workbooks3press 9trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-13
+all 27papers9oss 6workbooks3press 9trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-14
 
-7 min read · last updated2026-07-09 · [how verified ↗](/proof/)
+7 min read · last updated2026-07-14 · [how verified ↗](/proof/)
 
 Research papers · 9 quant projects
 
@@ -3207,7 +3686,7 @@ Email me the topic and I'll point you to the artifact (PDF, video, repo) within 
 
 ---
 
-# Projects · Christian T. Macion
+# Projects
 
 > AI engineering projects (multi-agent, eval, MCP) and quantitative research projects (multiple-testing, cross-sectional alpha, volatility, cointegration).
 
@@ -3315,7 +3794,7 @@ Combined-book analysis · cross-project
 
 ## What 9 projects tell you about a research book
 
-None of these projects stand alone. The signal, cost, regime, and bias-control layers are designed to compose — a single vol-targeted carry trade (03 + 06) carries different risk than a cointegration pair (05) carrying regime-aware sizing (07). The shared methodology across all nine is what makes the book interpretable to a risk manager, not just an alpha-hunter.
+None of these projects stand alone. The signal, cost, regime, and bias-control layers are designed to compose — a single vol-targeted carry trade (03 + 06) carries different risk than a cointegration pair (05) carrying regime-aware sizing (07). The shared methodology across all 9 is what makes the book interpretable to a risk manager, not just an alpha-hunter.
 Layer A — Signal
 
 ### Alpha sources
@@ -3364,11 +3843,11 @@ HAC inference:
 Honest nulls:
  projects 02 + 05 (rejected, shipped as rejections)
 
-The book is not nine winning trades. It is one pipeline with three orthogonal layers and a layered validation discipline that catches the failure modes that eat naive books alive. A risk manager reading these nine projects sees the same engineering discipline applied end-to-end — that is what is hireable.
+The book is not 9 winning trades. It is one pipeline with three orthogonal layers and a layered validation discipline that catches the failure modes that eat naive books alive. A risk manager reading these 9 projects sees the same engineering discipline applied end-to-end — that is what is hireable.
 
 ---
 
-# Solutions · Christian T. Macion
+# Solutions
 
 > Selected case studies. Problem → approach → evidence → outcome → proof. NDA-safe, public-data reproducible.
 
@@ -3391,6 +3870,18 @@ No live capital. Paper-trade first.
 No proprietary data sources. Ever.
 
 PBO-tested. Walk-forward validated.
+
+Each entry below is a real engagement or self-directed project: the problem, the approach, the evidence, the outcome, and the proof — in that order. Public data only, NDA-safe by construction.
+decision=argmaxa∈A​E[U(a)∣evidence]PROMISEEvery solution ships with at least one falsifiable claim and a proof pointer.solutions shipped10professional certs10211-month arcLOC light-dep Python76.5knumpy/pandas/boto3eval gates31G1–G31 statisticaltrust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-14
+
+9 min read · last updated2026-07-14 · [how verified ↗](/proof/)
+On this solutions page
+
+[AI engineering](#ai)
+
+[Quantitative research](#quant)
+
+[Education](#edu)
 
 Lane · AI Engineering
 
@@ -3783,7 +4274,7 @@ Email me the JD or scope and I'll send back a tailored solution sketch within 24
 
 ---
 
-# Papers · Christian T. Macion
+# Papers
 
 > Working memos, in-flight drafts, and the bookshelf that backs the methodology. NDA-safe by construction.
 
@@ -3834,10 +4325,10 @@ Abstract
 A block-bootstrap null with the same autocorrelation as the source is the cheapest defensible null hypothesis for a systematic strategy. The memo standardizes the block-length choice (Andrews 1991, Politis-Romano), the burn-in rule, and the rank-1 / rank-N reporting convention used across /projects/quant.
 Method
 
-Run the standardized bootstrap-null routine on the nine /projects/quant strategies. Report the rank-1 strategy's z-score against the null for each. Strategies above +1.65σ are flagged for embargoed OOS; strategies below are tabled.
+Run the standardized bootstrap-null routine on the 9 /projects/quant strategies. Report the rank-1 strategy's z-score against the null for each. Strategies above +1.65σ are flagged for embargoed OOS; strategies below are tabled.
 Finding
 
-Three of the nine strategies clear the +1.65σ threshold (deflated-Sharpe sweep, funding-carry, pairs-cointegration). Six are within ±1σ of the null mean. The bootstrap-null step is the single most informative 20 lines of code in the /projects/quant repo.
+Three of the 9 strategies clear the +1.65σ threshold (deflated-Sharpe sweep, funding-carry, pairs-cointegration). Six are within ±1σ of the null mean. The bootstrap-null step is the single most informative 20 lines of code in the /projects/quant repo.
 2026-05-04Draft in flight · not yet on the public PDF queue
 
 ### Eval-first discipline for multi-agent LLM systems
@@ -3902,7 +4393,7 @@ If a memo is on the queue above, email me the title and I'll point you to the la
 
 ---
 
-# Talks · Christian T. Macion
+# Talks
 
 > Public lectures, conference appearances, and meetup talks — sourced from the /proof archive. NDA-safe.
 
@@ -3992,13 +4483,13 @@ Open to invited lectures on systematic-trading research, AI-evaluation disciplin
 
 ---
 
-# Uses · Christian T. Macion
+# Uses
 
-> The hardware, software, and AI tooling used to ship the projects, methodology, and this site. Updated 2026-07-09.
+> The hardware, software, and AI tooling used to ship the projects, methodology, and this site. Updated 2026-07-14.
 
 Source: `/uses/`
 
-uses/ · last updated 2026-07-09
+uses/ · last updated 2026-07-14
 
 # What I use to do the work.
 
@@ -4098,7 +4589,7 @@ If a JD asks for a tool I use, I'll attach the relevant /uses entry plus a runna
 
 ---
 
-# Glossary · Quant &amp; AI terms · Christian T. Macion
+# Glossary · Quant &amp; AI terms
 
 > A short, alphabetised glossary of the quant and AI terms used across this site. Written for hiring managers and recruiters who don't yet know the field.
 
@@ -4129,7 +4620,7 @@ Each definition above links to a method or artifact on this site where it is app
 
 ---
 
-# Reading · shelf · Christian T. Macion
+# Reading · shelf
 
 > What I'm reading, re-reading, and keeping on the reference shelf. Public-data only.
 
@@ -4139,11 +4630,11 @@ reading · shelf · v6.0
 
 # Reading. Re-reading. Reference shelf.
 
-The re-reads matter more than the first reads.
+ The re-reads matter more than the first reads. 
 
 A dated, opinionated list of what I'm reading and re-reading. Public-data only — no proprietary data sources, no NDA-protected materials. Inspired by [Derek Sivers](https://sivers.org/book)'s/book shelf and the institutional library conventions at AQR / Jane Street.
 
-currently · 2026-07-13
+currently · 2026-07-14
 
 ## On the desk right now.
 
@@ -4262,17 +4753,17 @@ No proprietary material.
  I do not list strategy-specific books from NDA-protected desks. If you saw it referenced there, that's the only category I'd ask you not to ask about.
 
 Updated quarterly.
- This page refreshes with the queue when a book finishes its turn on the desk. Last refresh: 2026-07-13.
+ This page refreshes with the queue when a book finishes its turn on the desk. Last refresh: 2026-07-14.
 
 ---
 
-# About · Christian T. Macion
+# About
 
 > Operator + researcher building eval-first multi-agent AI systems and systematic trading research.
 
 Source: `/about/`
 
-_(Christian T. Macion, dark blazer over graphic tee, three-quarter view, neutral background.)_ 
+_(Christian T. Macion, dark blazer over graphic tee, three-quarter view, neutral background. Photographed February 2026.)_ 
 
 about/ · operator + researcher
 
@@ -4342,7 +4833,7 @@ Full record at [/solutions/](/solutions/) · engagements at [/experience/](/expe
 
 Method
 
-## 31 gates before a number ships.
+## 31-gate before a number ships.
 DSR(σ^)=V[μ^​]+V[σ^2]/2​E[μ^​]−rf​​⋅γ1​
 
 G1–G12
@@ -4354,11 +4845,11 @@ G16–G20
 G23–G31
  · LLM-output validation
 
-Full method at [/methodology/](/methodology/) · live calculator at [DSR calculator →](/methodology/)
+Full method at [/methodology/](/methodology/) · live calculator at[DSR calculator →](/methodology/)
 
 Quant side
 
-## Nine projects, public-data reproducible.
+## 9 projects, public-data reproducible.
 PBOCSCV​=P[λ∗∈F​training∈S]
 
 9
@@ -4385,16 +4876,16 @@ systematic trading research
 . The through-line is a single engineering principle: 
 
 don't ship what hasn't passed a measurable quality gate.
-Eleven agents in an orchestrator-worker topology. A 31-gate statistical evaluation harness. Pre-registered research windows. Public-data reproducibility. Headline metrics you can verify.
+11 agents in an orchestrator-worker topology. A 31-gate statistical evaluation harness. Pre-registered research windows. Public-data reproducibility. Headline metrics you can verify.
 
 I was previously the AI Systems Engineer / Quantitative Researcher on the
 
 systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/2026)
 under a PM with publicly attributable initials (closed past contract), where the same eval harness served both LLM outputs and systematic trading strategies. Before that I shipped a 7-agent venture-incubation pipeline under Macion Ventures, an 8-agent content-production pipeline for editorial automation, and a portfolio of runnable AI projects (RAG scorecard, ReAct tool-calling agent, MCP eval server, LLM-as-judge harness, reflection agent, AI-slop evaluation gate).
 
-On the quant side I design and backtest systematic strategies on crypto and equities — nine reproducible public-data projects spanning multiple-testing (Deflated Sharpe), cross-sectional and time-series alpha, volatility carry, cointegration, funding-carry, regime overlays, transaction-cost realism, and look-ahead-bias audits. Every project ships with the standard senior-research discipline: locked OOS windows, block-bootstrap CIs, and the methodology stated up-front, not bolted on at the end.
+On the quant side I design and backtest systematic strategies on crypto and equities — 9 reproducible public-data projects spanning multiple-testing (Deflated Sharpe), cross-sectional and time-series alpha, volatility carry, cointegration, funding-carry, regime overlays, transaction-cost realism, and look-ahead-bias audits. Every project ships with the standard senior-research discipline: locked OOS windows, block-bootstrap CIs, and the methodology stated up-front, not bolted on at the end.
 
-I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available 30 hrs/wk remote. I hold 102 professional certifications across AI, finance, math/statistics, and event flagships, built up in 11 months. I write about what I'm learning and ship the things I'm building.
+I'm based in Digos City, Davao del Sur, Philippines (UTC+8), available 30 hrs/wkremote. I hold 102 professional certifications across AI, finance, math/statistics, and event flagships, built up in 11 months. I write about what I'm learning and ship the things I'm building.
 
 Education
 
@@ -4415,7 +4906,7 @@ Email me at christianmacion26@gmail.com with the JD — tailored resume within 2
 
 ---
 
-# About this site · Christian T. Macion
+# About this site
 
 > How this site is built, the design system that holds it together, and the NDA guardrail that runs on every build.
 
@@ -4548,7 +5039,7 @@ Open an issue on the GitHub repo or email me. The /proof guardrail catches NDA d
 
 ---
 
-# Colophon · Christian T. Macion
+# Colophon
 
 > The design system — type, color, spacing, motion, and accessibility — for this site. All values live in src/styles/tokens.css.
 
@@ -4659,7 +5150,7 @@ Focus-visible ring:
  a 2px outline in
 
 --c-primary-2-deep
- (5.0:1) on every interactive element, gated by 
+ (5.0:1) on every interactive element, gated by
 
 :focus-visible
  so mouse users see no ring.
@@ -4698,7 +5189,7 @@ src/styles/tokens.css is the canonical source. PRs that change a token are expec
 
 ---
 
-# Contact · Christian T. Macion
+# Contact
 
 > Email christianmacion26@gmail.com with a JD, or reach me via LinkedIn, GitHub, or phone. Reply within 24h on weekdays.
 

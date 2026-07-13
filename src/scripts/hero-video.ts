@@ -31,8 +31,10 @@ function init(): void {
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (mq.addEventListener) {
     mq.addEventListener('change', apply);
-  } else if (mq.addListener) {
-    mq.addListener(apply); // Safari < 14
+  } else if ('addListener' in mq) {
+    // Safari < 14 fallback. `addListener` is deprecated in the TS lib
+    // (ts(6385)) but still exists at runtime for the legacy browsers.
+    (mq as unknown as { addListener: (cb: () => void) => void }).addListener(apply);
   }
   apply();
 }
@@ -44,3 +46,5 @@ if (typeof window !== 'undefined') {
     init();
   }
 }
+
+export {};

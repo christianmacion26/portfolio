@@ -44,6 +44,7 @@
  */
 
 import { seedFromString, buildSeed } from '@utils/prng';
+import { profile } from '@utils/profile';
 
 // === FIXTURE POOLS — NDA-clean, category language only ===
 const MARKETS_POOL = [
@@ -116,12 +117,12 @@ const QUANT_POOL = [
 ];
 
 const AI_POOL = [
-  '31-gate eval harness catches regression in MCP round-trip parity',
+  `${profile.stats.evalGates}-gate eval harness catches regression in MCP round-trip parity`,
   'Agent roster revision: 11 nodes; orchestrator plus 4 inputs plus 3 middle plus 3 outputs',
   'RAG recall@10 lifted 4pp via query-rewrite plus hybrid retrieval',
   'Structured-output JSON-schema validation: 100% pass across 200 traces',
   'MCP tool-call failure rate 0.8% over 1200 sample sessions',
-  'Eval harness gates G1 to G31 mechanical; no manual override',
+  `Eval harness gates G1 to G${profile.stats.evalGates} mechanical; no manual override`,
   'LLM judge scoring: 88% agreement with rubric-graded holdout',
   'Prompt-injection probe: 9 attack variants; all refused by charter',
   'Token-budget per trace: median 4.1k; p95 7.8k',
@@ -131,7 +132,7 @@ const AI_POOL = [
   'Embedding model swap: recall parity plus or minus 2pp at iso-cost',
   'Reranker on long context: NDCG@10 plus 3.4pp over base retriever',
   'Hallucination probe: factual recall 96% on 1000 closed-domain questions',
-  'Agent-fleet harness regression suite: 12 of 31 gates auto-triggered',
+  `Agent-fleet harness regression suite: 12 of ${profile.stats.evalGates} gates auto-triggered`,
   'Eval traceability: every gate cross-links to source artifact',
   'JSON-schema coverage: 41 contracts; lint pass at 100%',
   'MCP server health-check: 0 missed heartbeats over 7-day window',
@@ -140,9 +141,9 @@ const AI_POOL = [
 
 const LANES = [
   { id: 'markets', label: 'MARKETS', pool: MARKETS_POOL, tone: 'amber' as const, channel: '01' },
-  { id: 'policy',  label: 'POLICY',  pool: POLICY_POOL,  tone: 'pass'  as const, channel: '02' },
-  { id: 'quant',   label: 'QUANT',   pool: QUANT_POOL,   tone: 'info'  as const, channel: '03' },
-  { id: 'ai',      label: 'AI',      pool: AI_POOL,      tone: 'ai'    as const, channel: '04' },
+  { id: 'policy', label: 'POLICY', pool: POLICY_POOL, tone: 'pass' as const, channel: '02' },
+  { id: 'quant', label: 'QUANT', pool: QUANT_POOL, tone: 'info' as const, channel: '03' },
+  { id: 'ai', label: 'AI', pool: AI_POOL, tone: 'ai' as const, channel: '04' },
 ] as const;
 
 // Pad shorter pools to 20 with the longer ones' tail items so every
@@ -213,8 +214,8 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
   <header class="worldfeed__head container">
     <p class="worldfeed__eyebrow mono">World wire — 4 channels, 80 fixtures</p>
     <p class="worldfeed__sub">
-      Build-stamp seeded. Four lanes scroll in parallel, one headline per
-      channel every 8 seconds. NDA-clean by construction.
+      Build-stamp seeded. Four lanes scroll in parallel, one headline per channel every 8 seconds.
+      NDA-clean by construction.
     </p>
   </header>
 
@@ -280,7 +281,7 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
   .worldfeed {
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
     padding-block: var(--sp-6) var(--sp-7);
     position: relative;
   }
@@ -291,7 +292,7 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
     gap: var(--sp-3) var(--sp-5);
     margin-bottom: var(--sp-5);
     padding-bottom: var(--sp-3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--c-white-mist);
     max-width: var(--container-max);
     margin-left: auto;
     margin-right: auto;
@@ -307,7 +308,7 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
   }
   .worldfeed__sub {
     font-size: var(--fs-xs);
-    color: rgba(230, 237, 243, 0.55);
+    color: var(--c-ink-ghost);
     font-family: var(--ff-mono);
     margin: 0;
     letter-spacing: 0.02em;
@@ -327,7 +328,7 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
     display: flex;
     flex-direction: column;
     background: var(--c-tape-2);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--c-white-mist);
     border-radius: var(--radius-sm);
     overflow: hidden;
     min-width: 0;
@@ -339,12 +340,12 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
     align-items: center;
     gap: var(--sp-2);
     padding: var(--sp-2) var(--sp-3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--c-white-mist);
     background: var(--c-tape);
   }
   .worldfeed__lane-channel {
     font-size: 0.62rem;
-    color: rgba(230, 237, 243, 0.42);
+    color: var(--c-ink-veil);
     letter-spacing: 0.06em;
   }
   .worldfeed__lane-label {
@@ -371,13 +372,28 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
      gets amber; all other lanes render in ink-3 (subdued editorial).
      Per Man Group / Renaissance / AQR convention: data sections use
      ONE accent for emphasis, everything else is monochrome ink. */
-  .worldfeed__lane--amber .worldfeed__lane-dot-pulse { background: var(--c-primary-2); }
-  .worldfeed__lane--pass .worldfeed__lane-dot-pulse  { background: rgba(230, 237, 243, 0.55); }
-  .worldfeed__lane--info .worldfeed__lane-dot-pulse  { background: rgba(230, 237, 243, 0.35); }
-  .worldfeed__lane--ai   .worldfeed__lane-dot-pulse  { background: rgba(230, 237, 243, 0.25); }
+  .worldfeed__lane--amber .worldfeed__lane-dot-pulse {
+    background: var(--c-primary-2);
+  }
+  .worldfeed__lane--pass .worldfeed__lane-dot-pulse {
+    background: var(--c-ink-ghost);
+  }
+  .worldfeed__lane--info .worldfeed__lane-dot-pulse {
+    background: var(--c-ink-wisp);
+  }
+  .worldfeed__lane--ai .worldfeed__lane-dot-pulse {
+    background: var(--c-ink-haze);
+  }
   @keyframes worldfeed-dot {
-    0%, 100% { opacity: 0.55; transform: scale(1); }
-    50%      { opacity: 1;    transform: scale(1.18); }
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.18);
+    }
   }
 
   /* === animated viewport — 4 rows tall, overflowing track pans === */
@@ -395,8 +411,12 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
   @keyframes worldfeed-pan {
     /* 20 items / 4 visible = 5 rotations; total anim height = 40 rows.
        Translate by 50% (= 20 rows = one full copy) for a seamless loop. */
-    0%   { transform: translateY(0); }
-    100% { transform: translateY(-50%); }
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
   }
 
   /* === static mirror — shown ONLY when prefers-reduced-motion is set.
@@ -414,13 +434,13 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
     align-items: center;
     gap: var(--sp-2);
     padding: var(--sp-2) var(--sp-3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid var(--c-white-mist);
     min-height: var(--item-h);
     background: transparent;
   }
   .worldfeed__time {
     font-size: 0.7rem;
-    color: rgba(230, 237, 243, 0.55);
+    color: var(--c-ink-ghost);
     letter-spacing: 0.06em;
     font-variant-numeric: tabular-nums;
   }
@@ -451,13 +471,21 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
      that read as "AI-generated status dashboard" and replaces it with
      the institutional pattern of one accent + ink variants. */
   .worldfeed__lane--amber .worldfeed__chip,
-  .worldfeed__lane--amber .worldfeed__lane-label { color: var(--c-primary-2); }
-  .worldfeed__lane--pass  .worldfeed__chip,
-  .worldfeed__lane--pass  .worldfeed__lane-label { color: rgba(230, 237, 243, 0.65); }
-  .worldfeed__lane--info  .worldfeed__chip,
-  .worldfeed__lane--info  .worldfeed__lane-label { color: rgba(230, 237, 243, 0.45); }
-  .worldfeed__lane--ai    .worldfeed__chip,
-  .worldfeed__lane--ai    .worldfeed__lane-label { color: rgba(230, 237, 243, 0.35); }
+  .worldfeed__lane--amber .worldfeed__lane-label {
+    color: var(--c-primary-2);
+  }
+  .worldfeed__lane--pass .worldfeed__chip,
+  .worldfeed__lane--pass .worldfeed__lane-label {
+    color: var(--c-ink-faint);
+  }
+  .worldfeed__lane--info .worldfeed__chip,
+  .worldfeed__lane--info .worldfeed__lane-label {
+    color: var(--c-ink-veil);
+  }
+  .worldfeed__lane--ai .worldfeed__chip,
+  .worldfeed__lane--ai .worldfeed__lane-label {
+    color: var(--c-ink-wisp);
+  }
 
   /* === lane footer === */
   .worldfeed__lane-foot {
@@ -465,9 +493,9 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
     align-items: center;
     gap: var(--sp-2);
     padding: var(--sp-2) var(--sp-3);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid var(--c-white-mist);
     font-size: 0.6rem;
-    color: rgba(230, 237, 243, 0.42);
+    color: var(--c-ink-veil);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
@@ -499,10 +527,17 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
 
   /* === responsive: 2x2 then 1x4 === */
   @media (max-width: 880px) {
-    .worldfeed__grid { grid-template-columns: 1fr 1fr; }
+    .worldfeed__grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
   @media (max-width: 540px) {
-    .worldfeed__grid { grid-template-columns: 1fr; }
-    .worldfeed__head { flex-direction: column; align-items: flex-start; }
+    .worldfeed__grid {
+      grid-template-columns: 1fr;
+    }
+    .worldfeed__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>

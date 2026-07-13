@@ -27,7 +27,6 @@ import MiniSpark from '@components/MiniSpark.astro';
 import EquityCurveChart from '@components/EquityCurveChart.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { seedFromString, walk, formatPx, buildSeed } from '@utils/prng';
-import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 
 // === Index stats (PRNG-seeded from BUILD_DATE) ===
@@ -35,10 +34,10 @@ import { path } from '@utils/url';
 // 30-day series for the inline MiniSpark on each card.
 const rng = seedFromString(buildSeed() + '::markets-stats');
 const indexCards = [
-  { sym: 'SPX',     base: 5872,   sigma: 12,  volUnit: 'idx' },
-  { sym: 'DXY',     base: 104.21, sigma: 0.18, volUnit: 'idx' },
-  { sym: 'VIX',     base: 14.6,   sigma: 0.6,  volUnit: 'pts' },
-  { sym: 'BTC-USD', base: 96480,  sigma: 380,  volUnit: 'usd' },
+  { sym: 'SPX', base: 5872, sigma: 12, volUnit: 'idx' },
+  { sym: 'DXY', base: 104.21, sigma: 0.18, volUnit: 'idx' },
+  { sym: 'VIX', base: 14.6, sigma: 0.6, volUnit: 'pts' },
+  { sym: 'BTC-USD', base: 96480, sigma: 380, volUnit: 'usd' },
 ].map((ix) => {
   const series = walk(rng, ix.base, ix.sigma, 30);
   const last = series[series.length - 1];
@@ -46,7 +45,14 @@ const indexCards = [
   const deltaPct = +(((last - mean) / mean) * 100).toFixed(2);
   return {
     sym: ix.sym,
-    label: ix.sym === 'SPX' ? 'S&P 500' : ix.sym === 'DXY' ? 'Dollar Index' : ix.sym === 'VIX' ? 'CBOE VIX' : 'BTC-USD',
+    label:
+      ix.sym === 'SPX'
+        ? 'S&P 500'
+        : ix.sym === 'DXY'
+          ? 'Dollar Index'
+          : ix.sym === 'VIX'
+            ? 'CBOE VIX'
+            : 'BTC-USD',
     value: formatPx(last, last >= 1000 ? 2 : last >= 100 ? 2 : 4),
     delta: deltaPct,
     sub:
@@ -72,13 +78,13 @@ const equitySeries = walk(curveRng, 100, 0.6, 60);
 // 8 standard SOFR tenors, slightly inverted (a realistic 2026 shape).
 // One flat reference spot at the 1M point.
 const yieldCurve = [
-  { tenor: '1M',  yld: 5.32 },
-  { tenor: '3M',  yld: 5.28 },
-  { tenor: '6M',  yld: 5.21 },
-  { tenor: '1Y',  yld: 4.96 },
-  { tenor: '2Y',  yld: 4.71 },
-  { tenor: '3Y',  yld: 4.55 },
-  { tenor: '5Y',  yld: 4.42 },
+  { tenor: '1M', yld: 5.32 },
+  { tenor: '3M', yld: 5.28 },
+  { tenor: '6M', yld: 5.21 },
+  { tenor: '1Y', yld: 4.96 },
+  { tenor: '2Y', yld: 4.71 },
+  { tenor: '3Y', yld: 4.55 },
+  { tenor: '5Y', yld: 4.42 },
   { tenor: '10Y', yld: 4.38 },
 ];
 
@@ -96,16 +102,20 @@ const secondarySymbol = 'BTC-USD';
     { name: 'Markets', href: '/markets' },
   ]}
 >
-  {/* ============================================================
+  {
+    /* ============================================================
        TAPE — full-bleed. The first thing the eye meets; instant
        signal density before the editorial copy begins.
-       ============================================================ */}
+       ============================================================ */
+  }
   <MarketTape />
 
-  {/* ============================================================
+  {
+    /* ============================================================
        HERO — identity-first, single column, dark editorial.
        Title is the page identity, not the navigation chrome.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="mk-hero">
     <div class="container mk-hero__inner">
       <p class="mk-hero__eyebrow mono">
@@ -122,31 +132,33 @@ const secondarySymbol = 'BTC-USD';
       </VoiceLine>
       <p class="mk-hero__sub">
         A research view of what a quant desk reads in the first five minutes of the session: the
-        tape, the book, the term structure, and the coverage map. All four primitives are
-        reusable components — they ship on <a href={path('/research')}>research</a>,
+        tape, the book, the term structure, and the coverage map. All four primitives are reusable
+        components — they ship on <a href={path('/research')}>research</a>,
         <a href={path('/positions')}>positions</a>, and the
         <a href={path('/prediction-markets')}>prediction page</a> too.
       </p>
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        STATS ROW — 4 StatCells, indices + inline MiniSpark per cell.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="mk-stats">
     <div class="container">
       <div class="mk-stats__grid">
         {
           indexCards.map((c) => (
             <div class="mk-stats__cell">
-              <StatCell
-                label={c.label}
-                value={c.value}
-                delta={c.delta}
-                sub={c.sub}
-              />
+              <StatCell label={c.label} value={c.value} delta={c.delta} sub={c.sub} />
               <div class="mk-stats__spark">
-                <MiniSpark points={c.spark} width={220} height={26} ariaLabel={`${c.sym} 30-day series`} />
+                <MiniSpark
+                  points={c.spark}
+                  width={220}
+                  height={26}
+                  ariaLabel={`${c.sym} 30-day series`}
+                />
               </div>
             </div>
           ))
@@ -155,10 +167,12 @@ const secondarySymbol = 'BTC-USD';
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        3-COL TERMINAL — OrderBook (left) · EquityCurveChart (center)
        · Secondary OrderBook (right). On <=980px, stacks vertically.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="mk-terminal">
     <div class="container">
       <header class="mk-terminal__head">
@@ -173,11 +187,21 @@ const secondarySymbol = 'BTC-USD';
 
       <div class="mk-terminal__grid">
         <div class="mk-terminal__panel mk-terminal__panel--book">
-          <OrderBook symbol="SPX" midPx={indexCards[0].spark[indexCards[0].spark.length - 1]} spreadBps={2} depth={12} />
+          <OrderBook
+            symbol="SPX"
+            midPx={indexCards[0].spark[indexCards[0].spark.length - 1]}
+            spreadBps={2}
+            depth={12}
+          />
         </div>
         <div class="mk-terminal__panel mk-terminal__panel--chart">
           <div class="mk-terminal__panel-head mono">EQUITY · strategy walk · 60d</div>
-          <EquityCurveChart data={equitySeries} height={300} title="Composite strategy walk" caption="60-day composite walk from BUILD_DATE-seeded Gaussian random walk. σ = 0.6 daily; deterministic." />
+          <EquityCurveChart
+            data={equitySeries}
+            height={300}
+            title="Composite strategy walk"
+            caption="60-day composite walk from BUILD_DATE-seeded Gaussian random walk. σ = 0.6 daily; deterministic."
+          />
         </div>
         <div class="mk-terminal__panel mk-terminal__panel--book">
           <OrderBook symbol={secondarySymbol} spreadBps={4} depth={10} />
@@ -186,10 +210,12 @@ const secondarySymbol = 'BTC-USD';
     </div>
   </section>
 
-  {/* ============================================================
+  {
+    /* ============================================================
        BOTTOM BAND — CoverageGlobe · TermStructure · indices list.
        Three columns of equal weight; each is its own data primitive.
-       ============================================================ */}
+       ============================================================ */
+  }
   <section class="mk-band">
     <div class="container">
       <div class="mk-band__grid">
@@ -264,7 +290,7 @@ const secondarySymbol = 'BTC-USD';
     padding-block: clamp(var(--sp-7), 12vh, var(--sp-9));
     background: var(--c-tape);
     color: var(--ink-on-tape);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--c-white-mist);
   }
   .mk-hero__inner {
     max-width: 1080px;
@@ -280,7 +306,7 @@ const secondarySymbol = 'BTC-USD';
     margin-bottom: var(--sp-4);
   }
   .mk-hero__eyebrow span:nth-child(2) {
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--c-white-fade);
   }
   .mk-hero__title {
     font-size: clamp(1.85rem, 4.4vw, 3.4rem);
@@ -292,7 +318,7 @@ const secondarySymbol = 'BTC-USD';
     margin-bottom: var(--sp-5);
   }
   .mk-hero__voice {
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--c-white-soft);
     margin-bottom: var(--sp-4);
     max-width: 64ch;
   }
@@ -300,20 +326,20 @@ const secondarySymbol = 'BTC-USD';
     font-family: var(--ff-mono);
     font-size: 0.85em;
     color: var(--c-primary-2);
-    background: rgba(232, 178, 32, 0.08);
+    background: color-mix(in oklab, var(--c-amber) 0.08%, transparent);
     padding: 0.05em 0.4em;
     border-radius: 3px;
   }
   .mk-hero__sub {
     font-size: var(--fs-base);
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--c-white-faint);
     line-height: 1.65;
     max-width: 64ch;
   }
   .mk-hero__sub a {
     color: var(--c-primary-2-light);
     text-decoration: underline;
-    text-decoration-color: rgba(232, 178, 32, 0.4);
+    text-decoration-color: var(--c-amberl-decor);
     text-underline-offset: 3px;
   }
 
@@ -346,10 +372,15 @@ const secondarySymbol = 'BTC-USD';
     align-items: center;
   }
   @media (max-width: 880px) {
-    .mk-stats__grid { grid-template-columns: repeat(2, 1fr); }
+    .mk-stats__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
   @media (max-width: 540px) {
-    .mk-stats__grid { grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+    .mk-stats__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-3);
+    }
   }
 
   /* ============================================================
@@ -389,7 +420,9 @@ const secondarySymbol = 'BTC-USD';
     .mk-terminal__grid {
       grid-template-columns: 1fr 1fr;
     }
-    .mk-terminal__panel--chart { grid-column: 1 / -1; }
+    .mk-terminal__panel--chart {
+      grid-column: 1 / -1;
+    }
   }
   @media (max-width: 720px) {
     .mk-terminal__grid {
@@ -403,7 +436,7 @@ const secondarySymbol = 'BTC-USD';
   .mk-band {
     padding-block: var(--sp-7);
     background: var(--c-tape-2);
-    border-block: 1px solid rgba(255, 255, 255, 0.06);
+    border-block: 1px solid var(--c-white-mist);
   }
   .mk-band__grid {
     display: grid;
@@ -466,11 +499,17 @@ const secondarySymbol = 'BTC-USD';
     font-feature-settings: 'tnum' 1;
   }
   .mk-band__indices-delta {
-    font-weight: 700;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
   }
-  .mk-band__indices-delta--up { color: var(--c-pass); }
-  .mk-band__indices-delta--down { color: var(--c-fail); }
-  .mk-band__indices-delta--flat { color: var(--c-ink-3); }
+  .mk-band__indices-delta--up {
+    color: var(--c-pass);
+  }
+  .mk-band__indices-delta--down {
+    color: var(--c-fail);
+  }
+  .mk-band__indices-delta--flat {
+    color: var(--c-ink-3);
+  }
 </style>

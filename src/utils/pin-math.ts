@@ -14,12 +14,7 @@
  */
 import { seedFromString, buildSeed } from '@utils/prng';
 
-export type EventCategory =
-  | 'central-bank'
-  | 'earnings'
-  | 'geopolitical'
-  | 'data-release'
-  | 'fx';
+export type EventCategory = 'central-bank' | 'earnings' | 'geopolitical' | 'data-release' | 'fx';
 export type Severity = 'mild' | 'moderate' | 'critical';
 
 /**
@@ -29,10 +24,7 @@ export type Severity = 'mild' | 'moderate' | 'critical';
  * NDA-positive: generic quant math idioms (β, σ, DVO1, carry), no
  * proprietary signal content, no employer / platform names.
  */
-export function pinMathFromCategory(
-  category: EventCategory,
-  severity: Severity,
-): string {
+export function pinMathFromCategory(category: EventCategory, severity: Severity): string {
   const seed = seedFromString(buildSeed() + `::math-${category}-${severity}`);
   // Pre-curated templates — formulas don't need to be computed from
   // physics; they need to read as "this is how a quant thinks."
@@ -43,7 +35,7 @@ export function pinMathFromCategory(
     case 'earnings':
       return `|z_post| ≈ ${mag(1.0 + seed() * 0.6)}× pre; vol regime shift: low → mid`;
     case 'geopolitical':
-      return `flight-to-quality β ≈ ${mag(0.45 + seed() * 0.30)}; DVO1 spikes ${mag(8 + seed() * 12)}%`;
+      return `flight-to-quality β ≈ ${mag(0.45 + seed() * 0.3)}; DVO1 spikes ${mag(8 + seed() * 12)}%`;
     case 'data-release':
       return `|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > ${mag(1.1 + seed() * 0.6)}σ`;
     case 'fx':

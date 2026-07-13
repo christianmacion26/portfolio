@@ -39,7 +39,7 @@ const now: ShelfItem[] = [
     year: 2014,
     status: 'reference',
     blurb:
-      "The 12-page paper that started it. Every multi-trial strategy I ship gets the DSR test before deploy.",
+      'The 12-page paper that started it. Every multi-trial strategy I ship gets the DSR test before deploy.',
   },
   {
     title: 'Algorithmic Trading',
@@ -55,7 +55,7 @@ const now: ShelfItem[] = [
     year: 2002,
     status: 're-read',
     blurb:
-      "Market microstructure for the practitioner. The chapter on order types is the only correct one I have ever read.",
+      'Market microstructure for the practitioner. The chapter on order types is the only correct one I have ever read.',
   },
   {
     title: 'Hamlet',
@@ -71,7 +71,7 @@ const now: ShelfItem[] = [
     year: 2017,
     status: 'reference',
     blurb:
-      "The autobiographical proof that an academic with a card-counting edge can survive translation to a hedge fund. The chapter on Kelly sizing is the reason I cap every vol-target at 0.5× Kelly.",
+      'The autobiographical proof that an academic with a card-counting edge can survive translation to a hedge fund. The chapter on Kelly sizing is the reason I cap every vol-target at 0.5× Kelly.',
   },
 ];
 
@@ -82,7 +82,7 @@ const queue: ShelfItem[] = [
     year: 1995,
     status: 'reading',
     blurb:
-      "Re-deriving the Greeks by hand. Slow, deliberate. The only way the math actually sticks.",
+      'Re-deriving the Greeks by hand. Slow, deliberate. The only way the math actually sticks.',
   },
   {
     title: 'Heard on the Street',
@@ -90,7 +90,7 @@ const queue: ShelfItem[] = [
     year: 2008,
     status: 'reading',
     blurb:
-      "Quantitative interview prep, but the chapters on Brownian motion are a clean refresher before each new factor model.",
+      'Quantitative interview prep, but the chapters on Brownian motion are a clean refresher before each new factor model.',
   },
   {
     title: 'Antifragile',
@@ -109,7 +109,7 @@ const reference: ShelfItem[] = [
     year: 2007,
     status: 'reference',
     blurb:
-      "Open the relevant chapter before using any optimizer. Saves hours of debugging local-minima surprises.",
+      'Open the relevant chapter before using any optimizer. Saves hours of debugging local-minima surprises.',
   },
   {
     title: 'Information Theory, Inference, and Learning Algorithms',
@@ -117,7 +117,7 @@ const reference: ShelfItem[] = [
     year: 2003,
     status: 'reference',
     blurb:
-      "The KL-divergence chapter is the cleanest derivation I know. The RAG eval gate borrows the cross-entropy framing.",
+      'The KL-divergence chapter is the cleanest derivation I know. The RAG eval gate borrows the cross-entropy framing.',
   },
   {
     title: 'Reinforcement Learning',
@@ -125,34 +125,35 @@ const reference: ShelfItem[] = [
     year: 2018,
     status: 'reference',
     blurb:
-      "The reference. The reflect-revise agent is a degenerate policy-gradient loop over a single trajectory.",
+      'The reference. The reflect-revise agent is a degenerate policy-gradient loop over a single trajectory.',
   },
 ];
 
 function statusPill(s: ShelfItem['status']): string {
-  return s === 'reading'
-    ? 'reading'
-    : s === 're-read'
-      ? 're-read'
-      : 'reference';
-}---
+  return s === 'reading' ? 'reading' : s === 're-read' ? 're-read' : 'reference';
+}
+---
 
 <BaseLayout
   title="Reading · shelf"
   description="What I'm reading, re-reading, and keeping on the reference shelf. Public-data only."
-  breadcrumbs={[{ name: "Home", href: "/" }, { name: "Reading", href: "/reading" }]}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Reading', href: '/reading' },
+  ]}
 >
   <section class="section">
     <div class="container container-narrow">
       <p class="section__eyebrow mono">reading · shelf · v6.0</p>
       <h1>Reading. Re-reading. Reference shelf.</h1>
-      <VoiceLine class="hero__voice">
-        The re-reads matter more than the first reads.
-      </VoiceLine>
+      <VoiceLine class="hero__voice"> The re-reads matter more than the first reads. </VoiceLine>
       <p class="lede">
-        A dated, opinionated list of what I'm reading and re-reading. Public-data only — no proprietary data
-        sources, no NDA-protected materials. Inspired by <a href="https://sivers.org/book">Derek Sivers</a>'s
-        <span class="mono">/book</span> shelf and the institutional library conventions at AQR / Jane Street.
+        A dated, opinionated list of what I'm reading and re-reading. Public-data only — no
+        proprietary data sources, no NDA-protected materials. Inspired by <a
+          href="https://sivers.org/book">Derek Sivers</a
+        >'s
+        <span class="mono">/book</span> shelf and the institutional library conventions at AQR / Jane
+        Street.
       </p>
     </div>
   </section>
@@ -172,14 +173,14 @@ function statusPill(s: ShelfItem['status']): string {
               <div class="shelf__body">
                 <h3 class="shelf__title">
                   {b.href ? (
-                    <a href={b.href} rel="noopener">{b.title}</a>
+                    <a href={b.href} rel="noopener">
+                      {b.title}
+                    </a>
                   ) : (
                     b.title
                   )}
                 </h3>
-                <p class="shelf__author">
-                  {b.author}
-                </p>
+                <p class="shelf__author">{b.author}</p>
                 <p class="shelf__blurb">{b.blurb}</p>
               </div>
             </li>
@@ -202,12 +203,8 @@ function statusPill(s: ShelfItem['status']): string {
                 <span class="shelf__year mono">{b.year}</span>
               </div>
               <div class="shelf__body">
-                <h3 class="shelf__title">
-                  {b.title}
-                </h3>
-                <p class="shelf__author">
-                  {b.author}
-                </p>
+                <h3 class="shelf__title">{b.title}</h3>
+                <p class="shelf__author">{b.author}</p>
                 <p class="shelf__blurb">{b.blurb}</p>
               </div>
             </li>
@@ -230,12 +227,8 @@ function statusPill(s: ShelfItem['status']): string {
                 <span class="shelf__year mono">{b.year}</span>
               </div>
               <div class="shelf__body">
-                <h3 class="shelf__title">
-                  {b.title}
-                </h3>
-                <p class="shelf__author">
-                  {b.author}
-                </p>
+                <h3 class="shelf__title">{b.title}</h3>
+                <p class="shelf__author">{b.author}</p>
                 <p class="shelf__blurb">{b.blurb}</p>
               </div>
             </li>
@@ -259,8 +252,8 @@ function statusPill(s: ShelfItem['status']): string {
           desks. If you saw it referenced there, that's the only category I'd ask you not to ask about.
         </li>
         <li>
-          <strong>Updated quarterly.</strong> This page refreshes with the queue when a book finishes its
-          turn on the desk. Last refresh: <span class="mono">{buildStampUtc8()}</span>.
+          <strong>Updated quarterly.</strong> This page refreshes with the queue when a book finishes
+          its turn on the desk. Last refresh: <span class="mono">{buildStampUtc8()}</span>.
         </li>
       </ul>
     </div>
@@ -271,7 +264,7 @@ function statusPill(s: ShelfItem['status']): string {
   .hero__voice {
     margin: 0 0 var(--sp-5);
     max-width: 60ch;
-}
+  }
   .shelf {
     list-style: none;
     padding: 0;
@@ -317,15 +310,15 @@ function statusPill(s: ShelfItem['status']): string {
     width: fit-content;
   }
   .shelf__status--reading {
-    background: rgba(232, 178, 32, 0.18);
+    background: color-mix(in oklab, var(--c-amber) 0.18%, transparent);
     color: var(--c-amber-deep);
   }
   .shelf__status--re-read {
-    background: rgba(232, 178, 32, 0.10);
+    background: var(--c-amberl-soft);
     color: var(--c-primary-2);
   }
   .shelf__status--reference {
-    background: rgba(232, 178, 32, 0.05);
+    background: var(--c-amberl-faint);
     color: var(--c-ink-2);
   }
   .shelf__year {

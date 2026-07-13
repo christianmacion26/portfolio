@@ -27,9 +27,7 @@ const { term } = Astro.props;
 
 // Resolve the related-terms list once on the server so the deep page
 // only ships the 3-6 cross-links instead of the entire 25-term table.
-const relatedTerms = term.related
-  .map((id) => terms.find((t) => t.id === id))
-  .filter(Boolean);
+const relatedTerms = term.related.map((id) => terms.find((t) => t.id === id)).filter(Boolean);
 
 // Category breadcrumb — top of page
 const categoryHref = term.category === 'Quant' ? '/methodology' : '/proof';
@@ -90,7 +88,9 @@ const categoryColor = term.category === 'Quant' ? 'pill--accent' : 'pill--brand'
                   <span class="related__term">{rt!.term}</span>
                   <span class="related__short">{rt!.short}</span>
                 </a>
-                <span class:list={['pill', rt!.category === 'Quant' ? 'pill--accent' : 'pill--brand']}>
+                <span
+                  class:list={['pill', rt!.category === 'Quant' ? 'pill--accent' : 'pill--brand']}
+                >
                   {rt!.category}
                 </span>
               </li>
@@ -144,7 +144,7 @@ const categoryColor = term.category === 'Quant' ? 'pill--accent' : 'pill--brand'
     line-height: 1.15;
     margin-bottom: var(--sp-4);
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
   .hero__sub {
@@ -174,7 +174,7 @@ const categoryColor = term.category === 'Quant' ? 'pill--accent' : 'pill--brand'
     font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
     margin-bottom: var(--sp-3);
     color: var(--c-ink);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.01em;
   }
   .section__sub {
@@ -228,7 +228,7 @@ const categoryColor = term.category === 'Quant' ? 'pill--accent' : 'pill--brand'
     min-width: 0;
   }
   .related__term {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-primary);
     font-size: var(--fs-base);
     letter-spacing: -0.005em;

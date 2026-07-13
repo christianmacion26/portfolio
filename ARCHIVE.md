@@ -10,15 +10,15 @@
 
 ## Runtime architecture
 
-| Layer | Tech | Notes |
-|---|---|---|
-| Framework | Astro 7.0.7 | Static-site generator. No JS framework runtime — pages are HTML at build time. |
-| Styling | Hand-rolled CSS + design tokens | `src/styles/tokens.css` is the single source of truth for colors, type, spacing, shadows. No Tailwind, no CSS-in-JS. |
-| Type system | TypeScript 5.7 + path aliases | `@components/*`, `@layouts/*`, `@scripts/*`, `@styles/*`, `@utils/*` resolved via `tsconfig.json`. |
-| Math | KaTeX 0.17 | Server-rendered (no client JS). Trust-mode `false`. |
-| Charts | `lightweight-charts` | Single instance on `/positions`. |
-| Scripts | Five small TS modules | `reveal-on-scroll`, `odometer`, `active-nav`, `copy-button`, `theme-toggle`. Total ≈ 6KB minified. All gated by `prefers-reduced-motion`. |
-| Fonts | Inter + JetBrains Mono, self-hosted via `@fontsource` | No Google Fonts CDN dependency. |
+| Layer       | Tech                                                  | Notes                                                                                                                                     |
+| ----------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework   | Astro 7.0.7                                           | Static-site generator. No JS framework runtime — pages are HTML at build time.                                                            |
+| Styling     | Hand-rolled CSS + design tokens                       | `src/styles/tokens.css` is the single source of truth for colors, type, spacing, shadows. No Tailwind, no CSS-in-JS.                      |
+| Type system | TypeScript 5.7 + path aliases                         | `@components/*`, `@layouts/*`, `@scripts/*`, `@styles/*`, `@utils/*` resolved via `tsconfig.json`.                                        |
+| Math        | KaTeX 0.17                                            | Server-rendered (no client JS). Trust-mode `false`.                                                                                       |
+| Charts      | `lightweight-charts`                                  | Single instance on `/positions`.                                                                                                          |
+| Scripts     | Five small TS modules                                 | `reveal-on-scroll`, `odometer`, `active-nav`, `copy-button`, `theme-toggle`. Total ≈ 6KB minified. All gated by `prefers-reduced-motion`. |
+| Fonts       | Inter + JetBrains Mono, self-hosted via `@fontsource` | No Google Fonts CDN dependency.                                                                                                           |
 
 ## Content collections
 
@@ -45,10 +45,10 @@ Astro emits 34 pages (28 static routes + 6 deep project routes × sub-paths) plu
 
 ## Deploy targets
 
-| Target | URL | Trigger |
-|---|---|---|
-| **Cloudflare Pages (primary)** | `https://christianmacion-portfolio.pages.dev` | Manual `wrangler pages deploy dist --project-name christianmacion-portfolio --commit-dirty=true --branch main` after every GA-relevant edit. |
-| **GitHub Pages (degraded)** | `https://christianmacion26.github.io/portfolio` | Auto-deploy via `.github/workflows/deploy.yml` on push to `main`. |
+| Target                         | URL                                             | Trigger                                                                                                                                      |
+| ------------------------------ | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Cloudflare Pages (primary)** | `https://christianmacion-portfolio.pages.dev`   | Manual `wrangler pages deploy dist --project-name christianmacion-portfolio --commit-dirty=true --branch main` after every GA-relevant edit. |
+| **GitHub Pages (degraded)**    | `https://christianmacion26.github.io/portfolio` | Auto-deploy via `.github/workflows/deploy.yml` on push to `main`.                                                                            |
 
 The Cloudflare Pages mirror is the **primary live URL** because GH Pages' CDN edge on `185.199.111.153` is intermittently unresponsive in PH / sandbox regions. The GH Pages CDN serves 3 of 4 Pages IPs correctly — only one edge is broken. Not under our control.
 
@@ -108,4 +108,4 @@ If the content collection schema changes incompatibly, content entries older tha
 
 ---
 
-*This file is the institutional record. Update when the architecture changes.*
+_This file is the institutional record. Update when the architecture changes._

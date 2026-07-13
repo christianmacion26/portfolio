@@ -6,6 +6,7 @@
 **Goal:** define the **delta** from current v3.4 state to a world-class senior-QR portfolio. P0/P1/P2 priority tags; concrete action items mapped to existing `src/pages/`.
 
 > **Reading guide.** Each section follows the same shape:
+>
 > 1. **What world-class sites do** (sourced patterns, link citations)
 > 2. **What the current portfolio has** (audit against `PROPOSAL-v3.5.md` + `src/pages/`)
 > 3. **The delta** (concrete action items, ordered P0 → P1 → P2)
@@ -16,17 +17,17 @@
 
 ### 1.1 World-class patterns
 
-| Site | What /proof (or equivalent) surfaces |
-|------|--------------------------------------|
-| **AQR Insights** | Tag · title · date · 1-paragraph abstract · PDF/HTML link. Uniform row list with two-axis filter (Topic × Type). Topic multi-select includes `Machine Learning`, `Alternative Thinking`, `White Paper`. Source: [aqr.com/Insights](https://www.aqr.com/Insights) |
-| **Man Insights** | Title · Format (Article/Podcast/Video) · Series · length · date · teaser. Tabbed filters: Macro / Asset class / Client solutions, each with its own sidebar (Series, Topic, Audience) + Format sub-filter. Pagination 1–68 pages. Source: [man.com/insights](https://www.man.com/insights) |
-| **Jane Street blog** | Thumbnail · title · date · read-time · **author byline** (recurring names signal institutional voice). Pagination 14 pages. Separate `/machine-learning` landing curates a vertical. Source: [blog.janestreet.com](https://blog.janestreet.com/) |
-| **HuggingFace Spaces** | Each Space surfaces: status badge (Running / Zero / CPU Upgrade), tags (Featured / Agents / MCP), popularity count, last-updated timestamp, cover. "Spaces of the week" is a rotating curated highlight. Source: [huggingface.co/spaces](https://huggingface.co/spaces) |
-| **Replicate** | Each model: run-count as proof (`162.7M runs`), official/community badge, version visibility (flux-2-pro / flux-2-max), cover image as output sample. Trending vs latest vs popular as separate discovery rails. Source: [replicate.com/explore](https://replicate.com/explore) |
-| **Sebastian Raschka** | Dual-lane: long-form articles + Quick Notes, each with thumbnail + read time. `/publications/` separate from blog. Source: [sebastianraschka.com](https://sebastianraschka.com/) |
-| **Hudson River Trading `hrtbeat`** | Tech blog post titles: SystemVerilog tooling, Web Workers for real-time data, Python alerts DSL. "Artifacts speak louder than job titles." Source: [hudsonrivertrading.com](https://www.hudsonrivertrading.com/) |
-| **Letian Wang** | Each post: math typeset (LaTeX), external Colab notebook link, GitHub repo, category taxonomy, Disqus comments. Source: [letianzj.github.io](https://letianzj.github.io/) |
-| **NumEri (sub-pattern)** | Public researcher profile with cumulative correlation + stake (NMR). Numerai signals page surfaces: profile, model id, current correlation, MMC, TC, payout track record. |
+| Site                               | What /proof (or equivalent) surfaces                                                                                                                                                                                                                                                       |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **AQR Insights**                   | Tag · title · date · 1-paragraph abstract · PDF/HTML link. Uniform row list with two-axis filter (Topic × Type). Topic multi-select includes `Machine Learning`, `Alternative Thinking`, `White Paper`. Source: [aqr.com/Insights](https://www.aqr.com/Insights)                           |
+| **Man Insights**                   | Title · Format (Article/Podcast/Video) · Series · length · date · teaser. Tabbed filters: Macro / Asset class / Client solutions, each with its own sidebar (Series, Topic, Audience) + Format sub-filter. Pagination 1–68 pages. Source: [man.com/insights](https://www.man.com/insights) |
+| **Jane Street blog**               | Thumbnail · title · date · read-time · **author byline** (recurring names signal institutional voice). Pagination 14 pages. Separate `/machine-learning` landing curates a vertical. Source: [blog.janestreet.com](https://blog.janestreet.com/)                                           |
+| **HuggingFace Spaces**             | Each Space surfaces: status badge (Running / Zero / CPU Upgrade), tags (Featured / Agents / MCP), popularity count, last-updated timestamp, cover. "Spaces of the week" is a rotating curated highlight. Source: [huggingface.co/spaces](https://huggingface.co/spaces)                    |
+| **Replicate**                      | Each model: run-count as proof (`162.7M runs`), official/community badge, version visibility (flux-2-pro / flux-2-max), cover image as output sample. Trending vs latest vs popular as separate discovery rails. Source: [replicate.com/explore](https://replicate.com/explore)            |
+| **Sebastian Raschka**              | Dual-lane: long-form articles + Quick Notes, each with thumbnail + read time. `/publications/` separate from blog. Source: [sebastianraschka.com](https://sebastianraschka.com/)                                                                                                           |
+| **Hudson River Trading `hrtbeat`** | Tech blog post titles: SystemVerilog tooling, Web Workers for real-time data, Python alerts DSL. "Artifacts speak louder than job titles." Source: [hudsonrivertrading.com](https://www.hudsonrivertrading.com/)                                                                           |
+| **Letian Wang**                    | Each post: math typeset (LaTeX), external Colab notebook link, GitHub repo, category taxonomy, Disqus comments. Source: [letianzj.github.io](https://letianzj.github.io/)                                                                                                                  |
+| **NumEri (sub-pattern)**           | Public researcher profile with cumulative correlation + stake (NMR). Numerai signals page surfaces: profile, model id, current correlation, MMC, TC, payout track record.                                                                                                                  |
 
 ### 1.2 Current portfolio state
 
@@ -79,13 +80,13 @@
 
 ### 2.1 World-class patterns
 
-| Site | Methodology / process treatment |
-|------|----------------------------------|
-| **Optiver** | Six-stage pipeline as bold word chips: `Build → Ownership → Validate → Question → Deploy → Compound`. No numerals, no icons — purely typographic. One-loop narrative linking traders / researchers / engineers. Source: [optiver.com](https://www.optiver.com/) |
-| **Two Sigma** | "This is Financial Sciences" + stat carousel (380+ PB, 250+ PhDs, 12 Math Olympiad medalists). Implicit methodology = rigorous inquiry, data analysis, invention. Source: [twosigma.com](https://www.twosigma.com/) |
-| **Jane Street** | "Work where your mind matters" + Sierpinski-triangle puzzle as the methodology-flavored CTA — embed a math problem on the page. Source: [janestreet.com/join-jane-street](https://www.janestreet.com/join-jane-street) |
-| **Man Group** | Tabbed early-career tracks (Graduates / Internships / Apprenticeships), each with "What we offer you" bullets + CTA. Pattern matches a methodology with three entry paths. Source: [man.com/careers](https://www.man.com/careers) |
-| **GSA Capital** | Odometer counter on three stats with `//` code-comment sub-headline ("// A ruthlessly, restlessly nice place to work.") + ASCII-art decorative separator. Source: [gsacapital.com](https://www.gsacapital.com/) |
+| Site             | Methodology / process treatment                                                                                                                                                                                                                                       |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Optiver**      | Six-stage pipeline as bold word chips: `Build → Ownership → Validate → Question → Deploy → Compound`. No numerals, no icons — purely typographic. One-loop narrative linking traders / researchers / engineers. Source: [optiver.com](https://www.optiver.com/)       |
+| **Two Sigma**    | "This is Financial Sciences" + stat carousel (380+ PB, 250+ PhDs, 12 Math Olympiad medalists). Implicit methodology = rigorous inquiry, data analysis, invention. Source: [twosigma.com](https://www.twosigma.com/)                                                   |
+| **Jane Street**  | "Work where your mind matters" + Sierpinski-triangle puzzle as the methodology-flavored CTA — embed a math problem on the page. Source: [janestreet.com/join-jane-street](https://www.janestreet.com/join-jane-street)                                                |
+| **Man Group**    | Tabbed early-career tracks (Graduates / Internships / Apprenticeships), each with "What we offer you" bullets + CTA. Pattern matches a methodology with three entry paths. Source: [man.com/careers](https://www.man.com/careers)                                     |
+| **GSA Capital**  | Odometer counter on three stats with `//` code-comment sub-headline ("// A ruthlessly, restlessly nice place to work.") + ASCII-art decorative separator. Source: [gsacapital.com](https://www.gsacapital.com/)                                                       |
 | **Cubist / W&B** | "Modern quant lifecycle" blog — IDE → backtest → deflated Sharpe → robustness → deploy → monitor. Lopez-de-Prado derived pipeline. Source: [wandb.ai/site/articles/architecting-alpha](https://wandb.ai/site/articles/architecting-alpha-the-modern-quant-lifecycle/) |
 
 ### 2.2 Current portfolio state
@@ -127,14 +128,14 @@
 
 ### 3.1 World-class patterns
 
-| Site | Hero / home pattern |
-|------|--------------------|
+| Site                     | Hero / home pattern                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Hudson River Trading** | Period-separated cascading word list: "innovators. engineers. technologists. mathematicians. thinkers. scientists. tinkerers. strategists. developers. physicists. analysts. statisticians." — followed by "HRT is first and foremost a math and technology company." Single CTA "Join Our Team." Source: [hudsonrivertrading.com](https://www.hudsonrivertrading.com/) |
-| **GSA Capital** | `// A ruthlessly, restlessly nice place to work.` terminal-style sub-headline. Odometer counters between sections. "GSA OS 1.2.46" build version as a togglable metadata block. |
-| **Two Sigma** | Carousel of stats: "380+ PB · >$70B AUM · 5B+ trades · 10,000+ data sources · 250+ PhDs · 12 Math Olympiad medalists · 4,800+ person-years of R&D." CTA: "Get Curious With Us." |
-| **Schonfeld** | Period-terminated h1: "Empowering people. Driving performance." Dense stat strip: "Founded 1988 · 140+ PM teams · $22bn+ AUM · 1,100+ employees." Named individuals as authority (Steven Schonfeld, Ryan Tolkin). |
-| **Stripe** | Layered funnel: use-case cards → product index. Task-oriented at top, product-oriented below. Pure IA signal. |
-| **Numerai** | (JS-only) known from search: tournament hero with stake + correlation call-to-action. |
+| **GSA Capital**          | `// A ruthlessly, restlessly nice place to work.` terminal-style sub-headline. Odometer counters between sections. "GSA OS 1.2.46" build version as a togglable metadata block.                                                                                                                                                                                         |
+| **Two Sigma**            | Carousel of stats: "380+ PB · >$70B AUM · 5B+ trades · 10,000+ data sources · 250+ PhDs · 12 Math Olympiad medalists · 4,800+ person-years of R&D." CTA: "Get Curious With Us."                                                                                                                                                                                         |
+| **Schonfeld**            | Period-terminated h1: "Empowering people. Driving performance." Dense stat strip: "Founded 1988 · 140+ PM teams · $22bn+ AUM · 1,100+ employees." Named individuals as authority (Steven Schonfeld, Ryan Tolkin).                                                                                                                                                       |
+| **Stripe**               | Layered funnel: use-case cards → product index. Task-oriented at top, product-oriented below. Pure IA signal.                                                                                                                                                                                                                                                           |
+| **Numerai**              | (JS-only) known from search: tournament hero with stake + correlation call-to-action.                                                                                                                                                                                                                                                                                   |
 
 ### 3.2 Current portfolio state
 
@@ -172,27 +173,27 @@
 
 ### 4.1 Cross-site IA inventory
 
-| Site | Top nav | Body sections | Footer |
-|------|---------|---------------|--------|
-| **AQR** | Education · What We Do · Our Firm · MyAQR · Contact Us | Insights (with filter) · Approach · Strategies · Funds | Privacy · Terms · Disclaimers · Form CRS · EEO |
-| **Two Sigma** | About · Businesses · Insights · Careers · Contact · Investor Hub | Tagline hero → stats carousel → scientific approach → people → businesses → science at work → real estate | Geographic offices (8 cities), academic partnerships |
-| **Jane Street** | Who We Are · What We Do · The Latest · Culture · Join Jane Street | Hero → two candidate pathways → four department groups → puzzles → culture → offices | SEC/FINRA/FCA/HKSFC disclosures |
-| **Man Group** | Insights · Technology · About Us | Insights tab (3 columns) · Technology · News · Careers | Regional offices · Jurisdiction-specific disclosures |
-| **D. E. Shaw** | Who We Are · What We Do · How To Join · News · Library · Contact | Logo + tagline → 3 link clusters → footer | Terms · Privacy · Disclosures · Impersonation notice |
-| **Optiver** | Trade with us · All Jobs · Join us | Tagline → 3 capability cards → process chips → KPIs → culture teaser → location ticker → careers → insights | Education · Foundation · Alumni · Contact |
-| **Qube RT** | About Us · Careers · External Contributors · Commitments · Contact | Hero → 4-pillar image blocks (Research/Technology/Data/Trading) → CTA → disclaimer | FCA/SFC/AMF/MAS/DFSA/FINMA disclosures |
-| **Numerai** | (JS-only) · known IA: Tournament · Signals · Earn · Docs · About | Hero with stake + correlation → tournament mechanics → leaderboard → payouts | Careers · Press · Brand |
-| **HuggingFace** | Models · Datasets · Spaces · Buckets · Docs · Enterprise · Pricing · Resources · Log In | Trending Models → Spaces → Datasets → "Home of ML" 4 value props → Accelerate ML (paid) → enterprise logos → open source 12 libs | About · Brand · Terms · Privacy · Careers |
-| **Replicate** | Explore · Blog · Popular · Featured · Official · I want to… · Latest | Featured model hero → sections (Latest, Popular, Featured, Official) → collections → blog posts | (not visible) |
-| **Stripe** | (docs) layered funnel: use-cases grid → product index → API reference → changelog | Use-case cards (3×3 grid) · "Browse by product" (4 super-categories) | Country select · Status · Legal · Glossary |
-| **Shreya Shankar** | Home · Papers · Blog | Mentorship · About / Research statement · Academic Service · Publications · **"A Note for AI Agents"** · Footer | Social icons + builder credit |
-| **Neel Nanda** | About · Blog · Top Posts · Mechanistic Interpretability · Merch | Pinned CTA · Numbered chronological feed · Older Posts pagination | Subscribe newsletter · RSS · Feedback form |
-| **Chris Olah** | Blog · About · Contact | Recent Exciting Things → Neural Networks (general/RNN/CNN/Visualizing) → Circuits → Miscellaneous → Rough Notes → Personal Writing → Selected Twitter Threads → Traditional Papers | (none visible) |
-| **Gwern** | Topic clusters as anchor links | Newest → Popular → Notable → Blog → Thematic (Statistics / Meta-Science / AI / Crypto / etc.) → Self/Research → Cultural → Creative → References → Personal | About · Help · Changelog · Substack |
-| **Sebastian Raschka** | Home · Blog · Books · Courses · LLM Gallery · LLMs From Scratch · Reasoning Models · Talks · More | Hero bio → Recent Articles → Quick Notes → Books → Footer | Newsletter · Contact · YouTube · GitHub · Scholar · LinkedIn |
-| **Max Woolf** | Posts · Search · GitHub · Patreon | Bio · Blog cards (image-led) · pagination | Hugo PaperMod credit |
-| **Brittany Chiang** | (fixed right sidebar) 01 About · 02 Experience · 03 Projects | About → Experience → Projects → Writing → Footer | Figma/VS Code/Next.js/Tailwind/Vercel/Inter credits |
-| **Letian Wang** | Home · Archives · Sitemap | Chronological feed with Disqus counts · LaTeX math · external Colab / GitHub | Hexo + NexT.Muse credit |
+| Site                  | Top nav                                                                                           | Body sections                                                                                                                                                                      | Footer                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **AQR**               | Education · What We Do · Our Firm · MyAQR · Contact Us                                            | Insights (with filter) · Approach · Strategies · Funds                                                                                                                             | Privacy · Terms · Disclaimers · Form CRS · EEO               |
+| **Two Sigma**         | About · Businesses · Insights · Careers · Contact · Investor Hub                                  | Tagline hero → stats carousel → scientific approach → people → businesses → science at work → real estate                                                                          | Geographic offices (8 cities), academic partnerships         |
+| **Jane Street**       | Who We Are · What We Do · The Latest · Culture · Join Jane Street                                 | Hero → two candidate pathways → four department groups → puzzles → culture → offices                                                                                               | SEC/FINRA/FCA/HKSFC disclosures                              |
+| **Man Group**         | Insights · Technology · About Us                                                                  | Insights tab (3 columns) · Technology · News · Careers                                                                                                                             | Regional offices · Jurisdiction-specific disclosures         |
+| **D. E. Shaw**        | Who We Are · What We Do · How To Join · News · Library · Contact                                  | Logo + tagline → 3 link clusters → footer                                                                                                                                          | Terms · Privacy · Disclosures · Impersonation notice         |
+| **Optiver**           | Trade with us · All Jobs · Join us                                                                | Tagline → 3 capability cards → process chips → KPIs → culture teaser → location ticker → careers → insights                                                                        | Education · Foundation · Alumni · Contact                    |
+| **Qube RT**           | About Us · Careers · External Contributors · Commitments · Contact                                | Hero → 4-pillar image blocks (Research/Technology/Data/Trading) → CTA → disclaimer                                                                                                 | FCA/SFC/AMF/MAS/DFSA/FINMA disclosures                       |
+| **Numerai**           | (JS-only) · known IA: Tournament · Signals · Earn · Docs · About                                  | Hero with stake + correlation → tournament mechanics → leaderboard → payouts                                                                                                       | Careers · Press · Brand                                      |
+| **HuggingFace**       | Models · Datasets · Spaces · Buckets · Docs · Enterprise · Pricing · Resources · Log In           | Trending Models → Spaces → Datasets → "Home of ML" 4 value props → Accelerate ML (paid) → enterprise logos → open source 12 libs                                                   | About · Brand · Terms · Privacy · Careers                    |
+| **Replicate**         | Explore · Blog · Popular · Featured · Official · I want to… · Latest                              | Featured model hero → sections (Latest, Popular, Featured, Official) → collections → blog posts                                                                                    | (not visible)                                                |
+| **Stripe**            | (docs) layered funnel: use-cases grid → product index → API reference → changelog                 | Use-case cards (3×3 grid) · "Browse by product" (4 super-categories)                                                                                                               | Country select · Status · Legal · Glossary                   |
+| **Shreya Shankar**    | Home · Papers · Blog                                                                              | Mentorship · About / Research statement · Academic Service · Publications · **"A Note for AI Agents"** · Footer                                                                    | Social icons + builder credit                                |
+| **Neel Nanda**        | About · Blog · Top Posts · Mechanistic Interpretability · Merch                                   | Pinned CTA · Numbered chronological feed · Older Posts pagination                                                                                                                  | Subscribe newsletter · RSS · Feedback form                   |
+| **Chris Olah**        | Blog · About · Contact                                                                            | Recent Exciting Things → Neural Networks (general/RNN/CNN/Visualizing) → Circuits → Miscellaneous → Rough Notes → Personal Writing → Selected Twitter Threads → Traditional Papers | (none visible)                                               |
+| **Gwern**             | Topic clusters as anchor links                                                                    | Newest → Popular → Notable → Blog → Thematic (Statistics / Meta-Science / AI / Crypto / etc.) → Self/Research → Cultural → Creative → References → Personal                        | About · Help · Changelog · Substack                          |
+| **Sebastian Raschka** | Home · Blog · Books · Courses · LLM Gallery · LLMs From Scratch · Reasoning Models · Talks · More | Hero bio → Recent Articles → Quick Notes → Books → Footer                                                                                                                          | Newsletter · Contact · YouTube · GitHub · Scholar · LinkedIn |
+| **Max Woolf**         | Posts · Search · GitHub · Patreon                                                                 | Bio · Blog cards (image-led) · pagination                                                                                                                                          | Hugo PaperMod credit                                         |
+| **Brittany Chiang**   | (fixed right sidebar) 01 About · 02 Experience · 03 Projects                                      | About → Experience → Projects → Writing → Footer                                                                                                                                   | Figma/VS Code/Next.js/Tailwind/Vercel/Inter credits          |
+| **Letian Wang**       | Home · Archives · Sitemap                                                                         | Chronological feed with Disqus counts · LaTeX math · external Colab / GitHub                                                                                                       | Hexo + NexT.Muse credit                                      |
 
 ### 4.2 Recurring IA motifs (top-tier patterns to adopt)
 
@@ -219,20 +220,20 @@
 
 ### 4.3 Current portfolio IA inventory (against the synthesis)
 
-| Current page | Maps to world-class motif | Gap |
-|--------------|---------------------------|-----|
-| `/` (index) | Hero + stat row + proof + research + AI showcase + OSS + experience + about | Add pitchbook bio, role chips, "talk to me about", version stamp |
-| `/proof` | Work showcase | Add 2-axis filter, status badges, freshness, pagination, deep pages |
-| `/projects` | Subset of proof | Already linked from feed-projects.xml.ts; verify dual-feed (project vs. research) |
-| `/methodology` | Process / capability | Add process diagram, week-N scope, kill criteria, screening funnel |
-| `/glossary` | Stripe-glossary pattern | Already exists — verify completeness (200+ entries target) |
-| `/publications` | AQR Insights archive | Verify pagination, 2-axis filter, author byline, SSRN/arXiv links |
-| `/positions` | Open roles | Verify each role has location · comp range · WFH status · ATS link |
-| `/now` | nownownow.com | Verify dated, opinionated, 200–400 words, monthly cadence, freshness pill |
-| `/uses` | uses.tech | Verify 1 paragraph per category (hardware, editor, terminal, server, finance data, AI infra) |
-| `/for-recruiters` | Man Group hiring-manager surface | Verify PDF resume link, ATS tips, NDA-controlled-conversation protocol |
-| `/contact` | Calendly + email + LinkedIn + GitHub | Verify Cal.com slot picker; add PGP fingerprint |
-| `/404` | Pattern A error | Already exists — verify it lists quick links |
+| Current page      | Maps to world-class motif                                                   | Gap                                                                                          |
+| ----------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `/` (index)       | Hero + stat row + proof + research + AI showcase + OSS + experience + about | Add pitchbook bio, role chips, "talk to me about", version stamp                             |
+| `/proof`          | Work showcase                                                               | Add 2-axis filter, status badges, freshness, pagination, deep pages                          |
+| `/projects`       | Subset of proof                                                             | Already linked from feed-projects.xml.ts; verify dual-feed (project vs. research)            |
+| `/methodology`    | Process / capability                                                        | Add process diagram, week-N scope, kill criteria, screening funnel                           |
+| `/glossary`       | Stripe-glossary pattern                                                     | Already exists — verify completeness (200+ entries target)                                   |
+| `/publications`   | AQR Insights archive                                                        | Verify pagination, 2-axis filter, author byline, SSRN/arXiv links                            |
+| `/positions`      | Open roles                                                                  | Verify each role has location · comp range · WFH status · ATS link                           |
+| `/now`            | nownownow.com                                                               | Verify dated, opinionated, 200–400 words, monthly cadence, freshness pill                    |
+| `/uses`           | uses.tech                                                                   | Verify 1 paragraph per category (hardware, editor, terminal, server, finance data, AI infra) |
+| `/for-recruiters` | Man Group hiring-manager surface                                            | Verify PDF resume link, ATS tips, NDA-controlled-conversation protocol                       |
+| `/contact`        | Calendly + email + LinkedIn + GitHub                                        | Verify Cal.com slot picker; add PGP fingerprint                                              |
+| `/404`            | Pattern A error                                                             | Already exists — verify it lists quick links                                                 |
 
 ### 4.4 Delta — concrete action items
 
@@ -263,41 +264,41 @@
 
 ### 5.1 Audit against the v3.5 proposal checklist
 
-| Feature | Current state (v3.5 proposal) | Verification needed |
-|---------|-------------------------------|----------------------|
-| **Search (Pagefind)** | Planned; not yet built | Verify build runs Pagefind, produces `/search/index.html`, has search input in nav |
-| **RSS / Atom feed** | `@astrojs/rss` planned; `feed.xml.ts` exists for `/feed.xml`, `/feed-projects.xml.ts`, `/feed-solutions.xml.ts` | Verify all three emit valid RSS 2.0 + Atom; verify `<atom:link rel="self">`; submit to quantocracy.com |
-| **Dark mode** | `prefers-color-scheme: dark` rule exists in `tokens.css`; manual toggle planned | Verify toggle button is in the **top-right of nav**, not buried in footer. Verify localStorage persistence. Verify no flash-of-light on reload (`<script>` blocking or CSS-only via `data-theme` attribute). |
-| **Mobile tap targets ≥ 44px** | v3.5 mentions | Verify all nav links, social icons, and CTAs hit ≥ 44×44 px. Run through axe-core. |
-| **Reading time per article** | v3.5 mentions `reading-time` package | Verify surfaced as `5 min read` pill on every `/research/[slug]` and `/proof/[slug]`. |
-| **TOC on long pages** | v3.5 plans TOC | Verify generated from h2/h3 headings, sticky on scroll, collapses sub-trees, current-section highlight. |
-| **Numbered citations / footnotes** | v3.5 does not explicitly plan | **Missing.** Add `[^1]` Markdown footnote pattern + bibliography at bottom. Lopez-de-Prado / AQR / Raschka all do this. |
-| **"Talk to me" calendar link** | v3.5 plans `cal.com/christianmacion` | Verify the link is in the nav, not just `/contact`. Verify it surfaces 3-slot windows (Tue–Thu 18:00–22:00 PHT per v3.5 §6.4). |
-| **PDF download pattern** | v3.5 plans `/cv` PDF via Playwright | Verify each research post has a "Download PDF" link. Verify consistent header/footer/typography across PDFs. |
-| **"Pinned / highlighted" feature in /projects** | not yet | **Missing.** Add a `pinned: true` frontmatter flag. Render at the top with a star or "Pinned" pill. Neel Nanda pinned-post pattern. |
+| Feature                                         | Current state (v3.5 proposal)                                                                                   | Verification needed                                                                                                                                                                                          |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Search (Pagefind)**                           | Planned; not yet built                                                                                          | Verify build runs Pagefind, produces `/search/index.html`, has search input in nav                                                                                                                           |
+| **RSS / Atom feed**                             | `@astrojs/rss` planned; `feed.xml.ts` exists for `/feed.xml`, `/feed-projects.xml.ts`, `/feed-solutions.xml.ts` | Verify all three emit valid RSS 2.0 + Atom; verify `<atom:link rel="self">`; submit to quantocracy.com                                                                                                       |
+| **Dark mode**                                   | `prefers-color-scheme: dark` rule exists in `tokens.css`; manual toggle planned                                 | Verify toggle button is in the **top-right of nav**, not buried in footer. Verify localStorage persistence. Verify no flash-of-light on reload (`<script>` blocking or CSS-only via `data-theme` attribute). |
+| **Mobile tap targets ≥ 44px**                   | v3.5 mentions                                                                                                   | Verify all nav links, social icons, and CTAs hit ≥ 44×44 px. Run through axe-core.                                                                                                                           |
+| **Reading time per article**                    | v3.5 mentions `reading-time` package                                                                            | Verify surfaced as `5 min read` pill on every `/research/[slug]` and `/proof/[slug]`.                                                                                                                        |
+| **TOC on long pages**                           | v3.5 plans TOC                                                                                                  | Verify generated from h2/h3 headings, sticky on scroll, collapses sub-trees, current-section highlight.                                                                                                      |
+| **Numbered citations / footnotes**              | v3.5 does not explicitly plan                                                                                   | **Missing.** Add `[^1]` Markdown footnote pattern + bibliography at bottom. Lopez-de-Prado / AQR / Raschka all do this.                                                                                      |
+| **"Talk to me" calendar link**                  | v3.5 plans `cal.com/christianmacion`                                                                            | Verify the link is in the nav, not just `/contact`. Verify it surfaces 3-slot windows (Tue–Thu 18:00–22:00 PHT per v3.5 §6.4).                                                                               |
+| **PDF download pattern**                        | v3.5 plans `/cv` PDF via Playwright                                                                             | Verify each research post has a "Download PDF" link. Verify consistent header/footer/typography across PDFs.                                                                                                 |
+| **"Pinned / highlighted" feature in /projects** | not yet                                                                                                         | **Missing.** Add a `pinned: true` frontmatter flag. Render at the top with a star or "Pinned" pill. Neel Nanda pinned-post pattern.                                                                          |
 
 ### 5.2 Other features typically expected
 
-| Feature | Notes | Priority |
-|---------|-------|----------|
-| **`<html lang="en">`** | v3.5 mentions | P0 — accessibility WCAG 2.2 AA |
-| **Skip-to-content link** | WCAG 2.4.1 | P0 |
-| **`<meta name="theme-color">`** | v3.5 mentions `#FAF7F0` | P0 |
-| **`<link rel="canonical">`** | v3.5 mentions | P0 |
-| **`<link rel="alternate" type="application/rss+xml">`** | in `<head>` | P0 |
-| **Favicon set** (16, 32, 180, maskable) | v3.5 plans | P0 |
-| **Web App Manifest** | v3.5 plans `/manifest.json` | P0 |
-| **OG image** | v3.5 mentions amber+black banner | P0 |
-| **JSON-LD `Person`** | v3.5 plans via `Schema.astro` | P0 |
-| **JSON-LD `Article`** on each post | v3.5 plans | P0 |
-| **JSON-LD `BreadcrumbList`** | v3.5 plans | P1 |
-| **`/llms.txt`** | v3.5 plans per llmstxt.org spec | P0 — emerging pattern, prepares for LLM scrapers |
-| **`/robots.txt`** with named AI-bot user-agents | v3.5 plans | P0 — explicit `User-agent: GPTBot` etc. |
-| **`/humans.txt`** | v3.5 plans | P2 |
-| **404 page** | exists | P0 — verify (already in v3.5) |
-| **Print stylesheet** | v3.5 plans `@media print` | P1 |
-| **Reduced motion guard** | v3.5 plans `prefers-reduced-motion` | P0 |
-| **Visible focus ring** | v3.5 plans `:focus-visible` | P0 |
+| Feature                                                 | Notes                               | Priority                                         |
+| ------------------------------------------------------- | ----------------------------------- | ------------------------------------------------ |
+| **`<html lang="en">`**                                  | v3.5 mentions                       | P0 — accessibility WCAG 2.2 AA                   |
+| **Skip-to-content link**                                | WCAG 2.4.1                          | P0                                               |
+| **`<meta name="theme-color">`**                         | v3.5 mentions `#FAF7F0`             | P0                                               |
+| **`<link rel="canonical">`**                            | v3.5 mentions                       | P0                                               |
+| **`<link rel="alternate" type="application/rss+xml">`** | in `<head>`                         | P0                                               |
+| **Favicon set** (16, 32, 180, maskable)                 | v3.5 plans                          | P0                                               |
+| **Web App Manifest**                                    | v3.5 plans `/manifest.json`         | P0                                               |
+| **OG image**                                            | v3.5 mentions amber+black banner    | P0                                               |
+| **JSON-LD `Person`**                                    | v3.5 plans via `Schema.astro`       | P0                                               |
+| **JSON-LD `Article`** on each post                      | v3.5 plans                          | P0                                               |
+| **JSON-LD `BreadcrumbList`**                            | v3.5 plans                          | P1                                               |
+| **`/llms.txt`**                                         | v3.5 plans per llmstxt.org spec     | P0 — emerging pattern, prepares for LLM scrapers |
+| **`/robots.txt`** with named AI-bot user-agents         | v3.5 plans                          | P0 — explicit `User-agent: GPTBot` etc.          |
+| **`/humans.txt`**                                       | v3.5 plans                          | P2                                               |
+| **404 page**                                            | exists                              | P0 — verify (already in v3.5)                    |
+| **Print stylesheet**                                    | v3.5 plans `@media print`           | P1                                               |
+| **Reduced motion guard**                                | v3.5 plans `prefers-reduced-motion` | P0                                               |
+| **Visible focus ring**                                  | v3.5 plans `:focus-visible`         | P0                                               |
 
 ### 5.3 Delta — concrete action items
 
@@ -329,13 +330,13 @@
 
 ### 6.1 World-class patterns
 
-| Site | Error / edge-case treatment |
-|------|-----------------------------|
-| **Stripe Docs** | Custom 404 with a search box + "common destinations" list |
-| **Astro docs** | 404 with friendly mascot, link to `/`, search box |
-| **Gwern** | Search-friendly 404; everything is one HTML file anyway |
-| **Shreya Shankar** | Built-with-Astro credit suggests default 404 (not customized) |
-| **astro.build/themes** | "Houston, we have a problem." 404 with full nav preserved |
+| Site                   | Error / edge-case treatment                                   |
+| ---------------------- | ------------------------------------------------------------- |
+| **Stripe Docs**        | Custom 404 with a search box + "common destinations" list     |
+| **Astro docs**         | 404 with friendly mascot, link to `/`, search box             |
+| **Gwern**              | Search-friendly 404; everything is one HTML file anyway       |
+| **Shreya Shankar**     | Built-with-Astro credit suggests default 404 (not customized) |
+| **astro.build/themes** | "Houston, we have a problem." 404 with full nav preserved     |
 
 ### 6.2 Current state
 
@@ -366,21 +367,21 @@
 
 ### 7.1 World-class patterns
 
-| Pattern | Source |
-|---------|--------|
-| **Odometer counter** | GSA Capital, v3.5 already added |
-| **Subtle hover lift on cards** | Brittany Chiang, Sebastian Raschka (1px translate, 150ms ease, no shadow) |
-| **Hover-zoom on photos** | Brittany Chiang (1.02 scale, 300ms ease) |
-| **Background grain / paper texture** | Gwern (CSS `background-image: url(/grain.svg)` at 4% opacity) |
-| **Sticky section nav** | v3.5 already added; Brittany Chiang fixed-sidebar pattern |
-| **Scroll-progress indicator** | Medium.com / Stripe-docs (top 2px amber line that fills as user scrolls) |
-| **"Read time" pill** | Max Woolf, Sebastian Raschka, Jane Street |
-| **"Updated YYYY-MM-DD" freshness pill** | v3.5 already added |
-| **Browser-native View Transitions** | Astro 7 supports natively; zero JS |
-| **Tooltip popups on links** | Gwern (`title` attribute everywhere) |
-| **Floating toolbar** | Gwern (dark-mode, reader-mode, popup toggle, search) |
-| **Animated SVG process strip** | Optiver chips; can add subtle 1px underline animation on hover |
-| **Number-counter IntersectionObserver** | v3.5 already added |
+| Pattern                                 | Source                                                                    |
+| --------------------------------------- | ------------------------------------------------------------------------- |
+| **Odometer counter**                    | GSA Capital, v3.5 already added                                           |
+| **Subtle hover lift on cards**          | Brittany Chiang, Sebastian Raschka (1px translate, 150ms ease, no shadow) |
+| **Hover-zoom on photos**                | Brittany Chiang (1.02 scale, 300ms ease)                                  |
+| **Background grain / paper texture**    | Gwern (CSS `background-image: url(/grain.svg)` at 4% opacity)             |
+| **Sticky section nav**                  | v3.5 already added; Brittany Chiang fixed-sidebar pattern                 |
+| **Scroll-progress indicator**           | Medium.com / Stripe-docs (top 2px amber line that fills as user scrolls)  |
+| **"Read time" pill**                    | Max Woolf, Sebastian Raschka, Jane Street                                 |
+| **"Updated YYYY-MM-DD" freshness pill** | v3.5 already added                                                        |
+| **Browser-native View Transitions**     | Astro 7 supports natively; zero JS                                        |
+| **Tooltip popups on links**             | Gwern (`title` attribute everywhere)                                      |
+| **Floating toolbar**                    | Gwern (dark-mode, reader-mode, popup toggle, search)                      |
+| **Animated SVG process strip**          | Optiver chips; can add subtle 1px underline animation on hover            |
+| **Number-counter IntersectionObserver** | v3.5 already added                                                        |
 
 ### 7.2 Current state (per v3.5)
 
@@ -415,6 +416,7 @@ Planned: View Transitions API, IntersectionObserver stat counter, hover reveals.
 ### 8.1 P0 — ship in v6.0 (≤10 working days)
 
 **Content & IA**
+
 - [ ] Add 1-line pitchbook bio to hero (HRT pattern)
 - [ ] Add "open roles you'd interview for" card cluster on `/`
 - [ ] Add "talk to me about" chip list on `/`
@@ -436,6 +438,7 @@ Planned: View Transitions API, IntersectionObserver stat counter, hover reveals.
 - [ ] Add `/llms.txt` + `/llms-full.txt`
 
 **Site-wide**
+
 - [ ] Verify Pagefind search builds and is wired into nav
 - [ ] Verify RSS feeds (3) emit valid Atom 2.0; submit to quantocracy
 - [ ] Verify dark mode toggle (top-right nav, localStorage, no flash)
@@ -452,6 +455,7 @@ Planned: View Transitions API, IntersectionObserver stat counter, hover reveals.
 - [ ] Add footnote `[^1]` pattern on `/research/[slug]`
 
 **Verification**
+
 - [ ] Lighthouse: Perf ≥ 95, A11y ≥ 95, BP ≥ 95, SEO = 100
 - [ ] `npm run audit` (NDA) returns 0 violations
 - [ ] axe-core in CI; 0 violations
@@ -515,31 +519,39 @@ Distilled from the world-class sites surveyed. These trip up even experienced pr
 Based on §8.1, the v6.0 rebuild arcs as:
 
 **Day 1–2 — Hero + IA verification**
+
 - Verify dark-mode toggle (top-right), version stamp, scroll-progress, mobile tap targets, axe-core baseline.
 - Hero gets pitchbook bio + role chips + "talk to me about" + version stamp.
 
 **Day 3–4 — /proof rebuild**
+
 - New `ProofCard.astro` with status badge, freshness pill, read-time, lead visual.
 - Two-axis filter (Topic × Type) reusing existing filter pattern.
 - 5 deep pages `/proof/[slug]` for DSR / MCP / RAG / CombinedBook / Eval.
 - Pagination 6 per page.
 
 **Day 5 — /methodology**
+
 - Process strip SVG, week-N scope, kill-criterion table, screening funnel, comparison table.
 
 **Day 6 — Auxiliary pages**
+
 - `/talks`, `/colophon`, `/cv` (PDF), `/chat` (RAG), `/disclosures`, `/privacy`, `/llms.txt`.
 
 **Day 7 — Site-wide**
+
 - `pinned: true` mechanism, footnote pattern, JSON-LD, robots.txt, favicon set, manifest.
 
 **Day 8 — Verification**
+
 - Lighthouse, axe-core, NDA audit, Plausible wiring, `feed.xml` validation.
 
 **Day 9 — Polish**
+
 - Background grain, hover lift/zoom, TOC sidebar, footnote tooltips.
 
 **Day 10 — Outreach + monitoring**
+
 - Cold-DM Tier-A WFH (Numerai, HF, Replicate, Anyscale, Together AI).
 - ATS applications ×3.
 - Lighthouse baseline recording.
@@ -560,27 +572,28 @@ Based on §8.1, the v6.0 rebuild arcs as:
 
 ## 12. Success metrics (carry over from v3.5 §10, updated)
 
-| Metric | Target | Source |
-|--------|--------|--------|
-| Lighthouse Performance | ≥ 95 | Lighthouse CI |
-| Lighthouse Accessibility | ≥ 95, 0 axe violations | axe-core / Playwright |
-| Lighthouse Best Practices | ≥ 95 | Lighthouse |
-| Lighthouse SEO | 100 | Lighthouse |
-| LCP p75 | < 1.8s | Plausible + Web Vitals |
-| INP p75 | < 200ms | Plausible + Web Vitals |
-| CLS p75 | < 0.1 | Plausible + Web Vitals |
-| Page weight (homepage) | < 100 KB HTML + < 80 KB JS (lazy) | `astro build` output |
-| Inbound recruiter DMs | ≥ 5 in 4 weeks | LinkedIn, email |
-| GitHub stars across OSS | +20 in 4 weeks | GitHub API |
-| `/proof` CTR | ≥ 30% of visitors | Plausible |
-| `/research` 2-axis filter usage | ≥ 15% of visitors | Plausible |
-| Numerai Signals correlation | positive (any tier) | numer.ai profile |
-| ATS parse rate | 100% | Jobscan, Resume Worded |
-| Cold-DM response rate | ≥ 10% | LinkedIn |
-| `/chat` engagement | ≥ 5% of visitors ask ≥ 1 question | Plausible + log |
-| Pagefind search usage | ≥ 10% of visitors | Plausible |
+| Metric                          | Target                            | Source                 |
+| ------------------------------- | --------------------------------- | ---------------------- |
+| Lighthouse Performance          | ≥ 95                              | Lighthouse CI          |
+| Lighthouse Accessibility        | ≥ 95, 0 axe violations            | axe-core / Playwright  |
+| Lighthouse Best Practices       | ≥ 95                              | Lighthouse             |
+| Lighthouse SEO                  | 100                               | Lighthouse             |
+| LCP p75                         | < 1.8s                            | Plausible + Web Vitals |
+| INP p75                         | < 200ms                           | Plausible + Web Vitals |
+| CLS p75                         | < 0.1                             | Plausible + Web Vitals |
+| Page weight (homepage)          | < 100 KB HTML + < 80 KB JS (lazy) | `astro build` output   |
+| Inbound recruiter DMs           | ≥ 5 in 4 weeks                    | LinkedIn, email        |
+| GitHub stars across OSS         | +20 in 4 weeks                    | GitHub API             |
+| `/proof` CTR                    | ≥ 30% of visitors                 | Plausible              |
+| `/research` 2-axis filter usage | ≥ 15% of visitors                 | Plausible              |
+| Numerai Signals correlation     | positive (any tier)               | numer.ai profile       |
+| ATS parse rate                  | 100%                              | Jobscan, Resume Worded |
+| Cold-DM response rate           | ≥ 10%                             | LinkedIn               |
+| `/chat` engagement              | ≥ 5% of visitors ask ≥ 1 question | Plausible + log        |
+| Pagefind search usage           | ≥ 10% of visitors                 | Plausible              |
 
 **New v6.0 metrics:**
+
 - `llms.txt` crawler hits (≥ 1 per week) — Plausible custom event
 - `/talks` view count (if talks exist)
 - `/chat` satisfaction (thumb-up / thumb-down per response)
@@ -590,6 +603,7 @@ Based on §8.1, the v6.0 rebuild arcs as:
 ## 13. Source corpus (18 institutional + 7 personal + 2 frameworks)
 
 ### Institutional (18)
+
 1. [aqr.com/Insights](https://www.aqr.com/Insights) — AQR Insights archive
 2. [aqr.com/Our-Firm/Careers](https://www.aqr.com/Our-Firm/Careers) — AQR careers
 3. [twosigma.com](https://www.twosigma.com/) — Two Sigma
@@ -610,6 +624,7 @@ Based on §8.1, the v6.0 rebuild arcs as:
 18. [docs.stripe.com](https://docs.stripe.com/) · [docs.stripe.com/glossary](https://docs.stripe.com/glossary) — Stripe docs + glossary
 
 ### Personal reference (7)
+
 19. [shreyashankar.com](https://www.sh-reya.com/) — Shreya Shankar (redirected from `shreya-shankar.com`)
 20. [neelnanda.io](https://www.neelnanda.io/) — Neel Nanda
 21. [colah.github.io](https://colah.github.io/) — Chris Olah
@@ -620,10 +635,12 @@ Based on §8.1, the v6.0 rebuild arcs as:
 26. [letianzj.github.io](https://letianzj.github.io/) — Letian Wang (quant-researcher reference)
 
 ### Frameworks (2)
+
 27. [github.com/adityatelange/hugo-PaperMod](https://github.com/adityatelange/hugo-PaperMod) — Hugo PaperMod (Minimaxir's stack)
 28. [astro.build/themes](https://astro.build/themes/) — Astro themes reference (Astro Astronomy theme returned 404)
 
 ### Supplementary research
+
 29. [wandb.ai/site/articles/architecting-alpha](https://wandb.ai/site/articles/architecting-alpha-the-modern-quant-lifecycle/) — Cubist / W&B quant lifecycle
 30. [byfire.substack.com/p/2025-buy-side-quant-job-advice](https://byfire.substack.com/p/2025-buy-side-quant-job-advice) — Gappy's buy-side quant career advice
 31. [llmstxt.org](https://llmstxt.org/) — `/llms.txt` spec

@@ -22,7 +22,9 @@
 
 const INIT_FLAG = Symbol.for('cm.keyboard-shortcuts.init');
 declare global {
-  interface HTMLElement { [key: symbol]: boolean | undefined }
+  interface HTMLElement {
+    [key: symbol]: boolean | undefined;
+  }
 }
 const root = document.documentElement as unknown as Record<symbol, boolean | undefined>;
 if (root[INIT_FLAG]) {
@@ -31,6 +33,8 @@ if (root[INIT_FLAG]) {
   root[INIT_FLAG] = true;
   attach();
 }
+
+export {};
 
 function attach(): void {
   const panel = document.querySelector<HTMLElement>('#keyhint-panel');
@@ -93,12 +97,7 @@ function attach(): void {
   const handler = (e: KeyboardEvent): void => {
     // Don't intercept when the user is typing in a real field.
     const t = e.target as HTMLElement | null;
-    if (
-      t &&
-      (t.tagName === 'INPUT' ||
-        t.tagName === 'TEXTAREA' ||
-        t.isContentEditable)
-    ) {
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) {
       // Still allow Escape to close the panel even when an input is focused.
       if (e.key === 'Escape') {
         if (panel && panel.classList.contains('is-open')) {

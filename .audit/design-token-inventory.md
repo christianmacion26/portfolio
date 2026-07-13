@@ -22,90 +22,90 @@ All defined in `src/styles/tokens.css` `:root` (lines 26–147). Dark variants l
 
 ### 1.1 Brand palette (light)
 
-| Token | Value | Usage notes |
-|---|---|---|
-| `--c-primary` | `#0a0e14` | Near-black. Primary brand. In dark mode this becomes `#e6edf3` (inverted to text-color role). |
-| `--c-primary-deep` | `#000000` | Hover/darker state of primary. |
-| `--c-primary-2-deep` | `#8c6f2a` | Text-safe amber. WCAG-AA 5.0:1 on white — usable for body & small text. |
-| `--c-primary-2` | `#d4a017` | Single accent amber/gold. 2.7:1 on white — decorative only, ≥18px. |
-| `--c-primary-3` | `#6b4a8f` | Purple accent — sparingly. Maps to σ in math tokens. |
-| `--c-gold` | `#d4a017` | Callouts/highlights (decorative). Synonym of `--c-primary-2`. |
-| `--c-amber-deep` | `#8c6f2a` | Text-safe terminal-amber for body text. |
-| `--c-amber` | `#c98a16` | Terminal-amber accent (decorative). |
-| `--c-accent-cyan` | `#22d3ee` | Alternative accent (signal/data, not heavily used). |
+| Token                | Value     | Usage notes                                                                                   |
+| -------------------- | --------- | --------------------------------------------------------------------------------------------- |
+| `--c-primary`        | `#0a0e14` | Near-black. Primary brand. In dark mode this becomes `#e6edf3` (inverted to text-color role). |
+| `--c-primary-deep`   | `#000000` | Hover/darker state of primary.                                                                |
+| `--c-primary-2-deep` | `#8c6f2a` | Text-safe amber. WCAG-AA 5.0:1 on white — usable for body & small text.                       |
+| `--c-primary-2`      | `#d4a017` | Single accent amber/gold. 2.7:1 on white — decorative only, ≥18px.                            |
+| `--c-primary-3`      | `#6b4a8f` | Purple accent — sparingly. Maps to σ in math tokens.                                          |
+| `--c-gold`           | `#d4a017` | Callouts/highlights (decorative). Synonym of `--c-primary-2`.                                 |
+| `--c-amber-deep`     | `#8c6f2a` | Text-safe terminal-amber for body text.                                                       |
+| `--c-amber`          | `#c98a16` | Terminal-amber accent (decorative).                                                           |
+| `--c-accent-cyan`    | `#22d3ee` | Alternative accent (signal/data, not heavily used).                                           |
 
 ### 1.2 Ink (text) scale (light)
 
-| Token | Value | Usage |
-|---|---|---|
-| `--c-ink` | `#1a1f24` | Body text. |
-| `--c-ink-2` | `#5a6473` | Muted text (sub-titles, captions, secondary copy). |
-| `--c-ink-3` | `#869098` | Faintest (footnotes, pill labels, scroll-progress aria, ticker muted). |
-| `--c-rule` | `#c9ced6` | Dividers. |
-| `--c-rule-soft` | `#e6e9ee` | Hairline dividers. |
-| `--c-rule-strong` | `#1a1f24` | High-contrast rule (in light mode = `--c-ink`). |
+| Token             | Value     | Usage                                                                  |
+| ----------------- | --------- | ---------------------------------------------------------------------- |
+| `--c-ink`         | `#1a1f24` | Body text.                                                             |
+| `--c-ink-2`       | `#5a6473` | Muted text (sub-titles, captions, secondary copy).                     |
+| `--c-ink-3`       | `#869098` | Faintest (footnotes, pill labels, scroll-progress aria, ticker muted). |
+| `--c-rule`        | `#c9ced6` | Dividers.                                                              |
+| `--c-rule-soft`   | `#e6e9ee` | Hairline dividers.                                                     |
+| `--c-rule-strong` | `#1a1f24` | High-contrast rule (in light mode = `--c-ink`).                        |
 
 ### 1.3 Background scale (light)
 
-| Token | Value | Usage |
-|---|---|---|
-| `--c-bg` | `#ffffff` | Paper / page bg. |
-| `--c-bg-2` | `#f6f8fa` | Panel / banner bg. |
-| `--c-bg-3` | `#eef1f5` | Deeper panel. |
-| `--c-paper` | `#fbfaf6` | Term-paper cream. |
-| `--c-paper-2` | `#f5f3eb` | Deeper paper. |
-| `--c-tape` | `#0d1117` | Terminal / equity-tape dark. |
-| `--c-tape-2` | `#161b22` | Lighter tape. |
-| `--ink-on-tape` | `#e6edf3` | Body text on dark/tape. |
-| `--ink-on-tape-2` | `#c9ced6` | Muted text on dark/tape. |
+| Token             | Value     | Usage                        |
+| ----------------- | --------- | ---------------------------- |
+| `--c-bg`          | `#ffffff` | Paper / page bg.             |
+| `--c-bg-2`        | `#f6f8fa` | Panel / banner bg.           |
+| `--c-bg-3`        | `#eef1f5` | Deeper panel.                |
+| `--c-paper`       | `#fbfaf6` | Term-paper cream.            |
+| `--c-paper-2`     | `#f5f3eb` | Deeper paper.                |
+| `--c-tape`        | `#0d1117` | Terminal / equity-tape dark. |
+| `--c-tape-2`      | `#161b22` | Lighter tape.                |
+| `--ink-on-tape`   | `#e6edf3` | Body text on dark/tape.      |
+| `--ink-on-tape-2` | `#c9ced6` | Muted text on dark/tape.     |
 
 ### 1.4 Status / signal (light)
 
-| Token | Value | Usage |
-|---|---|---|
-| `--c-pass` | `#15803d` | Equity green, verified/pass. Deep enough for body text. |
-| `--c-pass-soft` | `#dcfce7` | Soft pass bg. |
-| `--c-fail` | `#9b2226` | Error/danger. |
-| `--c-fail-soft` | `#fee2e2` | Soft fail bg. |
-| `--c-warn` | `#8c6f2a` | Warning amber — text-safe (= `--c-amber-deep`). |
-| `--c-warn-soft` | `#fef3c7` | Soft warn bg. |
-| `--c-info` | `#1d4ed8` | Info blue. |
-| `--c-info-soft` | `#dbeafe` | Soft info bg. |
+| Token           | Value     | Usage                                                   |
+| --------------- | --------- | ------------------------------------------------------- |
+| `--c-pass`      | `#15803d` | Equity green, verified/pass. Deep enough for body text. |
+| `--c-pass-soft` | `#dcfce7` | Soft pass bg.                                           |
+| `--c-fail`      | `#9b2226` | Error/danger.                                           |
+| `--c-fail-soft` | `#fee2e2` | Soft fail bg.                                           |
+| `--c-warn`      | `#8c6f2a` | Warning amber — text-safe (= `--c-amber-deep`).         |
+| `--c-warn-soft` | `#fef3c7` | Soft warn bg.                                           |
+| `--c-info`      | `#1d4ed8` | Info blue.                                              |
+| `--c-info-soft` | `#dbeafe` | Soft info bg.                                           |
 
 ### 1.5 Math / quant accents (light)
 
-| Token | Value | Symbol | Notes |
-|---|---|---|---|
-| `--c-eq` | `#0a0e14` | — | Equation color (near-black). |
-| `--c-phi` | `#8c6f2a` | Φ | Primary accent. Text-safe, 5.0:1. |
-| `--c-sigma` | `#6b4a8f` | σ | Purple, kept for variety. |
-| `--c-delta` | `#8c6f2a` | Δ | Deep amber. |
-| `--c-mu` | `#5a6473` | μ | Gray. |
-| `--c-alpha` | `#15803d` | α | Green (signal pass), text-safe. |
-| `--c-beta` | `#8c6f2a` | β | Deep amber. |
+| Token       | Value     | Symbol | Notes                             |
+| ----------- | --------- | ------ | --------------------------------- |
+| `--c-eq`    | `#0a0e14` | —      | Equation color (near-black).      |
+| `--c-phi`   | `#8c6f2a` | Φ      | Primary accent. Text-safe, 5.0:1. |
+| `--c-sigma` | `#6b4a8f` | σ      | Purple, kept for variety.         |
+| `--c-delta` | `#8c6f2a` | Δ      | Deep amber.                       |
+| `--c-mu`    | `#5a6473` | μ      | Gray.                             |
+| `--c-alpha` | `#15803d` | α      | Green (signal pass), text-safe.   |
+| `--c-beta`  | `#8c6f2a` | β      | Deep amber.                       |
 
 ### 1.6 Dark mode overrides (key shifts)
 
-| Token | Light | Dark | Δ |
-|---|---|---|---|
-| `--c-primary` | `#0a0e14` | `#e6edf3` | inverts role: was brand ink, now text |
-| `--c-primary-2` | `#d4a017` | `#e8b220` | slight lift for dark BG |
-| `--c-primary-3` | `#6b4a8f` | `#9d80c4` | purple lifted |
-| `--c-amber` | `#c98a16` | `#e8b220` | lifted |
-| `--c-ink` | `#1a1f24` | `#f0f6fc` | inverts |
-| `--c-ink-2` | `#5a6473` | `#c9d1d9` | |
-| `--c-ink-3` | `#869098` | `#8b949e` | |
-| `--c-rule` | `#c9ced6` | `#4a525a` | v6.0 fix: lifted from `#30363d` for readable dividers on `#0d1117` |
-| `--c-rule-soft` | `#e6e9ee` | `#2d333b` | v6.0 fix: lifted from `#21262d` |
-| `--c-bg` | `#ffffff` | `#0d1117` | |
-| `--c-bg-2` | `#f6f8fa` | `#161b22` | |
-| `--c-bg-3` | `#eef1f5` | `#1f242c` | |
-| `--c-pass` | `#15803d` | `#3fb950` | lifted for dark contrast |
-| `--c-fail` | `#9b2226` | `#f85149` | |
-| `--c-warn` | `#8c6f2a` | `#d4a017` | |
-| `--c-info` | `#1d4ed8` | `#58a6ff` | |
-| `--hero-gradient-1` | `rgba(212,160,23,0.14)` | `rgba(212,160,23,0.18)` | |
-| `--hero-gradient-2` | `rgba(11,61,92,0.10)` | `rgba(11,61,92,0.18)` | |
+| Token               | Light                   | Dark                    | Δ                                                                  |
+| ------------------- | ----------------------- | ----------------------- | ------------------------------------------------------------------ |
+| `--c-primary`       | `#0a0e14`               | `#e6edf3`               | inverts role: was brand ink, now text                              |
+| `--c-primary-2`     | `#d4a017`               | `#e8b220`               | slight lift for dark BG                                            |
+| `--c-primary-3`     | `#6b4a8f`               | `#9d80c4`               | purple lifted                                                      |
+| `--c-amber`         | `#c98a16`               | `#e8b220`               | lifted                                                             |
+| `--c-ink`           | `#1a1f24`               | `#f0f6fc`               | inverts                                                            |
+| `--c-ink-2`         | `#5a6473`               | `#c9d1d9`               |                                                                    |
+| `--c-ink-3`         | `#869098`               | `#8b949e`               |                                                                    |
+| `--c-rule`          | `#c9ced6`               | `#4a525a`               | v6.0 fix: lifted from `#30363d` for readable dividers on `#0d1117` |
+| `--c-rule-soft`     | `#e6e9ee`               | `#2d333b`               | v6.0 fix: lifted from `#21262d`                                    |
+| `--c-bg`            | `#ffffff`               | `#0d1117`               |                                                                    |
+| `--c-bg-2`          | `#f6f8fa`               | `#161b22`               |                                                                    |
+| `--c-bg-3`          | `#eef1f5`               | `#1f242c`               |                                                                    |
+| `--c-pass`          | `#15803d`               | `#3fb950`               | lifted for dark contrast                                           |
+| `--c-fail`          | `#9b2226`               | `#f85149`               |                                                                    |
+| `--c-warn`          | `#8c6f2a`               | `#d4a017`               |                                                                    |
+| `--c-info`          | `#1d4ed8`               | `#58a6ff`               |                                                                    |
+| `--hero-gradient-1` | `rgba(212,160,23,0.14)` | `rgba(212,160,23,0.18)` |                                                                    |
+| `--hero-gradient-2` | `rgba(11,61,92,0.10)`   | `rgba(11,61,92,0.18)`   |                                                                    |
 
 Shadows also darken: `--shadow-xs/sm/md/lg` swap from `rgba(11,31,42,0.0X)` to `rgba(0,0,0,0.X)`. Borders lift: `--border-paper: 1px solid rgba(230,237,243,0.08)`.
 
@@ -127,10 +127,10 @@ These raw hex / rgba values are sprinkled directly across components and need ei
 
 Five semantic dots all share an 8×8px core with a 3px-ring glow:
 
-| Class | Core color | Ring color |
-|---|---|---|
-| `.dot` | `var(--c-pass/fail/warn/info)` | `var(--c-pass-soft/fail-soft/warn-soft/info-soft)` |
-| `.dot--muted` | `var(--c-ink-3)` | — |
+| Class         | Core color                     | Ring color                                         |
+| ------------- | ------------------------------ | -------------------------------------------------- |
+| `.dot`        | `var(--c-pass/fail/warn/info)` | `var(--c-pass-soft/fail-soft/warn-soft/info-soft)` |
+| `.dot--muted` | `var(--c-ink-3)`               | —                                                  |
 
 ---
 
@@ -140,40 +140,41 @@ Defined in `tokens.css` (lines 82–100) and applied via `global.css` h1–h6 (l
 
 ### 2.1 Font family stack
 
-| Token | Value | Notes |
-|---|---|---|
-| `--ff-sans` | `'Inter', 'Helvetica Neue', system-ui, -apple-system, sans-serif` | Body, headings, UI. |
-| `--ff-mono` | `'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace` | Code, captions, numbers, ticker, pills. |
-| `--ff-math` | `'KaTeX_Main', 'Latin Modern Math', 'Computer Modern Serif', 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif` | KaTeX equation rendering. |
+| Token       | Value                                                                                                                   | Notes                                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `--ff-sans` | `'Inter', 'Helvetica Neue', system-ui, -apple-system, sans-serif`                                                       | Body, headings, UI.                     |
+| `--ff-mono` | `'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace`                                                           | Code, captions, numbers, ticker, pills. |
+| `--ff-math` | `'KaTeX_Main', 'Latin Modern Math', 'Computer Modern Serif', 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif` | KaTeX equation rendering.               |
 
 The `BaseLayout` body uses `font-size: 16px` and `line-height: var(--lh-normal)` (1.5). `-webkit-font-smoothing: antialiased`, `text-rendering: optimizeLegibility`. `code/pre/kbd` get `font-size: 0.92em` (slightly smaller than body).
 
 ### 2.2 Font-size scale (modular — 1.25 ratio with rounded values)
 
-| Token | rem | px | Used for |
-|---|---|---|---|
-| `--fs-xs` | 0.78rem | 12.5px | Eyebrows, pill labels, ticker items, footnotes, code, tooltips, hero sub, input ticks. |
-| `--fs-sm` | 0.875rem | 14px | Nav links, button text, card body, project summary, proof-list meta. |
-| `--fs-base` | 1rem | 16px | Body. |
-| `--fs-lg` | 1.125rem | 18px | Section sub-headings, h4, footer__name. |
-| `--fs-xl` | 1.375rem | 22px | h3, code-card__title, callout titles. |
-| `--fs-2xl` | 1.75rem | 28px | h2, stat--md value, metric__value, cta__title. |
-| `--fs-3xl` | 2.25rem | 36px | h1 (mobile), section__title, stat--lg value. |
-| `--fs-4xl` | 3rem | 48px | h1 (desktop), stat--xl value. |
-| `--fs-5xl` | 4rem | 64px | Defined but unused in current source. |
+| Token       | rem      | px     | Used for                                                                               |
+| ----------- | -------- | ------ | -------------------------------------------------------------------------------------- |
+| `--fs-xs`   | 0.78rem  | 12.5px | Eyebrows, pill labels, ticker items, footnotes, code, tooltips, hero sub, input ticks. |
+| `--fs-sm`   | 0.875rem | 14px   | Nav links, button text, card body, project summary, proof-list meta.                   |
+| `--fs-base` | 1rem     | 16px   | Body.                                                                                  |
+| `--fs-lg`   | 1.125rem | 18px   | Section sub-headings, h4, footer__name.                                                |
+| `--fs-xl`   | 1.375rem | 22px   | h3, code-card__title, callout titles.                                                  |
+| `--fs-2xl`  | 1.75rem  | 28px   | h2, stat--md value, metric__value, cta__title.                                         |
+| `--fs-3xl`  | 2.25rem  | 36px   | h1 (mobile), section__title, stat--lg value.                                           |
+| `--fs-4xl`  | 3rem     | 48px   | h1 (desktop), stat--xl value.                                                          |
+| `--fs-5xl`  | 4rem     | 64px   | Defined but unused in current source.                                                  |
 
 Two `clamp()` overrides bypass the scale:
+
 - `.hero__title` → `clamp(2.5rem, 5.5vw, 4.5rem)` (max 72px).
 - `.hero__result-figure` → `clamp(2.25rem, 5vw, 3.5rem)`.
 
 ### 2.3 Line-height scale
 
-| Token | Value | Used for |
-|---|---|---|
-| `--lh-tight` | `1.15` | h1–h6 (headings). |
-| `--lh-snug` | `1.3` | Captions, code blocks, timeline contributions. |
-| `--lh-normal` | `1.5` | html/body, footer col, hero stat tiles. |
-| `--lh-loose` | `1.75` | Body paragraphs (`<p>`), list items, descriptions. |
+| Token         | Value  | Used for                                           |
+| ------------- | ------ | -------------------------------------------------- |
+| `--lh-tight`  | `1.15` | h1–h6 (headings).                                  |
+| `--lh-snug`   | `1.3`  | Captions, code blocks, timeline contributions.     |
+| `--lh-normal` | `1.5`  | html/body, footer col, hero stat tiles.            |
+| `--lh-loose`  | `1.75` | Body paragraphs (`<p>`), list items, descriptions. |
 
 ### 2.4 Heading defaults (global.css lines 102–129)
 
@@ -198,28 +199,28 @@ Two `clamp()` overrides bypass the scale:
 
 Defined in `tokens.css` (lines 102–112). 10-step geometric-ish scale, doubling from `--sp-6` upward.
 
-| Token | rem | px | Used for |
-|---|---|---|---|
-| `--sp-1` | 0.25rem | 4px | tight stacking inside pills, gap between eyebrow/title pairs. |
-| `--sp-2` | 0.5rem | 8px | inline icon-text gaps, pill padding-y, micro margins. |
-| `--sp-3` | 0.75rem | 12px | card body gaps, eyebrow→title margin, grid gap-2. |
-| `--sp-4` | 1rem | 16px | section sub-margin, card padding-y, list gaps. |
-| `--sp-5` | 1.5rem | 24px | default section gap, card padding, grid gap-default, `gap: var(--sp-5)` on the `.grid` utility. |
-| `--sp-6` | 2rem | 32px | section padding, big gaps, section__head bottom margin. |
-| `--sp-7` | 3rem | 48px | hero padding-block, footer padding-block, "tight" section alternative. |
-| `--sp-8` | 4rem | 64px | `.section` default padding-block, `process` padding-block. |
-| `--sp-9` | 6rem | 96px | Footer top margin, hero top padding. |
-| `--sp-10` | 8rem | 128px | Defined but unused. |
+| Token     | rem     | px    | Used for                                                                                        |
+| --------- | ------- | ----- | ----------------------------------------------------------------------------------------------- |
+| `--sp-1`  | 0.25rem | 4px   | tight stacking inside pills, gap between eyebrow/title pairs.                                   |
+| `--sp-2`  | 0.5rem  | 8px   | inline icon-text gaps, pill padding-y, micro margins.                                           |
+| `--sp-3`  | 0.75rem | 12px  | card body gaps, eyebrow→title margin, grid gap-2.                                               |
+| `--sp-4`  | 1rem    | 16px  | section sub-margin, card padding-y, list gaps.                                                  |
+| `--sp-5`  | 1.5rem  | 24px  | default section gap, card padding, grid gap-default, `gap: var(--sp-5)` on the `.grid` utility. |
+| `--sp-6`  | 2rem    | 32px  | section padding, big gaps, section__head bottom margin.                                         |
+| `--sp-7`  | 3rem    | 48px  | hero padding-block, footer padding-block, "tight" section alternative.                          |
+| `--sp-8`  | 4rem    | 64px  | `.section` default padding-block, `process` padding-block.                                      |
+| `--sp-9`  | 6rem    | 96px  | Footer top margin, hero top padding.                                                            |
+| `--sp-10` | 8rem    | 128px | Defined but unused.                                                                             |
 
 ---
 
 ## 4. Radius scale
 
-| Token | Value | Used by |
-|---|---|---|
-| `--radius-sm` | `6px` | Buttons, pills, code-card, search bar, theme toggle, ticker__item...wait, no — `.katex__thumb`, `.code-card__preview` (since it inherits), search input. Most-used radius. |
-| `--radius` | `10px` | Cards (`.card`, `.code-card`, `.proj-card`, `.stat`, `.gate-tile`, `.dsr-calc`), `.toc__link`, `.nav-more__menu`, `.hero__eq-cell`, `.proof-card`, `.flagship`, `.ctabanner__inner`. |
-| `--radius-lg` | `16px` | `.cta` (the gradient CTA banner), `.dsr-calc` outer. |
+| Token         | Value  | Used by                                                                                                                                                                              |
+| ------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--radius-sm` | `6px`  | Buttons, pills, code-card, search bar, theme toggle, ticker__item...wait, no — `.katex__thumb`, `.code-card__preview` (since it inherits), search input. Most-used radius.           |
+| `--radius`    | `10px` | Cards (`.card`, `.code-card`, `.proj-card`, `.stat`, `.gate-tile`, `.dsr-calc`), `.toc__link`, `.nav-more__menu`, `.hero__eq-cell`, `.proof-card`, `.flagship`, `.ctabanner__inner`. |
+| `--radius-lg` | `16px` | `.cta` (the gradient CTA banner), `.dsr-calc` outer.                                                                                                                                 |
 
 Plus: pill-shaped elements use `border-radius: 999px` directly (no token), and avatar uses `50%`. `.hl::after` (highlight underline) uses `2px`.
 
@@ -229,11 +230,11 @@ Plus: pill-shaped elements use `border-radius: 999px` directly (no token), and a
 
 Four steps (light mode → dark mode):
 
-| Token | Light | Dark |
-|---|---|---|
-| `--shadow-xs` | `0 1px 1px rgba(11,31,42,0.04)` | `0 1px 1px rgba(0,0,0,0.4)` |
-| `--shadow-sm` | `0 1px 3px rgba(11,31,42,0.06), 0 1px 2px rgba(11,31,42,0.04)` | `0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)` |
-| `--shadow-md` | `0 4px 12px rgba(11,31,42,0.08), 0 2px 4px rgba(11,31,42,0.04)` | `0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)` |
+| Token         | Light                                                           | Dark                                                     |
+| ------------- | --------------------------------------------------------------- | -------------------------------------------------------- |
+| `--shadow-xs` | `0 1px 1px rgba(11,31,42,0.04)`                                 | `0 1px 1px rgba(0,0,0,0.4)`                              |
+| `--shadow-sm` | `0 1px 3px rgba(11,31,42,0.06), 0 1px 2px rgba(11,31,42,0.04)`  | `0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)`   |
+| `--shadow-md` | `0 4px 12px rgba(11,31,42,0.08), 0 2px 4px rgba(11,31,42,0.04)` | `0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)`  |
 | `--shadow-lg` | `0 12px 32px rgba(11,31,42,0.1), 0 4px 8px rgba(11,31,42,0.05)` | `0 12px 32px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.3)` |
 
 Ad-hoc (not in tokens) — `0 1px 6px rgba(212,160,23,0.18)` (Footer avatar), `0 4px 16px rgba(11,31,42,0.18)` (hero headshot), `0 2px 12px rgba(212,160,23,0.18)` (avatar ring), `0 0 6px rgba(212,160,23,0.4)` (scroll-progress bar).
@@ -288,15 +289,15 @@ Ad-hoc (not in tokens) — `0 1px 6px rgba(212,160,23,0.18)` (Footer avatar), `0
 
 The system is **not tokenized** — values are inline across 5 files. Order from bottom to top:
 
-| z-index | Element | File |
-|---|---|---|
-| `0` | (default) | — |
-| `2` | `.ticker::before/after` gradient mask | Ticker.astro |
-| `30` | `.toc` (sticky section TOC) | SectionTOC.astro |
-| `50` | `.nav` (sticky top nav) | Nav.astro |
-| `60` | `.nav-more__menu` (Resources dropdown) | NavMore.astro |
-| `60` | `#scroll-progress-bar` (top progress bar) | scroll-progress.ts |
-| `1000` | `.skip-link:focus` | global.css |
+| z-index | Element                                   | File               |
+| ------- | ----------------------------------------- | ------------------ |
+| `0`     | (default)                                 | —                  |
+| `2`     | `.ticker::before/after` gradient mask     | Ticker.astro       |
+| `30`    | `.toc` (sticky section TOC)               | SectionTOC.astro   |
+| `50`    | `.nav` (sticky top nav)                   | Nav.astro          |
+| `60`    | `.nav-more__menu` (Resources dropdown)    | NavMore.astro      |
+| `60`    | `#scroll-progress-bar` (top progress bar) | scroll-progress.ts |
+| `1000`  | `.skip-link:focus`                        | global.css         |
 
 Stacking order reads correctly (TOC under nav, dropdown above nav, progress above all), but it relies on inline `60` colliding with itself. A `--z-{nav,toc,dropdown,progress,skip-link}` token set would let the implementer reorder cleanly.
 
@@ -363,18 +364,18 @@ Stacking order reads correctly (TOC under nav, dropdown above nav, progress abov
 
 `tokens.css` does not define breakpoint tokens. Breakpoints are scattered:
 
-| px | Where | Effect |
-|---|---|---|
-| 1080 | Nav.astro | Brand sub hides, primary nav still visible inline. |
-| 1024 | Nav.astro (commented: "primary visible ≥1024px") | — |
-| 980 | Nav.astro / NavMore.astro | Burger toggle appears, dropdown collapses, all links flat. |
-| 880 | Footer.astro, index.astro (hero__eq-row, hero__result, stat-row, now-strip) | Footer 4→2 cols, hero__result stacks, now strip 3→1. |
-| 760 | PipelineDiagram.astro | Horizontal SVG → vertical. |
-| 720 | global.css, index.astro, CTABanner, DSRCalculator, Avatar, TrustStrip, BrandMotif | Major mobile breakpoint. h1→--fs-3xl, h2→--fs-2xl, grids to 2-up, slider stacked, CTA 1-col, etc. |
-| 600 | global.css | KaTeX block shrink to 0.74em. Nav brand-name shrinks. |
-| 540 | Footer.astro, index.astro | Footer 2→1 col. Stat row 2→1 col. |
-| 480 | global.css | h1→--fs-2xl, h2→--fs-xl, container padding-inline→--sp-3. |
-| 420 | Nav.astro | Brand-name 0.7rem. |
+| px   | Where                                                                             | Effect                                                                                            |
+| ---- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 1080 | Nav.astro                                                                         | Brand sub hides, primary nav still visible inline.                                                |
+| 1024 | Nav.astro (commented: "primary visible ≥1024px")                                  | —                                                                                                 |
+| 980  | Nav.astro / NavMore.astro                                                         | Burger toggle appears, dropdown collapses, all links flat.                                        |
+| 880  | Footer.astro, index.astro (hero__eq-row, hero__result, stat-row, now-strip)       | Footer 4→2 cols, hero__result stacks, now strip 3→1.                                              |
+| 760  | PipelineDiagram.astro                                                             | Horizontal SVG → vertical.                                                                        |
+| 720  | global.css, index.astro, CTABanner, DSRCalculator, Avatar, TrustStrip, BrandMotif | Major mobile breakpoint. h1→--fs-3xl, h2→--fs-2xl, grids to 2-up, slider stacked, CTA 1-col, etc. |
+| 600  | global.css                                                                        | KaTeX block shrink to 0.74em. Nav brand-name shrinks.                                             |
+| 540  | Footer.astro, index.astro                                                         | Footer 2→1 col. Stat row 2→1 col.                                                                 |
+| 480  | global.css                                                                        | h1→--fs-2xl, h2→--fs-xl, container padding-inline→--sp-3.                                         |
+| 420  | Nav.astro                                                                         | Brand-name 0.7rem.                                                                                |
 
 **Missing**: any 4K / extra-large breakpoint. The site is desktop-up, never grows beyond `1180px` container.
 
@@ -384,13 +385,14 @@ Stacking order reads correctly (TOC under nav, dropdown above nav, progress abov
 
 Three shorthand tokens (`tokens.css` lines 135–137):
 
-| Token | Value |
-|---|---|
-| `--border` | `1px solid var(--c-rule)` |
-| `--border-strong` | `1px solid var(--c-ink-3)` |
-| `--border-paper` | `1px solid rgba(11, 31, 42, 0.12)` |
+| Token             | Value                              |
+| ----------------- | ---------------------------------- |
+| `--border`        | `1px solid var(--c-rule)`          |
+| `--border-strong` | `1px solid var(--c-ink-3)`         |
+| `--border-paper`  | `1px solid rgba(11, 31, 42, 0.12)` |
 
 Plus component-specific border colors:
+
 - `.code-card` / `.flagship` / `.hero__result` / `.gate-tile` / `.ai-secondary` / `.dsr-calc__why` use a `border-left: 3px solid var(--c-primary-2-deep)` accent — a recurring visual motif (6+ components).
 - `.hero__proof-row` uses `border-left: 3px solid var(--c-pass)`.
 - `.now-strip` has `border-top/bottom: 1px solid var(--c-tape-2)`.
@@ -423,32 +425,32 @@ Plus component-specific border colors:
 
 ## 13. Component inventory (all `src/components/*.astro`)
 
-| File | Purpose | Key CSS classes | LOC |
-|---|---|---|---|
-| `Avatar.astro` | Circular headshot, AVIF+WebP via `<Image>`, amber ring + soft amber shadow. | `.avatar` | 63 |
-| `BrandMotif.astro` | 33-cell micro-lattice SVG encoding G1–G31; family cells are real `<a>` links to `/methodology#family-N`; cell 16 is "ship" (animated), 27 is "block". | `.brand-motif`, `.brand-motif__cell`, `__cell--gate/--ship/--block` | 217 |
-| `CTABanner.astro` | Terminal-gradient CTA strip (tape→tape-2 diagonal, amber border) with primary+ghost buttons. | `.cta`, `.cta__inner/title/sub/actions` | 93 |
-| `Chart.astro` | Server-rendered SVG chart, 3 types: line / hist (with null PDF overlay + dataX marker) / bar. Deterministic gradient ID hash to avoid `<defs>` collisions. | `.chart`, `__svg/grid/axis/tick/title/caption/mark` | 396 |
-| `CodeProofCard.astro` | Proof card for OSS artifacts. `kind` eyebrow, title, tagline, terminal-style preview block + output lines, repo path footer. Amber left rail. | `.code-card`, `__head/kind/title/tagline/metric/preview/output/foot/link` | 186 |
-| `DSRCalculator.astro` | Interactive Deflated Sharpe Ratio (Bailey & López de Prado 2014) — 3 sliders (N, SR, T), verdict (pass/warn/fail), tape-dark output panel, `<details>` explainer. Pure JS, no libs. | `.dsr-calc`, `__head/eyebrow/title/sub/body/controls/row/label/val/slider/ticks/output/result/verdict/num/dsr/dsr-label/gates/chart/axis/axis-label/mark/why/why-summary/why-body` | 493 |
-| `Equation.astro` | Server-rendered KaTeX (`renderToString`), supports inline+block, 4 sizes (sm/md/lg/xl), 2 tones (paper/tape). Tape tone re-paints ~40 KaTeX class selectors to keep glyphs readable on dark. | `.eq`, `eq--block/--tape/--sm/--lg/--xl`, `.eq__label` | 149 |
-| `FlagshipCard.astro` | Tier-1 credential card. Wraps `ProofCard`. Has built-in `::after` shine sweep (600ms) + lift on hover. | `.flagship`, `__head/kind/badge/title/group/blurb/media/link` | 144 |
-| `Footer.astro` | 4-column site map + identity block. Uses `BrandMotif` + `Avatar` + status dot. Dark `var(--c-tape)` background. | `.footer`, `__inner/brand/mark/identity/avatar/id-text/name/role/loc/hours/cols/col/h4/base/base-inner/base-meta` | 241 |
-| `MetricPill.astro` | Single headline-metric pill (label + big mono value + optional sub). Tone-mappable color (brand/accent/gold/pass). | `.metric`, `__value/label/sub` | 57 |
-| `Nav.astro` | Top sticky nav. 7 primary + 11 secondary (Resources dropdown). Brand mark + name + sub. Search + theme-toggle buttons. Mobile: burger menu at ≤980px. Resume CTA always amber (P0-4 fix). | `.nav`, `__inner/brand/brand-mark/brand-text/brand-name/brand-sub/links/primary/secondary-row/link/link--active/cta/cta--mobile/cta--desktop/search/toggle-input/toggle/secondary-row/links` | 391 |
-| `NavMore.astro` | `<details>`-based Resources disclosure for desktop, flat `<ul>` for mobile. | `.nav-more`, `__summary/chev/menu/flat/link/link--active` | 198 |
-| `PipelineDiagram.astro` | Inline SVG flowchart, 5 boxes + arrows + feedback loop curve, both horizontal (default) and vertical (≤760px) variants. Themable: paper / tape tones. | `.pipeline`, `__svg/--h/--v`, `.pd-grid/grid-line/--v/--h`, `.pd-arrow/--loop`, `.pd-arrow-head/--loop`, `.pd-box/box-rect/box-num/box-title/box-sub`, `.pd-loop-label` | 473 |
-| `ProcessStrip.astro` | Wrapper around `PipelineDiagram` with section head. The v3.5 replacement for the old flat bar chart. | `.process`, `__head/title/sub/diagram`, `process--tape` | 72 |
-| `ProjectCard.astro` | Single project cell (AI or Quant), with `lane` badge, optional order number + status pill, up to 3 metrics, "Read more →" link. Hover: `translateY(-1px)`. | `.proj-card`, `__head/lane/ord/title/summary/metrics/metric/-label/-value/-sub/more` | 146 |
-| `ProofCard.astro` | `<figure>` with optional link wrap, `loading="lazy"` `<img>`, caption, credit. Aspect-ratio guard via inline `--proof-aspect` CSS var. Two tones (paper/tape). | `.proof-card`, `proof-card--paper/--tape`, `__link/img/cap/caption/credit` | 116 |
-| `ReadMeta.astro` | Quiet mono read-time + last-updated annotation for long-form pages. | `.read-meta`, `__time/sep/upd-prefix/date/proof` | 117 |
-| `SectionTOC.astro` | Sticky in-page section nav (below nav). Auto-discovers `[data-toc-id]` via client script. `is-active` class driven by `active-nav.ts` IntersectionObserver. | `.toc`, `__inner/label/list/link/link--active/auto/skeleton` | 156 |
-| `Sparkline.astro` | Tiny inline SVG sparkline, optional gradient fill, deterministic gradient ID. | `.sparkline` | 108 |
-| `Stat.astro` | Metric tile: label + big mono value (4 sizes, 4 variants) + sub + optional trend arrow + optional sparkline + optional KaTeX formula. | `.stat`, `__head/label/formula/value-row/value/trend/spark/sub`, `stat--sm/md/lg/xl`, `stat--default/primary/accent/mono`, `stat--trend-up/down/flat` | 198 |
-| `Ticker.astro` | CSS-only scrolling marquee of 10 "ticker symbols" (DSR, OOS, PBO, SHARPE, GATES, NDA, PROJ, CTA, PIT, UTC). 45s loop, 5 GitHub dark-mode color hues hard-coded. | `.ticker`, `__track/item/sym/val/delta`, `__item--pass/fail/warn/info/muted` | 142 |
-| `TimelineEntry.astro` | One experience entry. Left rail with dot+line, role/company/loc, date range, summary, contributions list with dot-status proofs. | `.tl`, `__rail/dot/line/body/head/role/meta/company/sep/loc/current/date/summary/content/contributions/contributions-label/contributions-list/contribution-label/contribution-evidence/contribution-proof/proofs/proofs-list/proof-glyph` | 268 |
-| `TrustStrip.astro` | Row of 5 trust pills (tested / reproducible / NDA-clean / RSS / build-SHA / verified). Pulsing green dot on the verified pill. | `.trust-strip`, `trust-strip--paper/--tape`, `__inner/title`, `.trust-pill`, `__icon/label/detail/dot`, `trust-pill--static` | 201 |
-| `VideoEmbed.astro` | HTML5 `<video>` wrapper. Two modes: inline (click-to-play, native controls) and gallery (autoplay/muted/loop/playsinline). Duration badge top-right in inline mode. | `.video-embed`, `__frame/video/cap/duration`, `video-embed--paper/--tape` | 104 |
+| File                    | Purpose                                                                                                                                                                                      | Key CSS classes                                                                                                                                                                                                                           | LOC |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| `Avatar.astro`          | Circular headshot, AVIF+WebP via `<Image>`, amber ring + soft amber shadow.                                                                                                                  | `.avatar`                                                                                                                                                                                                                                 | 63  |
+| `BrandMotif.astro`      | 33-cell micro-lattice SVG encoding G1–G31; family cells are real `<a>` links to `/methodology#family-N`; cell 16 is "ship" (animated), 27 is "block".                                        | `.brand-motif`, `.brand-motif__cell`, `__cell--gate/--ship/--block`                                                                                                                                                                       | 217 |
+| `CTABanner.astro`       | Terminal-gradient CTA strip (tape→tape-2 diagonal, amber border) with primary+ghost buttons.                                                                                                 | `.cta`, `.cta__inner/title/sub/actions`                                                                                                                                                                                                   | 93  |
+| `Chart.astro`           | Server-rendered SVG chart, 3 types: line / hist (with null PDF overlay + dataX marker) / bar. Deterministic gradient ID hash to avoid `<defs>` collisions.                                   | `.chart`, `__svg/grid/axis/tick/title/caption/mark`                                                                                                                                                                                       | 396 |
+| `CodeProofCard.astro`   | Proof card for OSS artifacts. `kind` eyebrow, title, tagline, terminal-style preview block + output lines, repo path footer. Amber left rail.                                                | `.code-card`, `__head/kind/title/tagline/metric/preview/output/foot/link`                                                                                                                                                                 | 186 |
+| `DSRCalculator.astro`   | Interactive Deflated Sharpe Ratio (Bailey & López de Prado 2014) — 3 sliders (N, SR, T), verdict (pass/warn/fail), tape-dark output panel, `<details>` explainer. Pure JS, no libs.          | `.dsr-calc`, `__head/eyebrow/title/sub/body/controls/row/label/val/slider/ticks/output/result/verdict/num/dsr/dsr-label/gates/chart/axis/axis-label/mark/why/why-summary/why-body`                                                        | 493 |
+| `Equation.astro`        | Server-rendered KaTeX (`renderToString`), supports inline+block, 4 sizes (sm/md/lg/xl), 2 tones (paper/tape). Tape tone re-paints ~40 KaTeX class selectors to keep glyphs readable on dark. | `.eq`, `eq--block/--tape/--sm/--lg/--xl`, `.eq__label`                                                                                                                                                                                    | 149 |
+| `FlagshipCard.astro`    | Tier-1 credential card. Wraps `ProofCard`. Has built-in `::after` shine sweep (600ms) + lift on hover.                                                                                       | `.flagship`, `__head/kind/badge/title/group/blurb/media/link`                                                                                                                                                                             | 144 |
+| `Footer.astro`          | 4-column site map + identity block. Uses `BrandMotif` + `Avatar` + status dot. Dark `var(--c-tape)` background.                                                                              | `.footer`, `__inner/brand/mark/identity/avatar/id-text/name/role/loc/hours/cols/col/h4/base/base-inner/base-meta`                                                                                                                         | 241 |
+| `MetricPill.astro`      | Single headline-metric pill (label + big mono value + optional sub). Tone-mappable color (brand/accent/gold/pass).                                                                           | `.metric`, `__value/label/sub`                                                                                                                                                                                                            | 57  |
+| `Nav.astro`             | Top sticky nav. 7 primary + 11 secondary (Resources dropdown). Brand mark + name + sub. Search + theme-toggle buttons. Mobile: burger menu at ≤980px. Resume CTA always amber (P0-4 fix).    | `.nav`, `__inner/brand/brand-mark/brand-text/brand-name/brand-sub/links/primary/secondary-row/link/link--active/cta/cta--mobile/cta--desktop/search/toggle-input/toggle/secondary-row/links`                                              | 391 |
+| `NavMore.astro`         | `<details>`-based Resources disclosure for desktop, flat `<ul>` for mobile.                                                                                                                  | `.nav-more`, `__summary/chev/menu/flat/link/link--active`                                                                                                                                                                                 | 198 |
+| `PipelineDiagram.astro` | Inline SVG flowchart, 5 boxes + arrows + feedback loop curve, both horizontal (default) and vertical (≤760px) variants. Themable: paper / tape tones.                                        | `.pipeline`, `__svg/--h/--v`, `.pd-grid/grid-line/--v/--h`, `.pd-arrow/--loop`, `.pd-arrow-head/--loop`, `.pd-box/box-rect/box-num/box-title/box-sub`, `.pd-loop-label`                                                                   | 473 |
+| `ProcessStrip.astro`    | Wrapper around `PipelineDiagram` with section head. The v3.5 replacement for the old flat bar chart.                                                                                         | `.process`, `__head/title/sub/diagram`, `process--tape`                                                                                                                                                                                   | 72  |
+| `ProjectCard.astro`     | Single project cell (AI or Quant), with `lane` badge, optional order number + status pill, up to 3 metrics, "Read more →" link. Hover: `translateY(-1px)`.                                   | `.proj-card`, `__head/lane/ord/title/summary/metrics/metric/-label/-value/-sub/more`                                                                                                                                                      | 146 |
+| `ProofCard.astro`       | `<figure>` with optional link wrap, `loading="lazy"` `<img>`, caption, credit. Aspect-ratio guard via inline `--proof-aspect` CSS var. Two tones (paper/tape).                               | `.proof-card`, `proof-card--paper/--tape`, `__link/img/cap/caption/credit`                                                                                                                                                                | 116 |
+| `ReadMeta.astro`        | Quiet mono read-time + last-updated annotation for long-form pages.                                                                                                                          | `.read-meta`, `__time/sep/upd-prefix/date/proof`                                                                                                                                                                                          | 117 |
+| `SectionTOC.astro`      | Sticky in-page section nav (below nav). Auto-discovers `[data-toc-id]` via client script. `is-active` class driven by `active-nav.ts` IntersectionObserver.                                  | `.toc`, `__inner/label/list/link/link--active/auto/skeleton`                                                                                                                                                                              | 156 |
+| `Sparkline.astro`       | Tiny inline SVG sparkline, optional gradient fill, deterministic gradient ID.                                                                                                                | `.sparkline`                                                                                                                                                                                                                              | 108 |
+| `Stat.astro`            | Metric tile: label + big mono value (4 sizes, 4 variants) + sub + optional trend arrow + optional sparkline + optional KaTeX formula.                                                        | `.stat`, `__head/label/formula/value-row/value/trend/spark/sub`, `stat--sm/md/lg/xl`, `stat--default/primary/accent/mono`, `stat--trend-up/down/flat`                                                                                     | 198 |
+| `Ticker.astro`          | CSS-only scrolling marquee of 10 "ticker symbols" (DSR, OOS, PBO, SHARPE, GATES, NDA, PROJ, CTA, PIT, UTC). 45s loop, 5 GitHub dark-mode color hues hard-coded.                              | `.ticker`, `__track/item/sym/val/delta`, `__item--pass/fail/warn/info/muted`                                                                                                                                                              | 142 |
+| `TimelineEntry.astro`   | One experience entry. Left rail with dot+line, role/company/loc, date range, summary, contributions list with dot-status proofs.                                                             | `.tl`, `__rail/dot/line/body/head/role/meta/company/sep/loc/current/date/summary/content/contributions/contributions-label/contributions-list/contribution-label/contribution-evidence/contribution-proof/proofs/proofs-list/proof-glyph` | 268 |
+| `TrustStrip.astro`      | Row of 5 trust pills (tested / reproducible / NDA-clean / RSS / build-SHA / verified). Pulsing green dot on the verified pill.                                                               | `.trust-strip`, `trust-strip--paper/--tape`, `__inner/title`, `.trust-pill`, `__icon/label/detail/dot`, `trust-pill--static`                                                                                                              | 201 |
+| `VideoEmbed.astro`      | HTML5 `<video>` wrapper. Two modes: inline (click-to-play, native controls) and gallery (autoplay/muted/loop/playsinline). Duration badge top-right in inline mode.                          | `.video-embed`, `__frame/video/cap/duration`, `video-embed--paper/--tape`                                                                                                                                                                 | 104 |
 
 **Total**: 25 components, ~4,729 lines (3,165 lines of markup/JS + ~1,564 lines of scoped CSS).
 
@@ -470,7 +472,7 @@ Motion is **institutional, not expressive**. The Phase D spec framed it as "inst
 
 The site is **content-heavy and quant-first**. Twenty-four pages organized around one argument: "I do solutions. Eval-first. NDA-clean." The hub-and-spoke radiates from the home page, with `proof.astro` (1,323 lines, 6 sections) as the spine and `methodology.astro` (G1–G31) as the load-bearing reference. The primary nav (always-visible on desktop ≥980px) surfaces 7 routes: **Home, For recruiters, Proof, Projects, Solutions, Method, Now**. The 11 secondary routes hide behind a Resources disclosure: **Live book, Experience, Pubs, Papers, Talks, Contact, Glossary, Uses, Reading, About this site, Colophon**. Mobile collapses everything into a flat burger menu.
 
-The home page is structured as a **scrollable prospectus**: (1) identity eyebrow + TL;DR pitch + h1 (the H1 sentence) + portrait block (CTA cert photo overlapping headshot) + topic chips; (2) Ticker marquee; (3) hero-meta with brand motif + two equation cells (DSR + multi-agent cost) + result-figure "31" with tooltip listing the 6 families; (4) TrustStrip; (5) 4-up stat row (certs / gates / LOC / agents); (6) ProcessStrip (5-step pipeline); (7) Now strip (open-to / latest / next); (8) Lane 1 — Quant Researcher projects (3 of 9); (9) Lane 2 — AI Engineer projects (3 of 6) + AI-secondary panel framing the AI lane as a *secondary, evaluable* extension of the primary quant work; (10) Method preview — 6 gate-tile cards; (11) CTABanner.
+The home page is structured as a **scrollable prospectus**: (1) identity eyebrow + TL;DR pitch + h1 (the H1 sentence) + portrait block (CTA cert photo overlapping headshot) + topic chips; (2) Ticker marquee; (3) hero-meta with brand motif + two equation cells (DSR + multi-agent cost) + result-figure "31" with tooltip listing the 6 families; (4) TrustStrip; (5) 4-up stat row (certs / gates / LOC / agents); (6) ProcessStrip (5-step pipeline); (7) Now strip (open-to / latest / next); (8) Lane 1 — Quant Researcher projects (3 of 9); (9) Lane 2 — AI Engineer projects (3 of 6) + AI-secondary panel framing the AI lane as a _secondary, evaluable_ extension of the primary quant work; (10) Method preview — 6 gate-tile cards; (11) CTABanner.
 
 Content collections total **44 entries**: 8 experiences (each a TimelineEntry), 4 cert groups, 15 projects (9 quant + 6 AI), 3 skills, 10 solutions, plus a 23k-line glossary. The proof page is the deepest: 6 sectioned tiers (Identity → Flagship credentials → Shipped code → Research artifacts → Track record → Public track record → NDA disclosure), with a Topic × Type filter bar (client-side, URL-sync), pagination (page size 6), and status pills. The for-recruiters page is a 4-section pitchbook that compresses the whole site for a 5-minute skim. The methodology page walks G1–G31 family by family. About.astro is the longest narrative page (554 lines) and serves as the bio. Positions.astro is a live paper-trade log (838 lines, NDA-safe by construction). Now.astro is the Derek Sivers–style current state. Mistakes.astro lists postmortems. Uses.astro and Reading.astro are classic taste pages. Colophon.astro is the implementation disclosure. The glossary.astro page renders the 23k-line `glossary-terms.ts` data file.
 

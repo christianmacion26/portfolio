@@ -17,7 +17,7 @@
  * Usage:
  *   <FactorTable projects={quantProjects} />
  */
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 interface MetricRow {
   label: string;
@@ -41,9 +41,10 @@ interface Props {
 const { projects: providedProjects } = Astro.props;
 
 // Default: pull all 9 quant projects and sort by order.
-const projects =
+const allProjects: CollectionEntry<'project'>[] = await getCollection('project');
+const projects: ProjectLite[] =
   providedProjects ??
-  ((await getCollection('project'))
+  allProjects
     .filter((p) => p.data.role === 'quant')
     .sort((a, b) => a.data.order - b.data.order)
     .map((p) => ({
@@ -53,7 +54,7 @@ const projects =
         order: p.data.order,
         metrics: p.data.metrics as MetricRow[],
       },
-    })));
+    }));
 
 interface Cell {
   display: string; // primary line
@@ -79,13 +80,10 @@ const empty: Cell = { display: '—' };
 
 const sharpeCols = projects.map((p) => mapMetric(p.data.metrics, [/sharpe/]));
 const psrCols = projects.map((p) => mapMetric(p.data.metrics, [/psr/, /probabilistic sharpe/]));
-const dsrCols = projects.map((p) =>
-  mapMetric(p.data.metrics, [/deflated sharpe/, /\bdsr\b/]),
-);
+const dsrCols = projects.map((p) => mapMetric(p.data.metrics, [/deflated sharpe/, /\bdsr\b/]));
 const pboCols = projects.map((p) => mapMetric(p.data.metrics, [/pbo/, /probability of backtest/]));
 
-const filledCount = (cells: (Cell | null)[]) =>
-  cells.reduce((acc, c) => acc + (c ? 1 : 0), 0);
+const filledCount = (cells: (Cell | null)[]) => cells.reduce((acc, c) => acc + (c ? 1 : 0), 0);
 
 // Honest accounting: how many cells are populated vs em-dash. The number
 // is itself a methodology statement — most strategies don't compute
@@ -114,10 +112,9 @@ function shortTitle(t: string): string {
       The four numbers that decide whether a strategy survives review.
     </h2>
     <p class="factor__sub">
-      Each strategy is scored against the four most-borrowed multiple-testing
-      diagnostics: raw Sharpe, Probabilistic Sharpe Ratio (PSR), Deflated
-      Sharpe Ratio (DSR), and Probability of Backtest Overfitting (PBO).
-      Empty cells report <span class="mono">—</span> — the metric was not
+      Each strategy is scored against the four most-borrowed multiple-testing diagnostics: raw
+      Sharpe, Probabilistic Sharpe Ratio (PSR), Deflated Sharpe Ratio (DSR), and Probability of
+      Backtest Overfitting (PBO). Empty cells report <span class="mono">—</span> — the metric was not
       computed in the source notebook, not omitted to hide a bad number.
     </p>
   </header>
@@ -141,9 +138,7 @@ function shortTitle(t: string): string {
             const pCell = psrCols[i] ?? empty;
             const dCell = dsrCols[i] ?? empty;
             const bCell = pboCols[i] ?? empty;
-            const filled = [sCell, pCell, dCell, bCell].filter(
-              (c) => c.display !== '—',
-            ).length;
+            const filled = [sCell, pCell, dCell, bCell].filter((c) => c.display !== '—').length;
             return (
               <tr class="factor__row">
                 <th scope="row" class="factor__name">
@@ -151,12 +146,20 @@ function shortTitle(t: string): string {
                      lane prefix (e.g., "quant/01-deflated-sharpe"), so we just
                      append it. All entries are quant (filtered on line 47). */}
                   <a class="factor__link" href={`/projects/${proj.id}/`}>
-                    <span class="factor__order mono">{String(proj.data.order).padStart(2, '0')}</span>
+                    <span class="factor__order mono">
+                      {String(proj.data.order).padStart(2, '0')}
+                    </span>
                     <span class="factor__name-text">{shortTitle(proj.data.title)}</span>
                   </a>
                 </th>
                 {[sCell, pCell, dCell, bCell].map((cell) => (
-                  <td class:list={['factor__cell', 'mono', { 'factor__cell--empty': cell.display === '—' }]}>
+                  <td
+                    class:list={[
+                      'factor__cell',
+                      'mono',
+                      { 'factor__cell--empty': cell.display === '—' },
+                    ]}
+                  >
                     <span class="factor__cell-val">{cell.display}</span>
                     {cell.sub && <span class="factor__cell-sub">{cell.sub}</span>}
                   </td>
@@ -176,13 +179,17 @@ function shortTitle(t: string): string {
     <p class="factor__legend-line">
       <span class="mono">—</span>
       <span class="factor__legend-text">
-        metric not computed in source notebook. Cells are deliberately empty —
-        the discipline is reporting only what was actually measured, not what
-        would look balanced in a marketing table.
+        metric not computed in source notebook. Cells are deliberately empty — the discipline is
+        reporting only what was actually measured, not what would look balanced in a marketing
+        table.
       </span>
     </p>
     <p class="factor__legend-line factor__legend-line--totals mono">
-      <span>Populated: Sharpe {totalsFilled.sharpe}/9 · PSR {totalsFilled.psr}/9 · DSR {totalsFilled.dsr}/9 · PBO {totalsFilled.pbo}/9</span>
+      <span
+        >Populated: Sharpe {totalsFilled.sharpe}/9 · PSR {totalsFilled.psr}/9 · DSR {
+          totalsFilled.dsr
+        }/9 · PBO {totalsFilled.pbo}/9</span
+      >
     </p>
   </footer>
 </section>
@@ -307,7 +314,7 @@ function shortTitle(t: string): string {
   }
   .factor__cell-val {
     display: block;
-    font-weight: 700;
+    font-weight: 600;
     font-size: var(--fs-base);
     line-height: 1.1;
   }
@@ -341,7 +348,7 @@ function shortTitle(t: string): string {
     border: 1px solid var(--c-rule);
     border-radius: var(--radius-sm);
     color: var(--c-primary-2);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .factor__legend {
