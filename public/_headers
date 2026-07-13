@@ -5,6 +5,20 @@
 # sends `cache-control: public, max-age=0, must-revalidate` on every file,
 # forcing a conditional revalidation round-trip on every repeat visit
 # (~50-100 ms TTFB penalty).
+#
+# v6.10.34 — added Content-Security-Policy. Portfolio ships zero third-party
+# scripts (no analytics, no ads, no fonts loaded from CDN); all assets are
+# self-hosted under /_astro/ and inline SVG. `img-src data:` permits the
+# inline data URIs used by a few badges/diagrams. `style-src 'unsafe-inline'`
+# needed because Astro inlines <style> blocks per-component at build time.
+# No `'unsafe-eval'`, no remote scripts.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; font-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable

@@ -76,7 +76,7 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
       </div>
 
       <div class="head-stats">
-        <Stat value={String(groups.length)} label="domains" sub="three" formula="|D|" />
+        <Stat value={String(groups.length)} label="domains" sub={String(groups.length === 1 ? 'one' : groups.length === 2 ? 'two' : groups.length === 3 ? 'three' : String(groups.length))} formula="|D|" />
         <Stat value={String(totalSkills)} label="skills" sub="in stack" formula="|\mathcal{S}|" />
         <Stat
           value={String(withLevel)}
@@ -376,7 +376,8 @@ const levelLabel: Record<1 | 2 | 3 | 4 | 5, string> = {
     color: var(--c-primary-2);
   }
   .skill__chip--lvl-3 {
-    background: rgba(212, 160, 23, 0.05);
+    /* v6.10.36 — token alias for F13 amber family. */
+    background: var(--c-amber-faint);
     border: 1px solid var(--c-ink-3);
     color: var(--c-ink-2);
   }

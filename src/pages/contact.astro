@@ -333,9 +333,11 @@ const platforms = [
     box-shadow: var(--shadow-md);
     color: var(--c-ink);
   }
+  /* v6.10.33 — institutional: drop the F13-era amber gradient (rgba 212,160,23 stale).
+     Lift via --c-bg-2 token; primary border remains to signal the hero variant. */
   .contact-card--primary {
     border-color: var(--c-primary);
-    background: linear-gradient(180deg, rgba(212, 160, 23, 0.04), var(--c-bg));
+    background: var(--c-bg-2);
   }
   .contact-card__label {
     font-size: var(--fs-xs);
@@ -462,7 +464,7 @@ const platforms = [
   .how-i-reply__num {
     font-size: var(--fs-3xl);
     color: var(--c-primary);
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1;
   }
   .how-i-reply__body h3 {

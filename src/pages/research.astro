@@ -49,14 +49,14 @@ const statsRow: Array<{
     variant: 'mono',
   },
   {
-    value: '31',
+    value: profile.stats.evalGates,
     label: 'eval gates',
     sub: 'G1–G31 mechanical harness',
     trend: 'up',
     variant: 'mono',
   },
   {
-    value: '102',
+    value: profile.stats.certCount,
     label: 'cert credentials',
     sub: 'STA Tier-1 + 4 cert groups',
     trend: 'up',
@@ -88,7 +88,7 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
 
 <BaseLayout
   title="Research"
-  description="Public-data quant research warehouse: 9 strategies, 4 factors, 12 sources. Every number reproducible."
+  description={`Public-data quant research warehouse: ${quantProjects.length} strategies, 4 factors, 12 sources. Every number reproducible.`}
   breadcrumbs={[
     { name: 'Home', href: '/' },
     { name: 'Research', href: '/research' },
@@ -113,7 +113,7 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
         <span>public data only</span>
       </p>
       <h1 class="r-hero__title">
-        Nine strategies. Four factors. Twelve sources.
+        {`${quantProjects.length} strategies. Four factors. Twelve sources.`}
       </h1>
       <p class="r-hero__sub">
         A market-data view of the research book. No narrative — the table
@@ -166,7 +166,7 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
   <section class="r-grid" aria-labelledby="r-grid-heading">
     <div class="container">
       <header class="r-grid__head">
-        <p class="r-grid__eyebrow mono">All nine strategies</p>
+        <p class="r-grid__eyebrow mono">{`All ${quantProjects.length} strategies`}</p>
         <h2 id="r-grid-heading" class="r-grid__title">The book, card by card.</h2>
         <p class="r-grid__sub">
           One card per quant project. Headline metric, one-line summary,
@@ -254,7 +254,8 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
   </section>
 
   {/* ============================================================
-       DATA SOURCE REGISTRY — 12 public-domain data sources.
+       DATA SOURCE REGISTRY — 12 public-domain data sources (curated list in
+       src/components/DataSourceList.astro; update the prose if the array grows).
        ============================================================ */}
   <DataSourceList />
 
@@ -580,9 +581,11 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
   /* ============================================================
      DISCLOSURE
      ============================================================ */
+  /* v6.10.34 — institutional: drop the linear-gradient bg.
+     --c-bg and --c-tape were both #0d1117 — gradient was a no-op. */
   .r-disclose {
     padding-block: var(--sp-9);
-    background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-tape) 100%);
+    background: var(--c-bg);
     border-block: var(--border-paper);
   }
   .r-disclose__inner {

@@ -713,7 +713,8 @@ const totalCount = quantPubs.length + aiPubs.length + workbooks.length + press.l
   .wb__status {
     display: inline-block;
     padding: 0 6px;
-    background: rgba(212, 160, 23, 0.12);
+    /* v6.10.36 — token alias for F13 amber family. */
+    background: var(--c-amber-soft);
     color: var(--c-warn);
     border-radius: 3px;
     font-weight: 600;

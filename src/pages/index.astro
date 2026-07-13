@@ -56,6 +56,9 @@ import { buildStampUtc8, buildYear } from '@utils/build-stamp';
 const projects = (await getCollection('project')).sort((a, b) => a.data.order - b.data.order);
 const aiFeatured = projects.filter((p) => p.data.role === 'ai').slice(0, 3);
 const quantFeatured = projects.filter((p) => p.data.role === 'quant').slice(0, 3);
+const quantCount = projects.filter((p) => p.data.role === 'quant').length;
+// v6.10.32 — derive prediction events count from canonical source (was 2, wrong; actual is 8 events)
+const predictionEvents = await getCollection('predictionEvent');
 
 // === v6.6 (Mission W) — work-row fixtures ===========================
 // 5 timeline rows distilled from the project corpus. Each row carries
@@ -205,8 +208,9 @@ const commitShort = (process.env.GIT_COMMIT ?? '').slice(0, 7) || 'local';
 
 // === v6.5 — METRIC STRIP ==========================================
 // 2-row × 4-col grid of pulse cells. Center values are the portfolio's
-// stable truths (84 pages, 31 gates, etc.) — they don't drift per
-// build. The DELTA on each cell is the "pulse" and is rolled from
+// stable truths (profile.stats.pagesBuilt pages, 31 gates, etc.) — they
+// don't drift per build (only on deliberate route add/remove). The DELTA
+// on each cell is the "pulse" and is rolled from
 // `seedFromString(buildSeed() + '::numbers')` so each build shows a
 // fresh pulse pattern; the next build rolls a new one. This matches
 // the same Standing Order §9 fixture pattern used by WorldFeed,
@@ -232,12 +236,15 @@ const pickDelta = (): { text: string; kind: MetricKind } => {
 // Eight institutional metrics in display order. Top row = outputs,
 // bottom row = capability + longevity. Each cell is 180×88 with
 // 1px hairlines on every interior edge.
+// v6.10.38 — PAGES BUILT derives from profile.stats (canonical page
+// count, updated on route add/remove); STRATEGIES derives from
+// quantCount = projects.filter(p => p.data.role === 'quant').length.
 const metricFacts: Array<{ label: string; value: string }> = [
-  { label: 'PAGES BUILT', value: '84' },
+  { label: 'PAGES BUILT', value: String(profile.stats.pagesBuilt) },
   { label: 'AUDIT', value: '100%' },
   { label: 'AFK LOOP', value: '6H' },
   { label: 'EVAL GATES', value: String(profile.stats.evalGates) },
-  { label: 'STRATEGIES', value: '9' },
+  { label: 'STRATEGIES', value: String(quantCount) },
   { label: 'AI AGENTS', value: String(profile.stats.aiAgentCount) },
   { label: 'CERTS', value: String(profile.stats.certCount) },
   { label: 'MONTHS', value: String(profile.stats.ageMonths) },
@@ -974,7 +981,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
       <div class="section__foot">
         <a href={path('/projects')} class="projects-cta">
           <span class="projects-cta__eyebrow mono">ALL PROJECTS</span>
-          <span class="projects-cta__main">15 projects · 9 quant · 4 markets · 2 prediction</span>
+          <span class="projects-cta__main">{projects.length} projects · {quantCount} quant · 4 markets · {predictionEvents.length} prediction</span>
           <span class="projects-cta__arrow" aria-hidden="true">→</span>
         </a>
       </div>
@@ -991,7 +998,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
          │  NUM 32px  │   sans, ink
          │ +0.04      │   10px mono, color-coded
          └────────────┘
-       Center values are portfolio truths (84 pages · 31 gates · 11
+       Center values are portfolio truths (profile.stats.pagesBuilt pages · 31 gates · 11
        agents · 102 certs · 9 strategies · 11 months · 100% audit ·
        6H AFK loop). Deltas are the "pulse" — seeded from
        `seedFromString(buildSeed() + '::numbers')` so each build

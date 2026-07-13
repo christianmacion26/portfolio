@@ -26,7 +26,7 @@ Christian T. Macion, CTA®·Open to remote roles · UTC+8
 I build research systems, and I ship the evals that prove they work.
 
 Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk·remote-first, async-friendly
-[CONTACT≤ 24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s-8.77 BP·DXY102.86·VIX14.70·BRENT83.52·AS OF 14:48 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
+[CONTACT≤ 24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197 issued by the Society of Technical Analysts.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s+18.94 BP·DXY99.56·VIX11.02·BRENT72.32·AS OF 09:54 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
 
 World wire — 4 channels, 80 fixtures
 
@@ -763,32 +763,32 @@ Entry points · stations grid
 [Station 01 · Markets
 
 ### Where is rate-of-change concentrated?
-+1.44 bp
++0.48 bp
 
 2s10s spread · UST
 
-DXY105.8
+DXY103.8
 
-VIX13.5
+VIX13.8
 
-BRENT74.2
+BRENT79.5
 
-OPEN+0.0709:44 UTC+8[ UST ][ spread ]](/markets/)
+OBS+0.0614:35 UTC+8[ UST ][ spread ]](/markets/)
 
 [Station 02 · Prediction
 
 ### What does the market price next?
-0.64
+0.58
 
 median implied probability
 
-events10
+events9
 
-edge ±0.32
+edge ±0.31
 
-tenor2027-Q1
+tenor2027-Q3
 
-LIVE+0.0203:20 UTC+8[ odds ][ edge ]](/prediction-markets/)
+LIVE-0.0402:41 UTC+8[ odds ][ edge ]](/prediction-markets/)
 
 [Station 03 · Research
 
@@ -801,14 +801,14 @@ gates31
 
 categories4
 
-pass81%
+pass79%
 
-LIVE-0.0107:58 UTC+8[ ideas ][ G1-31 ]](/research/)
+OBS-0.0509:34 UTC+8[ ideas ][ G1-31 ]](/research/)
 
 [Station 04 · AI
 
 ### How do evals ship?
-94%
+92%
 
 eval pass rate · 31 gates
 
@@ -818,7 +818,7 @@ datasets7
 
 harnesses3
 
-OBS-0.0120:18 UTC+8[ models ][ evals ]](/methodology/)
+OPEN+0.0709:44 UTC+8[ models ][ evals ]](/methodology/)
 
 Entry points
 
@@ -835,28 +835,28 @@ Data ingestion
 ## Pipeline live.▍
 
 Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single deterministic PRNG.
-throughput · events / s2.9k4.0k2.1k1.8k3.4kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE40%NORMALIZE30%ENRICH28%INDEX26%STREAM48%
+throughput · events / s4.4k4.2k3.8k2.0k1.8kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE26%NORMALIZE30%ENRICH33%INDEX23%STREAM23%
 
 Trader desk
 
 ## P&L · order flow · risk · signalslive
-φ 0.553ms
+φ 0.734ms
 
 Book equity · 60 bars · today
 
--8.32%60d
++0.42%60d
 
--1.62Sharpe-10.53%Max DD-14.00%Book skew
+0.50Sharpe-5.45%Max DD-3.90%Book skew
 
 Order flow · 8 × 4 heat
 
-+2,211/−2,931
-B96B85B97B41A80A263A285A143B131B72B268B284A278A61A192A226B122B285B230B54A223A188A258A283B75B107B129B135A98A102A155A96
++2,378/−2,571
+B175B142B147B64A44A144A204A284B63B259B53B60A257A213A206A29B190B263B89B265A40A287A61A123B126B72B138B272A16A259A152A252
 
 Risk · 1-day VaR
 
 NAV-normalized
-025507510021.1% NAV
+025507510069.4% NAV
 
 Signals · 4 × 4 sparklines
 
@@ -867,7 +867,7 @@ Positions
 
 5
 
-net −$316
+net +$16
 
 top · COMMOD-2
 
@@ -875,7 +875,7 @@ Orders
 
 5
 
-+1·2·2·1
++1·1·3·1
 
 open · partial · ack · rej
 
@@ -883,7 +883,7 @@ Calendar
 
 3
 
-next +2h
+next +6h
 
 impact MED
 
@@ -891,7 +891,7 @@ Alerts
 
 3
 
-2·2·0
+3·1·0
 
 crit · warn · info
 2y5y10y30y1m3m6m12mBTCETHSOLDXY2y5y10y30y1m3m6m12mBTCETHSOLDXY
@@ -905,7 +905,7 @@ Earth mission control · world event map
 ## Sixteen cities. Thirty-six events. The news behind the math.
 
 A rate decision in London is a half-life in Manila. We map the half-life.
-Earth-scale quant intelligence140 countries · 16 cities · 6 active events · 6 routes · Orthographic · rotatingEarth-scale event globe — cities, routes, and active events — rotatingOrthographic globe projection centered on (lat 20°, lon 80°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, 16 cities, 6 trade routes, 6 active events, region rollups (APAC 4 / EMEA 2 / Americas 4), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.DigosDigosSingaporeSingaporeTokyoTokyoHong KongHong KongShanghaiShanghaiSeoulSeoulManilaManilaMumbaiMumbaiDubaiDubaiSydneySydneyFrankfurtFrankfurtZurichZurichLondonLondonLondon GBRLondon · GBRParis FRAParis · FRABerlin DEUBerlin · DEURome ITARome · ITAMadrid ESPMadrid · ESPBrussels BELBrussels · BELAmsterdam NLDAmsterdam · NLDStockholm SWEStockholm · SWEVienna AUTVienna · AUTTokyo JPNTokyo · JPNCanberra AUSCanberra · AUSCentral bank press conference — FrankfurtΔy = ±4.3·σ_pp · cov(b,1y) ≈ +1.4σCentral bank policy decision — TokyoΔy = ±10.0·σ_pp · cov(b,1y) ≈ +1.4σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.2σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.5; DVO1 spikes 14.3%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 2.3σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.3× pre; vol regime shift: low → midMISSION CONTROL · BUILD 2026-07-12 18:13 UTC+8 · 16 HUBS · 14 CAPITALS · 10 EVENTS · 5 CRITICALCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km18:13:30 UTC+822° / 27°APAC4 evEMEA6 evAmericas4 ev
+Earth-scale quant intelligence140 countries · 16 cities · 6 active events · 6 routes · Orthographic · rotatingEarth-scale event globe — cities, routes, and active events — rotatingOrthographic globe projection centered on (lat 20°, lon 80°) with day/night terminator, country borders from Natural Earth 1:110m, latitude-ramp terrain, 16 cities, 6 trade routes, 6 active events, region rollups (APAC 4 / EMEA 2 / Americas 4), and mission-control chrome (header, roster, legend, scale, scrubber, crosshair, play/pause). Auto-rotates via CSS animation; pauses on hover or via the toggle checkbox. Sun position computed from the BUILD_DATE environment variable.DigosDigosSingaporeSingaporeTokyoTokyoHong KongHong KongShanghaiShanghaiSeoulSeoulManilaManilaMumbaiMumbaiDubaiDubaiSydneySydneyFrankfurtFrankfurtZurichZurichLondonLondonLondon GBRLondon · GBRParis FRAParis · FRABerlin DEUBerlin · DEURome ITARome · ITAMadrid ESPMadrid · ESPBrussels BELBrussels · BELAmsterdam NLDAmsterdam · NLDStockholm SWEStockholm · SWEVienna AUTVienna · AUTTokyo JPNTokyo · JPNCanberra AUSCanberra · AUSCentral bank press conference — FrankfurtΔy = ±8.8·σ_pp · cov(b,1y) ≈ +1.1σCentral bank policy decision — TokyoΔy = ±4.6·σ_pp · cov(b,1y) ≈ +1.3σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.3σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.7; DVO1 spikes 8.8%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 1.7σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.2× pre; vol regime shift: low → midMISSION CONTROL · BUILD 2026-07-13 10:57 UTC+8 · 16 HUBS · 14 CAPITALS · 10 EVENTS · 5 CRITICALCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km10:57:42 UTC+822° / 136°APAC4 evEMEA6 evAmericas4 ev
 
 Sun (subsolar)
 
@@ -1065,7 +1065,7 @@ news/36 events · last 24h
 
 Digos· desk action1
 
-central-bankbook fades FX carry into the fix
+central-bankdesk writes 6m vol on the front-end
 
 ---
 
@@ -1120,26 +1120,26 @@ VRP 3.8σ
 
 σ̂ 0.85
 
-ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.8899
+ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.5939
 
 What I do
 
 ## Four things, one discipline.
 
 A senior quant and an AI engineer can share a desk only if both write the eval harness. That's the only output that survives the next data drift, the next regime shift, the next model swap.
-9 projectsRRESEARCH
+7 projectsRRESEARCH
 
 Multi-testing-aware systematic strategies on public data.
-13 eventsAARTIFICIAL INTELLIGENCE
+10 eventsAARTIFICIAL INTELLIGENCE
 
 Multi-agent LLM systems with explicit eval harness and MCP contracts.
-19 hubsMMARKETS
+18 hubsMMARKETS
 
 Sixteen financial hubs. Thirty-six monitored events. Live tape.
-11 capitalsCCOVERAGE
+12 capitalsCCOVERAGE
 
 NDA-clean coverage. Past contracts disclosed, dates closed.
-REFLECT-RESLOP-SCANNDA-CLNLLM-AS-JUDDEF-SHARPEBACKTEST-EMCP-EVALPAIRS-TRADRAG-RECALLMACRO-/-VOCRYPTO-FUNDSR-CALCCROSS-SECTTIME-SERIEPBO-CSCVMCP-EVALTOOL-CALL-G1–G31THE-VARIANLOOK-AHEADREFLECT-RESLOP-SCANNDA-CLNLLM-AS-JUDDEF-SHARPEBACKTEST-EMCP-EVALPAIRS-TRADRAG-RECALLMACRO-/-VOCRYPTO-FUNDSR-CALCCROSS-SECTTIME-SERIEPBO-CSCVMCP-EVALTOOL-CALL-G1–G31THE-VARIANLOOK-AHEAD
+MCP-EVALLLM-AS-JUDTOOL-CALL-G1–G31CROSS-SECTSLOP-SCANMCP-EVALCRYPTO-FUNNDA-CLNDEF-SHARPEMACRO-/-VOBACKTEST-EPBO-CSCVPAIRS-TRADTHE-VARIANREFLECT-RERAG-RECALLLOOK-AHEADTIME-SERIEDSR-CALCMCP-EVALLLM-AS-JUDTOOL-CALL-G1–G31CROSS-SECTSLOP-SCANMCP-EVALCRYPTO-FUNNDA-CLNDEF-SHARPEMACRO-/-VOBACKTEST-EPBO-CSCVPAIRS-TRADTHE-VARIANREFLECT-RERAG-RECALLLOOK-AHEADTIME-SERIEDSR-CALC
 
 Selected work
 
@@ -1148,34 +1148,34 @@ Selected work
 [2025 · Q4QUANT
 
 ### Cross-Sectional Momentum (18 coins)
-18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.90→-0.04OOS Sharpe0.93→-0.04CI Straddle0.07→0.17](/projects/quant/02-cross-sectional-momentum/)
+18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.92→-0.02OOS Sharpe0.89→-0.04CI Straddle0.05→0.15](/projects/quant/02-cross-sectional-momentum/)
 
 [2025 · Q4QUANT
 
 ### Time-Series Momentum + Vol Targeting
-20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.28→0.40Max DD59%→29%Win Rate41%→51%](/projects/quant/03-timeseries-momentum-voltarget/)
+20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.25→0.39Max DD63%→31%Win Rate40%→49%](/projects/quant/03-timeseries-momentum-voltarget/)
 
 [2026 · Q1AI
 
 ### Slop Scanner
-13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index82.00→3.00Hedge Density0.19→0.05N-gram Rep0.36→0.06](/projects/ai/06-slop-scanner/)
+13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index82.00→5.00Hedge Density0.20→0.06N-gram Rep0.35→0.07](/projects/ai/06-slop-scanner/)
 
 [2026 · Q2QUANT
 
 ### Macro / Volatility-Regime Overlay
-VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.63→0.66Max DD56%→43%Calmar0.31→0.70](/projects/quant/07-macro-regime-overlay/)
+VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.62→0.68Max DD58%→44%Calmar0.31→0.72](/projects/quant/07-macro-regime-overlay/)
 
 [2026 · Q2QUANT
 
 ### Look-Ahead Bias Audit (the shift test)
-ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.62Leaked Sharpe0.59→5.17Phantom %2%→88%](/projects/quant/09-lookahead-bias-audit/)
+ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.63Leaked Sharpe0.58→5.03Phantom %2%→89%](/projects/quant/09-lookahead-bias-audit/)
 
-[ALL PROJECTS15 projects · 9 quant · 4 markets · 2 prediction→](/projects/)
+[ALL PROJECTS15 projects · 9 quant · 4 markets · 8 prediction→](/projects/)
 
 The numbers
 
 ## What eleven months of build looks like.
-PAGES BUILT84STABLEAUDIT100%+4.27AFK LOOP6H−1.9%EVAL GATES31+3.48STRATEGIES9−2.5%AI AGENTS11STABLECERTS102+1.7%MONTHS11−1.2%
+PAGES BUILT84+4.01AUDIT100%−1%AFK LOOP6H−2%EVAL GATES31+3.3%STRATEGIES9+2.4%AI AGENTS11STABLECERTS102+1.2%MONTHS11−1.5%
 
 STRATEGY NOTE01·CONDENSED
 iCard 1 of 3
@@ -1216,7 +1216,7 @@ Eight canonical questions. Each answer is short, factual, and verifiable from th
 
 01Who is this candidate?
 
-Christian T. Macion, CTA® — a quantitative researcher and AI engineer based in Digos City, Davao del Sur, Philippines (UTC+8). Eleven-agent research platform, 31-gate statistical eval harness, 76.5k LOC Python, 102 professional certifications across AI, finance, math, and events.
+Christian T. Macion, CTA® — a quantitative researcher and AI engineer based in Digos City, Davao del Sur, Philippines (UTC+8). 11-agent research platform, 31-gate statistical eval harness, 76.5k LOC Python, 102 professional certifications across AI, finance, math, and events.
 
 02What is their current availability?
 
@@ -1593,7 +1593,7 @@ Live Presenter-view delivery, Sep 13 2024. Webcam lower-right; deck filename 'MA
 P.5b · External accounts
 
 Six external accounts and surfaces, each with a handle and a public, dated metric. Hairline-rule rows, no thumbnails. If a row is empty, it means that channel isn't public yet.
-Numerainot public yetcorrelation / MMC / TC[see /positions](/positions/)HuggingFace@christianmacionMCP server artifact[/proof/eval-mcp-server](/proof/eval-mcp-server/)GitHubchristianmacion26102 certs · 76.5k LOC · 15 OSS projects[github.com/christianmacion26](https://github.com/christianmacion26)TradingView@CryptoneedsChristpublic chart · Elliott Wave[tradingview.com/u/CryptoneedsChrist](https://www.tradingview.com/u/CryptoneedsChrist/)Atom feeds3 streamsfeed.xml · feed-projects.xml · feed-solutions.xml[/feed.xml](/feed.xml)Medium@christianmacion26public essays[medium.com/@christianmacion](https://medium.com/@christianmacion)
+Numerainot public yetcorrelation / MMC / TC[see /positions](/positions/)HuggingFace@christianmacionMCP server artifact[/projects/ai/04-eval-mcp-server](/projects/ai/04-eval-mcp-server/)GitHubchristianmacion26102 certs · 76.5k LOC · 15 OSS projects[github.com/christianmacion26](https://github.com/christianmacion26)TradingView@CryptoneedsChristpublic chart · Elliott Wave[tradingview.com/u/CryptoneedsChrist](https://www.tradingview.com/u/CryptoneedsChrist/)Atom feeds3 streamsfeed.xml · feed-projects.xml · feed-solutions.xml[/feed.xml](/feed.xml)Medium@christianmacion26public essays[medium.com/@christianmacion](https://medium.com/@christianmacion)
 
 P.6 · What's not here
 
@@ -1902,7 +1902,7 @@ I read every email. If the role matches, you'll get a reply within 24h with: pro
 
 Source: `/positions/`
 
-Status: open to conversations · last refreshed 2026-07-12
+Status: open to conversations · last refreshed 2026-07-13
 
 positions/ · live paper-trading
 
@@ -2120,7 +2120,7 @@ systematic-strategy desk (NDA-protected; closed past contract 03/2026 – 06/202
 is a 
 
 closed past contract
-; PM of record with publicly attributable initials(NDA-protected desk). No proprietary data sources, strategy internals, or desk PnL are referenced anywhere on this site. If the proof you need is missing, email me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.contribution_density=months(ΔE)∑e∈E​proofs(e)​engagements∣E∣8multi-hatcontributions∑ce​32↑declaredproof pointers∑pe​22↑public artifactsmonthsΔt252024-12 → 2026-05trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-12
+; PM of record with publicly attributable initials(NDA-protected desk). No proprietary data sources, strategy internals, or desk PnL are referenced anywhere on this site. If the proof you need is missing, email me and if it's public, NDA-clean, and I have it on disk, I'll send it within 24 hours.contribution_density=months(ΔE)∑e∈E​proofs(e)​engagements∣E∣8multi-hatcontributions∑ce​32↑declaredproof pointers∑pe​22↑public artifactsmonthsΔt252024-12 → 2026-05trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-13
 
 8 min read · last updated2026-07-09 · [how verified ↗](/proof/)
 
@@ -2916,7 +2916,7 @@ publications/ · 27 artifacts
 Dated. Linkable. If a row says I did something, the proof is in the same row.
 
 Every artifact below is either an OSS repo, a memo, a workbook, or a public talk. No proprietary data sources. No NDA-protected content.
-all 27papers9oss 6workbooks3press 9trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-12
+all 27papers9oss 6workbooks3press 9trust/[testednumerical-eval](/proof/#code-artifacts)[reproduciblepublic repos](/projects/)[NDA-cleanby construction](/experience/#nda-safe)[RSS/feed.xml](/feed.xml)verified2026-07-13
 
 7 min read · last updated2026-07-09 · [how verified ↗](/proof/)
 
@@ -4143,7 +4143,7 @@ The re-reads matter more than the first reads.
 
 A dated, opinionated list of what I'm reading and re-reading. Public-data only — no proprietary data sources, no NDA-protected materials. Inspired by [Derek Sivers](https://sivers.org/book)'s/book shelf and the institutional library conventions at AQR / Jane Street.
 
-currently · 2026-07-12
+currently · 2026-07-13
 
 ## On the desk right now.
 
@@ -4262,7 +4262,7 @@ No proprietary material.
  I do not list strategy-specific books from NDA-protected desks. If you saw it referenced there, that's the only category I'd ask you not to ask about.
 
 Updated quarterly.
- This page refreshes with the queue when a book finishes its turn on the desk. Last refresh: 2026-07-12.
+ This page refreshes with the queue when a book finishes its turn on the desk. Last refresh: 2026-07-13.
 
 ---
 
@@ -4607,7 +4607,7 @@ The hedge-fund palette: near-black + deep amber on a term-paper cream. The full 
 
 tokens.css
  (primary, amber, paper, bg, ink, rule, status, math accents).
---c-primary#e6edf3off-white · primary text on dark--c-amber#e8b220institutional amber · accent + lift--c-tape#0d1117institutional-tape · page background--c-pass#3fb950verified signal · pass only
+--c-primary#e6edf3off-white · primary text on dark--c-amber#c98a16institutional amber · accent + lift--c-tape#0d1117institutional-tape · page background--c-pass#3fb950verified signal · pass only
 
 (c) · Spacing scale
 
@@ -4636,10 +4636,13 @@ EffectTriggerDurationEasingodometerdata-counter scrolls into view1200mscubic-bez
 
 ## WCAG AA contrast, skip-nav, focus-visible.
 
-All foreground/background pairs in the body of the site meet WCAG AA. The decorative amber tokens are reserved for ≥18px / non-text use.
+All foreground/background pairs in the body of the site meet WCAG AA at body sizes; the 
+
+--c-amber-light
+ hover variant is reserved for ≥18px / non-text use on cream surfaces (it drops to 1.7:1 there).
 
 ### Contrast pairs
-ForegroundBackgroundRatioLevel--c-ink--c-bg17.1:1AAA--c-ink-2--c-bg6.4:1AA--c-primary-2-deep--c-bg5.0:1AA--c-amber--c-bg3.4:1AA Large (≥18px only)--c-primary--c-bg19.2:1AAA
+ForegroundBackgroundRatioLevel--c-ink--c-bg17.1:1AAA--c-ink-2--c-bg6.4:1AA--c-primary-2-deep--c-bg5.0:1AA--c-amber--c-bg6.4:1AA--c-primary--c-bg19.2:1AAA
 
 ### Keyboard primitives
 

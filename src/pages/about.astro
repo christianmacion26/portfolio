@@ -26,7 +26,10 @@ import VoiceLine from '@components/VoiceLine.astro';
 const proofStrip = (await getCollection('solution'))
   .filter((s) => s.data.lane === 'ai')
   .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);---
+  .slice(0, 3);
+
+// v6.10.31 — derive project count from collection (quant lane = public-data reproducible)
+const quantProjectCount = (await getCollection('project')).filter((p) => p.data.role === 'quant').length;---
 
 <BaseLayout
   title="About"
@@ -176,7 +179,7 @@ const proofStrip = (await getCollection('solution'))
           />
         </div>
         <ul class="method-ribbon__list mono">
-          <li><strong>9</strong> public-data projects shipped</li>
+          <li><strong>{quantProjectCount}</strong> public-data projects shipped</li>
           <li><strong>5</strong> asset classes covered</li>
           <li><strong>3</strong> strategy families validated end-to-end</li>
         </ul>
@@ -224,7 +227,7 @@ const proofStrip = (await getCollection('solution'))
 
         <p>
           On the quant side I design and backtest systematic strategies on crypto and
-          equities — nine reproducible public-data projects spanning multiple-testing
+          equities — {quantProjectCount} reproducible public-data projects spanning multiple-testing
           (Deflated Sharpe), cross-sectional and time-series alpha, volatility carry,
           cointegration, funding-carry, regime overlays, transaction-cost realism, and
           look-ahead-bias audits. Every project ships with the standard senior-research

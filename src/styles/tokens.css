@@ -41,6 +41,15 @@
   /* v6.9.16 — tokenize the 10×-repeated amber underline rgba literal. */
   --c-amber-decor: rgba(212, 160, 23, 0.4);
   --c-amber-deep-decor: rgba(140, 111, 42, 0.4);
+  /* v6.10.36 — consolidate the 7 remaining rgba(212,160,23,*) literals
+     (5 sites at 0.12, 1 at 0.3, 1 at 0.05) onto token aliases so the
+     F13 color family stays consistent. Functional data viz
+     (EquityCurveChart regimes) + pagefind search highlight are kept
+     inline — those are intentionally alpha-mixed with calm/stress
+     rgba(63,185,80,…) / rgba(248,81,73,…). */
+  --c-amber-soft: rgba(212, 160, 23, 0.12);   /* active-bg (filter/pager/status) — 5 sites */
+  --c-amber-decor-deep: rgba(212, 160, 23, 0.3); /* pill--accent border — 1 site */
+  --c-amber-faint: rgba(212, 160, 23, 0.05);  /* skill chip subtle tint — 1 site */
   --c-accent-cyan: #22d3ee;     /* alternative accent (signal/data) */
 
   /* === INK === */

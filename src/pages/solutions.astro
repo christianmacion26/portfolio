@@ -13,6 +13,7 @@ import SectionTOC from '@components/SectionTOC.astro';
 import StatementCarousel from '@components/StatementCarousel.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
+import { profile } from '@utils/profile';
 import VoiceLine from '@components/VoiceLine.astro';
 
 const solutions = (await getCollection('solution')).sort((a, b) => a.data.order - b.data.order);
@@ -73,14 +74,14 @@ const eduSolutions = solutions.filter(
 
       <div class="solutions-head__stats">
         <Stat value={String(solutions.length)} label="solutions shipped" size="md" />
-        <Stat value="102" label="professional certs" sub="11-month arc" size="md" />
+        <Stat value={profile.stats.certCount} label="professional certs" sub="11-month arc" size="md" />
         <Stat
-          value="76.5k"
+          value={profile.stats.locPython}
           label="LOC light-dep Python"
           sub="numpy/pandas/boto3"
           size="md"
         />
-        <Stat value="31" label="eval gates" sub="G1–G31 statistical" size="md" />
+        <Stat value={profile.stats.evalGates} label="eval gates" sub="G1–G31 statistical" size="md" />
       </div>
     </div>
   </header>

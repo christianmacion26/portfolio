@@ -19,7 +19,10 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Equation from '@components/Equation.astro';
 import Stat from '@components/Stat.astro';
 import { path } from '@utils/url';
+import { getCollection } from 'astro:content';
 import VoiceLine from '@components/VoiceLine.astro';
+
+const quantProjectCount = (await getCollection('project')).filter((p) => p.data.role === 'quant').length;
 
 const resumes = [
   {
@@ -59,17 +62,24 @@ const resumes = [
       { kind: 'txt', file: path('/resume-quant-onepage.txt'), label: 'TXT', note: 'Workday · Greenhouse · Taleo' },
     ],
   },
-];---
+];
+
+// v6.10.35 — derive counts from resumes array; format count uniform across all
+const resumeCount = resumes.length;
+const formatCount = resumes[0]?.formats?.length ?? 0;
+const downloadCount = resumeCount * formatCount;
+
+---
 
 <BaseLayout
   title="Resume"
-  description="Three tailored resumes × 3 formats (PDF / Markdown / plain text). NDA-safe, public-data reproducible, ATS-friendly."
+  description={`${resumeCount} tailored resumes × ${formatCount} formats (PDF / Markdown / plain text). NDA-safe, public-data reproducible, ATS-friendly.`}
   breadcrumbs={[{ name: "Home", href: "/" }, { name: "Resume", href: "/resume" }]}
 >
   <header class="page-head">
     <div class="container">
-      <p class="section__eyebrow"><span class="mono">resume/</span> · 3 versions × 3 formats = 9 download targets</p>
-      <h1 class="page-head__title">Three tailored resumes.</h1>
+      <p class="section__eyebrow"><span class="mono">resume/</span> · {resumeCount} versions × {formatCount} formats = {downloadCount} download targets</p>
+      <h1 class="page-head__title">{resumeCount === 3 ? 'Three tailored resumes.' : `${resumeCount} tailored resumes.`}</h1>
       <VoiceLine class="page-head__voice">
         Same person, three shapes. Pick the resume that fits the seat — then pick the format the system expects.
       </VoiceLine>
@@ -89,10 +99,10 @@ const resumes = [
       </div>
 
       <div class="head-stats">
-        <Stat value="3" label="tailored" sub="resumes" />
-        <Stat value="3" label="formats" sub="PDF · MD · TXT" />
+        <Stat value={String(resumeCount)} label="tailored" sub="resumes" />
+        <Stat value={String(formatCount)} label="formats" sub="PDF · MD · TXT" />
         <Stat value="100%" label="NDA-safe" sub="by construction" />
-        <Stat value="9" label="quant proj" sub="public-data" />
+        <Stat value={String(quantProjectCount)} label="quant proj" sub="public-data" />
       </div>
     </div>
   </header>
@@ -199,9 +209,11 @@ const resumes = [
     border-color: var(--c-primary);
     box-shadow: var(--shadow-md);
   }
+  /* v6.10.33 — institutional: drop the F13-era amber gradient (rgba 212,160,23 stale).
+     Lift via --c-bg-2 token; primary border remains to signal the hero variant. */
   .resume-card--primary {
     border-color: var(--c-primary);
-    background: linear-gradient(180deg, rgba(212, 160, 23, 0.04), var(--c-bg));
+    background: var(--c-bg-2);
   }
   .resume-card__head {
     display: flex;

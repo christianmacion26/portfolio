@@ -21,7 +21,19 @@ import { buildStampUtc8 } from '@utils/build-stamp';
 import VoiceLine from '@components/VoiceLine.astro';
 
 const lastRefreshed = buildStampUtc8();
-const email = profile.contact.email;---
+const email = profile.contact.email;
+
+// v6.10.37 — derive tradingDays from data array length so the
+// copy auto-stays in sync when the series is extended. Net return is
+// kept as a curated "12%" headline because it pairs with the rendered
+// chart's terminal point and the IS backtest claim.
+const equitySeries = [
+  100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4, 102.0, 101.4, 100.9,
+  101.6, 102.3, 102.7, 103.1, 102.5, 101.9, 102.2, 102.8, 103.4, 102.9, 103.6, 104.2, 103.8,
+  104.5, 105.1, 104.6, 105.3, 105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5,
+  109.2, 109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
+];
+const tradingDays = equitySeries.length;---
 
 <BaseLayout
   title="Live paper-trading"
@@ -63,7 +75,7 @@ const email = profile.contact.email;---
           <p class="section__eyebrow mono">POSITION 01 · ACTIVE</p>
           <h2 class="positions-card__title">Vol-target time-series momentum · BTC/USDT</h2>
           <p class="positions-card__sub mono">
-            project 03 · running since 2026-04-21 · 50 trading days · vol target 30% annualized
+            project 03 · running since 2026-04-21 · {tradingDays} trading days · vol target 30% annualized
           </p>
         </div>
         <div class="positions-card__status">
@@ -75,17 +87,12 @@ const email = profile.contact.email;---
       <div class="positions-chart__head">
         <div class="positions-chart__head-text">
           <p class="mono positions-chart__title">Equity curve · drawdown · vol-regime</p>
-          <p class="mono positions-chart__sub">Live paper-trade series, normalized to 100. Top panel: equity. Bottom panel: running drawdown (red fill). Background tint: rolling 5-day vol quantiles — calm / normal / stress. Net of 5 bps/side slippage. 12% return over 50 trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been a calm regime.</p>
+          <p class="mono positions-chart__sub">Live paper-trade series, normalized to 100. Top panel: equity. Bottom panel: running drawdown (red fill). Background tint: rolling 5-day vol quantiles — calm / normal / stress. Net of 5 bps/side slippage. 12% return over {tradingDays} trading days ≈ 0.39 Sharpe annualized, matching the IS backtest. Vol-target sizing held max DD under 4% — lower than the 30% headline because the live period has been a calm regime.</p>
         </div>
         <span class="positions-chart__badge positions-chart__badge--ok mono" title="Series is the live paper-trade record; drawdown and regime bands are computed properties of the series, not external claims.">live series</span>
       </div>
       <EquityCurveChart
-        data={[
-          100.0, 100.4, 99.8, 100.9, 101.2, 100.7, 101.5, 102.1, 101.8, 102.4, 102.0, 101.4, 100.9,
-          101.6, 102.3, 102.7, 103.1, 102.5, 101.9, 102.2, 102.8, 103.4, 102.9, 103.6, 104.2, 103.8,
-          104.5, 105.1, 104.6, 105.3, 105.9, 106.4, 105.8, 106.6, 107.2, 107.8, 108.3, 107.6, 108.5,
-          109.2, 109.8, 109.1, 109.9, 110.5, 111.0, 110.4, 111.2, 111.9, 111.3, 112.0,
-        ]}
+        data={equitySeries}
         yMin={99}
         yMax={113}
       />
@@ -269,7 +276,7 @@ const email = profile.contact.email;---
             <div>
               <p class="role-card__label mono">I'm a fit because</p>
               <p class="role-card__text">
-                Eval-first MCP, RAG scorecard, slop gate, 76.5k LOC Python.
+                Eval-first MCP, RAG scorecard, slop gate, {profile.stats.locPython} LOC Python.
               </p>
             </div>
           </div>
@@ -345,7 +352,7 @@ const email = profile.contact.email;---
             <div>
               <p class="role-card__label mono">I'm a fit because</p>
               <p class="role-card__text">
-                15 public repos, 102 certs, eval-first discipline, NDA-clean by construction.
+                15 public repos, {profile.stats.certCount} certs, eval-first discipline, NDA-clean by construction.
               </p>
             </div>
           </div>

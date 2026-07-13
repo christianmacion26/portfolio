@@ -199,7 +199,7 @@ const paginate = (items: any[]) => {
 
 <BaseLayout
   title="Proof"
-  description="Decision-grade artefacts that back the claims on /experience, /certifications, and /now. Tier-1 credentials, 4 open-source artifacts, 9 quant projects, 6 AI projects, 10 case studies — all NDA-clean by construction."
+  description={`Decision-grade artefacts that back the claims on /experience, /certifications, and /now. Tier-1 credentials, ${codeArtifacts.length} open-source artifacts, ${quantProjects.length} quant projects, ${aiProjects.length} AI projects, ${solutions.length} case studies — all NDA-clean by construction.`}
   type="profile"
   breadcrumbs={[{ name: "Home", href: "/" }, { name: "Proof", href: "/proof" }]}
   extraJsonLd={{
@@ -215,8 +215,8 @@ const paginate = (items: any[]) => {
     },
     hasPart: [
       { '@type': 'CreativeWork', name: 'Tier-1 credentials (CTA, Ateneo + US Embassy, BIDA × Meta, Bitget)', url: 'https://christianmacion-portfolio.pages.dev/proof#credentials' },
-      { '@type': 'SoftwareSourceCode', name: 'Shipped code (mcp-backtest-server, qfin-rag-harness, numerical-faithfulness-eval, eval-mcp-server)', url: 'https://christianmacion-portfolio.pages.dev/proof#code' },
-      { '@type': 'ItemList', name: '9 quant projects + 6 AI projects + 10 case studies', url: 'https://christianmacion-portfolio.pages.dev/proof#research' },
+      { '@type': 'SoftwareSourceCode', name: `Shipped code (${codeArtifacts.map((c) => c.title).join(', ')})`, url: 'https://christianmacion-portfolio.pages.dev/proof#code' },
+      { '@type': 'ItemList', name: `${quantProjects.length} quant projects + ${aiProjects.length} AI projects + ${solutions.length} case studies`, url: 'https://christianmacion-portfolio.pages.dev/proof#research' },
       { '@type': 'CreativeWork', name: 'Public track record (lectures, charts, Atom feeds)', url: 'https://christianmacion-portfolio.pages.dev/proof#track' },
       { '@type': 'CreativeWork', name: 'External accounts (Numerai, HuggingFace, GitHub, TradingView, Medium)', url: 'https://christianmacion-portfolio.pages.dev/proof#public-track' },
       { '@type': 'DisclosureDocument', name: 'NDA-positive disclosure', url: 'https://christianmacion-portfolio.pages.dev/proof#disclosure' },
@@ -721,7 +721,7 @@ const paginate = (items: any[]) => {
           <div class="ptr__cell ptr__cell--handle mono" role="cell">@christianmacion</div>
           <div class="ptr__cell ptr__cell--metric mono" role="cell">MCP server artifact</div>
           <div class="ptr__cell ptr__cell--link" role="cell">
-            <a href={path('/proof/eval-mcp-server')} class="ptr__link mono">/proof/eval-mcp-server</a>
+            <a href={path('/projects/ai/04-eval-mcp-server')} class="ptr__link mono">/projects/ai/04-eval-mcp-server</a>
           </div>
         </div>
         <div class="ptr__row" role="row">
@@ -1123,13 +1123,14 @@ const paginate = (items: any[]) => {
     :root:not([data-theme='light']) .filter-chip.is-active {
       color: var(--c-amber);
       border-color: var(--c-amber);
-      background: rgba(212, 160, 23, 0.12);
+      /* v6.10.36 — token alias for F13 amber family. */
+      background: var(--c-amber-soft);
     }
   }
   :root[data-theme='dark'] .filter-chip.is-active {
     color: var(--c-amber);
     border-color: var(--c-amber);
-    background: rgba(212, 160, 23, 0.12);
+    background: var(--c-amber-soft);
   }
 
   /* === Filter visibility (CSS attribute selectors) ===
@@ -1217,13 +1218,14 @@ const paginate = (items: any[]) => {
     :root:not([data-theme='light']) .proof-pager__chip.is-active {
       color: var(--c-amber);
       border-color: var(--c-amber);
-      background: rgba(212, 160, 23, 0.12);
+      /* v6.10.36 — token alias for F13 amber family. */
+      background: var(--c-amber-soft);
     }
   }
   :root[data-theme='dark'] .proof-pager__chip.is-active {
     color: var(--c-amber);
     border-color: var(--c-amber);
-    background: rgba(212, 160, 23, 0.12);
+    background: var(--c-amber-soft);
   }
   .proof-pager__chip[disabled] {
     opacity: 0.4;

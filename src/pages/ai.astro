@@ -21,6 +21,7 @@ import VoiceLine from '@components/VoiceLine.astro';
 import Stat from '@components/Stat.astro';
 import { getCollection } from 'astro:content';
 import { path } from '@utils/url';
+import { profile } from '@utils/profile';
 
 interface AIProject {
   slug: string;
@@ -105,10 +106,10 @@ const loopSteps = [
         strategy. The harness is the artifact; the model is interchangeable.
       </VoiceLine>
       <div class="ai-hero__stats">
-        <Stat value="11" label="agents" sub="4 inputs · 3 middles · 3 outputs · 1 orchestrator" size="md" variant="primary" />
-        <Stat value="31" label="eval gates" sub="G1–G31 · 6 families · exit-0 contract" size="md" variant="primary" />
-        <Stat value="6" label="projects" sub="in-repo · reproducible" size="md" variant="primary" />
-        <Stat value="76.5k" label="LOC Python" sub="stdlib-heavy · LLM-free scoring" size="md" variant="primary" />
+        <Stat value={profile.stats.aiAgentCount} label="agents" sub="4 inputs · 3 middles · 3 outputs · 1 orchestrator" size="md" variant="primary" />
+        <Stat value={profile.stats.evalGates} label="eval gates" sub="G1–G31 · 6 families · exit-0 contract" size="md" variant="primary" />
+        <Stat value={String(aiProjects.length)} label="projects" sub="in-repo · reproducible" size="md" variant="primary" />
+        <Stat value={profile.stats.locPython} label="LOC Python" sub="stdlib-heavy · LLM-free scoring" size="md" variant="primary" />
       </div>
     </div>
   </header>

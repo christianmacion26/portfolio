@@ -118,11 +118,11 @@ const charter = [
       {/* === Headline stats — gate lattice at a glance === */}
       <div class="method-head__stats">
         <div class="method-head__stat">
-          <span class="method-head__stat-num tnum">31</span>
+          <span class="method-head__stat-num tnum">{gates.reduce((sum, g) => sum + (parseInt(g.range.split('–')[1].replace('G', ''), 10) - parseInt(g.range.split('–')[0].replace('G', ''), 10) + 1), 0)}</span>
           <span class="method-head__stat-lbl">statistical gates</span>
         </div>
         <div class="method-head__stat">
-          <span class="method-head__stat-num tnum">6</span>
+          <span class="method-head__stat-num tnum">{gates.length}</span>
           <span class="method-head__stat-lbl">gate families</span>
         </div>
         <div class="method-head__stat">

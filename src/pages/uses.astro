@@ -18,6 +18,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { path } from '@utils/url';
 import VoiceLine from '@components/VoiceLine.astro';
+import { profile } from '@utils/profile';
 
 const lastUpdated = '2026-07-09';
 
@@ -100,7 +101,7 @@ const sections: UseSection[] = [
         name: 'Python',
         detail: 'numpy / pandas / matplotlib / scipy',
         tag: 'python',
-        why: '~76.5k LOC of the public work. Pure stdlib math — no TA-Lib, no Lean, no backtrader.',
+        why: `~${profile.stats.locPython} LOC of the public work. Pure stdlib math — no TA-Lib, no Lean, no backtrader.`,
       },
       {
         name: 'TypeScript / JavaScript',

@@ -77,5 +77,6 @@ export const profile = {
     aiAgentCount: '11', // orchestrator + workers
     locPython: '76.5k', // ~76,500 LOC
     evalGates: '31', // 31-gate evaluation harness
+    pagesBuilt: '84', // built pages — update on route add/remove
   },
 } as const;
