@@ -1,7 +1,7 @@
 {
   "name": "christianmacion-portfolio",
   "type": "module",
-  "version": "6.11.9",
+  "version": "6.11.12",
   "private": true,
   "description": "Christian T. Macion — AI Engineer + Quantitative Researcher. Personal portfolio site.",
   "scripts": {
@@ -14,7 +14,7 @@
     "knip": "knip --no-progress",
     "prebuild": "node scripts/build-resumes.mjs && node scripts/build-resumes-md.mjs && node scripts/build-og-image.mjs && node scripts/optimize-assets.mjs && node scripts/build-earth-110m.mjs && node scripts/fetch-gdelt.mjs",
     "build": "BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) astro build && node scripts/build-llms-full.mjs",
-    "build:mirror": "BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) PUBLIC_SITE_URL=https://christianmacion-portfolio.pages.dev astro build --base=/ && node scripts/build-llms-full.mjs && cp public/llms-full.txt dist/llms-full.txt && node scripts/asset-audit.mjs && pagefind --site dist --output-subdir _pagefind",
+    "build:mirror": "BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) PUBLIC_SITE_URL=https://christianmacion-portfolio.pages.dev astro build --base=/ && node scripts/build-llms-full.mjs && cp public/llms-full.txt dist/llms-full.txt && node scripts/asset-audit.mjs && pagefind --site dist --output-subdir _pagefind && npm run no-f14",
     "deploy:mirror": "npm run build:mirror && npx wrangler pages deploy dist --project-name christianmacion-portfolio --commit-dirty=true --branch main",
     "resumes:build": "node scripts/build-resumes.mjs",
     "resumes:build:md": "node scripts/build-resumes-md.mjs",
@@ -27,8 +27,9 @@
     "version:bump": "tsx scripts/bump-version.ts",
     "sitemap:check": "tsx scripts/validate-sitemap.ts",
     "typecheck": "astro check",
-    "ci": "npm run lint:md && npm run lint && npm run format:check && npm run knip && npm run no-bulbs && npm run build && npm run audit && npm run sitemap:check",
-    "no-bulbs": "bash scripts/check-no-lightbulb-halos.sh"
+    "ci": "npm run lint:md && npm run lint && npm run format:check && npm run knip && npm run no-bulbs && npm run build && npm run no-f14 && npm run audit && npm run sitemap:check",
+    "no-bulbs": "bash scripts/check-no-lightbulb-halos.sh",
+    "no-f14": "bash scripts/check-no-f14-traffic-light.sh"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
