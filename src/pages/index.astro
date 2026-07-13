@@ -2215,11 +2215,13 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     background: var(--c-ink-3);
     transition: width 200ms ease-out;
   }
+  /* v6.11.10 — F14 amber-only. Work-bar delta chrome: pos = amber,
+     neg = ink-2. Sign carried by glyph + position, not hue. */
   .work__bar-fill--after.is-pos {
-    background: var(--c-data-positive);
+    background: var(--c-amber);
   }
   .work__bar-fill--after.is-neg {
-    background: var(--c-data-negative);
+    background: var(--c-ink-2);
   }
   .work__bar-val {
     font-size: 0.75rem;
@@ -2228,10 +2230,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     text-align: right;
   }
   .work__bar-val--after.is-pos {
-    color: var(--c-data-positive);
+    color: var(--c-amber);
   }
   .work__bar-val--after.is-neg {
-    color: var(--c-data-negative);
+    color: var(--c-ink-2);
   }
   .work__bar-pipe {
     text-align: center;
@@ -2239,10 +2241,10 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-size: 0.75rem;
   }
   .work__bar-pipe.is-pos {
-    color: var(--c-data-positive);
+    color: var(--c-amber);
   }
   .work__bar-pipe.is-neg {
-    color: var(--c-data-negative);
+    color: var(--c-ink-2);
   }
 
   @media (max-width: 720px) {
@@ -2308,11 +2310,12 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     color: var(--c-ink-2);
     line-height: 1;
   }
+  /* v6.11.10 — F14 amber-only. metric__delta up = amber, down = ink-2. */
   .metric__delta--up {
-    color: var(--c-data-positive);
+    color: var(--c-amber);
   }
   .metric__delta--down {
-    color: var(--c-data-negative);
+    color: var(--c-ink-2);
   }
   .metric__delta--flat {
     color: var(--c-ink-2);

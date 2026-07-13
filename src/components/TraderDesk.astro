@@ -822,11 +822,13 @@ const fmtPct = (n: number) => formatPct(n);
     margin: 0;
     line-height: 1;
   }
+  /* v6.11.10 — F14 amber-only. Pos = amber (gain), neg = ink-2
+     (loss). Sign carried by intensity + glyph, not hue. */
   .desk__pnl-headline--pos {
-    color: var(--c-pass);
+    color: var(--c-amber);
   }
   .desk__pnl-headline--neg {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
   .desk__pnl-cap--inline {
     color: var(--c-ink-2);
@@ -858,8 +860,9 @@ const fmtPct = (n: number) => formatPct(n);
     letter-spacing: 0.1em;
     color: var(--c-ink-2);
   }
+  /* v6.11.10 — F14 amber-only. Negative pnl stat now ink-2. */
   .desk__pnl-stat--neg .desk__pnl-stat-num {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
 
   .desk__spark {
@@ -867,9 +870,9 @@ const fmtPct = (n: number) => formatPct(n);
     height: 48px;
     display: block;
   }
+  /* v6.11.10 — F14 amber-only. Drawdown fill now ink-2. */
   .desk__spark-dd {
-    fill: var(--c-fail);
-    opacity: 0.12;
+    fill: color-mix(in oklab, var(--c-ink-2) 30%, transparent);
   }
   .desk__spark-base {
     stroke: var(--c-grid-line);
@@ -879,11 +882,12 @@ const fmtPct = (n: number) => formatPct(n);
   .desk__spark-bar {
     shape-rendering: crispEdges;
   }
+  /* v6.11.10 — F14 amber-only. Pos bar = amber, neg bar = ink-3. */
   .desk__spark-bar--pos {
-    fill: var(--c-data-positive);
+    fill: var(--c-amber);
   }
   .desk__spark-bar--neg {
-    fill: var(--c-data-negative);
+    fill: var(--c-ink-3);
   }
   .desk__spark-bar--strong {
     opacity: 1;
@@ -912,11 +916,12 @@ const fmtPct = (n: number) => formatPct(n);
     font-size: 0.85rem;
     font-weight: 600;
   }
+  /* v6.11.10 — F14 amber-only. Viz num pos = amber, neg = ink-2. */
   .desk__viz-num-pos {
-    color: var(--c-pass);
+    color: var(--c-amber);
   }
   .desk__viz-num-neg {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
   .desk__viz-num-sep {
     color: var(--c-ink-2);
@@ -962,19 +967,20 @@ const fmtPct = (n: number) => formatPct(n);
     line-height: 1;
     min-height: 22px;
   }
+  /* v6.11.10 — F14 amber-only. Bid cell tints amber; ask tints ink-3. */
   .desk__tape-cell--bid {
-    background: color-mix(in oklab, var(--c-data-positive) calc(var(--t) * 100%), transparent);
+    background: color-mix(in oklab, var(--c-amber) calc(var(--t) * 100%), transparent);
     border-color: color-mix(
       in oklab,
-      var(--c-data-positive) calc((var(--t) + 0.3) * 100%),
+      var(--c-amber) calc((var(--t) + 0.3) * 100%),
       transparent
     );
   }
   .desk__tape-cell--ask {
-    background: color-mix(in oklab, var(--c-data-negative) calc(var(--t) * 100%), transparent);
+    background: color-mix(in oklab, var(--c-ink-2) calc(var(--t) * 100%), transparent);
     border-color: color-mix(
       in oklab,
-      var(--c-data-negative) calc((var(--t) + 0.3) * 100%),
+      var(--c-ink-2) calc((var(--t) + 0.3) * 100%),
       transparent
     );
   }
@@ -999,17 +1005,18 @@ const fmtPct = (n: number) => formatPct(n);
     stroke-width: 6;
     stroke-linecap: butt;
   }
+  /* v6.11.10 — F14 amber-only. Safe = amber-soft, warn = amber,
+     alert = ink-2 (no red). */
   .desk__gauge-arc--safe {
-    stroke: var(--c-pass);
-    stroke-opacity: 0.45;
+    stroke: var(--c-amber-soft);
   }
   .desk__gauge-arc--warn {
     stroke: var(--c-amber);
-    stroke-opacity: 0.55;
+    stroke-opacity: 0.7;
   }
   .desk__gauge-arc--alert {
-    stroke: var(--c-fail);
-    stroke-opacity: 0.55;
+    stroke: var(--c-ink-2);
+    stroke-opacity: 0.7;
   }
   /* v6.7.1 — gauge ticks made more visible. v6.6 had them at ink-2
      8px which read as ghostly hairline. Bumped to ink + 9px + amber
@@ -1041,14 +1048,15 @@ const fmtPct = (n: number) => formatPct(n);
     font-size: 18px;
     font-weight: 600;
   }
+  /* v6.11.10 — F14 amber-only. Readout fills amber/amber-light/ink-2. */
   .desk__gauge-readout--safe {
-    fill: var(--c-pass);
+    fill: var(--c-amber-soft);
   }
   .desk__gauge-readout--warn {
     fill: var(--c-amber-light);
   }
   .desk__gauge-readout--alert {
-    fill: var(--c-fail);
+    fill: var(--c-ink-2);
   }
   .desk__gauge-readout-cap {
     font-size: var(--fs-3xs); font-size: 7px;
@@ -1079,15 +1087,16 @@ const fmtPct = (n: number) => formatPct(n);
   .desk__matrix-bar {
     shape-rendering: crispEdges;
   }
+  /* v6.11.10 — F14 amber-only. Matrix bars pos = amber, neg = ink-2. */
   .desk__matrix-bar--mute {
     fill: var(--c-ink-2);
     opacity: 0.45;
   }
   .desk__matrix-bar--pos {
-    fill: var(--c-data-positive);
+    fill: var(--c-amber);
   }
   .desk__matrix-bar--neg {
-    fill: var(--c-data-negative);
+    fill: var(--c-ink-2);
   }
   .desk__matrix-legend {
     font-size: var(--fs-3xs); font-size: 7px;
@@ -1095,10 +1104,10 @@ const fmtPct = (n: number) => formatPct(n);
     letter-spacing: 0.04em;
   }
   .desk__matrix-legend-dot--pos {
-    fill: var(--c-data-positive);
+    fill: var(--c-amber);
   }
   .desk__matrix-legend-dot--neg {
-    fill: var(--c-data-negative);
+    fill: var(--c-ink-2);
   }
   .desk__matrix-legend-dot--mute {
     fill: var(--c-ink-2);
@@ -1138,11 +1147,12 @@ const fmtPct = (n: number) => formatPct(n);
     margin: 0;
     font-weight: 500;
   }
+  /* v6.11.10 — F14 amber-only. KPI sub pos = amber, neg = ink-2. */
   .desk__kpi-sub--pos {
-    color: var(--c-pass);
+    color: var(--c-amber);
   }
   .desk__kpi-sub--neg {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
   .desk__kpi-sub--warn {
     color: var(--c-amber-light);
@@ -1168,8 +1178,9 @@ const fmtPct = (n: number) => formatPct(n);
     letter-spacing: 0.08em;
     margin-left: 0.4rem;
   }
+  /* v6.11.10 — F14 amber-only. High alert pill now ink-2. */
   .desk__kpi-pill--high {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
   .desk__kpi-pill--med {
     color: var(--c-amber-light);

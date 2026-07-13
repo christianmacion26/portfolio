@@ -30,7 +30,13 @@ const palette = [
   { name: '--c-primary', hex: '#e6edf3', role: 'off-white · primary text on dark' },
   { name: '--c-amber', hex: '#c98a16', role: 'institutional amber · accent + lift' },
   { name: '--c-tape', hex: '#0d1117', role: 'institutional-tape · page background' },
-  { name: '--c-pass', hex: '#3fb950', role: 'verified signal · pass only' },
+  // v6.11.10 — F14 amber-only. The `--c-pass` / `--c-fail` tokens
+  // are kept for backward compatibility (some MDX callers) but the
+  // site-wide chrome no longer uses them; primary "positive" data
+  // signal uses `--c-amber` instead.
+  { name: '--c-amber', hex: '#c98a16', role: 'institutional amber · accent + lift + data-positive signal' },
+  { name: '--c-pass', hex: '#3fb950', role: 'legacy green · reserved token' },
+  { name: '--c-ink-2', hex: '#adbac7', role: 'muted ink · data-negative signal (F14)' },
 ];
 
 // === (c) Spacing scale — 6 cells ===========================================
@@ -475,8 +481,9 @@ const contrastPairs = [
     background: var(--c-tape);
     border: 1px solid var(--c-rule);
   }
+  /* v6.11.10 — F14 amber-only. swatch__chip--pass now shows amber. */
   .swatch__chip--pass {
-    background: var(--c-pass);
+    background: var(--c-amber);
   }
   .swatch__name {
     padding: var(--sp-3) var(--sp-4) 0;

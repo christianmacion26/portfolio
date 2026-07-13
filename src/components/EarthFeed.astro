@@ -441,13 +441,15 @@ const events: NewsBurstEvent[] = [
     padding: 0.1rem 0.4rem;
     border-radius: 2px;
   }
+  /* v6.11.10 — F14 amber-only. Long-vol = ink-2 (no red); short-vol
+     = amber. Sign carried by semantic word + label, not hue. */
   .earth-feed__signal--long-vol {
-    background: rgba(248, 81, 73, 0.12);
-    color: var(--c-fail);
+    background: color-mix(in oklab, var(--c-ink-2) 12%, transparent);
+    color: var(--c-ink-2);
   }
   .earth-feed__signal--short-vol {
-    background: rgba(63, 185, 80, 0.12);
-    color: var(--c-pass);
+    background: color-mix(in oklab, var(--c-amber) 12%, transparent);
+    color: var(--c-amber);
   }
   .earth-feed__signal--flatten {
     background: rgba(34, 211, 238, 0.12);

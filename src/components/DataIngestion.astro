@@ -470,14 +470,16 @@ for (let s = 0; s < STAGES.length - 1; s++) {
     background: var(--c-tape-2);
     border-left: 3px solid transparent;
   }
+  /* v6.11.10 — F14 amber-only. Lag-cell left-borders: green→amber-2,
+     red→ink-2. */
   .ingest__lag-cell--green {
-    border-left-color: var(--c-data-positive);
+    border-left-color: var(--c-amber-2);
   }
   .ingest__lag-cell--amber {
     border-left-color: var(--c-amber);
   }
   .ingest__lag-cell--red {
-    border-left-color: var(--c-data-negative);
+    border-left-color: var(--c-ink-2);
   }
 
   .ingest__lag-name {

@@ -717,11 +717,13 @@ const scrubberLabel = utc8TimeLabel();
 const headerDateLabel = utc8DateLabel();
 
 // v6.5 — Legend rows (4 swatches in a 2×2 grid, smaller)
+// v6.11.10 — F14 amber-only. Earnings swatch now amber. Geo/fx
+// now ink-2 (no red).
 const LEGEND_ROWS: ReadonlyArray<{ color: string; label: string }> = [
   { color: 'var(--c-amber-light)', label: 'central-bank' },
-  { color: 'var(--c-pass)', label: 'earnings' },
+  { color: 'var(--c-amber)', label: 'earnings' },
   { color: 'var(--c-accent-cyan)', label: 'data-release' },
-  { color: 'var(--c-fail)', label: 'geo / fx' },
+  { color: 'var(--c-ink-2)', label: 'geo / fx' },
 ];
 
 // Roster rows — first 8 cities, sorted alphabetically.
@@ -1965,8 +1967,11 @@ const headerLabel = `MISSION CONTROL · ${headerDateLabel}${liveBadge}`;
   .eg__legend-dot--ink {
     background: var(--c-ink-2);
   }
+  /* v6.11.10 — F14 amber-only. The `--rose` swatch is unused (rose
+     = old traffic-light red) but the class still exists; remap to
+     ink-2 so any future usage stays in palette. */
   .eg__legend-dot--rose {
-    background: var(--c-fail);
+    background: var(--c-ink-2);
   }
 
   @media (max-width: 1080px) and (min-width: 600px) {

@@ -9,7 +9,7 @@ interface Props {
   label: string;
   value: string;
   sub?: string;
-  tone?: 'brand' | 'accent' | 'gold' | 'pass';
+  tone?: 'brand' | 'accent' | 'gold' | 'data-pos';
 }
 const { label, value, sub, tone = 'brand' } = Astro.props;
 const valueColor =
@@ -17,8 +17,8 @@ const valueColor =
     ? 'var(--c-primary-2-deep)'
     : tone === 'gold'
       ? 'var(--c-gold)'
-      : tone === 'pass'
-        ? 'var(--c-pass)'
+      : tone === 'data-pos'
+        ? 'var(--c-amber)'
         : 'var(--c-primary)';
 ---
 

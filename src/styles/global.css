@@ -299,15 +299,16 @@ li {
 }
 
 /* Data-tick signal — color-only classes for tabular data.
-   Pair with .tnum or [class*="metric"] etc. for full institutional readout. */
+   v6.11.10 — F14 amber-only. Pair with .tnum or [class*="metric"]
+   etc. for full institutional readout. */
 .data-up {
-  color: var(--c-data-positive);
+  color: var(--c-amber);
 }
 .data-down {
-  color: var(--c-data-negative);
+  color: var(--c-ink-2);
 }
 .data-flat {
-  color: var(--c-data-neutral);
+  color: var(--c-ink-3);
 }
 
 /* Gridline primitives — 1px hairlines for globe lat/lon, table separators,

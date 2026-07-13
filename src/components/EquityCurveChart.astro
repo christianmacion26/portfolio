@@ -291,8 +291,8 @@ const regimeFill: Record<'calm' | 'normal' | 'stress', string> = {
       stroke-linejoin="round"
       stroke-linecap="round"></path>
 
-    {/* Drawdown area (filled red) */}
-    <path d={ddArea} fill="var(--c-fail)" fill-opacity="0.35"></path>
+    {/* v6.11.10 — F14 amber-only. Drawdown area now ink-2 (no red). */}
+    <path d={ddArea} fill="var(--c-ink-2)" fill-opacity="0.18"></path>
 
     {/* Drawdown zero line (subtle) */}
     <line x1={padL} y1={ddBottom} x2={padL + innerW} y2={ddBottom} class="eq-chart__axis"></line>

@@ -9,9 +9,9 @@
  *
  * Visual conventions:
  *   - central-bank  -> var(--c-amber-light)   amber
- *   - earnings      -> var(--c-pass)          green
- *   - geopolitical  -> var(--c-fail)          red
- *   - data-release  -> var(--c-accent-cyan)   cyan
+ *   - earnings      -> var(--c-amber)         amber (F14)
+ *   - geopolitical  -> var(--c-ink-2)         ink (F14, no red)
+ *   - data-release  -> var(--c-accent-cyan)   cyan (kept, neutral)
  *   - fx            -> var(--c-primary-2)     amber (F14 institutional)
  *
  * Severity drives radius and ring count:
@@ -78,15 +78,16 @@ const sevClass = `evp-sev--${severity}`;
     animation: evp-pulse-ring 2400ms ease-out infinite;
   }
 
-  /* Category colors — palette tokens only. */
+  /* v6.11.10 — F14 amber-only. Earnings dot now amber; geopolitical
+     now ink-2 (criticality carried by pulse ring, not red hue). */
   .evp-cat--central-bank .evp__dot {
     fill: var(--c-amber-light);
   }
   .evp-cat--earnings .evp__dot {
-    fill: var(--c-pass);
+    fill: var(--c-amber);
   }
   .evp-cat--geopolitical .evp__dot {
-    fill: var(--c-fail);
+    fill: var(--c-ink-2);
   }
   .evp-cat--data-release .evp__dot {
     fill: var(--c-accent-cyan);
@@ -99,10 +100,10 @@ const sevClass = `evp-sev--${severity}`;
     stroke: var(--c-amber-light);
   }
   .evp-cat--earnings .evp__ring {
-    stroke: var(--c-pass);
+    stroke: var(--c-amber);
   }
   .evp-cat--geopolitical .evp__ring {
-    stroke: var(--c-fail);
+    stroke: var(--c-ink-2);
   }
   .evp-cat--data-release .evp__ring {
     stroke: var(--c-accent-cyan);

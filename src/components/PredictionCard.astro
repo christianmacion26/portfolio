@@ -204,7 +204,8 @@ const gradId = `card-grad-${event.id.replace(/[^a-z0-9]/gi, '')}`;
     color: var(--c-gold);
   }
   .card__pill--volatility {
-    color: var(--c-fail);
+    /* v6.11.10 — F14 amber-only. Volatility class no longer red. */
+    color: var(--c-ink-2);
   }
   .card__tenor {
     font-size: var(--fs-xs);
@@ -262,13 +263,15 @@ const gradId = `card-grad-${event.id.replace(/[^a-z0-9]/gi, '')}`;
     border-radius: 3px;
     white-space: nowrap;
   }
+  /* v6.11.10 — F14 amber-only. Positive edge = amber on soft amber;
+     negative edge = ink-2 on ink-3 tint. No green/red. */
   .card__edge--pos {
-    color: var(--c-pass);
-    background: var(--c-pass-soft);
+    color: var(--c-amber);
+    background: color-mix(in oklab, var(--c-amber) 8%, transparent);
   }
   .card__edge--neg {
-    color: var(--c-fail);
-    background: var(--c-fail-soft);
+    color: var(--c-ink-2);
+    background: color-mix(in oklab, var(--c-ink-2) 6%, transparent);
   }
   .card__svg {
     width: 100%;

@@ -99,11 +99,13 @@ const deltaStr =
     font-feature-settings: 'tnum' 1;
     color: var(--c-ink-2);
   }
+  /* v6.11.10 — F14 amber-only. Up = amber, down = ink-2. */
   .stat-cell--up .stat-cell__delta {
-    color: var(--c-pass);
+    color: var(--c-amber);
+    font-weight: 600;
   }
   .stat-cell--down .stat-cell__delta {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
   .stat-cell--flat .stat-cell__delta {
     color: var(--c-ink-3);

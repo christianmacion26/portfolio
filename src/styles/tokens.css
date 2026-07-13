@@ -332,11 +332,14 @@
   border-radius: 50%;
   vertical-align: middle;
 }
+/* v6.11.10 — F14 amber-only. dot--pass now amber; dot--fail now
+   ink-2 (no red dot). The .dot utility is still allowed for tickers
+   and chrome, just not the green/red semantic. */
 .dot--pass {
-  background: var(--c-pass);
+  background: var(--c-amber);
 }
 .dot--fail {
-  background: var(--c-fail);
+  background: var(--c-ink-2);
 }
 .dot--warn {
   background: var(--c-warn);
