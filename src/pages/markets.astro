@@ -26,44 +26,30 @@ import StatCell from '@components/StatCell.astro';
 import MiniSpark from '@components/MiniSpark.astro';
 import EquityCurveChart from '@components/EquityCurveChart.astro';
 import CTABanner from '@components/CTABanner.astro';
-import { seedFromString, walk, formatPx, buildSeed } from '@utils/prng';
+import { seedFromString, walk, buildSeed } from '@utils/prng';
 import { path } from '@utils/url';
+import { getIndexSnap } from '@utils/markets-data';
 
 // === Index stats (PRNG-seeded from BUILD_DATE) ===
 // Four headline indices with deterministic mid-prices and a small
 // 30-day series for the inline MiniSpark on each card.
-const rng = seedFromString(buildSeed() + '::markets-stats');
-const indexCards = [
-  { sym: 'SPX', base: 5872, sigma: 12, volUnit: 'idx' },
-  { sym: 'DXY', base: 104.21, sigma: 0.18, volUnit: 'idx' },
-  { sym: 'VIX', base: 14.6, sigma: 0.6, volUnit: 'pts' },
-  { sym: 'BTC-USD', base: 96480, sigma: 380, volUnit: 'usd' },
-].map((ix) => {
-  const series = walk(rng, ix.base, ix.sigma, 30);
-  const last = series[series.length - 1];
-  const mean = series.reduce((a, b) => a + b, 0) / series.length;
-  const deltaPct = +(((last - mean) / mean) * 100).toFixed(2);
+//
+// v6.11.12 — pull px + delta + spark from src/utils/markets-data.ts so
+// the stat cards show IDENTICAL numbers to the same indices on the
+// MarketTape at the top of this page. Previously the cards had their
+// own walk (sigma=12, len=30) while the tape had sigma=8.0, len=80 —
+// the same instrument rendered two different prices on one page.
+const STAT_CARD_SYMS = ['SPX', 'DXY', 'VIX', 'BTC-USD'] as const;
+const indexCards = STAT_CARD_SYMS.map((sym) => {
+  const snap = getIndexSnap(sym);
+  if (!snap) throw new Error(`markets-data: missing snap for ${sym}`);
   return {
-    sym: ix.sym,
-    label:
-      ix.sym === 'SPX'
-        ? 'S&P 500'
-        : ix.sym === 'DXY'
-          ? 'Dollar Index'
-          : ix.sym === 'VIX'
-            ? 'CBOE VIX'
-            : 'BTC-USD',
-    value: formatPx(last, last >= 1000 ? 2 : last >= 100 ? 2 : 4),
-    delta: deltaPct,
-    sub:
-      ix.sym === 'VIX'
-        ? 'volatility · CBOE'
-        : ix.sym === 'BTC-USD'
-          ? 'CME futures · spot'
-          : ix.sym === 'DXY'
-            ? 'DXY basket · ICE'
-            : 'equity · large-cap',
-    spark: series,
+    sym: snap.sym,
+    label: snap.label,
+    value: snap.pxStr,
+    delta: snap.deltaPct,
+    sub: snap.sub,
+    spark: snap.spark,
   };
 });
 
@@ -89,8 +75,13 @@ const yieldCurve = [
 ];
 
 // === Secondary order book (right column) ===
-// Two more symbols showing different mid-prices so the page reads as
-// "multi-symbol terminal", not "single instrument page".
+// BTC-USD order book to pair with the SPX book on the left. v6.11.12 —
+// pass the shared BTC-USD midPx so the right book shows the same BTC
+// price as the stat card above + the tape. Previously it used its
+// own internal walk (different sigma/seed) and rendered an unrelated
+// synthetic price like $5,882 while the stat card showed $99,236.
+const secondarySnap = getIndexSnap('BTC-USD');
+const secondaryMidPx = secondarySnap?.px;
 const secondarySymbol = 'BTC-USD';
 ---
 
@@ -204,7 +195,12 @@ const secondarySymbol = 'BTC-USD';
           />
         </div>
         <div class="mk-terminal__panel mk-terminal__panel--book">
-          <OrderBook symbol={secondarySymbol} spreadBps={4} depth={10} />
+          <OrderBook
+            symbol={secondarySymbol}
+            midPx={secondaryMidPx}
+            spreadBps={4}
+            depth={10}
+          />
         </div>
       </div>
     </div>
@@ -499,15 +495,18 @@ const secondarySymbol = 'BTC-USD';
     font-feature-settings: 'tnum' 1;
   }
   .mk-band__indices-delta {
-    font-weight: 600;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
+    color: var(--c-ink-2);
   }
+  /* v6.11.10 — F14 amber-only rule. Sign carried by glyph (▲/▼)
+     + intensity (soft/normal), not hue. No traffic-light chrome. */
   .mk-band__indices-delta--up {
-    color: var(--c-pass);
+    color: var(--c-amber);
   }
   .mk-band__indices-delta--down {
-    color: var(--c-fail);
+    color: var(--c-ink-2);
   }
   .mk-band__indices-delta--flat {
     color: var(--c-ink-3);
