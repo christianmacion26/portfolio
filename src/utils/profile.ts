@@ -86,6 +86,16 @@ export const profile = {
     'University of Southeastern Philippines (USeP) — units',
   ],
   awards: [
+    // [VERIFY] date-range-mismatch with ageMonths: stats.ageMonths is '11'
+    // (derived into /solutions, /about, /index chrome) but this award
+    // bracket spans 17 months (Dec 2024 → May 2026). Two interpretations
+    // resolve to consistent chrome:
+    //   A. ageMonths='11' is the OWNER's "active research arc" (e.g. since
+    //      v2 push), separate from the full cert history
+    //   B. ageMonths should be '17' to match the bracket on this line
+    // Awaiting OWNER verdict. For now, keep both as-is and let OWNER
+    // reconcile. See chrome-honesty memory: portfolio-chrome-unification
+    // for the rest of the v6.11.x chrome-derivation pattern.
     `${stats.certCount} certificates (2024-12 → 2026-05)`,
     'CTA® (Certified Technical Analyst, Society of Technical Analysts · cert #260197 · Jan 2026)',
     'Galactic Problem Solver · NASA Space Apps Challenge 2024 (Zurich cohort)',
