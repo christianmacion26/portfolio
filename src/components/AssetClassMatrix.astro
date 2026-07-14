@@ -14,6 +14,7 @@
  * by clicking through.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { profile } from '@utils/profile';
 
 interface CellContent {
   label: string; // display label (short strategy name)
@@ -138,8 +139,8 @@ const COL_LABEL: Record<(typeof COLS)[number], { title: string; sub: string }> =
     <h2 id="acm-heading" class="acm__title">Where each strategy works, and where it doesn't.</h2>
     <p class="acm__sub">
       Four asset classes × four regime states. Each cell lists the strategy (or two) that has a
-      defensible claim on that intersection — drawn from the 9 quant projects on this page. Empty
-      cells are intentional: a honest book has regimes it doesn't claim.
+      defensible claim on that intersection — drawn from the {profile.stats.strategyCount} quant projects
+      on this page. Empty cells are intentional: a honest book has regimes it doesn't claim.
     </p>
   </header>
 

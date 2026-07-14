@@ -22,6 +22,7 @@
  * render as tofu or in unrelated platform colors on recruiter machines.
  */
 import { buildStampUtc8 as _bs } from '@utils/build-stamp';
+import { path } from '@utils/url';
 
 interface Props {
   variant?: 'paper' | 'tape';
@@ -43,7 +44,7 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
 
     <a
       class="trust-pill"
-      href="/proof/#code-artifacts"
+      href={`${path('/proof')}/#code-artifacts`}
       title="All metrics evaluated by a separate harness"
     >
       <svg
@@ -64,7 +65,7 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
 
     <a
       class="trust-pill"
-      href="/projects/"
+      href={path('/projects')}
       title="Every project ships with a public repo + pages deploy"
     >
       <svg
@@ -88,7 +89,7 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
 
     <a
       class="trust-pill"
-      href="/experience/#nda-safe"
+      href={`${path('/experience')}/#nda-safe`}
       title="Past engagement disclosed at /experience; PM-verified, NDA-clean by construction"
     >
       <svg
@@ -109,7 +110,7 @@ const shortSha = buildSha ? buildSha.replace(/^.*?([0-9a-f]{7,})$/, '$1').slice(
 
     <a
       class="trust-pill"
-      href="/feed.xml"
+      href={path('/feed.xml')}
       rel="alternate"
       type="application/atom+xml"
       title="Atom feed of new projects"

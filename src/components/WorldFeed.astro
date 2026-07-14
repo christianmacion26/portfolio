@@ -103,10 +103,10 @@ const QUANT_POOL = [
   'Variance-risk-premium harvest: vol-targeted Sharpe 1.62',
   'Cointegration half-life estimate 32 days; mean-reversion quality good',
   'Funding-carry basis annualized 8.4%; vol-adjusted 5.1%',
-  'Lookahead audit flags 2 of 9 strategies; both repaired',
+  `Lookahead audit flags 2 of ${profile.stats.strategyCount} strategies; both repaired`,
   'Regime overlay adds 220bps of risk-adj alpha; turnover 1.4x',
   'Cross-sectional vs time-series momentum blend to lowest drawdown',
-  'Frozen-spec walk-forward: 9 strategies survive in-sample to out-of-sample',
+  `Frozen-spec walk-forward: ${profile.stats.strategyCount} strategies survive in-sample to out-of-sample`,
   'PIT enforcement yields 4 fewer fills and 12 fewer survivors',
   'Cost-adjusted backtest adds 3.2bps round-trip drag assumption',
   'HV-RV spread at 4-sigma; variance risk premium compressed',
@@ -141,7 +141,7 @@ const AI_POOL = [
 
 const LANES = [
   { id: 'markets', label: 'MARKETS', pool: MARKETS_POOL, tone: 'amber' as const, channel: '01' },
-  { id: 'policy', label: 'POLICY', pool: POLICY_POOL, tone: 'pass' as const, channel: '02' },
+  { id: 'policy', label: 'POLICY', pool: POLICY_POOL, tone: 'ink-ghost' as const, channel: '02' },
   { id: 'quant', label: 'QUANT', pool: QUANT_POOL, tone: 'info' as const, channel: '03' },
   { id: 'ai', label: 'AI', pool: AI_POOL, tone: 'ai' as const, channel: '04' },
 ] as const;
@@ -168,7 +168,7 @@ interface FeedItem {
 function buildLanes(): Array<{
   id: string;
   label: string;
-  tone: 'amber' | 'pass' | 'info' | 'ai';
+  tone: 'amber' | 'ink-ghost' | 'info' | 'ai';
   channel: string;
   items: FeedItem[];
 }> {
@@ -375,7 +375,7 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
   .worldfeed__lane--amber .worldfeed__lane-dot-pulse {
     background: var(--c-primary-2);
   }
-  .worldfeed__lane--pass .worldfeed__lane-dot-pulse {
+  .worldfeed__lane--ink-ghost .worldfeed__lane-dot-pulse {
     background: var(--c-ink-ghost);
   }
   .worldfeed__lane--info .worldfeed__lane-dot-pulse {
@@ -474,8 +474,8 @@ const CYCLE_SECONDS = (20 / VISIBLE_ROWS) * ROTATE_SECONDS;
   .worldfeed__lane--amber .worldfeed__lane-label {
     color: var(--c-primary-2);
   }
-  .worldfeed__lane--pass .worldfeed__chip,
-  .worldfeed__lane--pass .worldfeed__lane-label {
+  .worldfeed__lane--ink-ghost .worldfeed__chip,
+  .worldfeed__lane--ink-ghost .worldfeed__lane-label {
     color: var(--c-ink-faint);
   }
   .worldfeed__lane--info .worldfeed__chip,

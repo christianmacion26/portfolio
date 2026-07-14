@@ -22,6 +22,7 @@
  *   <BrandMotif width={420} caption="G1–G31 · ship(x) = 1 ⇔ ∀ gates pass" />
  */
 import { profile } from '@utils/profile';
+import { path } from '@utils/url';
 
 interface Props {
   /** Rendered width in px. Default 240. */
@@ -119,7 +120,7 @@ for (const f of families) {
      gate family on hover/long-press. */
   }
   <a
-    href="/methodology/"
+    href={path('/methodology')}
     class="brand-motif__link"
     aria-label={`See the full G1–G${profile.stats.evalGates} evaluation stack on /methodology`}
   >

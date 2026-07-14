@@ -119,7 +119,7 @@ const charter = [
         <Equation
           block
           size="lg"
-          latex={`\\Pr(\\text{ship}) \\;=\\; \\Pr(\\text{ship} \\mid \\text{passes G1--G31}) \\cdot \\prod_{i=1}^{31} \\Pr(G_i \\mid \\text{evidence}_i)`}
+          latex={`\\Pr(\\text{ship}) \\;=\\; \\Pr(\\text{ship} \\mid \\text{passes G1--G${profile.stats.evalGates}}) \\cdot \\prod_{i=1}^{${profile.stats.evalGates}} \\Pr(G_i \\mid \\text{evidence}_i)`}
         />
       </div>
 

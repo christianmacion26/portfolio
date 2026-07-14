@@ -23,6 +23,7 @@ const stats = {
   targetSeats: '5', // /positions conversation cards (lines 248-374)
   offTableSeats: '3', // /positions "off the table" bullets (lines 388-392)
   strategyCount: '9', // /projects quant files (01-…mdx) — update on strategy add/remove
+  positionsStartDate: '2026-04-21', // /positions paper-trading series start (BTC/USDT 1d klines)
 } as const;
 
 export const profile = {
