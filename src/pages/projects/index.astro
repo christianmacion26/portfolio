@@ -88,15 +88,20 @@ const itemListJsonLd = projectListJsonLd(
 
       {/* v6.4 — Lane filter chips (URL-param-driven, no client:*). */}
       <div class="lane-filter" role="group" aria-label="Filter projects by lane">
-        <a class="lane-filter__chip" href="/projects/" data-filter="all" aria-pressed={true}>
+        <a class="lane-filter__chip" href={path('/projects')} data-filter="all" aria-pressed={true}>
           All <span class="lane-filter__count mono">{projects.length}</span>
         </a>
-        <a class="lane-filter__chip" href="/projects/?tag=ai" data-filter="ai" aria-pressed={false}>
+        <a
+          class="lane-filter__chip"
+          href={`${path('/projects')}?tag=ai`}
+          data-filter="ai"
+          aria-pressed={false}
+        >
           AI Engineer <span class="lane-filter__count mono">{aiProjects.length}</span>
         </a>
         <a
           class="lane-filter__chip"
-          href="/projects/?tag=quant"
+          href={`${path('/projects')}?tag=quant`}
           data-filter="quant"
           aria-pressed={false}
         >

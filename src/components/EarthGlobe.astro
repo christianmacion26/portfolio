@@ -763,7 +763,7 @@ const headerLabel = `MISSION CONTROL · ${headerDateLabel}${liveBadge}`;
     checked={autoRotate}
     aria-label="Toggle globe rotation"
   />
-  <label for="eg-rotate-toggle" class="eg__rotate-btn-html" aria-hidden="true"></label>
+  <label for="eg-rotate-toggle" class="eg__rotate-btn-html"></label>
 
   <figcaption class="eg__caption">
     <span class="eg__caption-eyebrow mono">Earth-scale quant intelligence</span>
@@ -1590,6 +1590,7 @@ const headerLabel = `MISSION CONTROL · ${headerDateLabel}${liveBadge}`;
     display: flex;
     flex-direction: column;
     gap: var(--sp-3);
+    position: relative;
   }
   .eg__caption {
     display: flex;
@@ -1684,8 +1685,28 @@ const headerLabel = `MISSION CONTROL · ${headerDateLabel}${liveBadge}`;
     outline-offset: 4px;
     border-radius: 4px;
   }
+  /* v6.11.18.1 — a11y hit-area expansion. The SVG button rect is 20×20
+     units in an 800-unit viewBox; on a 375px mobile viewport it renders
+     as ~8×8 actual pixels — below WCAG 2.5.5 (44×44). Position this
+     hidden label over the SVG button at the rotate-button's SVG-unit
+     centre (676/800, 145/800) = (~84.5%, ~18.1%) of the wrapper. The
+     label is invisible (no fill / no border) but clickable; keyboard
+     focus goes through the underlying checkbox (`#eg-rotate-toggle`)
+     and the existing `:has(:focus-visible)` rule paints the focus ring
+     on the visible SVG button. */
   .eg__rotate-btn-html {
-    display: none;
+    position: absolute;
+    /* Button centre in viewBox units: (676, 145) of (800, 800).
+       Offset by 22px so the 44×44 box is centred on the button. */
+    top: calc(18.125% - 22px);
+    left: calc(84.5% - 22px);
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    z-index: 2;
+    padding: 0;
   }
   .eg__pause-icon {
     display: inline;

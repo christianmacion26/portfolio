@@ -208,8 +208,10 @@ if (formula) {
   .stat--mono .stat__label {
     color: var(--c-white-ghost);
   }
+  /* v6.11.18.1 — F14 sweep. Was a hardcoded green (#3fb950) — traffic-
+     light signal. Mono variant now uses the institutional amber token. */
   .stat--mono .stat__value {
-    color: #3fb950;
+    color: var(--c-amber);
   }
   .stat--mono .stat__sub {
     color: var(--c-white-ghost);

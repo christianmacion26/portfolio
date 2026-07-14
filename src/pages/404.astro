@@ -222,7 +222,10 @@ const quickCards = [
     flex: 1;
     padding: var(--sp-3) var(--sp-4);
     font-family: var(--ff-mono);
-    font-size: var(--fs-sm);
+    /* v6.11.18.1 — iOS Safari auto-zooms the viewport on inputs with
+       font-size < 16px. Bump from --fs-sm (14px) to 16px to keep the
+       layout stable when a mobile user taps the search field on /404. */
+    font-size: 16px;
     background: var(--c-bg);
     border: 1px solid var(--c-rule);
     border-radius: var(--radius-sm);

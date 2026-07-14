@@ -454,6 +454,13 @@
     color: var(--c-primary);
     list-style: none;
     user-select: none;
+    /* v6.11.18.1 — WCAG 2.5.5 touch target. var(--sp-2) ≈ 8px vertical
+       padding on a ~14px line gives ~30px height — below the 44px
+       minimum. Flexbox + min-height gets us there without changing the
+       visual. */
+    display: flex;
+    align-items: center;
+    min-height: 44px;
   }
   .dsr-calc__why-summary::before {
     content: '+ ';

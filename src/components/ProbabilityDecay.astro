@@ -1,6 +1,6 @@
 ---
 /**
- * ProbabilityDecay.astro — aggregate panel showing all 8 events as
+ * ProbabilityDecay.astro — aggregate panel showing all `events.length` events as
  * polylines on a probability-over-tenor axis.
  *
  * Server-rendered SVG, no JS. The X axis is the tenors normalized to a
@@ -166,14 +166,16 @@ function linePath(pts: { x: number; y: number }[]): string {
 <figure class="prob-decay">
   <figcaption class="prob-decay__head">
     <span class="prob-decay__eyebrow mono">PROBABILITY DECAY · TENOR LADDER</span>
-    <span class="prob-decay__sub">8 events · implied → fair · seeded from build date</span>
+    <span class="prob-decay__sub"
+      >{events.length} events · implied → fair · seeded from build date</span
+    >
   </figcaption>
 
   <svg
     class="prob-decay__svg"
     viewBox={`0 0 ${width} ${height}`}
     role="img"
-    aria-label="Probability decay across tenors for 8 binary event markets"
+    aria-label={`Probability decay across tenors for ${events.length} binary event markets`}
   >
     {/* Y grid + ticks (price in cents) */}
     {

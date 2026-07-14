@@ -85,8 +85,8 @@ const decayPoints = events.map((e) => ({
 ---
 
 <BaseLayout
-  title="Binary event markets · 8 events · 0 platforms named"
-  description="Eight binary event contracts — implied probability, model-implied fair value, and edge over the market. NDA-positive by construction."
+  title={`Binary event markets · ${n} events · 0 platforms named`}
+  description={`${n} binary event contracts — implied probability, model-implied fair value, and edge over the market. NDA-positive by construction.`}
 >
   {
     /* ============================================================
@@ -95,7 +95,7 @@ const decayPoints = events.map((e) => ({
        reads as a terminal at first paint, not a hero.
        ============================================================ */
   }
-  <MarketTape trailing={`prediction · build ${buildDate} · 8 binary event contracts`} />
+  <MarketTape trailing={`prediction · build ${buildDate} · ${n} binary event contracts`} />
 
   {
     /* ============================================================
@@ -108,7 +108,7 @@ const decayPoints = events.map((e) => ({
     <div class="container hero__inner">
       <p class="hero__eyebrow mono">V6.1 · BINARY EVENT MARKETS</p>
       <h1 class="hero__title">
-        Eight events. One implied-probability model. Zero platforms named.
+        {n} events. One implied-probability model. Zero platforms named.
       </h1>
       <VoiceLine class="hero__voice" ruled={true} size="md">
         Every metric on this page is a public-data probability, derived from the same seed-time
@@ -116,7 +116,7 @@ const decayPoints = events.map((e) => ({
         platform labels, no counterparty leakage — by construction.
       </VoiceLine>
       <div class="hero__meta mono">
-        <span>8 events</span>
+        <span>{n} events</span>
         <span class="hero__sep" aria-hidden="true">·</span>
         <span>build {buildDate}</span>
         <span class="hero__sep" aria-hidden="true">·</span>
@@ -144,7 +144,7 @@ const decayPoints = events.map((e) => ({
         <StatCell
           label="Mean implied"
           value={meanImpliedCents}
-          sub="cent-weighted across all 8 events"
+          sub={`cent-weighted across all ${n} events`}
         />
         <StatCell
           label="Mean edge"
