@@ -213,6 +213,9 @@ const tradingDays = equitySeries.length;
           I do 30-min intro calls on Tue/Wed/Thu 18:00–22:00 PHT (10:00–14:00 UTC). Email first —
           booking link in reply.
         </p>
+        <p class="positions-cal__agenda">
+          <a href={path('/screening-call')}>See the 30-min agenda →</a>
+        </p>
         <a
           class="btn btn--primary positions-cal__cta"
           href={`mailto:${email}?subject=Intro%20call%20request`}
@@ -707,6 +710,18 @@ const tradingDays = equitySeries.length;
   .positions-cal__cta {
     flex-shrink: 0;
     white-space: nowrap;
+  }
+  /* v6.12 — agenda link under the availability one-liner. */
+  .positions-cal__agenda {
+    margin: 0;
+    font-family: var(--ff-mono);
+    font-size: var(--fs-sm);
+  }
+  .positions-cal__agenda a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--c-amber-decor);
+    text-underline-offset: 3px;
   }
   @media (max-width: 720px) {
     .positions-cal {

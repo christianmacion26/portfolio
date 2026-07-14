@@ -28,7 +28,6 @@
   "ignore": ["src/components/Odometer.astro", "src/scripts/*.ts"],
   "ignoreDependencies": [
     "astro-expressive-code",
-    "@fontsource/jetbrains-mono",
     "@astrojs/rss",
     "astro-icon",
     "lightweight-charts",

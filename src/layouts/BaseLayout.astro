@@ -6,18 +6,25 @@
    Cyrillic / Greek / Vietnamese). Site is English-only; saves ~470 KB
    across the 4 weights on first paint. Plus dropped unused JetBrains-Mono
    imports entirely (--ff-mono falls back to system mono; 0 source uses
-   the family). Total saved: ~720 KB across weights 400/500/600/700. */
+   the family). Total saved: ~720 KB across weights 400/500/600/700.
+   v6.13.1 — re-added JetBrains Mono + added Source Serif 4, SCOPED via
+   the `surface="v6-13"` prop on this layout. Pages that don't opt in
+   (F14-amber surfaces) keep the v6.9.15 zero-cost behavior. Pages that
+   opt in load these two fonts via the `v6-13-fonts.astro` component
+   rendered conditionally below the body. */
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-600.css';
 import '@fontsource/inter/latin-700.css';
 import '@styles/tokens.css';
+import '@styles/tokens-v6.13.css';
 import '@styles/global.css';
 import '@styles/print.css';
 import 'katex/dist/katex.min.css';
 
 import Nav from '@components/Nav.astro';
 import Footer from '@components/Footer.astro';
+import V613Fonts from '@components/V613Fonts.astro';
 import { profile } from '@utils/profile';
 import { buildMeta, personJsonLd, websiteJsonLd, breadcrumbJsonLd } from '@utils/seo';
 import { path } from '@utils/url';
@@ -30,6 +37,7 @@ interface Props {
   className?: string;
   extraJsonLd?: unknown; // optional page-specific JSON-LD (e.g. ItemList, CreativeWork)
   breadcrumbs?: Array<{ name: string; href: string }>; // optional BreadcrumbList JSON-LD
+  surface?: 'v6-13'; // v6.13.0 — opt-in redesign surface (Jane Street × Noir). Default = legacy.
 }
 
 const {
@@ -40,6 +48,7 @@ const {
   className,
   extraJsonLd,
   breadcrumbs,
+  surface,
 } = Astro.props;
 const meta = buildMeta({
   title,
@@ -65,7 +74,7 @@ const crumbsJsonLd = breadcrumbs ? breadcrumbJsonLd(breadcrumbs) : null;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-surface={surface}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -168,6 +177,7 @@ const crumbsJsonLd = breadcrumbs ? breadcrumbJsonLd(breadcrumbs) : null;
   </head>
   <body class={className}>
     <a href="#main" class="skip-link">Skip to content</a>
+    {surface === 'v6-13' && <V613Fonts />}
     <Nav />
     <main id="main">
       <slot />
