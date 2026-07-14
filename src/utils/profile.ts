@@ -24,6 +24,8 @@ const stats = {
   offTableSeats: '3', // /positions "off the table" bullets (lines 388-392)
   strategyCount: '9', // /projects quant files (01-…mdx) — update on strategy add/remove
   positionsStartDate: '2026-04-21', // /positions paper-trading series start (BTC/USDT 1d klines)
+  // v6.11.33 — resume variants count. Drives /resume, /for-recruiters, /contact chrome.
+  resumeCount: '3', // unified / AI-only / Quant one-pager (resumes[] in resume.astro)
 } as const;
 
 export const profile = {

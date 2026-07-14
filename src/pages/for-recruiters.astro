@@ -22,6 +22,30 @@ const phoneDisplay = profile.contact.phoneDisplay;
 const linkedin = profile.contact.linkedin;
 const NGATE = `${profile.stats.evalGates}-gate`;
 
+// v6.12 — cold-email template. The {placeholder} tokens must appear as
+// literal text (the recruiter is supposed to copy-paste then fill them),
+// not as JSX expressions. Stored as a string in the frontmatter and
+// rendered via <pre>{...}</pre> so Astro doesn't try to evaluate them.
+const emailTemplate = `Subject: [{role-tag}] {seniority} · JD attached — {company}
+
+Hi Christian —
+
+I’m a {your-role} at {company}, sourcing for a {role} seat.
+The JD is attached. Highlights:
+  - {JD bullet 1}
+  - {JD bullet 2}
+  - {JD bullet 3}
+
+If you’re open, I’d like a 30-min screening this {Tue|Wed|Thu}
+between 18:00–22:00 PHT (UTC+8). Full agenda: christianmacion-portfolio.pages.dev/screening-call
+If not, who do you recommend?
+
+— {name}`;
+
+// Same template, ASCII-punctuated, for the mailto body. Slightly different
+// (— → -, ’ → ') so it survives ASCII-only transport cleanly.
+const emailBody = `Hi Christian —\n\nI'm a {your-role} at {company}, sourcing for a {role} seat.\nThe JD is attached. Highlights:\n  - {JD bullet 1}\n  - {JD bullet 2}\n  - {JD bullet 3}\n\nIf you're open, I'd like a 30-min screening this {Tue|Wed|Thu} between 18:00-22:00 PHT (UTC+8).\nFull agenda: https://christianmacion-portfolio.pages.dev/screening-call\n\nIf not, who do you recommend?\n\n— {name}`;
+
 const faqs = [
   {
     q: 'Who is this candidate?',
@@ -41,7 +65,7 @@ const faqs = [
   },
   {
     q: 'Do they have a one-page resume PDF?',
-    a: `Yes. Three tailored one-page resumes are linked at /resume — Quant (one-page), AI-only, and Unified. Each lists the same identity block and ${NGATE} methodology but weights different evidence.`,
+    a: `Yes. ${profile.stats.resumeCount} tailored one-page resumes are linked at /resume — Quant (one-page), AI-only, and Unified. Each lists the same identity block and ${NGATE} methodology but weights different evidence.`,
   },
   {
     q: 'Is the work NDA-clean by construction?',
@@ -159,6 +183,107 @@ const jsonLd = {
         >
         <a class="btn btn--ghost" href={path('/resume')}>View resumes →</a>
         <a class="btn btn--ghost" href={path('/proof')}>See proof →</a>
+        <a class="btn btn--ghost" href="#cold-email-template">Cold-email template ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="cold-email-template" class="section">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <p class="section__eyebrow mono">intro/</p>
+        <h2 class="section__title">Cold-email template — paste, fill, send.</h2>
+        <p class="section__sub">
+          Copy the block below. Two mailto links pre-fill subject + body. Reply SLA: 4 business
+          hours during UTC+8 day.
+        </p>
+      </header>
+
+      <div class="intro-template">
+        <pre class="intro-template__body mono">{emailTemplate}</pre>
+        <ul class="intro-template__links">
+          <li>
+            <a
+              class="btn btn--primary"
+              href={`mailto:${email}?subject=${encodeURIComponent('[QR] Senior · JD attached — {role}')}&body=${encodeURIComponent(emailBody)}`}
+            >
+              Email [QR] track →
+            </a>
+          </li>
+          <li>
+            <a
+              class="btn btn--ghost"
+              href={`mailto:${email}?subject=${encodeURIComponent('[AI] Eval-first · JD attached — {role}')}&body=${encodeURIComponent(emailBody)}`}
+            >
+              Email [AI] track →
+            </a>
+          </li>
+          <li class="intro-template__meta">
+            Reply SLA · 4 business hours during UTC+8 day. Cold DMs: 24h SLA.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <p class="section__eyebrow mono">paths/</p>
+        <h2 class="section__title">Reading paths — choose by role.</h2>
+        <p class="section__sub">Two ways to skim. Same site. Same eval gates. Different subset.</p>
+      </header>
+
+      <div class="persona-grid">
+        <article class="persona-card">
+          <h3 class="persona-card__title">If you’re hiring an AI engineer</h3>
+          <p class="persona-card__sub">
+            Eval-first engineer. MCP server. RAG pipeline. Multi-agent harness.
+          </p>
+          <ul class="persona-card__links">
+            <li>
+              <a href={path('/methodology')}>
+                {`G6, G7, G8, G11: frozen-spec eval · N-of-M · look-ahead bias`}
+              </a>
+            </li>
+            <li>
+              <a href={path('/projects')}>Projects → AI tooling lane</a>
+            </li>
+            <li>
+              <a href={path('/resume-ai-only.pdf')} download>AI resume (4-pg) ↓</a>
+            </li>
+            <li>
+              <a href={path('/proof')}>
+                Proof → mcp-backtest-server · qfin-rag-harness · numerical-faithfulness-eval
+              </a>
+            </li>
+          </ul>
+        </article>
+
+        <article class="persona-card">
+          <h3 class="persona-card__title">If you’re hiring a Quant researcher</h3>
+          <p class="persona-card__sub">
+            QR or QR-rotational. Deflated Sharpe. Look-ahead audit. Strategy research.
+          </p>
+          <ul class="persona-card__links">
+            <li>
+              <a href={path('/methodology')}>
+                {`G1–G4: regime · PSL · p-hacking · deflated Sharpe`}
+              </a>
+            </li>
+            <li>
+              <a href={path('/projects')}>Projects → Quant research lane</a>
+            </li>
+            <li>
+              <a href={path('/resume-tailored.pdf')} download>Quant resume (4-pg) ↓</a>
+            </li>
+            <li>
+              <a href={path('/research')}>
+                {`Research → ${profile.stats.strategyCount} strategies · 12 sources`}
+              </a>
+            </li>
+          </ul>
+        </article>
       </div>
     </div>
   </section>
@@ -371,6 +496,115 @@ const jsonLd = {
       max-width: 60vw;
       font-size: var(--fs-sm);
       line-height: 1.4;
+    }
+  }
+
+  /* v6.12 — cold-email template block. Two-column on desktop, stacked on
+     mobile. Mailto deep-links pre-fill subject + body via encodeURIComponent. */
+  .intro-template {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--sp-5);
+    align-items: start;
+  }
+  .intro-template__body {
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    padding: var(--sp-5);
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    color: var(--c-ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+    margin: 0;
+  }
+  .intro-template__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .intro-template__links li {
+    margin: 0;
+  }
+  .intro-template__links .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .intro-template__meta {
+    color: var(--c-ink-3);
+    font-size: var(--fs-xs);
+    font-family: var(--ff-mono);
+    line-height: var(--lh-loose);
+    padding-top: var(--sp-2);
+    border-top: 1px solid var(--c-rule-soft);
+  }
+
+  @media (max-width: 720px) {
+    .intro-template {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* v6.12 — persona split. 2-pane reading-path grid; single column on
+     narrow viewports. Derived from /methodology gate numbers + the
+     3 resume PDF variants; no hardcoded chrome. */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+  }
+  .persona-card {
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+  }
+  .persona-card__title {
+    font-size: var(--fs-lg);
+    color: var(--c-ink);
+    margin-bottom: var(--sp-2);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .persona-card__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-loose);
+    margin-bottom: var(--sp-4);
+  }
+  .persona-card__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .persona-card__links li {
+    padding-block: var(--sp-2);
+    border-bottom: 1px solid var(--c-rule-soft);
+  }
+  .persona-card__links li:last-child {
+    border-bottom: none;
+  }
+  .persona-card__links a {
+    color: var(--c-primary);
+    font-size: var(--fs-sm);
+    text-decoration: underline;
+    text-decoration-color: var(--c-amber-decor);
+    text-underline-offset: 3px;
+    line-height: var(--lh-loose);
+  }
+
+  @media (max-width: 800px) {
+    .persona-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
