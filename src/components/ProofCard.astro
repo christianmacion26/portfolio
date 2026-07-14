@@ -42,7 +42,7 @@ const figureStyle = aspect === 'auto' ? '' : `--proof-aspect: ${aspect}; --proof
 <figure class={`proof-card proof-card--${tone}`} style={figureStyle}>
   {
     href ? (
-      <a href={href} class="proof-card__link" target="_blank" rel="noopener">
+      <a href={href} class="proof-card__link" target="_blank" rel="noopener noreferrer">
         <img
           src={src}
           alt={alt}

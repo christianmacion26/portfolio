@@ -46,7 +46,7 @@ const updatedHuman = new Date(updated).toLocaleDateString('en-GB', {
         regime flip, new gate added to the stack). Inspired by <a
           href="https://nownownow.com/about"
           target="_blank"
-          rel="noopener">/now</a
+          rel="noopener noreferrer">/now</a
         >.
       </p>
       <div class="now-head__stamp mono">
@@ -93,7 +93,7 @@ const updatedHuman = new Date(updated).toLocaleDateString('en-GB', {
           <strong>This site:</strong> ongoing edits — see <a
             href="https://github.com/christianmacion26/portfolio/commits/main"
             target="_blank"
-            rel="noopener">commit history</a
+            rel="noopener noreferrer">commit history</a
           >
           for a dated build log.
         </li>
@@ -155,11 +155,13 @@ const updatedHuman = new Date(updated).toLocaleDateString('en-GB', {
         </li>
         <li>
           <strong>For casual / paper-trail:</strong>
-          <a href={profile.contact.linkedin} target="_blank" rel="noopener">LinkedIn DM</a>.
+          <a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer"
+            >LinkedIn DM</a
+          >.
         </li>
         <li>
           <strong>For public work / proof:</strong>
-          <a href={profile.contact.github} target="_blank" rel="noopener">GitHub</a> ({
+          <a href={profile.contact.github} target="_blank" rel="noopener noreferrer">GitHub</a> ({
             profile.stats.repoCount
           } public repos, all NDA-safe). Stack: see <a href={path('/uses')}>/uses</a>.
         </li>
@@ -169,7 +171,7 @@ const updatedHuman = new Date(updated).toLocaleDateString('en-GB', {
         This page is versioned. <a
           href={`https://github.com/christianmacion26/portfolio/commits/main/src/pages/now.astro`}
           target="_blank"
-          rel="noopener">Edit history →</a
+          rel="noopener noreferrer">Edit history →</a
         >
       </div>
     </div>
