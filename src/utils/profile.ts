@@ -22,6 +22,7 @@ const stats = {
   repoCount: '25', // GitHub public repos (api.github.com/users/christianmacion26 → public_repos=25)
   targetSeats: '5', // /positions conversation cards (lines 248-374)
   offTableSeats: '3', // /positions "off the table" bullets (lines 388-392)
+  strategyCount: '9', // /projects quant files (01-…mdx) — update on strategy add/remove
 } as const;
 
 export const profile = {

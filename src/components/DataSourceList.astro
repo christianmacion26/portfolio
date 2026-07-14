@@ -20,6 +20,7 @@
  *   <DataSourceList />
  */
 import { buildStampUtc8 } from '@utils/build-stamp';
+import { profile } from '@utils/profile';
 
 interface Source {
   name: string;
@@ -131,7 +132,9 @@ const lastVerified = buildStampUtc8();
 <section class="datasrc" aria-labelledby="datasrc-heading">
   <header class="datasrc__head">
     <p class="datasrc__eyebrow mono">Data source registry</p>
-    <h2 id="datasrc-heading" class="datasrc__title">Every dataset behind the 9 strategies.</h2>
+    <h2 id="datasrc-heading" class="datasrc__title">
+      Every dataset behind the {profile.stats.strategyCount} strategies.
+    </h2>
     <p class="datasrc__sub">
       Twelve public-domain sources. Every strategy, every equity curve, every OOS Sharpe on this
       page reads from this list. No proprietary feeds, no employer scrapes, no platform API keys.
