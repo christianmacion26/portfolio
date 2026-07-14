@@ -14,6 +14,7 @@ import ReadMeta from '@components/ReadMeta.astro';
 import TrustStrip from '@components/TrustStrip.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { path } from '@utils/url';
+import { buildStampUtc8 } from '@utils/build-stamp';
 import VoiceLine from '@components/VoiceLine.astro';
 
 const allEntries: CollectionEntry<'experience'>[] = await getCollection('experience');
@@ -39,10 +40,10 @@ const totalEntries = rendered.length;
 // a stale comment "2024-12 → 2026-05 = ~25 months" — that span is
 // actually 17 months, not 25). Union of months across all entries is
 // the honest unique-months span of the experience column. `today`
-// freezes at build time per deploy, so the chrome stays roughly
-// current between commits.
+// comes from buildStampUtc8() (BUILD_DATE env var) per Standing
+// Order §9 — no argless `new Date()` in deterministic outputs.
 function parseExpDate(s: string): Date {
-  const today = new Date();
+  const today = new Date(buildStampUtc8() + 'T00:00:00Z');
   if (s === 'present') return today;
   const [y, m] = s.split('-').map(Number);
   return new Date(Date.UTC(y, (m ?? 1) - 1, 1));
