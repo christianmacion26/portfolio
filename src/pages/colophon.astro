@@ -29,6 +29,16 @@ const typeScale = [
   { token: '--fs-3xl', px: '36px', role: 'section title' },
 ];
 
+// v6.11.26 — type-faces extracted as canonical list. 3 faces fill the
+// 4-role grid: UI/body (sans), data/code (mono), math (serif). Chrome
+// reads "{typeFaces.length} faces, four roles." — second number is
+// intentional ("three faces play four roles" is the design claim).
+const typeFaces = [
+  { name: 'Inter', ff: 'var(--ff-sans)', role: 'UI / body — sans, 400 / 500 / 600 / 700' },
+  { name: 'JetBrains Mono', ff: 'var(--ff-mono)', role: 'Data / code — mono, 400 / 500' },
+  { name: 'KaTeX_Main', ff: 'var(--ff-math)', role: 'Math serifs (rendered by KaTeX)' },
+];
+
 // === (b) Color palette — 4 swatches ========================================
 const palette = [
   { name: '--c-primary', hex: '#e6edf3', role: 'off-white · primary text on dark' },
@@ -142,7 +152,7 @@ const motionCount = motion.length;
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(a) · Type</p>
-        <h2 class="section__title">Three faces, four roles.</h2>
+        <h2 class="section__title">{typeFaces.length} faces, four roles.</h2>
         <p class="section__sub">
           Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math serifs. The{' '}
           {typeScaleCount}-step scale below is the institutional rhythm; full scale runs <code class="mono"
@@ -152,18 +162,14 @@ const motionCount = motion.length;
       </header>
 
       <div class="type-faces">
-        <article class="type-face">
-          <h3 class="type-face__name" style="font-family: var(--ff-sans);">Inter</h3>
-          <p class="type-face__role">UI / body — sans, 400 / 500 / 600 / 700</p>
-        </article>
-        <article class="type-face">
-          <h3 class="type-face__name" style="font-family: var(--ff-mono);">JetBrains Mono</h3>
-          <p class="type-face__role">Data / code — mono, 400 / 500</p>
-        </article>
-        <article class="type-face">
-          <h3 class="type-face__name" style="font-family: var(--ff-math);">KaTeX_Main</h3>
-          <p class="type-face__role">Math serifs (rendered by KaTeX)</p>
-        </article>
+        {
+          typeFaces.map((f) => (
+            <article class="type-face">
+              <h3 class="type-face__name" style={`font-family: ${f.ff};`}>{f.name}</h3>
+              <p class="type-face__role">{f.role}</p>
+            </article>
+          ))
+        }
       </div>
 
       <h3 class="sub-h3">{typeScaleCount}-step scale</h3>
