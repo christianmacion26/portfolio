@@ -41,6 +41,8 @@ const toneClass = tone === 'tape' ? 'eq--tape' : '';
 <span
   class:list={['eq', sizeClass, toneClass, className, { 'eq--block': block }]}
   data-latex={latex}
+  role={label ? 'math' : undefined}
+  aria-label={label ? `Equation ${label}` : undefined}
 >
   <Fragment set:html={html} />
   {
