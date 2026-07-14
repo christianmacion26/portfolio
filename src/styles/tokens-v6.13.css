@@ -40,7 +40,7 @@
  *       pattern; not relevant here but a sibling precedent)
  */
 
-:root[data-surface="v6-13"] {
+:root[data-surface='v6-13'] {
   /* === JANE-STREET NOIR PALETTE ===
    * Single accent (electric blue) used <5% of surface. Paper bg for
    * content blocks. Near-black primary for institutional-noir register. */
@@ -228,7 +228,7 @@
  * Same pattern as legacy tokens.css; carried over so motion stays
  * opt-out-safe on the redesigned surfaces too. */
 @media (prefers-reduced-motion: reduce) {
-  :root[data-surface="v6-13"] * {
+  :root[data-surface='v6-13'] * {
     transition: none !important;
     animation: none !important;
   }
@@ -241,41 +241,34 @@
  *
  * NOT applied globally — components opt in by adding `class="j-type"` or
  * `class="j-type-display"` etc. */
-:root[data-surface="v6-13"] {
+:root[data-surface='v6-13'] {
   /* Display (hero / page H1) */
-  --j-type-display: var(--j-t-3xl) var(--j-lh-tight) var(--j-w-display)
-    var(--j-ff-display);
-  --j-type-h1: var(--j-t-xl) var(--j-lh-snug) var(--j-w-display)
-    var(--j-ff-display);
+  --j-type-display: var(--j-t-3xl) var(--j-lh-tight) var(--j-w-display) var(--j-ff-display);
+  --j-type-h1: var(--j-t-xl) var(--j-lh-snug) var(--j-w-display) var(--j-ff-display);
 
   /* Headings (H2/H3) */
-  --j-type-h2: var(--j-t-lg) var(--j-lh-snug) var(--j-w-heading)
-    var(--j-ff-body);
-  --j-type-h3: var(--j-t-md) var(--j-lh-snug) var(--j-w-heading)
-    var(--j-ff-body);
+  --j-type-h2: var(--j-t-lg) var(--j-lh-snug) var(--j-w-heading) var(--j-ff-body);
+  --j-type-h3: var(--j-t-md) var(--j-lh-snug) var(--j-w-heading) var(--j-ff-body);
 
   /* Body */
-  --j-type-body: var(--j-t-base) var(--j-lh-normal) var(--j-w-body)
-    var(--j-ff-body);
-  --j-type-lead: var(--j-t-md) var(--j-lh-loose) var(--j-w-body)
-    var(--j-ff-body);
+  --j-type-body: var(--j-t-base) var(--j-lh-normal) var(--j-w-body) var(--j-ff-body);
+  --j-type-lead: var(--j-t-md) var(--j-lh-loose) var(--j-w-body) var(--j-ff-body);
 
   /* Meta / mono */
-  --j-type-meta: var(--j-t-sm) var(--j-lh-snug) var(--j-w-body)
-    var(--j-ff-body);
+  --j-type-meta: var(--j-t-sm) var(--j-lh-snug) var(--j-w-body) var(--j-ff-body);
   --j-type-mono: var(--j-t-sm) var(--j-lh-snug) var(--j-w-mono) var(--j-ff-mono);
 }
 
 /* === Focus ring — v6.13 surfaces ===
  * Single accent-color ring, 2px, no halo. */
-:root[data-surface="v6-13"] :focus-visible {
+:root[data-surface='v6-13'] :focus-visible {
   outline: 2px solid var(--j-accent);
   outline-offset: 2px;
   border-radius: var(--j-r-sm);
 }
 
 /* === Selection — v6.13 surfaces === */
-:root[data-surface="v6-13"] ::selection {
+:root[data-surface='v6-13'] ::selection {
   background: var(--j-accent);
   color: var(--j-accent-on);
 }
@@ -303,7 +296,7 @@
  *     ink-2/ink-3 with arrow glyph for direction)
  *   - Single accent (#5b8def) used sparingly — accents go to focus
  *     rings + the live pulse dot, not chrome */
-:root[data-surface="v6-13"] {
+:root[data-surface='v6-13'] {
   /* BG / surface */
   --c-bg: var(--j-bg);
   --c-bg-2: var(--j-bg-elev);

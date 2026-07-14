@@ -608,11 +608,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
 ];
 ---
 
-<BaseLayout
-  title={profile.titles.primary}
-  description={profile.titles.secondary}
-  surface="v6-13"
->
+<BaseLayout title={profile.titles.primary} description={profile.titles.secondary} surface="v6-13">
   {
     /* ============================================================
        HERO — identity-first, single-column, dark editorial.
@@ -1500,45 +1496,45 @@ const velocityRows: { stage: string; intensity: number }[][] = [
    * their F14-amber chrome. */
 }
 <style is:global>
-  :root[data-surface="v6-13"] .hero {
+  :root[data-surface='v6-13'] .hero {
     padding-block: var(--j-sp-7) var(--j-sp-6);
     background: var(--j-bg);
   }
-  :root[data-surface="v6-13"] .hero__grid {
+  :root[data-surface='v6-13'] .hero__grid {
     display: none; /* demoted: the legacy 80×80 grid pattern reads as decorative noise under Jane Street */
   }
-  :root[data-surface="v6-13"] .hero__inner {
+  :root[data-surface='v6-13'] .hero__inner {
     max-width: var(--j-container-wide);
     padding-inline: var(--j-sp-3);
   }
-  :root[data-surface="v6-13"] .hero__badge {
+  :root[data-surface='v6-13'] .hero__badge {
     margin-bottom: var(--j-sp-3);
     font-family: var(--j-ff-mono);
     font-size: var(--j-t-sm);
     letter-spacing: var(--j-track-wide);
   }
-  :root[data-surface="v6-13"] .hero__badge-link {
+  :root[data-surface='v6-13'] .hero__badge-link {
     color: var(--j-accent);
     border-bottom: 1px solid var(--j-accent);
   }
-  :root[data-surface="v6-13"] .hero__eyebrow {
+  :root[data-surface='v6-13'] .hero__eyebrow {
     color: var(--j-ink-2);
     font-family: var(--j-ff-body);
     font-size: var(--j-t-sm);
     margin-bottom: var(--j-sp-5);
   }
-  :root[data-surface="v6-13"] .hero__top {
+  :root[data-surface='v6-13'] .hero__top {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
     gap: var(--j-sp-6);
     align-items: center;
   }
   @media (width<=900px) {
-    :root[data-surface="v6-13"] .hero__top {
+    :root[data-surface='v6-13'] .hero__top {
       grid-template-columns: 1fr;
     }
   }
-  :root[data-surface="v6-13"] .hero__title {
+  :root[data-surface='v6-13'] .hero__title {
     font-family: var(--j-ff-display);
     font-size: clamp(var(--j-t-2xl), 8vw, var(--j-t-3xl));
     line-height: var(--j-lh-tight);
@@ -1547,7 +1543,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     letter-spacing: var(--j-track-tight);
     margin-bottom: var(--j-sp-4);
   }
-  :root[data-surface="v6-13"] .hero__voice {
+  :root[data-surface='v6-13'] .hero__voice {
     font-family: var(--j-ff-body);
     font-size: var(--j-t-md);
     line-height: var(--j-lh-loose);
@@ -1555,23 +1551,23 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     font-style: normal;
     margin-bottom: var(--j-sp-5);
   }
-  :root[data-surface="v6-13"] .hero__sub {
+  :root[data-surface='v6-13'] .hero__sub {
     font-family: var(--j-ff-body);
     font-size: var(--j-t-base);
     line-height: var(--j-lh-normal);
     color: var(--j-ink-3);
     margin-bottom: var(--j-sp-5);
   }
-  :root[data-surface="v6-13"] .hero__sep {
+  :root[data-surface='v6-13'] .hero__sep {
     color: var(--j-ink-4);
     margin-inline: var(--j-sp-2);
   }
-  :root[data-surface="v6-13"] .hero__actions {
+  :root[data-surface='v6-13'] .hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--j-sp-3);
   }
-  :root[data-surface="v6-13"] .hero__cta {
+  :root[data-surface='v6-13'] .hero__cta {
     border: 1px solid var(--j-ink-4);
     background: transparent;
     color: var(--j-ink);
@@ -1581,47 +1577,47 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     transition: border-color var(--j-dur) var(--j-ease-snappy);
     min-height: 44px;
   }
-  :root[data-surface="v6-13"] .hero__cta:hover {
+  :root[data-surface='v6-13'] .hero__cta:hover {
     border-color: var(--j-accent);
   }
-  :root[data-surface="v6-13"] .hero__cta--primary {
+  :root[data-surface='v6-13'] .hero__cta--primary {
     background: var(--j-accent);
     color: var(--j-accent-on);
     border-color: var(--j-accent);
   }
-  :root[data-surface="v6-13"] .hero__cta--primary:hover {
+  :root[data-surface='v6-13'] .hero__cta--primary:hover {
     background: var(--j-accent-2);
     border-color: var(--j-accent-2);
   }
-  :root[data-surface="v6-13"] .hero__cta--accent {
+  :root[data-surface='v6-13'] .hero__cta--accent {
     border-color: var(--j-accent);
     color: var(--j-accent);
   }
-  :root[data-surface="v6-13"] .hero__cta-key {
+  :root[data-surface='v6-13'] .hero__cta-key {
     font-family: var(--j-ff-mono);
     font-size: var(--j-t-xs);
     letter-spacing: var(--j-track-wide);
     font-weight: var(--j-w-mono);
   }
-  :root[data-surface="v6-13"] .hero__cta-val {
+  :root[data-surface='v6-13'] .hero__cta-val {
     margin-left: var(--j-sp-2);
     color: inherit;
     opacity: 0.7;
   }
-  :root[data-surface="v6-13"] .hero__cta--primary .hero__cta-val {
+  :root[data-surface='v6-13'] .hero__cta--primary .hero__cta-val {
     color: var(--j-accent-on);
     opacity: 0.8;
   }
-  :root[data-surface="v6-13"] .hero__cta-arrow {
+  :root[data-surface='v6-13'] .hero__cta-arrow {
     margin-left: var(--j-sp-2);
   }
-  :root[data-surface="v6-13"] .hero__id {
+  :root[data-surface='v6-13'] .hero__id {
     border: var(--j-b-hairline);
     padding: var(--j-sp-3);
     border-radius: var(--j-r);
     background: var(--j-bg-elev);
   }
-  :root[data-surface="v6-13"] .hero__id-eyebrow {
+  :root[data-surface='v6-13'] .hero__id-eyebrow {
     color: var(--j-ink-3);
     font-family: var(--j-ff-mono);
     font-size: var(--j-t-xs);
@@ -1629,41 +1625,41 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     display: block;
     margin-top: var(--j-sp-2);
   }
-  :root[data-surface="v6-13"] .hero__portrait {
+  :root[data-surface='v6-13'] .hero__portrait {
     margin: 0;
   }
   /* Demote the live-tape to a thinner row */
-  :root[data-surface="v6-13"] .live-tape {
+  :root[data-surface='v6-13'] .live-tape {
     background: var(--j-bg-elev);
     border-block: 1px solid var(--j-ink-4);
     padding-block: var(--j-sp-2);
   }
-  :root[data-surface="v6-13"] .live-tape__row {
+  :root[data-surface='v6-13'] .live-tape__row {
     font-family: var(--j-ff-mono);
     font-size: var(--j-t-xs);
     color: var(--j-ink-2);
   }
-  :root[data-surface="v6-13"] .live-tape__val.is-up {
+  :root[data-surface='v6-13'] .live-tape__val.is-up {
     color: var(--j-ink); /* monochrome — no green; F14 */
   }
-  :root[data-surface="v6-13"] .live-tape__val.is-down {
+  :root[data-surface='v6-13'] .live-tape__val.is-down {
     color: var(--j-ink-3); /* monochrome — no red; F14 */
   }
   /* Sections — generous section breaks (144px) */
-  :root[data-surface="v6-13"] .section {
+  :root[data-surface='v6-13'] .section {
     padding-block: var(--j-sp-7);
   }
-  :root[data-surface="v6-13"] .section--tight {
+  :root[data-surface='v6-13'] .section--tight {
     padding-block: var(--j-sp-5);
   }
-  :root[data-surface="v6-13"] .section--slim {
+  :root[data-surface='v6-13'] .section--slim {
     padding-block: var(--j-sp-6);
   }
-  :root[data-surface="v6-13"] .section--alt {
+  :root[data-surface='v6-13'] .section--alt {
     background: var(--j-bg-elev);
     color: var(--j-ink);
   }
-  :root[data-surface="v6-13"] .section__title {
+  :root[data-surface='v6-13'] .section__title {
     font-family: var(--j-ff-display);
     font-size: var(--j-t-xl);
     font-weight: var(--j-w-display);
@@ -1672,7 +1668,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     margin-bottom: var(--j-sp-3);
     letter-spacing: var(--j-track-tight);
   }
-  :root[data-surface="v6-13"] .section__eyebrow {
+  :root[data-surface='v6-13'] .section__eyebrow {
     font-family: var(--j-ff-mono);
     font-size: var(--j-t-xs);
     color: var(--j-accent);
@@ -1680,31 +1676,31 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     text-transform: uppercase;
     margin-bottom: var(--j-sp-3);
   }
-  :root[data-surface="v6-13"] .section__sub {
+  :root[data-surface='v6-13'] .section__sub {
     color: var(--j-ink-2);
     font-size: var(--j-t-md);
     line-height: var(--j-lh-loose);
     max-width: 60ch;
   }
-  :root[data-surface="v6-13"] h1,
-  :root[data-surface="v6-13"] h2,
-  :root[data-surface="v6-13"] h3 {
+  :root[data-surface='v6-13'] h1,
+  :root[data-surface='v6-13'] h2,
+  :root[data-surface='v6-13'] h3 {
     color: var(--j-ink);
   }
-  :root[data-surface="v6-13"] body {
+  :root[data-surface='v6-13'] body {
     font-family: var(--j-ff-body);
     color: var(--j-ink);
     background: var(--j-bg);
   }
-  :root[data-surface="v6-13"] a {
+  :root[data-surface='v6-13'] a {
     color: var(--j-ink);
     text-decoration-color: var(--j-ink-4);
   }
-  :root[data-surface="v6-13"] a:hover {
+  :root[data-surface='v6-13'] a:hover {
     color: var(--j-accent);
     text-decoration-color: var(--j-accent);
   }
-  :root[data-surface="v6-13"] .container {
+  :root[data-surface='v6-13'] .container {
     max-width: var(--j-container-wide);
     padding-inline: var(--j-sp-4);
   }
