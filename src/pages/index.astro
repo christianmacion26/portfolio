@@ -134,6 +134,26 @@ const workRows: WorkRow[] = [
   },
 ];
 
+// v6.11.24 — credential ribbon chips (mono tag + label). 12 issuers from
+// the curated flagship + Tier-1 set: STA · BMC · BIDA · NASA · B4Y · CRY ·
+// ADDU · USeP · NMR · HF · UP · OJP. Count drives the section title
+// "Twelve names that earned a callout." so chrome stays in lockstep.
+const credentialChips: { mono: string; label: string }[] = [
+  { mono: 'STA', label: 'Tier-1 Analyst · STA' },
+  { mono: 'BMC', label: 'Bloomberg BMC' },
+  { mono: 'BIDA', label: 'BIDA · Meta AI' },
+  { mono: 'NASA', label: 'NASA Space Apps' },
+  { mono: 'B4Y', label: 'Bitget B4Y' },
+  { mono: 'CRY', label: 'Cryptoneeds' },
+  { mono: 'ADDU', label: 'Ateneo de Davao' },
+  { mono: 'USeP', label: 'USeP · Engineering' },
+  { mono: 'NMR', label: 'Numerai' },
+  { mono: 'HF', label: 'Hugging Face' },
+  { mono: 'UP', label: 'Upwork · Top Rated' },
+  { mono: 'OJP', label: 'OnlineJobs.ph' },
+];
+const credentialCount = credentialChips.length;
+
 // Per-row numeric deltas. Each row consumes 6 values from the seeded
 // stream: [before, after, before, after, before, after] — three bar pairs.
 // For the "honest decay" / "phantom" rows, a before-after reduction is
@@ -1084,7 +1104,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     <div class="container">
       <header class="section__head what__head">
         <p class="section__eyebrow">What I do</p>
-        <h2 class="section__title">Four things, one discipline.</h2>
+        <h2 class="section__title">{whatCells.length} things, one discipline.</h2>
         <p class="section__sub">
           A senior quant and an AI engineer can share a desk only if both write the eval harness.
           That's the only output that survives the next data drift, the next regime shift, the next
@@ -1092,8 +1112,8 @@ const velocityRows: { stage: string; intensity: number }[][] = [
         </p>
       </header>
 
-      {/* === 4-CELL LETTERFORM GRID (R / A / M / C) === */}
-      <div class="what__cells" role="list" aria-label="Four pillars of practice">
+      {/* === {whatCells.length}-CELL LETTERFORM GRID (R / A / M / C) === */}
+      <div class="what__cells" role="list" aria-label="{`${whatCells.length} pillars of practice`}">
         {
           whatCells.map((cell) => (
             <article class="what-cell" role="listitem">
@@ -1155,7 +1175,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     <div class="container">
       <header class="section__head work__head">
         <p class="section__eyebrow">Selected work</p>
-        <h2 class="section__title">Five proofs of method.</h2>
+        <h2 class="section__title">{workRows.length} proofs of method.</h2>
       </header>
 
       <ol class="work__timeline">
@@ -1334,70 +1354,19 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     <div class="container">
       <header class="section__head creds__head">
         <p class="section__eyebrow">Credentials</p>
-        <h2 class="section__title">Twelve names that earned a callout.</h2>
+        <h2 class="section__title">{credentialCount} names that earned a callout.</h2>
       </header>
 
       <ul class="creds__ribbon" aria-label="Credential ribbon">
-        <li class="creds__chip">
-          <span class="creds__chip-mono">STA</span>
-          <span class="creds__chip-label mono">Tier-1 Analyst · STA</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">BMC</span>
-          <span class="creds__chip-label mono">Bloomberg BMC</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">BIDA</span>
-          <span class="creds__chip-label mono">BIDA · Meta AI</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">NASA</span>
-          <span class="creds__chip-label mono">NASA Space Apps</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">B4Y</span>
-          <span class="creds__chip-label mono">Bitget B4Y</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">CRY</span>
-          <span class="creds__chip-label mono">Cryptoneeds</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">ADDU</span>
-          <span class="creds__chip-label mono">Ateneo de Davao</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">USeP</span>
-          <span class="creds__chip-label mono">USeP · Engineering</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">NMR</span>
-          <span class="creds__chip-label mono">Numerai</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">HF</span>
-          <span class="creds__chip-label mono">Hugging Face</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">UP</span>
-          <span class="creds__chip-label mono">Upwork · Top Rated</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
-        <li class="creds__chip">
-          <span class="creds__chip-mono">OJP</span>
-          <span class="creds__chip-label mono">OnlineJobs.ph</span>
-          <span class="creds__chip-rule" aria-hidden="true"></span>
-        </li>
+        {
+          credentialChips.map((c) => (
+            <li class="creds__chip">
+              <span class="creds__chip-mono">{c.mono}</span>
+              <span class="creds__chip-label mono">{c.label}</span>
+              <span class="creds__chip-rule" aria-hidden="true" />
+            </li>
+          ))
+        }
       </ul>
     </div>
   </section>
