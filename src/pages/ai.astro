@@ -89,6 +89,16 @@ const loopSteps = [
   { num: '04', title: 'Measure', desc: "OTel traces · Cohen's κ · bootstrap CIs · DSR." },
   { num: '05', title: 'Next', desc: 'Reflect → revise → loop. No-progress halt ships nothing.' },
 ];
+
+// v6.11.34 — source-of-truth for the platform DAG. Mirrors the
+// AgentGraph component's nodes[] in layout (4 inputs / 3 middles /
+// 3 outputs / 1 orchestrator). Counts derived from .length below.
+const platformInputs = [
+  { label: 'Doc corpus', sub: '17 · 34 chunks' },
+  { label: 'Eval set', sub: '35 Q · gold' },
+  { label: 'Build output', sub: 'ships · tests' },
+  { label: 'Telemetry', sub: 'OTel · traces' },
+];
 ---
 
 <BaseLayout
@@ -156,9 +166,9 @@ const loopSteps = [
           {profile.stats.aiAgentCount} agents. A directed-acyclic graph with one feedback edge.
         </h2>
         <p class="section__sub">
-          Four inputs feed the orchestrator. The orchestrator dispatches to RAG-Recall, Eval-Gate,
-          and Router. The middles publish to Artifact, Metric, and Feedback. Feedback loops back to
-          the orchestrator — that loop is the entire system.
+          {platformInputs.length} inputs feed the orchestrator. The orchestrator dispatches to
+          RAG-Recall, Eval-Gate, and Router. The middles publish to Artifact, Metric, and Feedback.
+          Feedback loops back to the orchestrator — that loop is the entire system.
         </p>
       </header>
 

@@ -1,0 +1,524 @@
+---
+/**
+ * screening-call.astro — v6.12 · 30-min agenda page for recruiters.
+ *
+ * v6.12 — "weaponize for jobs" mission. Built so a recruiter can
+ * copy-paste the agenda into their internal pitch deck and forward
+ * the artifact list to the hiring manager.
+ *
+ * Sections:
+ *  1. Hero — eyebrow, H1, VoiceLine, kv identity strip
+ *  2. Agenda — 6-step timeline (00:00 → 30:00) with `<time>` semantics
+ *  3. Questions I'd love to be asked — 5 bullets
+ *  4. Artifact handoff — 5 surfaces emailed within 24h
+ *  5. CTABanner — mailto w/ pre-filled subject + body
+ *
+ * Compliance:
+ *   - ItemList JSON-LD via extraJsonLd (schema.org/ItemList)
+ *   - All hrefs go through path() (Cloudflare --base=/ mirror)
+ *   - No analytics, no NDA leaks, F14 amber-only (no traffic-light)
+ *   - References: generic "on request" string (no specific names)
+ *   - agendaVersion from buildStampUtc8() — §9 compliant
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CTABanner from '@components/CTABanner.astro';
+import VoiceLine from '@components/VoiceLine.astro';
+import { profile } from '@utils/profile';
+import { path } from '@utils/url';
+import { buildStampUtc8 } from '@utils/build-stamp';
+
+const email = profile.contact.email;
+const fullName = profile.fullName;
+const agendaVersion = buildStampUtc8();
+const NGATE = `G1–G${profile.stats.evalGates}`;
+
+const agenda = [
+  {
+    mins: '00:00–05:00',
+    seconds: 'PT5M',
+    title: 'Context',
+    body: 'You pitch the role, comp range, target start. I share the seat-shape I’d fit (QR / QR-rotational / Quant Research Engineer / Research Engineer). 5 minutes, no fluff.',
+  },
+  {
+    mins: '05:00–15:00',
+    seconds: 'PT10M',
+    title: 'Walk through /proof',
+    body: 'You pick which flagship to drill into. Most recruiters ask for the deflated-Sharpe walkthrough or the MCP eval-server demo. I bring the artifact open in another tab.',
+  },
+  {
+    mins: '15:00–25:00',
+    seconds: 'PT10M',
+    title: 'Live Q&A',
+    body: 'Your team’s turn. Five prompts I’d love to be asked below — pick any. Bring your own; I’ll answer either way.',
+  },
+  {
+    mins: '25:00–28:00',
+    seconds: 'PT3M',
+    title: 'Compensation framework',
+    body: 'Cash + equity mix, base location, EOR / IC arrangement. I’ll say what I’m targeting and what would change my answer.',
+  },
+  {
+    mins: '28:00–30:00',
+    seconds: 'PT2M',
+    title: 'Next steps',
+    body: 'If mutual: I send the artifact handoff (see below) within 24h, you loop in the HM, second call within the week. If not: I name two people I’d recommend.',
+  },
+];
+
+const questions = [
+  'Walk me through a strategy you shipped and abandoned — what changed your mind?',
+  'How do you prove an LLM eval is not overfit to its prompt set?',
+  'Show me a backtest result where the methodology changed your conclusion.',
+  'What’s a recent paper you read that changed how you think?',
+  'What stack would you reach for day 1 — and why that over the default?',
+];
+
+const artifacts = [
+  {
+    label: 'Tailored resume PDF',
+    href: path('/resume'),
+    sub: 'Unified · AI-only · Quant one-pager — pick the lane you want.',
+  },
+  {
+    label: 'Three flagship proof URLs',
+    href: path('/proof'),
+    sub: 'Pre-curated artifact bundle — deflated Sharpe, MCP eval server, look-ahead bias audit.',
+  },
+  {
+    label: 'Eval-gate map',
+    href: path('/methodology'),
+    sub: `Which of ${NGATE} apply to your stack and which your team hasn't shipped yet.`,
+  },
+  {
+    label: 'GitHub handles',
+    href: profile.contact.github,
+    sub: `${profile.stats.repoCount} public repos · runnable scorecards · reproducible methodology.`,
+    external: true,
+  },
+  {
+    label: 'References',
+    href: undefined,
+    sub: 'Available on request — three names, NDA-cleared for hiring. Email to start.',
+    external: false,
+  },
+];
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '30-minute screening call agenda',
+  description: `A 30-minute screening call with ${fullName}, structured into five phases from context-setting to artifact handoff. Agenda version: ${agendaVersion}.`,
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  numberOfItems: agenda.length,
+  itemListElement: agenda.map((a, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: `${a.mins} — ${a.title}`,
+    description: a.body,
+  })),
+};
+---
+
+<BaseLayout
+  title="Screening call"
+  description={`The 30-minute screening call agenda with ${fullName}. Tue/Wed/Thu 18:00–22:00 PHT (10:00–14:00 UTC). 5 phases, 5 prompts, 5 artifact handoff surfaces. NDA-clean.`}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Screening call', href: '/screening-call' },
+  ]}
+  extraJsonLd={itemListJsonLd}
+>
+  <section class="hero">
+    <div class="container container--narrow">
+      <p class="eyebrow mono">
+        <span>FOR HIRING MANAGERS</span>
+        <span aria-hidden="true">·</span>
+        <span>30-MIN AGENDA</span>
+        <span aria-hidden="true">·</span>
+        <span>NDA-CLEAN</span>
+      </p>
+      <h1 class="hero__title">Screening call — what the 30 minutes look like.</h1>
+      <VoiceLine class="hero__voice"> Thirty minutes. Five phases. The agenda. </VoiceLine>
+      <p class="hero__sub">
+        Tue / Wed / Thu · 18:00–22:00 PHT (10:00–14:00 UTC) · 30 minutes ·
+        <a href={`mailto:${email}`}>{email}</a>
+      </p>
+
+      <table class="kv">
+        <tbody>
+          <tr>
+            <th scope="row">Time zone</th>
+            <td>{profile.location.display}</td>
+          </tr>
+          <tr>
+            <th scope="row">Window</th>
+            <td>Tue / Wed / Thu · 18:00–22:00 PHT (10:00–14:00 UTC)</td>
+          </tr>
+          <tr>
+            <th scope="row">Duration</th>
+            <td>30 minutes · hard cap</td>
+          </tr>
+          <tr>
+            <th scope="row">Format</th>
+            <td>Google Meet · link emailed 24h before · no recording unless asked</td>
+          </tr>
+          <tr>
+            <th scope="row">Agenda version</th>
+            <td class="mono">{agendaVersion} · page rendered at build time</td>
+          </tr>
+          <tr>
+            <th scope="row">Reply SLA</th>
+            <td>4 business hours during UTC+8 day · cold DMs 24h SLA</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="hero__actions">
+        <a
+          class="btn btn--primary"
+          href={`mailto:${email}?subject=${encodeURIComponent('[SCREENING] {role} · {company}')}`}
+          >Book a slot →</a
+        >
+        <a class="btn btn--ghost" href={path('/for-recruiters')}>60-second skim ←</a>
+        <a class="btn btn--ghost" href={path('/proof')}>See proof →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <p class="section__eyebrow mono">agenda/</p>
+        <h2 class="section__title">Five phases, five minutes each — except the middle one.</h2>
+        <p class="section__sub">
+          {agenda.length} phases. The middle one is where the second-call decision lands.
+        </p>
+      </header>
+
+      <ol class="agenda" aria-label="30-minute screening agenda">
+        {
+          agenda.map((a) => (
+            <li class="agenda__item">
+              <time class="agenda__time mono" datetime={a.seconds}>
+                {a.mins}
+              </time>
+              <div class="agenda__body">
+                <h3 class="agenda__title">{a.title}</h3>
+                <p class="agenda__text">{a.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <p class="section__eyebrow mono">prompts/</p>
+        <h2 class="section__title">Questions worth asking.</h2>
+        <p class="section__sub">{questions.length} prompts. Each puts the methodology on the table.</p>
+      </header>
+
+      <ol class="prompts">
+        {
+          questions.map((q, i) => (
+            <li class="prompts__item">
+              <span class="prompts__num mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="prompts__q">{q}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <header class="section__head">
+        <p class="section__eyebrow mono">handoff/</p>
+        <h2 class="section__title">What lands in the recruiter’s inbox within 24 hours.</h2>
+        <p class="section__sub">
+          {artifacts.length} surfaces. One forward-to-HM bundle. Yes/no on second call.
+        </p>
+      </header>
+
+      <ul class="handoff">
+        {
+          artifacts.map((a) => (
+            <li class="handoff__item">
+              <div class="handoff__label mono">{a.label}</div>
+              <div class="handoff__sub">{a.sub}</div>
+              {a.href && (
+                <a
+                  class="handoff__link"
+                  href={a.href}
+                  target={a.external ? '_blank' : undefined}
+                  rel={a.external ? 'noopener noreferrer' : undefined}
+                >
+                  Open →
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CTABanner
+    title="Ready to book a slot?"
+    sub={`Email ${email} with the role, the JD, and which Tue / Wed / Thu you want. Reply within 4 business hours during UTC+8 day with a Meet link.`}
+    primaryLabel={`Email ${fullName.split(',')[0]} →`}
+    primaryHref={`mailto:${email}?subject=${encodeURIComponent('[SCREENING] {role} · {company}')}`}
+    secondaryLabel="See /for-recruiters first"
+    secondaryHref={path('/for-recruiters')}
+  />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--sp-9) var(--sp-7);
+    background: var(--c-paper);
+    border-bottom: var(--border);
+  }
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+  }
+  .hero__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin-bottom: var(--sp-4);
+    color: var(--c-ink);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .hero__voice {
+    margin: 0 0 var(--sp-5);
+    max-width: 60ch;
+  }
+  .hero__sub {
+    font-size: clamp(1rem, 2vw, var(--fs-lg));
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin-bottom: var(--sp-7);
+    max-width: 60ch;
+  }
+  .hero__sub a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--c-amber-decor);
+    text-underline-offset: 3px;
+  }
+
+  .kv {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--sp-7);
+    border-top: var(--border);
+    border-bottom: var(--border);
+  }
+  .kv th,
+  .kv td {
+    text-align: left;
+    padding: var(--sp-3) var(--sp-4);
+    border-bottom: 1px solid var(--c-rule-soft);
+    vertical-align: top;
+  }
+  .kv tr:last-child th,
+  .kv tr:last-child td {
+    border-bottom: none;
+  }
+  .kv th {
+    width: 30%;
+    color: var(--c-ink-3);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    font-family: var(--ff-mono);
+  }
+  .kv td {
+    color: var(--c-ink);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: center;
+  }
+
+  .section {
+    padding-block: var(--sp-9);
+  }
+  .section--alt {
+    background: var(--c-paper);
+    border-block: var(--border);
+  }
+  .section__head {
+    margin-bottom: var(--sp-6);
+  }
+  .section__eyebrow {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-primary-2-deep);
+    font-weight: 600;
+    margin-bottom: var(--sp-2);
+  }
+  .section__title {
+    font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+    margin-bottom: var(--sp-3);
+    color: var(--c-ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .section__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-base);
+    line-height: var(--lh-loose);
+    max-width: 60ch;
+  }
+
+  .agenda {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    counter-reset: agenda;
+  }
+  .agenda__item {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--sp-5);
+    padding: var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-left: 3px solid var(--c-primary);
+    border-radius: var(--radius);
+  }
+  .agenda__time {
+    font-size: var(--fs-lg);
+    color: var(--c-primary);
+    font-weight: 500;
+    line-height: 1.2;
+    align-self: start;
+  }
+  .agenda__title {
+    font-size: var(--fs-lg);
+    color: var(--c-ink);
+    margin-bottom: var(--sp-2);
+    font-weight: 600;
+  }
+  .agenda__text {
+    color: var(--c-ink-2);
+    line-height: var(--lh-loose);
+    margin: 0;
+  }
+
+  .prompts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .prompts__item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: var(--sp-4);
+    padding-block: var(--sp-3);
+    border-bottom: 1px solid var(--c-rule-soft);
+    align-items: baseline;
+  }
+  .prompts__item:last-child {
+    border-bottom: none;
+  }
+  .prompts__num {
+    color: var(--c-primary-2-deep);
+    font-size: var(--fs-base);
+    font-weight: 600;
+  }
+  .prompts__q {
+    color: var(--c-ink);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-loose);
+  }
+
+  .handoff {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  .handoff__item {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--c-bg);
+    border: 1px solid var(--c-rule);
+    border-radius: var(--radius);
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 2fr auto;
+    gap: var(--sp-4);
+    align-items: center;
+  }
+  .handoff__label {
+    color: var(--c-primary);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .handoff__sub {
+    color: var(--c-ink-2);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-loose);
+  }
+  .handoff__link {
+    color: var(--c-primary);
+    font-family: var(--ff-mono);
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--c-primary);
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .handoff__link:hover {
+    background: var(--c-bg-2);
+  }
+
+  @media (max-width: 720px) {
+    .agenda__item,
+    .prompts__item,
+    .handoff__item {
+      grid-template-columns: 1fr;
+      gap: var(--sp-2);
+    }
+    .handoff__item {
+      gap: var(--sp-3);
+    }
+    .handoff__link {
+      justify-self: start;
+    }
+    .kv th {
+      width: 38%;
+    }
+  }
+</style>

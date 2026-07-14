@@ -64,6 +64,7 @@ const NGATE = `${profile.stats.evalGates}-gate`;
           block
           latex={`\\mathrm{ship}(x) = \\begin{cases} 1 & \\text{if } x \\text{ passes G1--G${profile.stats.evalGates}} \\\\ 0 & \\text{otherwise} \\end{cases}`}
           size="md"
+          label="(1)"
         />
       </div>
 
@@ -99,8 +100,8 @@ const NGATE = `${profile.stats.evalGates}-gate`;
           What I built and shipped<span class="muted"> — not what I am.</span>
         </h2>
         <p class="section__lede">
-          Three decision-grade artefacts from the long record. Each one links to a public-data
-          reproduction or a documented engagement summary.
+          {proofStrip.length} decision-grade artefacts from the long record. Each one links to a
+          public-data reproduction or a documented engagement summary.
         </p>
       </header>
 
@@ -161,6 +162,7 @@ const NGATE = `${profile.stats.evalGates}-gate`;
           <Equation
             latex={`\\mathrm{DSR}(\\hat{\\sigma}) \\;=\\; \\frac{\\mathbb{E}\\!\\left[\\hat{\\mu}\\right] - r_f}{\\sqrt{V\\!\\left[\\hat{\\mu}\\right] + V\\!\\left[\\hat{\\sigma}^2\\right] / 2}} \\cdot \\gamma_1`}
             size="md"
+            label="(2)"
           />
         </div>
         <ul class="method-ribbon__list mono">
