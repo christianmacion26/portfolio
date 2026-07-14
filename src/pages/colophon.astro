@@ -17,7 +17,11 @@ import VoiceLine from '@components/VoiceLine.astro';
 
 const fullName = profile.fullName.split(',')[0];
 
-// === (a) Type — 4-step scale display =======================================
+// === (a) Type — step count derived from typeScale ==========================
+// Comments use `4-step scale` / `6 cells` / `5 effects` literals — derived
+// here so chrome stays in lockstep with the array lengths.
+// Counts are declared alongside the arrays so chrome stays in lockstep.
+// (Order matters: derive AFTER arrays.)
 const typeScale = [
   { token: '--fs-sm', px: '14px', role: 'small / meta / captions' },
   { token: '--fs-base', px: '16px', role: 'body text' },

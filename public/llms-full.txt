@@ -24,7 +24,7 @@ Christian T. Macion, CTA®·UTC+8
 I build research systems, and I ship the evals that prove they work.
 
 Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk·remote-first, async-friendly
-[CONTACT<24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s+38.44 BP·DXY99.56·VIX15.58·BRENT75.51·AS OF 12:18 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
+[CONTACT<24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s+21.81 BP·DXY103.62·VIX12.32·BRENT82.25·AS OF 11:06 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
 
 World wire — 4 channels, 80 fixtures
 
@@ -761,32 +761,32 @@ Entry points · stations grid
 [Station 01 · Markets
 
 ### Where is rate-of-change concentrated?
-+3.37 bp
+-0.26 bp
 
 2s10s spread · UST
 
-DXY103.5
+DXY103.1
 
-VIX15.8
+VIX15.3
 
-BRENT79.2
+BRENT75.5
 
-OBS+0.0404:59 UTC+8[ UST ][ spread ]](/markets/)
+OPEN+0.0022:32 UTC+8[ UST ][ spread ]](/markets/)
 
 [Station 02 · Prediction
 
 ### What does the market price next?
-0.55
+0.66
 
 median implied probability
 
-events9
+events10
 
-edge ±0.33
+edge ±0.39
 
 tenor2027-Q3
 
-OPEN+0.0403:24 UTC+8[ odds ][ edge ]](/prediction-markets/)
+OBS+0.0612:03 UTC+8[ odds ][ edge ]](/prediction-markets/)
 
 [Station 03 · Research
 
@@ -799,14 +799,14 @@ gates31
 
 categories4
 
-pass86%
+pass76%
 
-OBS+0.0110:54 UTC+8[ ideas ][ G1–G31 ]](/research/)
+OPEN-0.0705:08 UTC+8[ ideas ][ G1–G31 ]](/research/)
 
 [Station 04 · AI
 
 ### How do evals ship?
-92%
+96%
 
 eval pass rate · 31 gates
 
@@ -816,7 +816,7 @@ datasets7
 
 harnesses3
 
-OBS+0.0602:21 UTC+8[ models ][ evals ]](/methodology/)
+LIVE+0.0121:16 UTC+8[ models ][ evals ]](/methodology/)
 
 Entry points
 
@@ -833,28 +833,28 @@ Data ingestion
 ## Pipeline live.▍
 
 Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single deterministic PRNG.
-throughput · events / s3.4k3.6k3.4k3.5k2.8kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE45%NORMALIZE56%ENRICH77%INDEX70%STREAM67%
+throughput · events / s4.5k4.6k3.1k3.4k2.8kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE23%NORMALIZE28%ENRICH21%INDEX48%STREAM75%
 
 Trader desk
 
 ## P&L · order flow · risk · signalslive
-φ 0.496ms
+φ 0.225ms
 
 Book equity · 60 bars · today
 
--11.21%60d
+-1.71%60d
 
--2.34Sharpe-13.24%Max DD-7.90%Book skew
+-0.42Sharpe-8.73%Max DD-15.30%Book skew
 
 Order flow · 8 × 4 heat
 
-+2,360/−2,766
-B233B269B68B213A179A260A169A49B174B278B260B19A271A269A217A86B130B270B20B134A14A237A164A122B140B48B38B66A256A113A278A82
++1,633/−2,224
+B23B165B178B13A155A144A72A192B13B228B29B154A246A28A179A72B193B90B89B19A225A25A133A131B56B45B138B200A163A25A282A152
 
 Risk · 1-day VaR
 
 NAV-normalized
-025507510053.4% NAV
+025507510056.8% NAV
 
 Signals · 4 × 4 sparklines
 
@@ -865,15 +865,15 @@ Positions
 
 5
 
-net −$426
+net −$65
 
-top · GLOBAL-1
+top · EQUITY-7
 
 Orders
 
 5
 
-+1·0·1·1
++3·1·2·1
 
 open · partial · ack · rej
 
@@ -881,15 +881,15 @@ Calendar
 
 3
 
-next +2h
+next +1h
 
-impact LOW
+impact MED
 
 Alerts
 
 3
 
-1·2·0
+2·1·0
 
 crit · warn · info
 2y5y10y30y1m3m6m12mBTCETHSOLDXY2y5y10y30y1m3m6m12mBTCETHSOLDXY
@@ -964,7 +964,7 @@ Earth-scale quant intelligence140 countries · 16 cities · 30 active events · 
                       Tokyo · JPN
                     Canberra AUS
                       Canberra · AUS
-                    Central bank press conference — FrankfurtΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σCentral bank policy decision — TokyoΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.5σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.6; DVO1 spikes 8.1%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 2.2σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.4× pre; vol regime shift: low → midSAU–YEM yield · Sanaa — Sanaaflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%POL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%FIN–TWN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%IND diplomacy · India — IndiaΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σIRN–USA diplomacy · Tehran — TehranΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σIND diplomacy · India — IndiaΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σPOL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%TWN–FIN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%USA–IRN diplomacy · Tehran — TehranΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σESP aid · Algeciras — Algecirasflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%IRN aid · Lebanon — Lebanonflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%ARE–NOR aid · Norway — Norwayflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%CHN–EUR aid · China — ChinaΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σaid · Nagpur — Nagpurflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%aid · Saoner — Saonerflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%SGP aid · Singapore — SingaporeΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σKOR–ESP aid · Seoul — SeoulΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σconsultation · Nagpur — Nagpurflight-to-quality β ≈ 0.6; DVO1 spikes 8.1%AUS–USA consultation · Sydney — SydneyΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σCHN aid · Shengsi — ShengsiΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σCHN aid · Zhoushan — ZhoushanΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σaid · Jammu — Jammuflight-to-quality β ≈ 0.6; DVO1 spikes 8.1%GBR aid · Shengsi — ShengsiΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σGBR–CHN aid · Shengsi — ShengsiΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σMISSION CONTROL · 2026-07-14 22:14 UTC+8 · LIVE 50 · 02:36ZCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km22:14:40 UTC+822° / -34°APAC18 evEMEA12 evAmericas30 ev
+                    Central bank press conference — FrankfurtΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σCentral bank policy decision — TokyoΔy = ±8.2·σ_pp · cov(b,1y) ≈ +1.0σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.6σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.5; DVO1 spikes 17.3%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 2.4σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.4× pre; vol regime shift: low → midSAU–YEM yield · Sanaa — Sanaaflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%POL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%FIN–TWN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%IND diplomacy · India — IndiaΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σIRN–USA diplomacy · Tehran — TehranΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σIND diplomacy · India — IndiaΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σPOL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%TWN–FIN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%USA–IRN diplomacy · Tehran — TehranΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σESP aid · Algeciras — Algecirasflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%IRN aid · Lebanon — Lebanonflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%ARE–NOR aid · Norway — Norwayflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%CHN–EUR aid · China — ChinaΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σaid · Nagpur — Nagpurflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%aid · Saoner — Saonerflight-to-quality β ≈ 0.6; DVO1 spikes 13.1%SGP aid · Singapore — SingaporeΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σKOR–ESP aid · Seoul — SeoulΔy = ±2.3·σ_pp · cov(b,1y) ≈ +1.4σconsultation · Nagpur — Nagpurflight-to-quality β ≈ 0.5; DVO1 spikes 17.3%AUS–USA consultation · Sydney — SydneyΔy = ±8.2·σ_pp · cov(b,1y) ≈ +1.0σCHN aid · Shengsi — ShengsiΔy = ±8.2·σ_pp · cov(b,1y) ≈ +1.0σCHN aid · Zhoushan — ZhoushanΔy = ±8.2·σ_pp · cov(b,1y) ≈ +1.0σaid · Jammu — Jammuflight-to-quality β ≈ 0.5; DVO1 spikes 17.3%GBR aid · Shengsi — ShengsiΔy = ±8.2·σ_pp · cov(b,1y) ≈ +1.0σGBR–CHN aid · Shengsi — ShengsiΔy = ±8.2·σ_pp · cov(b,1y) ≈ +1.0σMISSION CONTROL · 2026-07-14 22:15 UTC+8 · LIVE 50 · 02:36ZCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km22:15:16 UTC+822° / -34°APAC18 evEMEA12 evAmericas30 ev
 
 Sun (subsolar)
 
@@ -1124,7 +1124,7 @@ news/36 events · last 24h
 
 Digos· desk action1
 
-central-bankdesk buys 1m wings on the front-end
+central-bankdesk writes 6m vol on the front-end
 
 ---
 
@@ -1179,7 +1179,7 @@ VRP 3.8σ
 
 σ̂ 0.85
 
-ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.4076
+ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.0708
 
 What I do
 
@@ -1189,16 +1189,16 @@ A senior quant and an AI engineer can share a desk only if both write the eval h
 11 projectsRRESEARCH
 
 Multi-testing-aware systematic strategies on public data.
-9 eventsAARTIFICIAL INTELLIGENCE
+11 eventsAARTIFICIAL INTELLIGENCE
 
 Multi-agent LLM systems with explicit eval harness and MCP contracts.
-19 hubsMMARKETS
+15 hubsMMARKETS
 
 36 financial hubs. 60 monitored events. Live tape.
-15 capitalsCCOVERAGE
+17 capitalsCCOVERAGE
 
 NDA-clean coverage. Past contracts disclosed, dates closed.
-LOOK-AHEADDSR-CALCRAG-RECALLSLOP-SCANTHE-VARIANREFLECT-REMACRO-/-VOMCP-EVALCRYPTO-FUNLLM-AS-JUDTOOL-CALL-DEF-SHARPETIME-SERIENDA-CLNCROSS-SECTMCP-EVALPBO-CSCVPAIRS-TRADBACKTEST-EG1–G31LOOK-AHEADDSR-CALCRAG-RECALLSLOP-SCANTHE-VARIANREFLECT-REMACRO-/-VOMCP-EVALCRYPTO-FUNLLM-AS-JUDTOOL-CALL-DEF-SHARPETIME-SERIENDA-CLNCROSS-SECTMCP-EVALPBO-CSCVPAIRS-TRADBACKTEST-EG1–G31
+BACKTEST-EPAIRS-TRADMCP-EVALMCP-EVALTHE-VARIANRAG-RECALLNDA-CLNG1–G31LOOK-AHEADDSR-CALCSLOP-SCANMACRO-/-VOLLM-AS-JUDPBO-CSCVREFLECT-RECROSS-SECTDEF-SHARPETOOL-CALL-CRYPTO-FUNTIME-SERIEBACKTEST-EPAIRS-TRADMCP-EVALMCP-EVALTHE-VARIANRAG-RECALLNDA-CLNG1–G31LOOK-AHEADDSR-CALCSLOP-SCANMACRO-/-VOLLM-AS-JUDPBO-CSCVREFLECT-RECROSS-SECTDEF-SHARPETOOL-CALL-CRYPTO-FUNTIME-SERIE
 
 Selected work
 
@@ -1207,34 +1207,34 @@ Selected work
 [2025 · Q4QUANT
 
 ### Cross-Sectional Momentum (18 coins)
-18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.93→-0.01OOS Sharpe0.93→-0.04CI Straddle0.07→0.14](/projects/quant/02-cross-sectional-momentum/)
+18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.90→-0.01OOS Sharpe0.93→-0.02CI Straddle0.07→0.14](/projects/quant/02-cross-sectional-momentum/)
 
 [2025 · Q4QUANT
 
 ### Time-Series Momentum + Vol Targeting
-20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.29→0.38Max DD61%→31%Win Rate39%→48%](/projects/quant/03-timeseries-momentum-voltarget/)
+20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.29→0.40Max DD60%→30%Win Rate40%→49%](/projects/quant/03-timeseries-momentum-voltarget/)
 
 [2026 · Q1AI
 
 ### Slop Scanner
-13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index81.00→3.00Hedge Density0.18→0.05N-gram Rep0.35→0.07](/projects/ai/06-slop-scanner/)
+13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index81.00→5.00Hedge Density0.21→0.06N-gram Rep0.35→0.07](/projects/ai/06-slop-scanner/)
 
 [2026 · Q2QUANT
 
 ### Macro / Volatility-Regime Overlay
-VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.63→0.66Max DD56%→41%Calmar0.30→0.69](/projects/quant/07-macro-regime-overlay/)
+VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.63→0.68Max DD56%→41%Calmar0.30→0.70](/projects/quant/07-macro-regime-overlay/)
 
 [2026 · Q2QUANT
 
 ### Look-Ahead Bias Audit (the shift test)
-ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.60→0.62Leaked Sharpe0.61→5.17Phantom %2%→88%](/projects/quant/09-lookahead-bias-audit/)
+ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.59→0.61Leaked Sharpe0.57→5.07Phantom %1%→86%](/projects/quant/09-lookahead-bias-audit/)
 
 [ALL PROJECTS15 projects · 9 quant · 4 markets · 8 prediction→](/projects/)
 
 The numbers
 
 ## What 11 months of build looks like.
-PAGES BUILT84STABLEAUDIT100%+4.04AFK LOOP6HSTABLEEVAL GATES31−0.5%STRATEGIES9+1.41AI AGENTS11+2.11CERTS102STABLEMONTHS11−0.2%
+PAGES BUILT84−0.6%AUDIT100%+3.51AFK LOOP6H+4.8EVAL GATES31−0.6%STRATEGIES9+3.33AI AGENTS11STABLECERTS102+3.35MONTHS11+2.28
 
 STRATEGY NOTE01·CONDENSED
 iCard 1 of 3
