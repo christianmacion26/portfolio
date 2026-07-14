@@ -30,6 +30,8 @@
  *   - `prefers-reduced-motion: reduce` honored (slide transition
  *     suppressed).
  */
+import { path } from '@utils/url';
+
 interface DrawerEvent {
   slug: string;
   city: string;
@@ -571,7 +573,7 @@ function signalPillColor(sig: string): string {
               <dd class="earth-drawer__mono">{e.source}</dd>
               <dt>Research</dt>
               <dd>
-                <a href={`/research#event-${e.slug}`} class="earth-drawer__deep">
+                <a href={`${path('/research')}#event-${e.slug}`} class="earth-drawer__deep">
                   backtest artifact →
                 </a>
               </dd>

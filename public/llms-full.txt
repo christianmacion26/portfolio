@@ -24,7 +24,7 @@ Christian T. Macion, CTA®·UTC+8
 I build research systems, and I ship the evals that prove they work.
 
 Based in Digos City, Davao del Sur, Philippines (UTC+8) · 30 hrs/wk·remote-first, async-friendly
-[CONTACT<24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s-10.01 BP·DXY102.36·VIX22.71·BRENT82.38·AS OF 13:54 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
+[CONTACT<24 h reply](/contact/)[RESUME3 × 3 variants · formats↓](/resume/)[PROOF5 trades · 2 certs · 1 paper](/proof/) _(Christian T. Macion, CTA®, Certified Technical Analyst portrait, January 2026. CTA cert #260197.)_ CTA cert #260197Society of Technical Analysts · Jan 2026PROVENANCE · TAPE 01YIELD 2s10s+38.44 BP·DXY99.56·VIX15.58·BRENT75.51·AS OF 12:18 UTC+8Research coverageResearch coverage · 6-axis radarBACKTEST80%SIGNALS89%RISK89%EXEC72%EVAL87%AGENTS81%Project velocity · last 24 weeksWEEKWPHFMRW18–W23HPWWRHW12–W17MWHFWWW06–W11MRHPRWW00–W05MRWPRMWWrote7×PPaper3×HHypothesis4×FFrozen-spec1×MModel4×RReleased5×
 
 World wire — 4 channels, 80 fixtures
 
@@ -761,32 +761,32 @@ Entry points · stations grid
 [Station 01 · Markets
 
 ### Where is rate-of-change concentrated?
-+2.93 bp
++3.37 bp
 
 2s10s spread · UST
 
-DXY104.9
+DXY103.5
 
-VIX12.6
+VIX15.8
 
-BRENT74.8
+BRENT79.2
 
-OPEN+0.0417:55 UTC+8[ UST ][ spread ]](/markets/)
+OBS+0.0404:59 UTC+8[ UST ][ spread ]](/markets/)
 
 [Station 02 · Prediction
 
 ### What does the market price next?
-0.54
+0.55
 
 median implied probability
 
 events9
 
-edge ±0.39
+edge ±0.33
 
-tenor2027-Q1
+tenor2027-Q3
 
-LIVE+0.0102:49 UTC+8[ odds ][ edge ]](/prediction-markets/)
+OPEN+0.0403:24 UTC+8[ odds ][ edge ]](/prediction-markets/)
 
 [Station 03 · Research
 
@@ -799,14 +799,14 @@ gates31
 
 categories4
 
-pass77%
+pass86%
 
-LIVE+0.0308:23 UTC+8[ ideas ][ G1–G31 ]](/research/)
+OBS+0.0110:54 UTC+8[ ideas ][ G1–G31 ]](/research/)
 
 [Station 04 · AI
 
 ### How do evals ship?
-95%
+92%
 
 eval pass rate · 31 gates
 
@@ -816,7 +816,7 @@ datasets7
 
 harnesses3
 
-LIVE-0.0816:49 UTC+8[ models ][ evals ]](/methodology/)
+OBS+0.0602:21 UTC+8[ models ][ evals ]](/methodology/)
 
 Entry points
 
@@ -833,28 +833,28 @@ Data ingestion
 ## Pipeline live.▍
 
 Five-stage fan-in from venue to subscribers — server-rendered, seeded from a single deterministic PRNG.
-throughput · events / s2.2k2.1k3.3k2.1k3.0kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE50%NORMALIZE21%ENRICH78%INDEX47%STREAM58%
+throughput · events / s3.4k3.6k3.4k3.5k2.8kNYSNASCMEBINCBOSOURCENORMALIZEENRICHINDEXSTREAMNYSE1.2kNASDAQ2.4kCME0.8kBINANCE4.1kDEDUP8.5kTIMESTAMP8.5kCLEAN8.4kTAG8.3kFX-CONV8.2kHOLIDAY8.2kCOLUMNAR8.0kPARTITIONS8.0kSNAPSHOT0.5kZERO-COPY8.0kZMQ-SUB8.0kKAFKA-PUB7.9kSOURCE45%NORMALIZE56%ENRICH77%INDEX70%STREAM67%
 
 Trader desk
 
 ## P&L · order flow · risk · signalslive
-φ 0.206ms
+φ 0.496ms
 
 Book equity · 60 bars · today
 
-+15.34%60d
+-11.21%60d
 
-3.85Sharpe-4.10%Max DD-18.10%Book skew
+-2.34Sharpe-13.24%Max DD-7.90%Book skew
 
 Order flow · 8 × 4 heat
 
-+1,860/−2,680
-B125B31B85B215A219A289A273A236B32B73B143B220A133A55A242A62B54B126B103B89A252A148A168A119B157B171B88B148A200A179A52A53
++2,360/−2,766
+B233B269B68B213A179A260A169A49B174B278B260B19A271A269A217A86B130B270B20B134A14A237A164A122B140B48B38B66A256A113A278A82
 
 Risk · 1-day VaR
 
 NAV-normalized
-025507510048.0% NAV
+025507510053.4% NAV
 
 Signals · 4 × 4 sparklines
 
@@ -865,15 +865,15 @@ Positions
 
 5
 
-net +$583
+net −$426
 
-top · MACRO-3
+top · GLOBAL-1
 
 Orders
 
 5
 
-+4·1·2·1
++1·0·1·1
 
 open · partial · ack · rej
 
@@ -881,7 +881,7 @@ Calendar
 
 3
 
-next +6h
+next +2h
 
 impact LOW
 
@@ -889,7 +889,7 @@ Alerts
 
 3
 
-3·0·0
+1·2·0
 
 crit · warn · info
 2y5y10y30y1m3m6m12mBTCETHSOLDXY2y5y10y30y1m3m6m12mBTCETHSOLDXY
@@ -964,7 +964,7 @@ Earth-scale quant intelligence140 countries · 16 cities · 30 active events · 
                       Tokyo · JPN
                     Canberra AUS
                       Canberra · AUS
-                    Central bank press conference — FrankfurtΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σCentral bank policy decision — TokyoΔy = ±6.3·σ_pp · cov(b,1y) ≈ +1.6σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.4σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.5; DVO1 spikes 16.2%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 2.2σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.1× pre; vol regime shift: low → midSAU–YEM yield · Sanaa — Sanaaflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%POL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%FIN–TWN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%IND diplomacy · India — IndiaΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σIRN–USA diplomacy · Tehran — TehranΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σIND diplomacy · India — IndiaΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σPOL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%TWN–FIN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%USA–IRN diplomacy · Tehran — TehranΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σESP aid · Algeciras — Algecirasflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%IRN aid · Lebanon — Lebanonflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%ARE–NOR aid · Norway — Norwayflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%CHN–EUR aid · China — ChinaΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σaid · Nagpur — Nagpurflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%aid · Saoner — Saonerflight-to-quality β ≈ 0.5; DVO1 spikes 16.8%SGP aid · Singapore — SingaporeΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σKOR–ESP aid · Seoul — SeoulΔy = ±3.8·σ_pp · cov(b,1y) ≈ +1.4σconsultation · Nagpur — Nagpurflight-to-quality β ≈ 0.5; DVO1 spikes 16.2%AUS–USA consultation · Sydney — SydneyΔy = ±6.3·σ_pp · cov(b,1y) ≈ +1.6σCHN aid · Shengsi — ShengsiΔy = ±6.3·σ_pp · cov(b,1y) ≈ +1.6σCHN aid · Zhoushan — ZhoushanΔy = ±6.3·σ_pp · cov(b,1y) ≈ +1.6σaid · Jammu — Jammuflight-to-quality β ≈ 0.5; DVO1 spikes 16.2%GBR aid · Shengsi — ShengsiΔy = ±6.3·σ_pp · cov(b,1y) ≈ +1.6σGBR–CHN aid · Shengsi — ShengsiΔy = ±6.3·σ_pp · cov(b,1y) ≈ +1.6σMISSION CONTROL · 2026-07-14 10:48 UTC+8 · LIVE 50 · 02:36ZCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km10:48:16 UTC+822° / 138°APAC18 evEMEA12 evAmericas30 ev
+                    Central bank press conference — FrankfurtΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σCentral bank policy decision — TokyoΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σTrade-balance release — Shanghai|ε| < σ̂ ⇒ in-line; signal: long-vol if |ε| > 1.5σEnergy-export framework talks — Parisflight-to-quality β ≈ 0.6; DVO1 spikes 8.1%FX reserve adjustment — Singaporecarry = r_d − r_f − σ·Δτ; intervention if |z| > 2.2σEmerging-market sovereign coupon — Mumbai|z_post| ≈ 1.4× pre; vol regime shift: low → midSAU–YEM yield · Sanaa — Sanaaflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%POL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%FIN–TWN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%IND diplomacy · India — IndiaΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σIRN–USA diplomacy · Tehran — TehranΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σIND diplomacy · India — IndiaΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σPOL diplomacy · Warsaw — Warsawflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%TWN–FIN diplomacy · Finland — Finlandflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%USA–IRN diplomacy · Tehran — TehranΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σESP aid · Algeciras — Algecirasflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%IRN aid · Lebanon — Lebanonflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%ARE–NOR aid · Norway — Norwayflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%CHN–EUR aid · China — ChinaΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σaid · Nagpur — Nagpurflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%aid · Saoner — Saonerflight-to-quality β ≈ 0.7; DVO1 spikes 8.7%SGP aid · Singapore — SingaporeΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σKOR–ESP aid · Seoul — SeoulΔy = ±7.4·σ_pp · cov(b,1y) ≈ +1.0σconsultation · Nagpur — Nagpurflight-to-quality β ≈ 0.6; DVO1 spikes 8.1%AUS–USA consultation · Sydney — SydneyΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σCHN aid · Shengsi — ShengsiΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σCHN aid · Zhoushan — ZhoushanΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σaid · Jammu — Jammuflight-to-quality β ≈ 0.6; DVO1 spikes 8.1%GBR aid · Shengsi — ShengsiΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σGBR–CHN aid · Shengsi — ShengsiΔy = ±5.9·σ_pp · cov(b,1y) ≈ +1.1σMISSION CONTROL · 2026-07-14 22:14 UTC+8 · LIVE 50 · 02:36ZCITYLATLONNDigos6.7°N125.4°E0Dubai25.2°N55.3°E0Frankfurt50.1°N8.7°E1Hong Kong22.3°N114.2°E0London51.5°N0.1°W0Manila14.6°N121.0°E0Mumbai19.1°N72.9°E1New York40.7°N74.0°W1LAT 20.0°LON 80.0°central-bankearningsdata-releasegeo / fx05001000 km22:14:40 UTC+822° / -34°APAC18 evEMEA12 evAmericas30 ev
 
 Sun (subsolar)
 
@@ -978,153 +978,153 @@ High-impact · 42
 
 news/36 events · last 24h
 
-[Digos ·PH inflation print, in-line with consensusbreakeven-watch](/research#event-digos-ph-inflation)
+[Digos ·PH inflation print, in-line with consensusbreakeven-watch](/research/#event-digos-ph-inflation)
 
-[Digos ·PSEi index rebalance, semi-annual reviewflatten](/research#event-digos-psei-rebalance)
+[Digos ·PSEi index rebalance, semi-annual reviewflatten](/research/#event-digos-psei-rebalance)
 
-[Digos ·PHP crosses 58/USD, central-bank fix windowcarry](/research#event-digos-php-cross)
+[Digos ·PHP crosses 58/USD, central-bank fix windowcarry](/research/#event-digos-php-cross)
 
-[Digos ·PH 10Y auction, bid-cover 3.1×carry](/research#event-digos-ph10y-auction)
+[Digos ·PH 10Y auction, bid-cover 3.1×carry](/research/#event-digos-ph10y-auction)
 
-[Singapore ·SGD NEER policy-band re-anchoringcarry](/research#event-sgd-neer-anchor)
+[Singapore ·SGD NEER policy-band re-anchoringcarry](/research/#event-sgd-neer-anchor)
 
-[Singapore ·Non-oil domestic exports, monthlyflatten](/research#event-sg-nodx-monthly)
+[Singapore ·Non-oil domestic exports, monthlyflatten](/research/#event-sg-nodx-monthly)
 
-[Tokyo ·BoJ policy decision, hold unanimoussteepen](/research#event-boj-policy-hold)
+[Tokyo ·BoJ policy decision, hold unanimoussteepen](/research/#event-boj-policy-hold)
 
-[Tokyo ·Yen crosses 152/USD, verbal interventionshort-vol](/research#event-jpy-intervention)
+[Tokyo ·Yen crosses 152/USD, verbal interventionshort-vol](/research/#event-jpy-intervention)
 
-[Hong Kong ·HIBOR fixing, 1m at 4.85%carry](/research#event-hibor-1m-fix)
+[Hong Kong ·HIBOR fixing, 1m at 4.85%carry](/research/#event-hibor-1m-fix)
 
-[Hong Kong ·Mega-IPO bookbuild, demand-cover 4.2×long-vol](/research#event-hk-mega-ipo)
+[Hong Kong ·Mega-IPO bookbuild, demand-cover 4.2×long-vol](/research/#event-hk-mega-ipo)
 
-[Shanghai ·Trade-balance release, surplus $68 Bflatten](/research#event-cn-trade-balance)
+[Shanghai ·Trade-balance release, surplus $68 Bflatten](/research/#event-cn-trade-balance)
 
-[Shanghai ·PBoC MLF, 1Y rate unchangedcarry](/research#event-pboc-mlf-1y)
+[Shanghai ·PBoC MLF, 1Y rate unchangedcarry](/research/#event-pboc-mlf-1y)
 
-[Seoul ·KOSPI earnings bellwether, tech printlong-vol](/research#event-kospi-earnings-tech)
+[Seoul ·KOSPI earnings bellwether, tech printlong-vol](/research/#event-kospi-earnings-tech)
 
-[Seoul ·KRW crosses 1380/USD, exporter bidcarry](/research#event-krw-exporter-bid)
+[Seoul ·KRW crosses 1380/USD, exporter bidcarry](/research/#event-krw-exporter-bid)
 
-[Mumbai ·EM sovereign coupon, 10Y externalcarry](/research#event-em-sov-coupon-10y)
+[Mumbai ·EM sovereign coupon, 10Y externalcarry](/research/#event-em-sov-coupon-10y)
 
-[Mumbai ·Nifty 50 rebalance, weight shiftflatten](/research#event-nifty-rebalance)
+[Mumbai ·Nifty 50 rebalance, weight shiftflatten](/research/#event-nifty-rebalance)
 
-[Sydney ·Iron-ore export, weekly port dataflatten](/research#event-iron-ore-weekly)
+[Sydney ·Iron-ore export, weekly port dataflatten](/research/#event-iron-ore-weekly)
 
-[Sydney ·RBA minutes, hawkish tiltsteepen](/research#event-rba-minutes-hawk)
+[Sydney ·RBA minutes, hawkish tiltsteepen](/research/#event-rba-minutes-hawk)
 
-[Manila ·PH GDP Q2 advance estimate, +6.0% YoYflatten](/research#event-ph-gdp-q2)
+[Manila ·PH GDP Q2 advance estimate, +6.0% YoYflatten](/research/#event-ph-gdp-q2)
 
-[Manila ·BSP overnight rate decision, holdcarry](/research#event-bsp-policy-hold)
+[Manila ·BSP overnight rate decision, holdcarry](/research/#event-bsp-policy-hold)
 
-[Frankfurt ·ECB press conference, verbal forward-guidancelong-vol](/research#event-ecb-press-conference)
+[Frankfurt ·ECB press conference, verbal forward-guidancelong-vol](/research/#event-ecb-press-conference)
 
-[Frankfurt ·Bunds 10Y auction, weak bid-coverflatten](/research#event-bund-10y-weak-cover)
+[Frankfurt ·Bunds 10Y auction, weak bid-coverflatten](/research/#event-bund-10y-weak-cover)
 
-[Zurich ·SMI index rebalance, defensive tiltflatten](/research#event-smi-rebalance)
+[Zurich ·SMI index rebalance, defensive tiltflatten](/research/#event-smi-rebalance)
 
-[Zurich ·SX5E vol-of-vol, gap-wideningshort-vol](/research#event-sx5e-vov-gap)
+[Zurich ·SX5E vol-of-vol, gap-wideningshort-vol](/research/#event-sx5e-vov-gap)
 
-[London ·Gilts 10Y auction, strong coversteepen](/research#event-gilts-10y-strong)
+[London ·Gilts 10Y auction, strong coversteepen](/research/#event-gilts-10y-strong)
 
-[London ·Brent settles at $84, framework talkslong-vol](/research#event-brent-84-framework)
+[London ·Brent settles at $84, framework talkslong-vol](/research/#event-brent-84-framework)
 
-[Dubai ·Energy-export framework talks, headline tonelong-vol](/research#event-dxb-energy-framework)
+[Dubai ·Energy-export framework talks, headline tonelong-vol](/research/#event-dxb-energy-framework)
 
-[Dubai ·UAE dirham peg, USD-anchored reviewcarry](/research#event-aed-peg-review)
+[Dubai ·UAE dirham peg, USD-anchored reviewcarry](/research/#event-aed-peg-review)
 
-[New York ·Headline CPI release, +0.2% MoMlong-vol](/research#event-cpi-headline-print)
+[New York ·Headline CPI release, +0.2% MoMlong-vol](/research/#event-cpi-headline-print)
 
-[New York ·Mega-cap tech earnings, post-print driftlong-vol](/research#event-mega-cap-tech-earnings)
+[New York ·Mega-cap tech earnings, post-print driftlong-vol](/research/#event-mega-cap-tech-earnings)
 
-[Toronto ·CAD employment, surprise +25kflatten](/research#event-cad-employment-surprise)
+[Toronto ·CAD employment, surprise +25kflatten](/research/#event-cad-employment-surprise)
 
-[Toronto ·TSX index rebalance, energy weight upflatten](/research#event-tsx-rebalance-energy)
+[Toronto ·TSX index rebalance, energy weight upflatten](/research/#event-tsx-rebalance-energy)
 
-[Sao Paulo ·BCB Selic decision, cut 50 bpsteepen](/research#event-bcb-selic-cut-50)
+[Sao Paulo ·BCB Selic decision, cut 50 bpsteepen](/research/#event-bcb-selic-cut-50)
 
-[Sao Paulo ·BRL crosses 5.10/USD, fiscal-headline riskflatten](/research#event-brl-fiscal-risk)
+[Sao Paulo ·BRL crosses 5.10/USD, fiscal-headline riskflatten](/research/#event-brl-fiscal-risk)
 
-[New York ·All-stock deal announced, $42 B EVflatten](/research#event-ny-mna-deal)
+[New York ·All-stock deal announced, $42 B EVflatten](/research/#event-ny-mna-deal)
 
-[New York ·Tech IPO launch, range $34-38long-vol](/research#event-ny-tech-ipo-launch)
+[New York ·Tech IPO launch, range $34-38long-vol](/research/#event-ny-tech-ipo-launch)
 
-[Digos ·PH inflation print, in-line with consensusbreakeven-watch](/research#event-digos-ph-inflation)
+[Digos ·PH inflation print, in-line with consensusbreakeven-watch](/research/#event-digos-ph-inflation)
 
-[Digos ·PSEi index rebalance, semi-annual reviewflatten](/research#event-digos-psei-rebalance)
+[Digos ·PSEi index rebalance, semi-annual reviewflatten](/research/#event-digos-psei-rebalance)
 
-[Digos ·PHP crosses 58/USD, central-bank fix windowcarry](/research#event-digos-php-cross)
+[Digos ·PHP crosses 58/USD, central-bank fix windowcarry](/research/#event-digos-php-cross)
 
-[Digos ·PH 10Y auction, bid-cover 3.1×carry](/research#event-digos-ph10y-auction)
+[Digos ·PH 10Y auction, bid-cover 3.1×carry](/research/#event-digos-ph10y-auction)
 
-[Singapore ·SGD NEER policy-band re-anchoringcarry](/research#event-sgd-neer-anchor)
+[Singapore ·SGD NEER policy-band re-anchoringcarry](/research/#event-sgd-neer-anchor)
 
-[Singapore ·Non-oil domestic exports, monthlyflatten](/research#event-sg-nodx-monthly)
+[Singapore ·Non-oil domestic exports, monthlyflatten](/research/#event-sg-nodx-monthly)
 
-[Tokyo ·BoJ policy decision, hold unanimoussteepen](/research#event-boj-policy-hold)
+[Tokyo ·BoJ policy decision, hold unanimoussteepen](/research/#event-boj-policy-hold)
 
-[Tokyo ·Yen crosses 152/USD, verbal interventionshort-vol](/research#event-jpy-intervention)
+[Tokyo ·Yen crosses 152/USD, verbal interventionshort-vol](/research/#event-jpy-intervention)
 
-[Hong Kong ·HIBOR fixing, 1m at 4.85%carry](/research#event-hibor-1m-fix)
+[Hong Kong ·HIBOR fixing, 1m at 4.85%carry](/research/#event-hibor-1m-fix)
 
-[Hong Kong ·Mega-IPO bookbuild, demand-cover 4.2×long-vol](/research#event-hk-mega-ipo)
+[Hong Kong ·Mega-IPO bookbuild, demand-cover 4.2×long-vol](/research/#event-hk-mega-ipo)
 
-[Shanghai ·Trade-balance release, surplus $68 Bflatten](/research#event-cn-trade-balance)
+[Shanghai ·Trade-balance release, surplus $68 Bflatten](/research/#event-cn-trade-balance)
 
-[Shanghai ·PBoC MLF, 1Y rate unchangedcarry](/research#event-pboc-mlf-1y)
+[Shanghai ·PBoC MLF, 1Y rate unchangedcarry](/research/#event-pboc-mlf-1y)
 
-[Seoul ·KOSPI earnings bellwether, tech printlong-vol](/research#event-kospi-earnings-tech)
+[Seoul ·KOSPI earnings bellwether, tech printlong-vol](/research/#event-kospi-earnings-tech)
 
-[Seoul ·KRW crosses 1380/USD, exporter bidcarry](/research#event-krw-exporter-bid)
+[Seoul ·KRW crosses 1380/USD, exporter bidcarry](/research/#event-krw-exporter-bid)
 
-[Mumbai ·EM sovereign coupon, 10Y externalcarry](/research#event-em-sov-coupon-10y)
+[Mumbai ·EM sovereign coupon, 10Y externalcarry](/research/#event-em-sov-coupon-10y)
 
-[Mumbai ·Nifty 50 rebalance, weight shiftflatten](/research#event-nifty-rebalance)
+[Mumbai ·Nifty 50 rebalance, weight shiftflatten](/research/#event-nifty-rebalance)
 
-[Sydney ·Iron-ore export, weekly port dataflatten](/research#event-iron-ore-weekly)
+[Sydney ·Iron-ore export, weekly port dataflatten](/research/#event-iron-ore-weekly)
 
-[Sydney ·RBA minutes, hawkish tiltsteepen](/research#event-rba-minutes-hawk)
+[Sydney ·RBA minutes, hawkish tiltsteepen](/research/#event-rba-minutes-hawk)
 
-[Manila ·PH GDP Q2 advance estimate, +6.0% YoYflatten](/research#event-ph-gdp-q2)
+[Manila ·PH GDP Q2 advance estimate, +6.0% YoYflatten](/research/#event-ph-gdp-q2)
 
-[Manila ·BSP overnight rate decision, holdcarry](/research#event-bsp-policy-hold)
+[Manila ·BSP overnight rate decision, holdcarry](/research/#event-bsp-policy-hold)
 
-[Frankfurt ·ECB press conference, verbal forward-guidancelong-vol](/research#event-ecb-press-conference)
+[Frankfurt ·ECB press conference, verbal forward-guidancelong-vol](/research/#event-ecb-press-conference)
 
-[Frankfurt ·Bunds 10Y auction, weak bid-coverflatten](/research#event-bund-10y-weak-cover)
+[Frankfurt ·Bunds 10Y auction, weak bid-coverflatten](/research/#event-bund-10y-weak-cover)
 
-[Zurich ·SMI index rebalance, defensive tiltflatten](/research#event-smi-rebalance)
+[Zurich ·SMI index rebalance, defensive tiltflatten](/research/#event-smi-rebalance)
 
-[Zurich ·SX5E vol-of-vol, gap-wideningshort-vol](/research#event-sx5e-vov-gap)
+[Zurich ·SX5E vol-of-vol, gap-wideningshort-vol](/research/#event-sx5e-vov-gap)
 
-[London ·Gilts 10Y auction, strong coversteepen](/research#event-gilts-10y-strong)
+[London ·Gilts 10Y auction, strong coversteepen](/research/#event-gilts-10y-strong)
 
-[London ·Brent settles at $84, framework talkslong-vol](/research#event-brent-84-framework)
+[London ·Brent settles at $84, framework talkslong-vol](/research/#event-brent-84-framework)
 
-[Dubai ·Energy-export framework talks, headline tonelong-vol](/research#event-dxb-energy-framework)
+[Dubai ·Energy-export framework talks, headline tonelong-vol](/research/#event-dxb-energy-framework)
 
-[Dubai ·UAE dirham peg, USD-anchored reviewcarry](/research#event-aed-peg-review)
+[Dubai ·UAE dirham peg, USD-anchored reviewcarry](/research/#event-aed-peg-review)
 
-[New York ·Headline CPI release, +0.2% MoMlong-vol](/research#event-cpi-headline-print)
+[New York ·Headline CPI release, +0.2% MoMlong-vol](/research/#event-cpi-headline-print)
 
-[New York ·Mega-cap tech earnings, post-print driftlong-vol](/research#event-mega-cap-tech-earnings)
+[New York ·Mega-cap tech earnings, post-print driftlong-vol](/research/#event-mega-cap-tech-earnings)
 
-[Toronto ·CAD employment, surprise +25kflatten](/research#event-cad-employment-surprise)
+[Toronto ·CAD employment, surprise +25kflatten](/research/#event-cad-employment-surprise)
 
-[Toronto ·TSX index rebalance, energy weight upflatten](/research#event-tsx-rebalance-energy)
+[Toronto ·TSX index rebalance, energy weight upflatten](/research/#event-tsx-rebalance-energy)
 
-[Sao Paulo ·BCB Selic decision, cut 50 bpsteepen](/research#event-bcb-selic-cut-50)
+[Sao Paulo ·BCB Selic decision, cut 50 bpsteepen](/research/#event-bcb-selic-cut-50)
 
-[Sao Paulo ·BRL crosses 5.10/USD, fiscal-headline riskflatten](/research#event-brl-fiscal-risk)
+[Sao Paulo ·BRL crosses 5.10/USD, fiscal-headline riskflatten](/research/#event-brl-fiscal-risk)
 
-[New York ·All-stock deal announced, $42 B EVflatten](/research#event-ny-mna-deal)
+[New York ·All-stock deal announced, $42 B EVflatten](/research/#event-ny-mna-deal)
 
-[New York ·Tech IPO launch, range $34-38long-vol](/research#event-ny-tech-ipo-launch)
+[New York ·Tech IPO launch, range $34-38long-vol](/research/#event-ny-tech-ipo-launch)
 
 Digos· desk action1
 
-central-bankdesk trims 10Y receivers, rolls into 5Y
+central-bankdesk buys 1m wings on the front-end
 
 ---
 
@@ -1179,26 +1179,26 @@ VRP 3.8σ
 
 σ̂ 0.85
 
-ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.7413
+ρ mapOUCARRYσ̂SR1.000.850.42DSR0.910.340.78VRP0.660.550.71build · 0.4076
 
 What I do
 
 ## Four things, one discipline.
 
 A senior quant and an AI engineer can share a desk only if both write the eval harness. That's the only output that survives the next data drift, the next regime shift, the next model swap.
-8 projectsRRESEARCH
+11 projectsRRESEARCH
 
 Multi-testing-aware systematic strategies on public data.
-12 eventsAARTIFICIAL INTELLIGENCE
+9 eventsAARTIFICIAL INTELLIGENCE
 
 Multi-agent LLM systems with explicit eval harness and MCP contracts.
-13 hubsMMARKETS
+19 hubsMMARKETS
 
 36 financial hubs. 60 monitored events. Live tape.
-11 capitalsCCOVERAGE
+15 capitalsCCOVERAGE
 
 NDA-clean coverage. Past contracts disclosed, dates closed.
-LLM-AS-JUDPBO-CSCVCRYPTO-FUNRAG-RECALLCROSS-SECTTOOL-CALL-TIME-SERIEMACRO-/-VOBACKTEST-EG1–G31PAIRS-TRADSLOP-SCANMCP-EVALLOOK-AHEADNDA-CLNDSR-CALCTHE-VARIANREFLECT-REMCP-EVALDEF-SHARPELLM-AS-JUDPBO-CSCVCRYPTO-FUNRAG-RECALLCROSS-SECTTOOL-CALL-TIME-SERIEMACRO-/-VOBACKTEST-EG1–G31PAIRS-TRADSLOP-SCANMCP-EVALLOOK-AHEADNDA-CLNDSR-CALCTHE-VARIANREFLECT-REMCP-EVALDEF-SHARPE
+LOOK-AHEADDSR-CALCRAG-RECALLSLOP-SCANTHE-VARIANREFLECT-REMACRO-/-VOMCP-EVALCRYPTO-FUNLLM-AS-JUDTOOL-CALL-DEF-SHARPETIME-SERIENDA-CLNCROSS-SECTMCP-EVALPBO-CSCVPAIRS-TRADBACKTEST-EG1–G31LOOK-AHEADDSR-CALCRAG-RECALLSLOP-SCANTHE-VARIANREFLECT-REMACRO-/-VOMCP-EVALCRYPTO-FUNLLM-AS-JUDTOOL-CALL-DEF-SHARPETIME-SERIENDA-CLNCROSS-SECTMCP-EVALPBO-CSCVPAIRS-TRADBACKTEST-EG1–G31
 
 Selected work
 
@@ -1207,34 +1207,34 @@ Selected work
 [2025 · Q4QUANT
 
 ### Cross-Sectional Momentum (18 coins)
-18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.90→-0.03OOS Sharpe0.91→-0.05CI Straddle0.05→0.12](/projects/quant/02-cross-sectional-momentum/)
+18 COINS · IS/OOS · BOOTSTRAP CIIS Sharpe0.93→-0.01OOS Sharpe0.93→-0.04CI Straddle0.07→0.14](/projects/quant/02-cross-sectional-momentum/)
 
 [2025 · Q4QUANT
 
 ### Time-Series Momentum + Vol Targeting
-20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.28→0.37Max DD63%→31%Win Rate40%→49%](/projects/quant/03-timeseries-momentum-voltarget/)
+20-DAY RV · 5 BPS/SIDE · RISK-MANAGEDSharpe0.29→0.38Max DD61%→31%Win Rate39%→48%](/projects/quant/03-timeseries-momentum-voltarget/)
 
 [2026 · Q1AI
 
 ### Slop Scanner
-13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index83.00→2.00Hedge Density0.21→0.05N-gram Rep0.34→0.07](/projects/ai/06-slop-scanner/)
+13 METRICS · STDLIB ONLY · LITERATURE-GROUNDEDSLOP Index81.00→3.00Hedge Density0.18→0.05N-gram Rep0.35→0.07](/projects/ai/06-slop-scanner/)
 
 [2026 · Q2QUANT
 
 ### Macro / Volatility-Regime Overlay
-VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.65→0.67Max DD60%→43%Calmar0.28→0.69](/projects/quant/07-macro-regime-overlay/)
+VIX REGIME · SMOOTH SCALER · 5 BPS/SIDESharpe0.63→0.66Max DD56%→41%Calmar0.30→0.69](/projects/quant/07-macro-regime-overlay/)
 
 [2026 · Q2QUANT
 
 ### Look-Ahead Bias Audit (the shift test)
-ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.58→0.59Leaked Sharpe0.58→5.12Phantom %1%→88%](/projects/quant/09-lookahead-bias-audit/)
+ONE-BAR SHIFT · LEAK MAGNITUDE · PHANTOM CATCHClean Sharpe0.60→0.62Leaked Sharpe0.61→5.17Phantom %2%→88%](/projects/quant/09-lookahead-bias-audit/)
 
 [ALL PROJECTS15 projects · 9 quant · 4 markets · 8 prediction→](/projects/)
 
 The numbers
 
 ## What 11 months of build looks like.
-PAGES BUILT84+2.69AUDIT100%+3.39AFK LOOP6H−1.4%EVAL GATES31STABLESTRATEGIES9−0.3%AI AGENTS11STABLECERTS102STABLEMONTHS11+2.2%
+PAGES BUILT84STABLEAUDIT100%+4.04AFK LOOP6HSTABLEEVAL GATES31−0.5%STRATEGIES9+1.41AI AGENTS11+2.11CERTS102STABLEMONTHS11−0.2%
 
 STRATEGY NOTE01·CONDENSED
 iCard 1 of 3
@@ -1366,182 +1366,182 @@ Event detail36 fixturesDigosPH inflation print, in-line with consensus2026-07-11
 ### PH inflation print, in-line with consensus
 
 |ε| ≈ 1.1σ
-Signalbreakeven-watchMagnitude±1.1 σDesk actiondesk holds breakevens, lift vega 1mSourcePH statistics authority (public)Research[backtest artifact →](/research#event-digos-ph-inflation)DigosPSEi index rebalance, semi-annual review2026-07-11 13:05 UTC+8
+Signalbreakeven-watchMagnitude±1.1 σDesk actiondesk holds breakevens, lift vega 1mSourcePH statistics authority (public)Research[backtest artifact →](/research/#event-digos-ph-inflation)DigosPSEi index rebalance, semi-annual review2026-07-11 13:05 UTC+8
 
 ### PSEi index rebalance, semi-annual review
 
 Δweight ≈ 0.18%
-SignalflattenMagnitude0.18 % ΔweightDesk actionTWAP through the last 15 minSourcePH exchange (public notice)Research[backtest artifact →](/research#event-digos-psei-rebalance)DigosPHP crosses 58/USD, central-bank fix window2026-07-11 12:18 UTC+8
+SignalflattenMagnitude0.18 % ΔweightDesk actionTWAP through the last 15 minSourcePH exchange (public notice)Research[backtest artifact →](/research/#event-digos-psei-rebalance)DigosPHP crosses 58/USD, central-bank fix window2026-07-11 12:18 UTC+8
 
 ### PHP crosses 58/USD, central-bank fix window
 
 ΔUSD/PHP ≈ 0.4%
-SignalcarryMagnitude+0.4 % USD/PHPDesk actionbook clips FX carry at 75 bpSourcePH central-bank fix (public)Research[backtest artifact →](/research#event-digos-php-cross)DigosPH 10Y auction, bid-cover 3.1×2026-07-11 11:40 UTC+8
+SignalcarryMagnitude+0.4 % USD/PHPDesk actionbook clips FX carry at 75 bpSourcePH central-bank fix (public)Research[backtest artifact →](/research/#event-digos-php-cross)DigosPH 10Y auction, bid-cover 3.1×2026-07-11 11:40 UTC+8
 
 ### PH 10Y auction, bid-cover 3.1×
 
 tail = 1.2 bp
-SignalcarryMagnitude1.2 bp tailDesk actionbook rolls down 5y into the auctionSourcePH treasury auction (public)Research[backtest artifact →](/research#event-digos-ph10y-auction)SingaporeSGD NEER policy-band re-anchoring2026-07-11 08:15 UTC+8
+SignalcarryMagnitude1.2 bp tailDesk actionbook rolls down 5y into the auctionSourcePH treasury auction (public)Research[backtest artifact →](/research/#event-digos-ph10y-auction)SingaporeSGD NEER policy-band re-anchoring2026-07-11 08:15 UTC+8
 
 ### SGD NEER policy-band re-anchoring
 
 ΔNEER ≈ −0.6%
-SignalcarryMagnitude−0.6 % NEERDesk actionbook clips FX carry at 75 bpSourceSG monetary authority (public)Research[backtest artifact →](/research#event-sgd-neer-anchor)SingaporeNon-oil domestic exports, monthly2026-07-11 09:00 UTC+8
+SignalcarryMagnitude−0.6 % NEERDesk actionbook clips FX carry at 75 bpSourceSG monetary authority (public)Research[backtest artifact →](/research/#event-sgd-neer-anchor)SingaporeNon-oil domestic exports, monthly2026-07-11 09:00 UTC+8
 
 ### Non-oil domestic exports, monthly
 
 ΔNODX ≈ 4.2% MoM
-SignalflattenMagnitude+4.2 % MoMDesk actionbook sizes position to vol surpriseSourceSG trade statistics (public)Research[backtest artifact →](/research#event-sg-nodx-monthly)TokyoBoJ policy decision, hold unanimous2026-07-11 11:00 UTC+8
+SignalflattenMagnitude+4.2 % MoMDesk actionbook sizes position to vol surpriseSourceSG trade statistics (public)Research[backtest artifact →](/research/#event-sg-nodx-monthly)TokyoBoJ policy decision, hold unanimous2026-07-11 11:00 UTC+8
 
 ### BoJ policy decision, hold unanimous
 
 p(hold) ≈ 0.78
-SignalsteepenMagnitude0.78 pDesk actiondesk trims 10Y receivers, rolls into 5YSourceBoJ statement (public)Research[backtest artifact →](/research#event-boj-policy-hold)TokyoYen crosses 152/USD, verbal intervention2026-07-11 14:55 UTC+8
+SignalsteepenMagnitude0.78 pDesk actiondesk trims 10Y receivers, rolls into 5YSourceBoJ statement (public)Research[backtest artifact →](/research/#event-boj-policy-hold)TokyoYen crosses 152/USD, verbal intervention2026-07-11 14:55 UTC+8
 
 ### Yen crosses 152/USD, verbal intervention
 
 |z| ≈ 1.4σ
-Signalshort-volMagnitude1.4 σDesk actiondesk buys 3m USD/JPY wings into interventionSourceMoF briefing (public)Research[backtest artifact →](/research#event-jpy-intervention)Hong KongHIBOR fixing, 1m at 4.85%2026-07-11 11:15 UTC+8
+Signalshort-volMagnitude1.4 σDesk actiondesk buys 3m USD/JPY wings into interventionSourceMoF briefing (public)Research[backtest artifact →](/research/#event-jpy-intervention)Hong KongHIBOR fixing, 1m at 4.85%2026-07-11 11:15 UTC+8
 
 ### HIBOR fixing, 1m at 4.85%
 
 ΔHIBOR ≈ +12 bp
-SignalcarryMagnitude+12 bp HIBORDesk actionbook holds cross-currency basis through fixSourceHKMA fixing (public)Research[backtest artifact →](/research#event-hibor-1m-fix)Hong KongMega-IPO bookbuild, demand-cover 4.2×2026-07-11 10:30 UTC+8
+SignalcarryMagnitude+12 bp HIBORDesk actionbook holds cross-currency basis through fixSourceHKMA fixing (public)Research[backtest artifact →](/research/#event-hibor-1m-fix)Hong KongMega-IPO bookbuild, demand-cover 4.2×2026-07-11 10:30 UTC+8
 
 ### Mega-IPO bookbuild, demand-cover 4.2×
 
 pricing 4 bp inside range
-Signallong-volMagnitude4.2 demand-cover ×Desk actiondesk buys 3m 110% call spreadsSourceHK exchange filings (public)Research[backtest artifact →](/research#event-hk-mega-ipo)ShanghaiTrade-balance release, surplus $68 B2026-07-11 12:00 UTC+8
+Signallong-volMagnitude4.2 demand-cover ×Desk actiondesk buys 3m 110% call spreadsSourceHK exchange filings (public)Research[backtest artifact →](/research/#event-hk-mega-ipo)ShanghaiTrade-balance release, surplus $68 B2026-07-11 12:00 UTC+8
 
 ### Trade-balance release, surplus $68 B
 
 Δcopper ≈ 0.6%/$B
-SignalflattenMagnitude+0.6 % copper/$BDesk actionbook keeps breakeven watch to next printSourceCN customs release (public)Research[backtest artifact →](/research#event-cn-trade-balance)ShanghaiPBoC MLF, 1Y rate unchanged2026-07-11 09:20 UTC+8
+SignalflattenMagnitude+0.6 % copper/$BDesk actionbook keeps breakeven watch to next printSourceCN customs release (public)Research[backtest artifact →](/research/#event-cn-trade-balance)ShanghaiPBoC MLF, 1Y rate unchanged2026-07-11 09:20 UTC+8
 
 ### PBoC MLF, 1Y rate unchanged
 
 ΔMLF ≈ 0 bp
-SignalcarryMagnitude0 bp MLFDesk actiondesk trims 10Y receivers, rolls into 5YSourcePBoC operation notice (public)Research[backtest artifact →](/research#event-pboc-mlf-1y)SeoulKOSPI earnings bellwether, tech print2026-07-11 10:00 UTC+8
+SignalcarryMagnitude0 bp MLFDesk actiondesk trims 10Y receivers, rolls into 5YSourcePBoC operation notice (public)Research[backtest artifact →](/research/#event-pboc-mlf-1y)SeoulKOSPI earnings bellwether, tech print2026-07-11 10:00 UTC+8
 
 ### KOSPI earnings bellwether, tech print
 
 |z_post| ≈ 1.5×
-Signallong-volMagnitude1.5 × post-printDesk actiondesk buys 3m 110% call spreadsSourceKR exchange filings (public)Research[backtest artifact →](/research#event-kospi-earnings-tech)SeoulKRW crosses 1380/USD, exporter bid2026-07-11 13:30 UTC+8
+Signallong-volMagnitude1.5 × post-printDesk actiondesk buys 3m 110% call spreadsSourceKR exchange filings (public)Research[backtest artifact →](/research/#event-kospi-earnings-tech)SeoulKRW crosses 1380/USD, exporter bid2026-07-11 13:30 UTC+8
 
 ### KRW crosses 1380/USD, exporter bid
 
 Δcarry ≈ −18 bp
-SignalcarryMagnitude−18 bp carryDesk actionbook clips FX carry at 75 bpSourceKR BOK reference (public)Research[backtest artifact →](/research#event-krw-exporter-bid)MumbaiEM sovereign coupon, 10Y external2026-07-11 11:45 UTC+8
+SignalcarryMagnitude−18 bp carryDesk actionbook clips FX carry at 75 bpSourceKR BOK reference (public)Research[backtest artifact →](/research/#event-krw-exporter-bid)MumbaiEM sovereign coupon, 10Y external2026-07-11 11:45 UTC+8
 
 ### EM sovereign coupon, 10Y external
 
 roll-down ≈ 18 bp
-SignalcarryMagnitude18 bp roll-downDesk actionbook rolls down 5y into the auctionSourceEM sovereign issuance notice (public)Research[backtest artifact →](/research#event-em-sov-coupon-10y)MumbaiNifty 50 rebalance, weight shift2026-07-11 14:00 UTC+8
+SignalcarryMagnitude18 bp roll-downDesk actionbook rolls down 5y into the auctionSourceEM sovereign issuance notice (public)Research[backtest artifact →](/research/#event-em-sov-coupon-10y)MumbaiNifty 50 rebalance, weight shift2026-07-11 14:00 UTC+8
 
 ### Nifty 50 rebalance, weight shift
 
 Δweight ≈ 0.22%
-SignalflattenMagnitude0.22 % ΔweightDesk actionTWAP through the last 15 minSourceIN index provider (public)Research[backtest artifact →](/research#event-nifty-rebalance)SydneyIron-ore export, weekly port data2026-07-11 09:30 UTC+8
+SignalflattenMagnitude0.22 % ΔweightDesk actionTWAP through the last 15 minSourceIN index provider (public)Research[backtest artifact →](/research/#event-nifty-rebalance)SydneyIron-ore export, weekly port data2026-07-11 09:30 UTC+8
 
 ### Iron-ore export, weekly port data
 
 Δiron ≈ ±1.4%
-SignalflattenMagnitude±1.4 % ironDesk actiondesk fades the kneejerk in 5 minSourceAU port authority weekly (public)Research[backtest artifact →](/research#event-iron-ore-weekly)SydneyRBA minutes, hawkish tilt2026-07-11 11:30 UTC+8
+SignalflattenMagnitude±1.4 % ironDesk actiondesk fades the kneejerk in 5 minSourceAU port authority weekly (public)Research[backtest artifact →](/research/#event-iron-ore-weekly)SydneyRBA minutes, hawkish tilt2026-07-11 11:30 UTC+8
 
 ### RBA minutes, hawkish tilt
 
 Δy_2y ≈ +6 bp
-SignalsteepenMagnitude+6 bp y_2yDesk actiondesk trims 10Y receivers, rolls into 5YSourceRBA minutes (public)Research[backtest artifact →](/research#event-rba-minutes-hawk)ManilaPH GDP Q2 advance estimate, +6.0% YoY2026-07-11 10:00 UTC+8
+SignalsteepenMagnitude+6 bp y_2yDesk actiondesk trims 10Y receivers, rolls into 5YSourceRBA minutes (public)Research[backtest artifact →](/research/#event-rba-minutes-hawk)ManilaPH GDP Q2 advance estimate, +6.0% YoY2026-07-11 10:00 UTC+8
 
 ### PH GDP Q2 advance estimate, +6.0% YoY
 
 surprise ≈ +0.3%
-SignalflattenMagnitude+0.3 % surpriseDesk actionbook sizes position to vol surpriseSourcePH statistics authority advance (public)Research[backtest artifact →](/research#event-ph-gdp-q2)ManilaBSP overnight rate decision, hold2026-07-11 16:00 UTC+8
+SignalflattenMagnitude+0.3 % surpriseDesk actionbook sizes position to vol surpriseSourcePH statistics authority advance (public)Research[backtest artifact →](/research/#event-ph-gdp-q2)ManilaBSP overnight rate decision, hold2026-07-11 16:00 UTC+8
 
 ### BSP overnight rate decision, hold
 
 p(hold) ≈ 0.86
-SignalcarryMagnitude0.86 pDesk actiondesk buys 1m wings on the front-endSourceBSP statement (public)Research[backtest artifact →](/research#event-bsp-policy-hold)FrankfurtECB press conference, verbal forward-guidance2026-07-11 20:45 UTC+8
+SignalcarryMagnitude0.86 pDesk actiondesk buys 1m wings on the front-endSourceBSP statement (public)Research[backtest artifact →](/research/#event-bsp-policy-hold)FrankfurtECB press conference, verbal forward-guidance2026-07-11 20:45 UTC+8
 
 ### ECB press conference, verbal forward-guidance
 
 dσ/dword ≈ 1.4 bp
-Signallong-volMagnitude1.4 bp / wordDesk actiondesk writes 6m vol on the front-endSourceECB press conference (public)Research[backtest artifact →](/research#event-ecb-press-conference)FrankfurtBunds 10Y auction, weak bid-cover2026-07-11 19:15 UTC+8
+Signallong-volMagnitude1.4 bp / wordDesk actiondesk writes 6m vol on the front-endSourceECB press conference (public)Research[backtest artifact →](/research/#event-ecb-press-conference)FrankfurtBunds 10Y auction, weak bid-cover2026-07-11 19:15 UTC+8
 
 ### Bunds 10Y auction, weak bid-cover
 
 tail = 1.8 bp
-SignalflattenMagnitude1.8 bp tailDesk actionbook holds curve-flattener into the statementSourceDE federal auction (public)Research[backtest artifact →](/research#event-bund-10y-weak-cover)ZurichSMI index rebalance, defensive tilt2026-07-11 16:30 UTC+8
+SignalflattenMagnitude1.8 bp tailDesk actionbook holds curve-flattener into the statementSourceDE federal auction (public)Research[backtest artifact →](/research/#event-bund-10y-weak-cover)ZurichSMI index rebalance, defensive tilt2026-07-11 16:30 UTC+8
 
 ### SMI index rebalance, defensive tilt
 
 Δweight ≈ 0.15%
-SignalflattenMagnitude0.15 % ΔweightDesk actionbook holds post-print drift via dispersionSourceCH index provider (public)Research[backtest artifact →](/research#event-smi-rebalance)ZurichSX5E vol-of-vol, gap-widening2026-07-11 18:00 UTC+8
+SignalflattenMagnitude0.15 % ΔweightDesk actionbook holds post-print drift via dispersionSourceCH index provider (public)Research[backtest artifact →](/research/#event-smi-rebalance)ZurichSX5E vol-of-vol, gap-widening2026-07-11 18:00 UTC+8
 
 ### SX5E vol-of-vol, gap-widening
 
 VRP ≈ 4σ
-Signalshort-volMagnitude4 σ VRPDesk actiondesk sells weekly IV into the bellSourceSX5E option surface (public surface)Research[backtest artifact →](/research#event-sx5e-vov-gap)LondonGilts 10Y auction, strong cover2026-07-11 19:30 UTC+8
+Signalshort-volMagnitude4 σ VRPDesk actiondesk sells weekly IV into the bellSourceSX5E option surface (public surface)Research[backtest artifact →](/research/#event-sx5e-vov-gap)LondonGilts 10Y auction, strong cover2026-07-11 19:30 UTC+8
 
 ### Gilts 10Y auction, strong cover
 
 tail = 0.6 bp
-SignalsteepenMagnitude0.6 bp tailDesk actiondesk trims 10Y receivers, rolls into 5YSourceUK DMO auction (public)Research[backtest artifact →](/research#event-gilts-10y-strong)LondonBrent settles at $84, framework talks2026-07-11 22:00 UTC+8
+SignalsteepenMagnitude0.6 bp tailDesk actiondesk trims 10Y receivers, rolls into 5YSourceUK DMO auction (public)Research[backtest artifact →](/research/#event-gilts-10y-strong)LondonBrent settles at $84, framework talks2026-07-11 22:00 UTC+8
 
 ### Brent settles at $84, framework talks
 
 Δbrent ≈ ±1.1%
-Signallong-volMagnitude±1.1 % brentDesk actiondesk buys 1m ATM straddles on brentSourceICE brent settle (public)Research[backtest artifact →](/research#event-brent-84-framework)DubaiEnergy-export framework talks, headline tone2026-07-11 15:00 UTC+8
+Signallong-volMagnitude±1.1 % brentDesk actiondesk buys 1m ATM straddles on brentSourceICE brent settle (public)Research[backtest artifact →](/research/#event-brent-84-framework)DubaiEnergy-export framework talks, headline tone2026-07-11 15:00 UTC+8
 
 ### Energy-export framework talks, headline tone
 
 β ≈ 0.62
-Signallong-volMagnitude0.62 βDesk actiondesk buys 1m ATM straddles on brentSourceAE ministry briefing (public)Research[backtest artifact →](/research#event-dxb-energy-framework)DubaiUAE dirham peg, USD-anchored review2026-07-11 13:00 UTC+8
+Signallong-volMagnitude0.62 βDesk actiondesk buys 1m ATM straddles on brentSourceAE ministry briefing (public)Research[backtest artifact →](/research/#event-dxb-energy-framework)DubaiUAE dirham peg, USD-anchored review2026-07-11 13:00 UTC+8
 
 ### UAE dirham peg, USD-anchored review
 
 ΔUSD/AED ≈ 0 bp
-SignalcarryMagnitude0 bp pegDesk actionbook holds cross-currency basis through fixSourceCBUAE peg statement (public)Research[backtest artifact →](/research#event-aed-peg-review)New YorkHeadline CPI release, +0.2% MoM2026-07-11 20:30 UTC+8
+SignalcarryMagnitude0 bp pegDesk actionbook holds cross-currency basis through fixSourceCBUAE peg statement (public)Research[backtest artifact →](/research/#event-aed-peg-review)New YorkHeadline CPI release, +0.2% MoM2026-07-11 20:30 UTC+8
 
 ### Headline CPI release, +0.2% MoM
 
 |ε| ≈ 1.4σ
-Signallong-volMagnitude1.4 σDesk actiondesk adds 1m options if surprise > 1.4σSourceBLS release (public)Research[backtest artifact →](/research#event-cpi-headline-print)New YorkMega-cap tech earnings, post-print drift2026-07-11 21:00 UTC+8
+Signallong-volMagnitude1.4 σDesk actiondesk adds 1m options if surprise > 1.4σSourceBLS release (public)Research[backtest artifact →](/research/#event-cpi-headline-print)New YorkMega-cap tech earnings, post-print drift2026-07-11 21:00 UTC+8
 
 ### Mega-cap tech earnings, post-print drift
 
 |z_post| ≈ 1.5×
-Signallong-volMagnitude1.5 × post-printDesk actionbook lifts gamma into the printSourceissuer earnings filings (public)Research[backtest artifact →](/research#event-mega-cap-tech-earnings)TorontoCAD employment, surprise +25k2026-07-11 20:30 UTC+8
+Signallong-volMagnitude1.5 × post-printDesk actionbook lifts gamma into the printSourceissuer earnings filings (public)Research[backtest artifact →](/research/#event-mega-cap-tech-earnings)TorontoCAD employment, surprise +25k2026-07-11 20:30 UTC+8
 
 ### CAD employment, surprise +25k
 
 ΔP(recession) ≈ ±18%
-SignalflattenMagnitude±18 % ΔP(recession)Desk actionbook keeps breakeven watch to next printSourceStatCan labour force (public)Research[backtest artifact →](/research#event-cad-employment-surprise)TorontoTSX index rebalance, energy weight up2026-07-11 16:00 UTC+8
+SignalflattenMagnitude±18 % ΔP(recession)Desk actionbook keeps breakeven watch to next printSourceStatCan labour force (public)Research[backtest artifact →](/research/#event-cad-employment-surprise)TorontoTSX index rebalance, energy weight up2026-07-11 16:00 UTC+8
 
 ### TSX index rebalance, energy weight up
 
 Δweight ≈ 0.20%
-SignalflattenMagnitude0.20 % ΔweightDesk actionTWAP through the last 15 minSourceCA index provider (public)Research[backtest artifact →](/research#event-tsx-rebalance-energy)Sao PauloBCB Selic decision, cut 50 bp2026-07-11 23:00 UTC+8
+SignalflattenMagnitude0.20 % ΔweightDesk actionTWAP through the last 15 minSourceCA index provider (public)Research[backtest artifact →](/research/#event-tsx-rebalance-energy)Sao PauloBCB Selic decision, cut 50 bp2026-07-11 23:00 UTC+8
 
 ### BCB Selic decision, cut 50 bp
 
 ΔSelic ≈ −50 bp
-SignalsteepenMagnitude−50 bp SelicDesk actiondesk buys 1m wings on the front-endSourceBCB Copom statement (public)Research[backtest artifact →](/research#event-bcb-selic-cut-50)Sao PauloBRL crosses 5.10/USD, fiscal-headline risk2026-07-11 22:30 UTC+8
+SignalsteepenMagnitude−50 bp SelicDesk actiondesk buys 1m wings on the front-endSourceBCB Copom statement (public)Research[backtest artifact →](/research/#event-bcb-selic-cut-50)Sao PauloBRL crosses 5.10/USD, fiscal-headline risk2026-07-11 22:30 UTC+8
 
 ### BRL crosses 5.10/USD, fiscal-headline risk
 
 Δcarry ≈ −24 bp
-SignalflattenMagnitude−24 bp carryDesk actionbook unwinds EM-FX carry to one-thirdSourceBR fiscal headline (public news)Research[backtest artifact →](/research#event-brl-fiscal-risk)New YorkAll-stock deal announced, $42 B EV2026-07-11 14:00 UTC+8
+SignalflattenMagnitude−24 bp carryDesk actionbook unwinds EM-FX carry to one-thirdSourceBR fiscal headline (public news)Research[backtest artifact →](/research/#event-brl-fiscal-risk)New YorkAll-stock deal announced, $42 B EV2026-07-11 14:00 UTC+8
 
 ### All-stock deal announced, $42 B EV
 
 arb-spread ≈ 1.8%
-SignalflattenMagnitude1.8 % arb-spreadDesk actionbook holds post-print drift via dispersionSourceSEC merger filing (public)Research[backtest artifact →](/research#event-ny-mna-deal)New YorkTech IPO launch, range $34-382026-07-11 18:30 UTC+8
+SignalflattenMagnitude1.8 % arb-spreadDesk actionbook holds post-print drift via dispersionSourceSEC merger filing (public)Research[backtest artifact →](/research/#event-ny-mna-deal)New YorkTech IPO launch, range $34-382026-07-11 18:30 UTC+8
 
 ### Tech IPO launch, range $34-38
 
 demand-cover ≈ 4.2×
-Signallong-volMagnitude4.2 × coverDesk actiondesk buys 3m 110% call spreadsSourceissuer S-1 filing (public)Research[backtest artifact →](/research#event-ny-tech-ipo-launch)© 2026 Christian Macion[CTA cert #260197 ↗](/proof/cta-cert-portrait-2026-01.jpg)BUILD 2026-07-14 · v6.11.18.1 · COMMIT local[GitHub ↗](https://github.com/christianmacion26)[LinkedIn ↗](https://www.linkedin.com/in/christianmacion)[Email ↗](mailto:christianmacion26@gmail.com)Keyboard
+Signallong-volMagnitude4.2 × coverDesk actiondesk buys 3m 110% call spreadsSourceissuer S-1 filing (public)Research[backtest artifact →](/research/#event-ny-tech-ipo-launch)© 2026 Christian Macion[CTA cert #260197 ↗](/proof/cta-cert-portrait-2026-01.jpg)BUILD 2026-07-14 · v6.11.18.1 · COMMIT local[GitHub ↗](https://github.com/christianmacion26)[LinkedIn ↗](https://www.linkedin.com/in/christianmacion)[Email ↗](mailto:christianmacion26@gmail.com)Keyboard
 
 ### Shortcuts
 

@@ -28,6 +28,8 @@
  *   - Palette tokens only.
  *   - `prefers-reduced-motion: reduce` honored.
  */
+import { path } from '@utils/url';
+
 interface NewsBurstEvent {
   slug: string;
   city: string;
@@ -347,7 +349,7 @@ const events: NewsBurstEvent[] = [
       {
         events.concat(events).map((e) => (
           <li class="earth-feed__chip">
-            <a href={`/research#event-${e.slug}`}>
+            <a href={`${path('/research')}#event-${e.slug}`}>
               <span class="earth-feed__city">{e.city} ·</span>
               <span class="earth-feed__head-text">{e.title}</span>
               <span class:list={['earth-feed__signal', `earth-feed__signal--${e.signal}`]}>

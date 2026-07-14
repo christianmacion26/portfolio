@@ -18,6 +18,7 @@
  *   <FactorTable projects={quantProjects} />
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { path } from '@utils/url';
 
 interface MetricRow {
   label: string;
@@ -145,7 +146,7 @@ function shortTitle(t: string): string {
                   {/* v6.10.11 — content collection `id` already includes the
                      lane prefix (e.g., "quant/01-deflated-sharpe"), so we just
                      append it. All entries are quant (filtered on line 47). */}
-                  <a class="factor__link" href={`/projects/${proj.id}/`}>
+                  <a class="factor__link" href={path(`/projects/${proj.id}`)}>
                     <span class="factor__order mono">
                       {String(proj.data.order).padStart(2, '0')}
                     </span>

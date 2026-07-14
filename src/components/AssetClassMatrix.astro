@@ -15,6 +15,7 @@
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { profile } from '@utils/profile';
+import { path } from '@utils/url';
 
 interface CellContent {
   label: string; // display label (short strategy name)
@@ -183,7 +184,7 @@ const COL_LABEL: Record<(typeof COLS)[number], { title: string; sub: string }> =
                            quant (filtered on line 33). */}
                         <a
                           class="acm__link"
-                          href={`/projects/${it.slug}/`}
+                          href={path(`/projects/${it.slug}`)}
                           title={`Strategy: ${it.slug}`}
                         >
                           <span class="acm__link-num mono">{String(idx + 1).padStart(2, '0')}</span>
