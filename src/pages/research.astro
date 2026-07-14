@@ -21,6 +21,9 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { profile } from '@utils/profile';
 import { path } from '@utils/url';
 import { seedFromString, buildSeed, walk } from '@utils/prng';
+// v6.11.16 — derive "12 sources" chrome from the registry itself, not a
+// hand-coded literal. Same array that DataSourceList renders.
+import { dataSourceCount } from '@utils/data-sources';
 
 // Gate-count chrome: derives from profile.stats.evalGates. Used in
 // voice-line sub lines and CTA primary labels.
@@ -94,7 +97,7 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
 
 <BaseLayout
   title="Research"
-  description={`Public-data quant research warehouse: ${quantProjects.length} strategies, 4 factors, 12 sources. Every number reproducible.`}
+  description={`Public-data quant research warehouse: ${quantProjects.length} strategies, 4 factors, ${dataSourceCount} sources. Every number reproducible.`}
   breadcrumbs={[
     { name: 'Home', href: '/' },
     { name: 'Research', href: '/research' },
@@ -123,7 +126,7 @@ statsRow[3].spark = sparkFor(2, 14, 0.5, 24);
         <span>public data only</span>
       </p>
       <h1 class="r-hero__title">
-        {`${quantProjects.length} strategies. Four factors. Twelve sources.`}
+        {`${quantProjects.length} strategies. Four factors. ${dataSourceCount} sources.`}
       </h1>
       <p class="r-hero__sub">
         A market-data view of the research book. No narrative — the table is the narrative. Every
