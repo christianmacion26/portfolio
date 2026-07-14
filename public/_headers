@@ -36,3 +36,12 @@
 # LLM-friendly markdown alternates — moderate cache.
 /llms*.txt
   Cache-Control: public, max-age=86400
+
+# Proof videos — long cache + explicit range support. v6.11.18 fix:
+# Cloudflare Pages default `cache-control: public, max-age=0, must-revalidate`
+# was stripping Accept-Ranges for the /proof/*.mp4 files, breaking
+# video scrubbing in Chrome. Explicit immutable cache + range header
+# ensures Chrome can seek the video without redownloading the whole file.
+/proof/*.mp4
+  Cache-Control: public, max-age=31536000, immutable
+  Accept-Ranges: bytes
