@@ -99,6 +99,13 @@ const contrastPairs = [
   { fg: '--c-amber', bg: '--c-bg', ratio: '6.4:1', level: 'AA' },
   { fg: '--c-primary', bg: '--c-bg', ratio: '19.2:1', level: 'AAA' },
 ];
+
+// v6.11.23 — colophon chrome counts derived from the array lengths above
+// so they stay in lockstep when a token/effect/pair is added.
+const typeScaleCount = typeScale.length;
+const paletteCount = palette.length;
+const spacingCount = spacing.length;
+const motionCount = motion.length;
 ---
 
 <BaseLayout
@@ -137,8 +144,8 @@ const contrastPairs = [
         <p class="section__eyebrow">(a) · Type</p>
         <h2 class="section__title">Three faces, four roles.</h2>
         <p class="section__sub">
-          Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math serifs. The
-          four-step scale below is the institutional rhythm; full scale runs <code class="mono"
+          Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math serifs. The{' '}
+          {typeScaleCount}-step scale below is the institutional rhythm; full scale runs <code class="mono"
             >--fs-xs</code
           > to <code class="mono">--fs-5xl</code>.
         </p>
@@ -159,7 +166,7 @@ const contrastPairs = [
         </article>
       </div>
 
-      <h3 class="sub-h3">4-step scale</h3>
+      <h3 class="sub-h3">{typeScaleCount}-step scale</h3>
       <ol class="type-scale">
         {
           typeScale.map((t) => (
@@ -187,7 +194,7 @@ const contrastPairs = [
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(b) · Color palette</p>
-        <h2 class="section__title">Four colors, four roles.</h2>
+        <h2 class="section__title">{paletteCount} colors, four roles.</h2>
         <p class="section__sub">
           The hedge-fund palette: near-black + deep amber on a term-paper cream. The full token set
           is in <code class="mono">tokens.css</code> (primary, amber, paper, bg, ink, rule, status, math
@@ -219,7 +226,7 @@ const contrastPairs = [
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(c) · Spacing scale</p>
-        <h2 class="section__title">Six cells, 8px base.</h2>
+        <h2 class="section__title">{spacingCount} cells, 8px base.</h2>
         <p class="section__sub">
           A geometric scale (multiples of 4, doubling past <code class="mono">--sp-4</code>). The
           full scale runs to <code class="mono">--sp-10</code> (8rem) for hero padding.
@@ -249,7 +256,7 @@ const contrastPairs = [
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">(d) · Motion vocabulary</p>
-        <h2 class="section__title">Five effects, institutional restraint.</h2>
+        <h2 class="section__title">{motionCount} effects, institutional restraint.</h2>
         <p class="section__sub">
           Motion is minimal and functional. All effects respect
           <code class="mono">prefers-reduced-motion: reduce</code>. Total motion JS budget is &lt;
