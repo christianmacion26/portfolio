@@ -299,6 +299,19 @@ for (const ev of loadGdeltEvents()) {
   pinMathMap.set(ev.title, pinMathFromCategory(ev.category, ev.severity));
 }
 
+// v6.11.18 — derive the "X cities / Y events" chrome from the actual
+// rendered globe data so the headline never lies. Mirror of
+// src/components/EarthGlobe.astro:583-599 (same aggregation).
+const liveEventsForCount = loadGdeltEvents();
+const allGlobeEvents = [
+  ...evRowsForMath.map((r: CollectionEntry<'worldEvent'>) => ({
+    city: (r.data as { city?: string }).city ?? '',
+  })),
+  ...liveEventsForCount.map((e) => ({ city: e.city })),
+];
+const globeCityCount = new Set(allGlobeEvents.map((e) => e.city).filter(Boolean)).size;
+const globeEventCount = allGlobeEvents.length;
+
 // === v6.5 — live tape mini-row fixtures =========================
 // Bloomberg-style summary strip between hero and workspace. All four
 // stats are deterministic from buildSeed() so the same build renders
@@ -421,7 +434,7 @@ const whatCells = [
     label: 'MARKETS',
     chipNum: hubsN,
     chipUnit: 'hubs',
-    caption: 'Sixteen financial hubs. Thirty-six monitored events. Live tape.',
+    caption: `${globeCityCount} financial hubs. ${globeEventCount} monitored events. Live tape.`,
   },
   {
     letter: 'C',
@@ -1009,7 +1022,7 @@ const velocityRows: { stage: string; intensity: number }[][] = [
     <div class="container">
       <header class="section__head world-events__head">
         <p class="section__eyebrow">Earth mission control · world event map</p>
-        <h2 class="section__title">Sixteen cities. Thirty-six events. The news behind the math.</h2>
+        <h2 class="section__title">{globeCityCount} cities. {globeEventCount} events. The news behind the math.</h2>
         <VoiceLine class="section__sub voice-line--cmd" ruled={true} size="md">
           A rate decision in London is a half-life in Manila. We map the half-life.
         </VoiceLine>
