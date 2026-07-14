@@ -34,7 +34,36 @@ const totalContributions = rendered.reduce(
 );
 const totalProofs = rendered.reduce((sum, { entry }) => sum + (entry.data.proofs?.length ?? 0), 0);
 const totalEntries = rendered.length;
-const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
+
+// v6.11.19 — totalMonths derived from frontmatter (was hardcoded 25 with
+// a stale comment "2024-12 → 2026-05 = ~25 months" — that span is
+// actually 17 months, not 25). Union of months across all entries is
+// the honest unique-months span of the experience column. `today`
+// freezes at build time per deploy, so the chrome stays roughly
+// current between commits.
+function parseExpDate(s: string): Date {
+  const today = new Date();
+  if (s === 'present') return today;
+  const [y, m] = s.split('-').map(Number);
+  return new Date(Date.UTC(y, (m ?? 1) - 1, 1));
+}
+const monthKeys = new Set<string>();
+for (const { entry } of rendered) {
+  const start = parseExpDate(entry.data.startDate);
+  const end = parseExpDate(entry.data.endDate ?? 'present');
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    monthKeys.add(`${cursor.getUTCFullYear()}-${String(cursor.getUTCMonth() + 1).padStart(2, '0')}`);
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+  }
+}
+const totalMonths = monthKeys.size;
+// Earliest + latest months across all rendered entries — shown in the
+// chrome as the experience window so the date stamps reflect real data.
+const sortedMonths = [...monthKeys].sort();
+const expWindowEarliest = sortedMonths[0] ?? '';
+const expWindowLatest = sortedMonths[sortedMonths.length - 1] ?? '';
+const expWindow = `${expWindowEarliest} → ${expWindowLatest}`;
 ---
 
 <BaseLayout
@@ -102,7 +131,7 @@ const totalMonths = 25; // 2024-12 → 2026-05 = ~25 months of working history
           formula="\sum p_e"
           trend="up"
         />
-        <Stat value={`${totalMonths}`} label="months" sub="2024-12 → 2026-05" formula="\Delta t" />
+        <Stat value={`${totalMonths}`} label="months" sub={expWindow} formula="\Delta t" />
       </div>
     </div>
   </header>
