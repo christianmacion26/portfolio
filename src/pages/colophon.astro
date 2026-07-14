@@ -154,9 +154,11 @@ const motionCount = motion.length;
         <p class="section__eyebrow">(a) · Type</p>
         <h2 class="section__title">{typeFaces.length} faces, four roles.</h2>
         <p class="section__sub">
-          Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math serifs. The{' '}
-          {typeScaleCount}-step scale below is the institutional rhythm; full scale runs <code class="mono"
-            >--fs-xs</code
+          Inter for UI and body. JetBrains Mono for data and code. KaTeX_Main for math serifs. The{
+            ' '
+          }
+          {typeScaleCount}-step scale below is the institutional rhythm; full scale runs <code
+            class="mono">--fs-xs</code
           > to <code class="mono">--fs-5xl</code>.
         </p>
       </header>
@@ -165,7 +167,9 @@ const motionCount = motion.length;
         {
           typeFaces.map((f) => (
             <article class="type-face">
-              <h3 class="type-face__name" style={`font-family: ${f.ff};`}>{f.name}</h3>
+              <h3 class="type-face__name" style={`font-family: ${f.ff};`}>
+                {f.name}
+              </h3>
               <p class="type-face__role">{f.role}</p>
             </article>
           ))

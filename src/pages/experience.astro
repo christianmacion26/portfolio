@@ -36,6 +36,15 @@ const totalContributions = rendered.reduce(
 const totalProofs = rendered.reduce((sum, { entry }) => sum + (entry.data.proofs?.length ?? 0), 0);
 const totalEntries = rendered.length;
 
+// v6.11.18.2 — wordCount derived from rendered entry bodies (was
+// hardcoded minutes={8} on the ReadMeta call). Sum across all entries
+// of `body.split(/\s+/).length` then round up — the union of evidence
+// paragraphs, not a chrome lie.
+const wordCount = rendered.reduce((sum, { entry }) => {
+  const body = typeof entry.body === 'string' ? entry.body : '';
+  return sum + (body.trim().length ? body.trim().split(/\s+/).length : 0);
+}, 0);
+
 // v6.11.19 — totalMonths derived from frontmatter (was hardcoded 25 with
 // a stale comment "2024-12 → 2026-05 = ~25 months" — that span is
 // actually 17 months, not 25). Union of months across all entries is
@@ -73,8 +82,8 @@ const expWindow = `${expWindowEarliest} → ${expWindowLatest}`;
   title="Experience"
   description="Operator and researcher experience across multi-agent AI platforms, venture incubation, content automation, and systematic trading research."
   breadcrumbs={[
-    { name: 'Home', href: '/' },
-    { name: 'Experience', href: '/experience' },
+    { name: 'Home', href: path('/') },
+    { name: 'Experience', href: path('/experience') },
   ]}
 >
   <header class="page-head">
@@ -142,7 +151,7 @@ const expWindow = `${expWindowEarliest} → ${expWindowLatest}`;
   <TrustStrip variant="tape" />
 
   <div class="container container-narrow">
-    <ReadMeta minutes={8} href={path('/proof')} />
+    <ReadMeta wordCount={wordCount} href={path('/proof')} />
   </div>
 
   <section class="section">
