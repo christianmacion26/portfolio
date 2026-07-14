@@ -35,6 +35,28 @@ const tier1Count = groups.reduce(
     sum + g.data.items.filter((c: CertGroupEntry['data']['items'][number]) => c.tier === 1).length,
   0,
 );
+// v6.11.22 — derive certification window from curated items' years
+// (was hardcoded "(Nov 2022 → May 2026)" — actually Nov 2022 → May 2026,
+// but the month-spans are fabricated). Years are honest; months derived
+// from earliest/latest cert year (Nov is the Nov of the year indicated;
+// May = month awarded for Tier-1 STA Jan 2026 ceremony).
+type CertItem = CertGroupEntry['data']['items'][number];
+const allItems: CertItem[] = groups.flatMap((g) => g.data.items);
+const yearsArr = allItems.map((c) => Number(c.year)).filter((n) => Number.isFinite(n));
+const earliestYear = yearsArr.length ? Math.min(...yearsArr) : null;
+const latestYear = yearsArr.length ? Math.max(...yearsArr) : null;
+const certWindow =
+  earliestYear !== null && latestYear !== null
+    ? earliestYear === latestYear
+      ? `${earliestYear}`
+      : `${earliestYear} → ${latestYear}`
+    : '';
+// Cert span in months — derived from earliest/latest year (Jan → Dec).
+// This is the honest denominator for cert-density: same units, same window.
+const certSpanMonths =
+  earliestYear !== null && latestYear !== null
+    ? (latestYear - earliestYear + 1) * 12
+    : Number(profile.stats.ageMonths);
 ---
 
 <BaseLayout
@@ -58,14 +80,14 @@ const tier1Count = groups.reduce(
       </VoiceLine>
       <p class="page-head__sub">
         {claimedTotal} professional certifications across AI, finance, math/statistics, and event flagships
-        — collected in {profile.stats.ageMonths} months (Nov 2022 → May 2026). Curated below by domain;
+        — collected over {certSpanMonths} months ({certWindow}). Curated below by domain;
         Tier-1 issuers flagged.
       </p>
 
       <div class="head-eq">
         <Equation
           block
-          latex={`\\text{cert\\_density} = \\frac{c(t)}{t} = \\frac{${claimedTotal} \\text{ certs}}{${profile.stats.ageMonths} \\text{ months}} \\approx ${(claimedTotal / Number(profile.stats.ageMonths)).toFixed(1)} \\text{ certs/month}`}
+          latex={`\\text{cert\\_density} = \\frac{c(t)}{t} = \\frac{${claimedTotal} \\text{ certs}}{${certSpanMonths} \\text{ months}} \\approx ${(claimedTotal / certSpanMonths).toFixed(1)} \\text{ certs/month}`}
           size="md"
         />
       </div>
