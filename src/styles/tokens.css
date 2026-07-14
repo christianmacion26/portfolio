@@ -68,33 +68,33 @@
      ProofCard, Collaborators, KeyHintPanel, Stat, Equation. Each
      step is named for its semantic role; auto-tracks any future
      palette shift via color-mix(in oklab). */
-  --c-ink-mute:   color-mix(in oklab, var(--c-ink) 70%, transparent); /* nav links, footers */
-  --c-ink-soft:   color-mix(in oklab, var(--c-ink) 78%, transparent); /* subdued body */
-  --c-ink-faint:  color-mix(in oklab, var(--c-ink) 65%, transparent); /* captions, hints */
-  --c-ink-ghost:  color-mix(in oklab, var(--c-ink) 55%, transparent); /* placeholders, eyebrow */
-  --c-ink-fade:   color-mix(in oklab, var(--c-ink) 45%, transparent); /* disabled, very faint */
-  --c-ink-wisp:   color-mix(in oklab, var(--c-ink) 35%, transparent); /* near-invisible chrome */
-  --c-ink-haze:   color-mix(in oklab, var(--c-ink) 25%, transparent); /* hairline text */
-  --c-ink-mist:   color-mix(in oklab, var(--c-ink) 85%, transparent); /* strong subdued */
-  --c-ink-veil:   color-mix(in oklab, var(--c-ink) 42%, transparent); /* hover ghost */
+  --c-ink-mute: color-mix(in oklab, var(--c-ink) 70%, transparent); /* nav links, footers */
+  --c-ink-soft: color-mix(in oklab, var(--c-ink) 78%, transparent); /* subdued body */
+  --c-ink-faint: color-mix(in oklab, var(--c-ink) 65%, transparent); /* captions, hints */
+  --c-ink-ghost: color-mix(in oklab, var(--c-ink) 55%, transparent); /* placeholders, eyebrow */
+  --c-ink-fade: color-mix(in oklab, var(--c-ink) 45%, transparent); /* disabled, very faint */
+  --c-ink-wisp: color-mix(in oklab, var(--c-ink) 35%, transparent); /* near-invisible chrome */
+  --c-ink-haze: color-mix(in oklab, var(--c-ink) 25%, transparent); /* hairline text */
+  --c-ink-mist: color-mix(in oklab, var(--c-ink) 85%, transparent); /* strong subdued */
+  --c-ink-veil: color-mix(in oklab, var(--c-ink) 42%, transparent); /* hover ghost */
   --c-ink-shroud: color-mix(in oklab, var(--c-ink) 75%, transparent); /* tertiary copy */
   --c-ink-veil-95: color-mix(in oklab, var(--c-ink) 95%, transparent); /* near-full */
   /* White-alpha (used for hover/glass overlays on amber panels) */
-  --c-white-mute:  color-mix(in oklab, #fff 70%, transparent);
-  --c-white-soft:  color-mix(in oklab, #fff 78%, transparent);
+  --c-white-mute: color-mix(in oklab, #fff 70%, transparent);
+  --c-white-soft: color-mix(in oklab, #fff 78%, transparent);
   --c-white-faint: color-mix(in oklab, #fff 60%, transparent);
   --c-white-ghost: color-mix(in oklab, #fff 55%, transparent);
-  --c-white-fade:  color-mix(in oklab, #fff 30%, transparent);
-  --c-white-haze:  color-mix(in oklab, #fff 8%, transparent);
-  --c-white-mist:  color-mix(in oklab, #fff 6%, transparent);
-  --c-white-wisp:  color-mix(in oklab, #fff 4%, transparent);
+  --c-white-fade: color-mix(in oklab, #fff 30%, transparent);
+  --c-white-haze: color-mix(in oklab, #fff 8%, transparent);
+  --c-white-mist: color-mix(in oklab, #fff 6%, transparent);
+  --c-white-wisp: color-mix(in oklab, #fff 4%, transparent);
   /* Amber-light alpha (used for emphasis chrome over tape) */
-  --c-amberl-decor:    color-mix(in oklab, var(--c-amber-light) 40%, transparent);
-  --c-amberl-soft:     color-mix(in oklab, var(--c-amber-light) 10%, transparent);
-  --c-amberl-faint:    color-mix(in oklab, var(--c-amber-light) 4%, transparent);
-  --c-amberl-mid:      color-mix(in oklab, var(--c-amber-light) 55%, transparent);
-  --c-amberl-strong:   color-mix(in oklab, var(--c-amber-light) 35%, transparent);
-  --c-amberl-mist:     color-mix(in oklab, var(--c-amber-light) 12%, transparent);
+  --c-amberl-decor: color-mix(in oklab, var(--c-amber-light) 40%, transparent);
+  --c-amberl-soft: color-mix(in oklab, var(--c-amber-light) 10%, transparent);
+  --c-amberl-faint: color-mix(in oklab, var(--c-amber-light) 4%, transparent);
+  --c-amberl-mid: color-mix(in oklab, var(--c-amber-light) 55%, transparent);
+  --c-amberl-strong: color-mix(in oklab, var(--c-amber-light) 35%, transparent);
+  --c-amberl-mist: color-mix(in oklab, var(--c-amber-light) 12%, transparent);
 
   /* === BG (DARK — the default everywhere) === */
   --c-bg: #0d1117; /* institutional-tape primary surface */

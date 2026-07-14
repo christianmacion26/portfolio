@@ -970,19 +970,11 @@ const fmtPct = (n: number) => formatPct(n);
   /* v6.11.10 — F14 amber-only. Bid cell tints amber; ask tints ink-3. */
   .desk__tape-cell--bid {
     background: color-mix(in oklab, var(--c-amber) calc(var(--t) * 100%), transparent);
-    border-color: color-mix(
-      in oklab,
-      var(--c-amber) calc((var(--t) + 0.3) * 100%),
-      transparent
-    );
+    border-color: color-mix(in oklab, var(--c-amber) calc((var(--t) + 0.3) * 100%), transparent);
   }
   .desk__tape-cell--ask {
     background: color-mix(in oklab, var(--c-ink-2) calc(var(--t) * 100%), transparent);
-    border-color: color-mix(
-      in oklab,
-      var(--c-ink-2) calc((var(--t) + 0.3) * 100%),
-      transparent
-    );
+    border-color: color-mix(in oklab, var(--c-ink-2) calc((var(--t) + 0.3) * 100%), transparent);
   }
   .desk__tape-side {
     font-size: 0.5rem;
@@ -1059,7 +1051,8 @@ const fmtPct = (n: number) => formatPct(n);
     fill: var(--c-ink-2);
   }
   .desk__gauge-readout-cap {
-    font-size: var(--fs-3xs); font-size: 7px;
+    font-size: var(--fs-3xs);
+    font-size: 7px;
     fill: var(--c-ink-2);
     letter-spacing: 0.08em;
   }
@@ -1071,7 +1064,8 @@ const fmtPct = (n: number) => formatPct(n);
     display: block;
   }
   .desk__matrix-axis {
-    font-size: var(--fs-3xs); font-size: 7px;
+    font-size: var(--fs-3xs);
+    font-size: 7px;
     fill: var(--c-ink-2);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -1099,7 +1093,8 @@ const fmtPct = (n: number) => formatPct(n);
     fill: var(--c-ink-2);
   }
   .desk__matrix-legend {
-    font-size: var(--fs-3xs); font-size: 7px;
+    font-size: var(--fs-3xs);
+    font-size: 7px;
     fill: var(--c-ink-2);
     letter-spacing: 0.04em;
   }

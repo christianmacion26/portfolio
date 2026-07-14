@@ -188,10 +188,3 @@ export function getIndexSnap(sym: string): IndexSnap | null {
     decimals: seed.decimals,
   };
 }
-
-/** Get the full tape series (80 ticks) for an index, for the scrolling tape. */
-export function getIndexSeries(sym: string): number[] {
-  const seed = INDEX_SEEDS.find((s) => s.sym === sym);
-  if (!seed) return [];
-  return getTapeSeries('markets-index', seed.base, seed.sigma);
-}

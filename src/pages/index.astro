@@ -604,11 +604,13 @@ const velocityRows: { stage: string; intensity: number }[][] = [
       <p class="hero__eyebrow">
         <span class="hero__eyebrow-name">{profile.fullName}</span>
         <span class="hero__eyebrow-sep" aria-hidden="true">·</span>
-        {/* v6.11.9 — was "Open to remote roles · UTC+8". The "Open to
+        {
+          /* v6.11.9 — was "Open to remote roles · UTC+8". The "Open to
            remote roles" phrase duplicated the badge above. Trimmed to
            just the timezone so the eyebrow doesn't overflow on mobile
            and the two lines carry distinct signals (badge = availability,
-           eyebrow = identity + time zone). */}
+           eyebrow = identity + time zone). */
+        }
         <span>{profile.location.timezone}</span>
       </p>
 

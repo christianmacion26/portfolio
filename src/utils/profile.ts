@@ -16,6 +16,12 @@ const stats = {
   locPython: '76.5k', // ~76,500 LOC
   evalGates: '31', // 31-gate evaluation harness
   pagesBuilt: '84', // built pages — update on route add/remove
+  // v6.11.13 — derived chrome counts. /positions had hardcoded
+  // "15 repos" / "Five seats" / "Three seat types" that contradicted
+  // other pages and silently drifted when role-cards were added/removed.
+  repoCount: '25', // GitHub public repos (api.github.com/users/christianmacion26 → public_repos=25)
+  targetSeats: '5', // /positions conversation cards (lines 248-374)
+  offTableSeats: '3', // /positions "off the table" bullets (lines 388-392)
 } as const;
 
 export const profile = {

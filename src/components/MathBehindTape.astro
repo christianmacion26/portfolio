@@ -213,12 +213,12 @@ const outputCells = OUTPUTS.map((c) => ({ ...c, color: signVar(c.sign) }));
               style={`left:${f.deltaSign >= 0 ? '72%' : '28%'}`}
             />
           </div>
-          <span class={`mathtape__tile-delta mono mathtape__tile-delta--${f.deltaSign > 0 ? 'pos' : 'neg'}`}>
+          <span
+            class={`mathtape__tile-delta mono mathtape__tile-delta--${f.deltaSign > 0 ? 'pos' : 'neg'}`}
+          >
             {f.deltaIn}
           </span>
-          <span class="mathtape__tile-out mono tnum">
-            {f.outputVal}
-          </span>
+          <span class="mathtape__tile-out mono tnum">{f.outputVal}</span>
         </li>
       ))
     }

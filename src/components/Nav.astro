@@ -15,10 +15,14 @@ const isActive = (href: string) => {
 
 // Primary links — visible inline at every viewport >= 1024px.
 // Mobile (<=980px) renders ALL links flat inside the burger menu.
+// v6.11.13 — Positions promoted from secondary to primary. The "Live
+// book" label was ambiguous (trade book? book to read?) and buried the
+// most important recruiter-visiting page behind a 10-link disclosure.
 const primary = [
   { href: path('/'), label: 'Home' },
   { href: path('/for-recruiters'), label: 'For recruiters' },
   { href: path('/proof'), label: 'Proof' },
+  { href: path('/positions'), label: 'Positions' },
   { href: path('/projects'), label: 'Projects' },
   { href: path('/solutions'), label: 'Solutions' },
   { href: path('/methodology'), label: 'Method' },
@@ -37,8 +41,9 @@ const markets = [
 
 // Secondary links - behind a "Resources" details disclosure on desktop,
 // flat list on mobile.
+// v6.11.13 — /positions promoted to primary nav (was "Live book" here);
+// removed to avoid duplicate entry.
 const secondary = [
-  { href: path('/positions'), label: 'Live book' },
   { href: path('/experience'), label: 'Experience' },
   { href: path('/publications'), label: 'Pubs' },
   { href: path('/papers'), label: 'Papers' },

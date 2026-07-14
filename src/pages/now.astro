@@ -159,8 +159,9 @@ const updatedHuman = new Date(updated).toLocaleDateString('en-GB', {
         </li>
         <li>
           <strong>For public work / proof:</strong>
-          <a href={profile.contact.github} target="_blank" rel="noopener">GitHub</a> (24 public repos,
-          all NDA-safe). Stack: see <a href={path('/uses')}>/uses</a>.
+          <a href={profile.contact.github} target="_blank" rel="noopener">GitHub</a> ({
+            profile.stats.repoCount
+          } public repos, all NDA-safe). Stack: see <a href={path('/uses')}>/uses</a>.
         </li>
       </ul>
 

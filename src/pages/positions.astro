@@ -84,7 +84,7 @@ const tradingDays = equitySeries.length;
           </p>
         </div>
         <div class="positions-card__status">
-          <span class="dot dot--pass"></span>
+          <span class="dot dot--amber"></span>
           <span class="mono">live · in regime</span>
         </div>
       </header>
@@ -107,30 +107,6 @@ const tradingDays = equitySeries.length;
         >
       </div>
       <EquityCurveChart data={equitySeries} yMin={99} yMax={113} />
-
-      <aside class="positions-proof">
-        <a href={path('/proof')} class="positions-proof__link">
-          <img
-            src={path('/proof/cryptoneeds-christ-chart.jpg')}
-            alt="TradingView chart of XAUT/USDT (tokenized gold) on the 1-hour timeframe with Elliott Wave counts, by @CryptoneedsChrist."
-            width="220"
-            height="160"
-            loading="lazy"
-            decoding="async"
-            class="positions-proof__img"
-          />
-          <div class="positions-proof__copy">
-            <div class="positions-proof__title mono">Operator-discretion · XAUT/USDT</div>
-            <p>
-              Public TradingView chart by <strong>@CryptoneedsChrist</strong>. Same operator,
-              different instrument family than the systematic book above — discretionary Elliott
-              Wave work on tokenized gold. <a href={path('/proof')} class="positions-proof__cta"
-                >See full chart + provenance on /proof →</a
-              >
-            </p>
-          </div>
-        </a>
-      </aside>
 
       <div class="positions-grid">
         <div class="positions-metric">
@@ -209,11 +185,11 @@ const tradingDays = equitySeries.length;
       <div class="positions-code">
         <span class="mono">code:</span>
         <a
-          href="https://github.com/christianmacion26/timeseries-momentum-voltarget"
+          href={`${profile.contact.github}/timeseries-momentum-voltarget`}
           target="_blank"
           rel="noopener"
         >
-          github.com/christianmacion26/timeseries-momentum-voltarget
+          {`${profile.contact.github.replace('https://', '')}/timeseries-momentum-voltarget`}
         </a>
       </div>
     </div>
@@ -225,9 +201,9 @@ const tradingDays = equitySeries.length;
         <p class="section__eyebrow">Open conversations · the live book</p>
         <h2 class="section__title">Conversations I'd pick up the phone for.</h2>
         <p class="section__sub">
-          Five seats that fit my operating constraints — quant, AI, eval, OSS. Not a JD wishlist; a
-          list of the conversations I'd actually take a 30-min call about. If your role isn't on the
-          list, email me anyway with the JD — I read every one.
+          {profile.stats.targetSeats} seats that fit my operating constraints — quant, AI, eval, OSS.
+          Not a JD wishlist; a list of the conversations I'd actually take a 30-min call about. If your
+          role isn't on the list, email me anyway with the JD — I read every one.
         </p>
       </header>
 
@@ -318,8 +294,8 @@ const tradingDays = equitySeries.length;
               </p>
             </div>
           </div>
-          <a class="btn btn--ghost btn--sm role-card__next" href={path('/contact')}
-            >Next step: /contact →</a
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/for-recruiters')}
+            >Next step: /for-recruiters →</a
           >
         </article>
 
@@ -341,8 +317,8 @@ const tradingDays = equitySeries.length;
               </p>
             </div>
           </div>
-          <a class="btn btn--ghost btn--sm role-card__next" href={path('/contact')}
-            >Next step: /contact →</a
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/for-recruiters')}
+            >Next step: /for-recruiters →</a
           >
         </article>
 
@@ -362,13 +338,13 @@ const tradingDays = equitySeries.length;
             <div>
               <p class="role-card__label mono">I'm a fit because</p>
               <p class="role-card__text">
-                15 public repos, {profile.stats.certCount} certs, eval-first discipline, NDA-clean by
-                construction.
+                {profile.stats.repoCount} public repos, {profile.stats.certCount} certs, eval-first discipline,
+                NDA-clean by construction.
               </p>
             </div>
           </div>
-          <a class="btn btn--ghost btn--sm role-card__next" href={path('/contact')}
-            >Next step: /contact →</a
+          <a class="btn btn--ghost btn--sm role-card__next" href={path('/for-recruiters')}
+            >Next step: /for-recruiters →</a
           >
         </article>
       </div>
@@ -381,8 +357,8 @@ const tradingDays = equitySeries.length;
         <p class="section__eyebrow">Off the table</p>
         <h2 class="section__title">Not currently looking for.</h2>
         <p class="section__sub">
-          Three seat types that don't fit my operating constraints. No judgment if you run one —
-          just not where I'm spending the next 12 months.
+          {profile.stats.offTableSeats} seat types that don't fit my operating constraints. No judgment
+          if you run one — just not where I'm spending the year ahead.
         </p>
       </header>
       <ul class="neg">
@@ -499,60 +475,8 @@ const tradingDays = equitySeries.length;
     color: var(--c-ink-2);
   }
 
-  .positions-proof {
-    margin-block: var(--sp-5);
-    padding: var(--sp-3);
-    background: var(--c-tape);
-    border: 1px solid var(--c-tape-2);
-    border-radius: var(--radius);
-    border-left: 3px solid var(--c-primary-2);
-  }
-  .positions-proof__link {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: var(--sp-4);
-    align-items: center;
-    color: inherit;
-  }
-  .positions-proof__img {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-sm);
-    display: block;
-  }
-  .positions-proof__title {
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--c-primary-2-deep);
-    margin-bottom: var(--sp-2);
-    font-weight: 600;
-  }
-  .positions-proof__copy p {
-    font-size: var(--fs-sm);
-    color: var(--c-ink-soft);
-    line-height: var(--lh-snug);
-    margin: 0;
-  }
-  .positions-proof__copy strong {
-    color: var(--ink-on-tape);
-    font-weight: 600;
-  }
-  .positions-proof__cta {
-    color: var(--c-primary-2-deep);
-    text-decoration-color: var(--c-amber-decor);
-  }
-  .positions-proof__cta:hover {
-    text-decoration-color: var(--c-primary-2-deep);
-  }
-  @media (max-width: 720px) {
-    .positions-proof__link {
-      grid-template-columns: 1fr;
-    }
-    .positions-proof__img {
-      max-width: 220px;
-    }
-  }
+  /* v6.11.13 — .positions-proof aside removed (XAUT/USDT chart broke
+     the page's "what I'm currently running" frame). */
 
   .positions-grid {
     display: grid;
@@ -566,6 +490,10 @@ const tradingDays = equitySeries.length;
     align-items: flex-start;
     gap: var(--sp-4);
     margin-bottom: var(--sp-3);
+    /* v6.11.13 — wrap so the badge drops below the long subtitle on
+       mobile viewports ≤540px (badge has white-space: nowrap + flex:
+       0 0 auto; without wrap it floats to the right edge awkwardly). */
+    flex-wrap: wrap;
   }
   .positions-chart__head-text {
     flex: 1 1 auto;
@@ -594,6 +522,9 @@ const tradingDays = equitySeries.length;
     border: 1px solid var(--c-amberl-strong);
     border-radius: var(--radius-sm);
     white-space: nowrap;
+    /* v6.11.13 — keep the badge pinned to the top of its line so it
+       doesn't drift down when the subtitle wraps multi-line. */
+    align-self: flex-start;
   }
   .positions-chart__badge--ok {
     color: var(--c-primary-2);
