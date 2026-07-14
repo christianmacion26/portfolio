@@ -74,6 +74,24 @@ const repos = [
     href: 'https://github.com/christianmacion26/portfolio_v2/tree/master/eval-mcp-server',
   },
 ];
+
+// v6.11.31 — license rows extracted to array for chrome derivation
+const licenses = [
+  {
+    name: 'LICENSE-COPY',
+    label: 'CC-BY-SA 4.0',
+    href: 'https://creativecommons.org/licenses/by-sa/4.0/',
+    desc:
+      ' — for the prose, the methodology write-up, the working memos, and the rest of the human-readable content.',
+  },
+  {
+    name: 'LICENSE-CODE',
+    label: 'MIT',
+    href: 'https://opensource.org/licenses/MIT',
+    desc:
+      ' — for the code: the design tokens, the components, the /proof scripts, and the OSS repos on GitHub.',
+  },
+];
 ---
 
 <BaseLayout
@@ -262,32 +280,24 @@ const repos = [
         <p class="section__eyebrow">(e) · License</p>
         <h2 class="section__title">CC-BY-SA for copy, MIT for code.</h2>
         <p class="section__sub">
-          Two licenses, two roles. The full text is in the repo; the placeholders below will be
-          replaced with the canonical files before public release.
+          {licenses.length} licenses, two roles. The full text is in the repo; the placeholders below will
+          be replaced with the canonical files before public release.
         </p>
       </header>
       <div class="lic">
-        <div class="lic__row">
-          <span class="lic__name mono">LICENSE-COPY</span>
-          <span class="lic__value">
-            <a
-              href="https://creativecommons.org/licenses/by-sa/4.0/"
-              target="_blank"
-              rel="noopener noreferrer">CC-BY-SA 4.0</a
-            > — for the prose, the methodology write-up, the working memos, and the rest of the human-readable
-            content.
-          </span>
-        </div>
-        <div class="lic__row">
-          <span class="lic__name mono">LICENSE-CODE</span>
-          <span class="lic__value">
-            <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer"
-              >MIT</a
-            >
-            — for the code: the design tokens, the components, the /proof scripts, and the OSS repos on
-            GitHub.
-          </span>
-        </div>
+        {
+          licenses.map((l) => (
+            <div class="lic__row">
+              <span class="lic__name mono">{l.name}</span>
+              <span class="lic__value">
+                <a href={l.href} target="_blank" rel="noopener noreferrer">
+                  {l.label}
+                </a>
+                {l.desc}
+              </span>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
