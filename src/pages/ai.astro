@@ -103,7 +103,7 @@ const loopSteps = [
     <div class="container">
       <p class="section__eyebrow">AI lane</p>
       <h1 class="section__title">
-        Eleven agents. One loop. <span class="hl">{NGATE}.</span>
+        {profile.stats.aiAgentCount} agents. One loop. <span class="hl">{NGATE}.</span>
       </h1>
       <VoiceLine size="md">
         Every LLM output I ship passes the same statistical gate stack as a systematic strategy. The
@@ -120,7 +120,7 @@ const loopSteps = [
         <Stat
           value={profile.stats.evalGates}
           label="eval gates"
-          sub="G1–G31 · 6 families · exit-0 contract"
+          sub={`G1–G${profile.stats.evalGates} · 6 families · exit-0 contract`}
           size="md"
           variant="primary"
         />
@@ -221,7 +221,9 @@ const loopSteps = [
     <div class="container">
       <header class="section__head">
         <p class="section__eyebrow">Projects · the surface evidence</p>
-        <h2 class="section__title">Six artifacts. Each is a project, not a demo.</h2>
+        <h2 class="section__title">
+          {aiProjects.length} artifacts. Each is a project, not a demo.
+        </h2>
         <p class="section__sub">
           Every project on this page ships with a reproducible harness, a labeled eval set or scored
           output, and a CI-enforced gate stack. None depend on a paid API at read time.

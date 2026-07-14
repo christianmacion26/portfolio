@@ -187,11 +187,15 @@ function hashSeed(s: string): string {
 }
 const gradId = `eq-grad-${hashSeed(`${data.length}|${data[0]}|${data[data.length - 1]}`)}`;
 
-// Regime colors — kept neutral so the institutional palette isn't bent.
+// Regime colors — kept amber-only so the institutional palette isn't bent.
+// v6.11.18 — was rgba(63,185,80,0.06) green for calm + rgba(248,81,73,0.07)
+// red for stress. F14 rule: monochrome amber + ink. Calm = amber-soft
+// (positive state, less saturated), stress = ink-2 with 6% opacity
+// (negative state, dimmed — same hue family, sign lives in intensity).
 const regimeFill: Record<'calm' | 'normal' | 'stress', string> = {
-  calm: 'rgba(63, 185, 80, 0.06)',
+  calm: 'rgba(212, 160, 23, 0.08)',
   normal: 'rgba(212, 160, 23, 0.05)',
-  stress: 'rgba(248, 81, 73, 0.07)',
+  stress: 'rgba(173, 186, 199, 0.10)',
 };
 ---
 
@@ -402,14 +406,17 @@ const regimeFill: Record<'calm' | 'normal' | 'stress', string> = {
     border-radius: 2px;
     border: 1px solid var(--c-rule-soft);
   }
+  /* v6.11.18 — F14 amber-only migration. Was rgba(63,185,80,0.18) green
+     for calm + rgba(248,81,73,0.22) red for stress. Now amber-soft for
+     calm + ink-2 18% for stress. Sign lives in intensity, not hue. */
   .eq-chart__swatch--calm {
-    background: rgba(63, 185, 80, 0.18);
+    background: rgba(212, 160, 23, 0.22);
   }
   .eq-chart__swatch--normal {
     background: rgba(212, 160, 23, 0.16);
   }
   .eq-chart__swatch--stress {
-    background: rgba(248, 81, 73, 0.22);
+    background: rgba(173, 186, 199, 0.2);
   }
   .eq-chart__caption {
     font-size: var(--fs-xs);

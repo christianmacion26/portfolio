@@ -109,10 +109,10 @@ const rings: RingOut[] = firing
         e.data.category === 'central-bank'
           ? 'var(--c-amber-light)'
           : e.data.category === 'earnings'
-            ? 'var(--c-pass)'
+            ? 'var(--c-amber-deep)'
             : e.data.category === 'data-release'
               ? 'var(--c-accent-cyan)'
-              : 'var(--c-fail)',
+              : 'var(--c-amber)',
       slug: e.id ?? e.data.city.toLowerCase().replace(/\s+/g, '-'),
       city: e.data.city,
       title: e.data.title,

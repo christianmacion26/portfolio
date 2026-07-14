@@ -73,7 +73,11 @@ const NGATE = `${profile.stats.evalGates}-gate`;
           label="certs"
           sub={`${profile.stats.ageMonths}-month arc`}
         />
-        <Stat value={profile.stats.evalGates} label="gates" sub="G1–G31" />
+        <Stat
+          value={profile.stats.evalGates}
+          label="gates"
+          sub={`G1–G${profile.stats.evalGates}`}
+        />
         <Stat value={profile.stats.aiAgentCount} label="agents" sub="orch + workers" />
         <Stat value={profile.stats.locPython} label="LOC" sub="light-dep" />
       </div>

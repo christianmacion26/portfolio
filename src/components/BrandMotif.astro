@@ -38,7 +38,7 @@ interface Props {
 
 const { width = 240, height, caption, decorative = true } = Astro.props;
 
-const N = 33;
+const N = Number(profile.stats.evalGates) + 2; // 31 gates + ship + block indicator cells
 const VIEW_W = 240;
 const VIEW_H = 60;
 // 33 circles across VIEW_W → step ~7.0
@@ -135,7 +135,7 @@ for (const f of families) {
       <title>{`Validation gate lattice — G1–G${profile.stats.evalGates} across 6 families`}</title>
       <desc>
         {
-          `Thirty-three cells representing the G1–G${profile.stats.evalGates} statistical eval stack. Cells
+          `${N} cells representing the G1–G${profile.stats.evalGates} statistical eval stack. Cells
         16 and 27 are reserved indicator positions (ship, block). Hover any cell
         to read its family.`
         }

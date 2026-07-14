@@ -56,13 +56,28 @@ echo "Scanning $DIST for F14 traffic-light chrome..."
 # The pattern: any usage of the four legacy tokens via var(...).
 # Token DEFINITIONS look like `--c-pass: #...;` — those have NO `var(...)`
 # wrapper and so are silently excluded by this regex.
-PATTERN='var\(--c-(pass|fail|data-positive|data-negative)\)'
+# v6.11.18 — also check SVG attributes (`fill="var(--c-pass)"`,
+# `stroke="var(--c-pass)"`, `bg="...", style="...: var(--c-pass)"`) which
+# render in dist/*.html but bypass `--include="*.css"`. Astro inlines
+# scoped CSS into HTML <style> blocks, AND any literal var() in JSX
+# attributes flows through as-is to render output.
+#
+# v6.11.18 — also check raw rgba(63,185,80,*) / rgba(248,81,73,*)
+# (the literal green/red values for the legacy pass/fail semantics).
+# These are how some components bypass the token system entirely.
+# Pattern matches `rgba(63, 185, 80, ...)` and `rgba(248, 81, 73, ...)`
+# with any alpha. Whitespace-tolerant.
+VAR_PATTERN='var\(--c-(pass|fail|data-positive|data-negative)\)'
+RGBA_PATTERN='rgba\(\s*(63,\s*185,\s*80|248,\s*81,\s*73)\s*,'
 
 # Collect offenders: "<file>:<line>: <match>"
+# Scan both: (1) bundled CSS — same as before, and (2) rendered HTML
+# (with --include="*.html") which catches SVG attribute values and
+# inline style strings.
 OFFENDERS=$(grep -rEn \
-  --include="*.css" \
+  --include="*.css" --include="*.html" \
   "$DIST" \
-  -e "$PATTERN" \
+  -e "$VAR_PATTERN" -e "$RGBA_PATTERN" \
   2>/dev/null | head -100 || true)
 
 if [ -n "$OFFENDERS" ]; then

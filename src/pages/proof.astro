@@ -152,6 +152,18 @@ const heroQuantCount = quantProjects.length;
 const heroAiCount = aiProjects.length;
 const heroSolutionCount = solutions.length;
 
+// v6.11.18 — "on disk" = everything we can actually render: flagship
+// certs (3 from certGroup.featuredImg + 1 standalone Bitget card)
+// + codeArtifacts + quantProjects + aiProjects + solutions + 1
+// ProofCard (the operator-discretion Cryptoneeds-Christ chart).
+// Previously hardcoded "Thirty-one" — actual is 34.
+const proofCountOnDisk =
+  flagshipCerts.length +
+  1 /* standalone Bitget */ +
+  codeArtifacts.length +
+  heroArtifactCount +
+  1; /* ProofCard */
+
 const formatProjectMetric = (p: (typeof projects)[number]) => {
   if (!p.data.metrics?.length) return null;
   const first = p.data.metrics[0];
@@ -339,15 +351,18 @@ const paginate = (items: any[]) => {
       </div>
 
       <div class="proof-head__motif">
-        <BrandMotif width={320} caption="proof/ · G1–G31 gates emit the artefacts below" />
+        <BrandMotif
+          width={320}
+          caption={`proof/ · G1–G${profile.stats.evalGates} gates emit the artefacts below`}
+        />
       </div>
       <p class="proof-head__sub">
         A gallery of public, NDA-clean artifacts — records, charts, co-signed certificates — that
         back up the claims on
         <a href={path('/experience')}>/experience</a>,
         <a href={path('/certifications')}>/certifications</a>, and <a href={path('/now')}>/now</a>.
-        Thirty-one artifacts on disk, twenty-two surfaced below. Updated when something new ships;
-        never deleted when something expires.
+        {proofCountOnDisk} artifacts on disk, {heroArtifactCount} surfaced below. Updated when something
+        new ships; never deleted when something expires.
       </p>
 
       <p class="proof-head__ver mono">{proofVersion} · {buildStampUtc8()}</p>

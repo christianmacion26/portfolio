@@ -35,7 +35,25 @@ cat > "$TMPDIR/dist_with_violation/_astro/fake.css" <<'CSS'
 .good::after{color:var(--c-amber);}
 CSS
 
-# Sanity check: the regex MUST match both usage lines and MUST NOT match defs.
+# v6.11.18 — also include an HTML file with SVG attribute violations
+# (Astro inlines var() refs into HTML fill="..." and stroke="..." attrs,
+# which the previous gate missed). Fixture validation requires the gate
+# to catch these too.
+cat > "$TMPDIR/dist_with_violation/index.html" <<'HTML'
+<svg fill="var(--c-pass)"></svg>
+<div style="color:var(--c-fail)"></div>
+HTML
+
+# v6.11.18 — also include a fixture that uses raw rgba(63,185,80,*) /
+# rgba(248,81,73,*) (the literal green/red values bypassing the token
+# system). Some components (EquityCurveChart, HeroVideo) historically
+# rendered these directly. The gate's rgba pattern catches both.
+cat > "$TMPDIR/dist_with_violation/raw-rgba.html" <<'HTML'
+<rect fill="rgba(63, 185, 80, 0.06)"></rect>
+<rect fill="rgba(248,81,73,0.18)"></rect>
+HTML
+
+# Sanity check: the regex MUST match all usage lines and MUST NOT match defs.
 USAGE_MATCHES=$(grep -cE 'var\(--c-(pass|fail|data-positive|data-negative)\)' "$TMPDIR/dist_with_violation/_astro/fake.css" || true)
 DEF_MATCHES=$(grep -cE '^\s*--c-(pass|fail|data-positive|data-negative):' "$TMPDIR/dist_with_violation/_astro/fake.css" || true)
 if [ "$USAGE_MATCHES" -lt 2 ]; then

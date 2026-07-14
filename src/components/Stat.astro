@@ -153,11 +153,17 @@ if (formula) {
     font-weight: 600;
     font-size: var(--fs-lg);
   }
+  /* v6.11.18 — F14 amber-only migration. Was var(--c-pass) / var(--c-fail);
+     every chrome element across Man Group / Renaissance / AQR / Bridgewater
+     uses monochrome amber + ink. Trend-up is amber-light (bright, advancing),
+     trend-down is ink-3 (dimmed, receding); same hue family, sign lives in
+     the glyph (▲/▼) rather than in hue. v6.11.11 CI gate will flag the old
+     var(--c-pass) / var(--c-fail) refs. */
   .stat--trend-up .stat__trend {
-    color: var(--c-pass);
+    color: var(--c-amber-light);
   }
   .stat--trend-down .stat__trend {
-    color: var(--c-fail);
+    color: var(--c-ink-3);
   }
   .stat--trend-flat .stat__trend {
     color: var(--c-ink-2);

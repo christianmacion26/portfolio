@@ -208,7 +208,10 @@ for (let c = 0; c <= gridCols; c++) {
               delays so the band "breathes".
               v6.10.30 — hoist fill to <g> (SVG presentation attr
               inheritance): 8 inline fill="rgba(...)" → 1 parent fill. */}
-          <g class="hero-video__cities" fill="rgba(63, 185, 80, 0.55)">
+          {/* v6.11.18 — F14 amber-only migration. Was rgba(63,185,80,0.55)
+              green for city dots. Now amber-light at 0.6 — same pulse
+              cadence, monochrome amber family. */}
+          <g class="hero-video__cities" fill="rgba(232, 178, 32, 0.60)">
             {cityDots.map((c) => (
               <circle cx={c.cx} cy={c.cy} r={c.r} style={`--pulse-delay: ${c.delay}s;`} />
             ))}
